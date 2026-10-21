@@ -16,6 +16,7 @@ from app.services.fleet_topology_service import FleetTopologyService
 from app.services.outcome_ledger import OutcomeLedgerService
 from app.services.model_governance import ModelGovernanceService
 from app.services.jurassic.experiment_runner import ExperimentRunner
+from app.services.phoenix import PolicyGateway, RunbookEngine, IncidentCorrelationEngine
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("aegisstor")
@@ -191,6 +192,11 @@ def initialize_database_and_seed_demo():
 
         # 6. Seed AEGISSTOR Jurassic Resilience Lab initial presets & experiment runs
         ExperimentRunner.seed_initial_experiments_if_missing(db)
+
+        # 7. Seed AEGISSTOR Phoenix safety policies, standard runbooks, and correlate incidents
+        PolicyGateway.get_active_policy(db)
+        RunbookEngine.seed_standard_runbooks(db)
+        IncidentCorrelationEngine.scan_and_create_incidents(db)
 
         db.commit()
         logger.info("Demo database verified/seeded idempotently.")

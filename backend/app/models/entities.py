@@ -450,4 +450,146 @@ class JurassicResilienceReport(Base):
     created_at = Column(DateTime, default=utc_now)
 
 
+# ============================================================================
+# PHOENIX: SAFE SELF-HEALING & INCIDENT ORCHESTRATION ENTITIES
+# ============================================================================
+
+class PhoenixIncident(Base):
+    __tablename__ = "phoenix_incidents"
+
+    id = Column(String(64), primary_key=True, index=True)
+    title = Column(String(256), nullable=False)
+    category = Column(String(64), nullable=False)  # CAPACITY_EXHAUSTION, LATENCY_SATURATION, IOPS_THROTTLING, POOL_UNBALANCE, FAILOVER_DEGRADATION, WORKLOAD_HOTSPOT
+    severity = Column(String(32), nullable=False)  # SEV1_CRITICAL, SEV2_HIGH, SEV3_MEDIUM, SEV4_LOW
+    status = Column(String(32), nullable=False, default="DETECTED")  # 14 lifecycle states
+    target_device_id = Column(String(64), ForeignKey("devices.id"), nullable=True, index=True)
+    affected_devices_json = Column(Text, default="[]")
+    pool_id = Column(String(64), nullable=True)
+    
+    # Provenance and evidence classification
+    evidence_type = Column(String(32), default="PREDICTED")  # PREDICTED, OBSERVED, SIMULATED, RESOLVED, INSUFFICIENT_EVIDENCE
+    detection_timestamp = Column(DateTime, default=utc_now)
+    projected_breach_timestamp = Column(DateTime, nullable=True)
+    time_to_breach_hours = Column(Float, nullable=True)
+    confidence_score = Column(Float, default=0.85)
+    model_version = Column(String(64), default="Conformal-Quantile-v1.8")
+    
+    # Structured evidence and hypothesis tracking
+    symptoms_json = Column(Text, default="[]")
+    hypotheses_json = Column(Text, default="[]")  # [{hypothesis, status: CONFIRMED_OBSERVATION|SUPPORTED_HYPOTHESIS|UNCONFIRMED_HYPOTHESIS}]
+    evidence_payload_json = Column(Text, default="{}")
+    forecast_reference_id = Column(Integer, nullable=True)
+    risk_reference_id = Column(Integer, nullable=True)
+    
+    # Active resolution and runbook linkage
+    active_proposal_id = Column(String(64), nullable=True)
+    assigned_engineer = Column(String(64), default="unassigned")
+    escalation_reason = Column(String(256), nullable=True)
+    resolution_summary = Column(Text, nullable=True)
+    resolved_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=utc_now)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
+
+
+class PhoenixRunbook(Base):
+    __tablename__ = "phoenix_runbooks"
+
+    id = Column(String(64), primary_key=True, index=True)
+    name = Column(String(128), nullable=False)
+    version = Column(String(32), default="1.0.0")
+    category = Column(String(64), nullable=False)
+    description = Column(Text, nullable=False)
+    preconditions_json = Column(Text, default="[]")
+    steps_json = Column(Text, default="[]")
+    rollback_steps_json = Column(Text, default="[]")
+    safety_constraints_json = Column(Text, default="{}")
+    verification_criteria_json = Column(Text, default="{}")
+    estimated_duration_minutes = Column(Integer, default=15)
+    is_automated = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=utc_now)
+
+
+class PhoenixPolicy(Base):
+    __tablename__ = "phoenix_policies"
+
+    id = Column(String(64), primary_key=True, index=True)
+    name = Column(String(128), nullable=False)
+    version = Column(String(32), default="1.0.0")
+    min_free_reserve_pct = Column(Float, default=10.0)
+    max_latency_ms = Column(Float, default=20.0)
+    max_bandwidth_mb_s = Column(Float, default=6400.0)
+    max_telemetry_age_seconds = Column(Integer, default=3600)
+    allowed_action_types_json = Column(Text, default="[]")
+    require_human_approval = Column(Boolean, default=True)
+    allow_shadow_mode_only = Column(Boolean, default=True)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=utc_now)
+
+
+class PhoenixActionProposal(Base):
+    __tablename__ = "phoenix_action_proposals"
+
+    id = Column(String(64), primary_key=True, index=True)
+    incident_id = Column(String(64), ForeignKey("phoenix_incidents.id"), nullable=False, index=True)
+    runbook_id = Column(String(64), ForeignKey("phoenix_runbooks.id"), nullable=True)
+    action_type = Column(String(64), nullable=False)
+    target_resource_id = Column(String(64), nullable=False)
+    parameters_json = Column(Text, default="{}")
+    
+    # Pre-execution simulation & policy evaluation
+    simulation_run_id = Column(String(64), nullable=True)
+    simulation_outcome_json = Column(Text, default="{}")
+    policy_verdict = Column(String(32), default="REQUIRES_HUMAN_REVIEW")  # ALLOWED_FOR_SIMULATION, REQUIRES_HUMAN_REVIEW, REJECTED_BY_POLICY, INSUFFICIENT_EVIDENCE
+    policy_violations_json = Column(Text, default="[]")
+    recommendation_score = Column(Float, default=0.85)
+    
+    # Human approval tracking (proposal mutation resets approval)
+    approval_status = Column(String(32), default="PENDING")  # PENDING, APPROVED, REJECTED, INVALIDATED
+    approved_by = Column(String(64), nullable=True)
+    approved_at = Column(DateTime, nullable=True)
+    approval_rationale = Column(Text, nullable=True)
+    proposal_hash = Column(String(64), nullable=False)  # SHA256 of parameters and action to verify immutability
+    
+    created_at = Column(DateTime, default=utc_now)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
+
+
+class PhoenixExecutionRecord(Base):
+    __tablename__ = "phoenix_execution_records"
+
+    id = Column(String(64), primary_key=True, index=True)
+    proposal_id = Column(String(64), ForeignKey("phoenix_action_proposals.id"), nullable=False, index=True)
+    incident_id = Column(String(64), ForeignKey("phoenix_incidents.id"), nullable=False, index=True)
+    idempotency_token = Column(String(64), unique=True, nullable=False, index=True)
+    execution_mode = Column(String(32), default="MODE_A_SIMULATE")  # MODE_A_SIMULATE, MODE_B_DIAGNOSTIC_READONLY, MODE_C_CONTROLLED_EXECUTION
+    status = Column(String(32), default="EXECUTING")  # EXECUTING, SUCCESS, FAILED, ABORTED
+    current_step_index = Column(Integer, default=0)
+    total_steps = Column(Integer, default=1)
+    step_logs_json = Column(Text, default="[]")
+    execution_result_json = Column(Text, default="{}")
+    error_message = Column(Text, nullable=True)
+    started_at = Column(DateTime, default=utc_now)
+    completed_at = Column(DateTime, nullable=True)
+
+
+class PhoenixRecoveryVerification(Base):
+    __tablename__ = "phoenix_recovery_verifications"
+
+    id = Column(String(64), primary_key=True, index=True)
+    incident_id = Column(String(64), ForeignKey("phoenix_incidents.id"), nullable=False, index=True)
+    proposal_id = Column(String(64), ForeignKey("phoenix_action_proposals.id"), nullable=True)
+    execution_id = Column(String(64), ForeignKey("phoenix_execution_records.id"), nullable=True)
+    status = Column(String(32), default="INCONCLUSIVE")  # RECOVERY_SATISFIED, PARTIALLY_VERIFIED, INCONCLUSIVE, UNSUCCESSFUL
+    observation_window_hours = Column(Float, default=24.0)
+    baseline_metrics_json = Column(Text, default="{}")
+    observed_metrics_json = Column(Text, default="{}")
+    threshold_checks_json = Column(Text, default="[]")
+    secondary_degradation_detected = Column(Boolean, default=False)
+    residual_risk_score = Column(Float, default=0.0)
+    verification_notes = Column(Text, default="")
+    verified_at = Column(DateTime, default=utc_now)
+
+
+
 

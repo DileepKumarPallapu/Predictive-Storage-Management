@@ -17,6 +17,7 @@ import { PageDatasetsQuality } from './pages/PageDatasetsQuality';
 import { PageSettingsAudit } from './pages/PageSettingsAudit';
 import { PageOmegaControlRoom } from './pages/PageOmegaControlRoom';
 import { PageJurassicLab } from './pages/PageJurassicLab';
+import { PagePhoenixOrchestrator } from './pages/PagePhoenixOrchestrator';
 import { api } from './api/client';
 
 export const App: React.FC = () => {
@@ -145,6 +146,7 @@ export const App: React.FC = () => {
             )}
             {currentPage === 'omega' && <PageOmegaControlRoom />}
             {currentPage === 'jurassic' && <PageJurassicLab />}
+            {currentPage === 'phoenix' && <PagePhoenixOrchestrator />}
             {currentPage === 'interventions' && (
               <PageInterventionStudio initialDeviceId={selectedDeviceId} />
             )}

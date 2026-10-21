@@ -5,7 +5,9 @@ from app.models.entities import (
     StorageSystem, StoragePool, ResourceRelationship, WorkloadDependency,
     OutcomeLedgerRecord, GovernancePromotionGate,
     JurassicScenario, JurassicExperiment, JurassicFaultEvent,
-    JurassicDriftRecord, JurassicResilienceReport
+    JurassicDriftRecord, JurassicResilienceReport,
+    PhoenixIncident, PhoenixRunbook, PhoenixPolicy,
+    PhoenixActionProposal, PhoenixExecutionRecord, PhoenixRecoveryVerification
 )
 
 __all__ = [
@@ -15,5 +17,7 @@ __all__ = [
     "StorageSystem", "StoragePool", "ResourceRelationship", "WorkloadDependency",
     "OutcomeLedgerRecord", "GovernancePromotionGate",
     "JurassicScenario", "JurassicExperiment", "JurassicFaultEvent",
-    "JurassicDriftRecord", "JurassicResilienceReport"
+    "JurassicDriftRecord", "JurassicResilienceReport",
+    "PhoenixIncident", "PhoenixRunbook", "PhoenixPolicy",
+    "PhoenixActionProposal", "PhoenixExecutionRecord", "PhoenixRecoveryVerification"
 ]

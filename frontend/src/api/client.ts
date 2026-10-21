@@ -484,4 +484,61 @@ export const api = {
   getJurassicFallbackStates: () => apiFetch<any>("/jurassic/fallback-states"),
   getJurassicReportUrl: (experimentId: string, format: "markdown" | "csv" = "markdown") =>
     `${API_BASE}/jurassic/experiments/${experimentId}/report?format=${format}`,
+
+  // ==========================================
+  // AEGISSTOR PHOENIX INCIDENT ORCHESTRATION API
+  // ==========================================
+  getPhoenixIncidents: (params?: { severity?: string; status?: string; category?: string; device_id?: string }) => {
+    const query = new URLSearchParams();
+    if (params?.severity) query.append("severity", params.severity);
+    if (params?.status) query.append("status", params.status);
+    if (params?.category) query.append("category", params.category);
+    if (params?.device_id) query.append("device_id", params.device_id);
+    const qs = query.toString() ? `?${query.toString()}` : "";
+    return apiFetch<any[]>(`/phoenix/incidents${qs}`);
+  },
+  scanPhoenixIncidents: () =>
+    apiFetch<any>("/phoenix/incidents/scan", {
+      method: "POST",
+    }),
+  getPhoenixIncident: (id: string) => apiFetch<any>(`/phoenix/incidents/${id}`),
+  transitionPhoenixIncident: (id: string, target_state: string, reason?: string) =>
+    apiFetch<any>(`/phoenix/incidents/${id}/transition`, {
+      method: "POST",
+      body: JSON.stringify({ target_state, reason }),
+    }),
+  getPhoenixRunbooks: (category?: string) => {
+    const qs = category ? `?category=${category}` : "";
+    return apiFetch<any[]>(`/phoenix/runbooks${qs}`);
+  },
+  getPhoenixPolicies: () => apiFetch<any>("/phoenix/policies"),
+  createPhoenixProposal: (incidentId: string, payload: any) =>
+    apiFetch<any>(`/phoenix/incidents/${incidentId}/proposals`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  approvePhoenixProposal: (proposalId: string, reviewerId: string, rationale: string) =>
+    apiFetch<any>(`/phoenix/proposals/${proposalId}/approve`, {
+      method: "POST",
+      body: JSON.stringify({ reviewer_id: reviewerId, rationale }),
+    }),
+  executePhoenixProposal: (
+    proposalId: string,
+    idempotencyToken: string,
+    executionMode = "MODE_A_SIMULATE"
+  ) =>
+    apiFetch<any>(`/phoenix/proposals/${proposalId}/execute`, {
+      method: "POST",
+      body: JSON.stringify({ idempotency_token: idempotencyToken, execution_mode: executionMode }),
+    }),
+  verifyPhoenixRecovery: (incidentId: string, payload: any = {}) =>
+    apiFetch<any>(`/phoenix/incidents/${incidentId}/verify`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  getPhoenixEvidenceGraph: (incidentId: string) =>
+    apiFetch<any>(`/phoenix/incidents/${incidentId}/evidence-graph`),
+  getPhoenixRepeatedPatterns: () =>
+    apiFetch<any>("/phoenix/analytics/repeated-patterns"),
+  getPhoenixExecutions: () => apiFetch<any[]>("/phoenix/executions"),
 };
