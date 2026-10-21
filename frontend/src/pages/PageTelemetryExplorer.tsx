@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { api, DeviceSummary, TelemetryResponse } from '../api/client';
 import { ScientificForecastChart } from '../components/ScientificForecastChart';
-import { LineChart, Download, Calendar, HardDrive, AlertTriangle } from 'lucide-react';
+import { LineChart, Download, Calendar, HardDrive, AlertTriangle, Sparkles } from 'lucide-react';
+import { usePresentationMode } from '../context/PresentationModeContext';
 
 export const PageTelemetryExplorer: React.FC = () => {
   const [devices, setDevices] = useState<DeviceSummary[]>([]);
@@ -10,6 +11,7 @@ export const PageTelemetryExplorer: React.FC = () => {
   const [timeRangeHours, setTimeRangeHours] = useState<number>(168); // 7 days
   const [telemetry, setTelemetry] = useState<TelemetryResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const { isGuided } = usePresentationMode();
 
   useEffect(() => {
     loadDevices();
@@ -47,13 +49,13 @@ export const PageTelemetryExplorer: React.FC = () => {
   };
 
   const metrics = [
-    { id: 'used_bytes', label: 'Used Storage Capacity', isBytes: true },
-    { id: 'utilization_pct', label: 'Utilization Percentage (%)', isBytes: false },
-    { id: 'read_iops', label: 'Read IOPS', isBytes: false },
-    { id: 'write_iops', label: 'Write IOPS', isBytes: false },
-    { id: 'throughput_mb_s', label: 'Throughput (MB/s)', isBytes: false },
-    { id: 'latency_p95_ms', label: 'Tail Latency P95 (ms)', isBytes: false },
-    { id: 'queue_depth', label: 'Queue Depth', isBytes: false },
+    { id: 'used_bytes', guidedLabel: 'Storage Used', expertLabel: 'Used Storage Capacity', isBytes: true },
+    { id: 'utilization_pct', guidedLabel: 'Drive Fullness (%)', expertLabel: 'Utilization Percentage (%)', isBytes: false },
+    { id: 'read_iops', guidedLabel: 'Read Activity (IOPS)', expertLabel: 'Read IOPS', isBytes: false },
+    { id: 'write_iops', guidedLabel: 'Write Activity (IOPS)', expertLabel: 'Write IOPS', isBytes: false },
+    { id: 'throughput_mb_s', guidedLabel: 'Data Speed (MB/s)', expertLabel: 'Throughput (MB/s)', isBytes: false },
+    { id: 'latency_p95_ms', guidedLabel: 'Response Delay (ms)', expertLabel: 'Tail Latency P95 (ms)', isBytes: false },
+    { id: 'queue_depth', guidedLabel: 'Queue Length', expertLabel: 'Queue Depth', isBytes: false },
   ];
 
   const currentMetricCfg = metrics.find((m) => m.id === selectedMetric) || metrics[0];
@@ -64,15 +66,17 @@ export const PageTelemetryExplorer: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent-cyan)]/15 border border-[var(--accent-cyan)]/30 flex items-center justify-center text-[var(--accent-cyan)] shadow-[0_0_12px_rgba(85,214,255,0.2)]">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent-cyan)]/15 border border-[var(--accent-cyan)]/30 flex items-center justify-center text-[var(--accent-cyan)] shadow-[0_0_12px_rgba(97,221,248,0.2)]">
               <LineChart size={18} />
             </div>
             <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
-              Telemetry Explorer & Raw Signal Diagnostics
+              {isGuided ? 'Telemetry Explorer & Raw Signal Data' : 'Telemetry Explorer & Raw Signal Diagnostics'}
             </h2>
           </div>
           <p className="text-xs text-[var(--text-secondary)] mt-1.5 leading-relaxed">
-            High-fidelity time-series telemetry inspection, missingness detection, and empirical data export.
+            {isGuided
+              ? 'Inspect time-series telemetry directly from physical or synthetic storage pools. No data points are ever fabricated.'
+              : 'High-fidelity time-series telemetry inspection, missingness detection, and empirical data export.'}
           </p>
         </div>
 
@@ -86,18 +90,19 @@ export const PageTelemetryExplorer: React.FC = () => {
       </div>
 
       {/* Control Bar */}
-      <div className="glass-panel rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
+      <div className="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
         {/* Device select */}
         <div className="flex items-center gap-2">
-          <HardDrive size={15} className="text-[var(--text-tertiary)]" />
-          <span className="text-xs text-[var(--text-secondary)] font-medium">Device:</span>
+          <HardDrive size={15} className="text-[var(--text-muted)]" />
+          <span className="text-xs text-[var(--text-secondary)] font-medium">Pool:</span>
           <select
             value={selectedDevice}
             onChange={(e) => setSelectedDevice(e.target.value)}
-            className="bg-[var(--surface-raised)]/60 border border-[var(--border-subtle)] focus:border-[var(--accent-cyan)]/70 rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
+            className="bg-[var(--surface-raised)] border border-[var(--border-visible)] focus:border-[var(--accent-cyan)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
+            aria-label="Storage Pool"
           >
             {devices.map((d) => (
-              <option key={d.id} value={d.id} className="bg-[var(--surface-panel)] text-[var(--text-primary)]">
+              <option key={d.id} value={d.id} className="bg-[var(--surface-primary)] text-[var(--text-primary)]">
                 {d.name} ({d.id})
               </option>
             ))}
@@ -106,7 +111,7 @@ export const PageTelemetryExplorer: React.FC = () => {
 
         {/* Time range */}
         <div className="flex items-center gap-2">
-          <Calendar size={15} className="text-[var(--text-tertiary)]" />
+          <Calendar size={15} className="text-[var(--text-muted)]" />
           <span className="text-xs text-[var(--text-secondary)] font-medium">Window:</span>
           {[
             { hours: 24, label: '24 Hours' },
@@ -119,7 +124,7 @@ export const PageTelemetryExplorer: React.FC = () => {
               onClick={() => setTimeRangeHours(t.hours)}
               className={`px-3 py-1 rounded-lg text-xs font-mono font-medium border transition-all ${
                 timeRangeHours === t.hours
-                  ? 'bg-[var(--accent-cyan)]/15 border-[var(--accent-cyan)] text-[var(--accent-cyan)] font-bold shadow-[0_0_8px_rgba(85,214,255,0.2)]'
+                  ? 'bg-[var(--accent-cyan)]/15 border-[var(--accent-cyan)] text-[var(--accent-cyan)] font-bold shadow-[0_0_8px_rgba(97,221,248,0.2)]'
                   : 'glass-panel text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
               }`}
             >
@@ -135,13 +140,13 @@ export const PageTelemetryExplorer: React.FC = () => {
           <button
             key={m.id}
             onClick={() => setSelectedMetric(m.id)}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-medium border transition-all ${
               selectedMetric === m.id
-                ? 'bg-[var(--accent-cyan)]/15 border-[var(--accent-cyan)] text-[var(--accent-cyan)] shadow-[0_0_10px_rgba(85,214,255,0.2)] font-semibold'
+                ? 'bg-[var(--accent-cyan)]/15 border-[var(--accent-cyan)] text-[var(--accent-cyan)] shadow-[0_0_10px_rgba(97,221,248,0.2)] font-semibold'
                 : 'glass-panel text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
             }`}
           >
-            {m.label}
+            {isGuided ? m.guidedLabel : m.expertLabel}
           </button>
         ))}
       </div>
@@ -149,7 +154,7 @@ export const PageTelemetryExplorer: React.FC = () => {
       {/* Main Chart */}
       {telemetry && (
         <ScientificForecastChart
-          title={`${currentMetricCfg.label} — ${selectedDevice}`}
+          title={`${isGuided ? currentMetricCfg.guidedLabel : currentMetricCfg.expertLabel} — ${selectedDevice}`}
           historicalTimestamps={telemetry.timestamps}
           historicalValues={telemetry.values}
           units={telemetry.units}
@@ -159,12 +164,12 @@ export const PageTelemetryExplorer: React.FC = () => {
 
       {/* Missingness Notification if present */}
       {telemetry && telemetry.missing_intervals.length > 0 && (
-        <div className="bg-[var(--color-warning)]/10 border border-[var(--color-warning)]/30 rounded-xl p-4 text-xs text-[var(--color-warning)] space-y-1">
+        <div className="bg-[var(--color-warning)]/10 border border-[var(--color-warning)]/30 rounded-2xl p-4 text-xs text-[var(--color-warning)] space-y-1">
           <div className="font-bold flex items-center gap-2">
-            <AlertTriangle size={15} /> Telemetry Gaps Detected (Never Fabricated):
+            <AlertTriangle size={15} /> Telemetry Gaps Detected (Zero Fabrication Policy):
           </div>
           <p className="text-[11px] text-[var(--text-secondary)] font-mono">
-            Collector recorded {telemetry.missing_intervals.length} intermittent dropout window(s).
+            Collector recorded {telemetry.missing_intervals.length} intermittent dropout window(s). AEGISSTOR displays gaps honestly rather than drawing misleading straight lines.
           </p>
         </div>
       )}

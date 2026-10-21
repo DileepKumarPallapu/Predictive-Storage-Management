@@ -3,6 +3,9 @@ import { Sidebar, PageId } from './components/Sidebar';
 import { TopBar } from './components/TopBar';
 import { CommandPalette } from './components/CommandPalette';
 import { AuthModal } from './components/AuthModal';
+import { OnboardingModal } from './components/OnboardingModal';
+import { PresentationModeProvider } from './context/PresentationModeContext';
+
 import { PageExecutiveOverview } from './pages/PageExecutiveOverview';
 import { PageStorageFleet } from './pages/PageStorageFleet';
 import { PageDeviceIntelligence } from './pages/PageDeviceIntelligence';
@@ -21,17 +24,21 @@ import { PagePhoenixOrchestrator } from './pages/PagePhoenixOrchestrator';
 import { PageAtlasRealityLab } from './pages/PageAtlasRealityLab';
 import { api } from './api/client';
 
-export const App: React.FC = () => {
+const AppContent: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<PageId>('overview');
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const [isLightTheme, setIsLightTheme] = useState<boolean>(false);
   const [operatingMode, setOperatingMode] = useState<string>('demo');
   const [activeAlertsCount, setActiveAlertsCount] = useState<number>(3);
   const [selectedDeviceId, setSelectedDeviceId] = useState<string>('vol-nvme-tier1-db');
-  
+
   // Modals state
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [isAuthOpen, setIsAuthOpen] = useState<boolean>(false);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState<boolean>(() => {
+    return !localStorage.getItem('aegisstor_onboarding_completed');
+  });
+
   const [currentUser, setCurrentUser] = useState<{ username: string; role: string }>({
     username: 'admin',
     role: 'ADMIN',
@@ -95,6 +102,11 @@ export const App: React.FC = () => {
     setIsLightTheme((prev) => !prev);
   };
 
+  const handleCloseOnboarding = () => {
+    setIsOnboardingOpen(false);
+    localStorage.setItem('aegisstor_onboarding_completed', 'true');
+  };
+
   const handleNavigateToDevice = (devId: string) => {
     setSelectedDeviceId(devId);
     setCurrentPage('intelligence');
@@ -107,13 +119,14 @@ export const App: React.FC = () => {
 
   return (
     <div className={`min-h-screen flex ${isLightTheme ? 'light-theme' : ''} bg-transparent text-[var(--text-primary)] transition-colors duration-200`}>
-      {/* Sidebar Navigation */}
+      {/* Sidebar Navigation (7 Goal-Oriented Sections) */}
       <Sidebar
         currentPage={currentPage}
         onSelectPage={(p) => setCurrentPage(p)}
         collapsed={sidebarCollapsed}
         onToggleCollapsed={() => setSidebarCollapsed(!sidebarCollapsed)}
         activeAlertsCount={activeAlertsCount}
+        onOpenOnboarding={() => setIsOnboardingOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -128,11 +141,12 @@ export const App: React.FC = () => {
           onOpenAlerts={() => setCurrentPage('alerts')}
           onOpenSearch={() => setIsSearchOpen(true)}
           onOpenAuth={() => setIsAuthOpen(true)}
+          onOpenTour={() => setIsOnboardingOpen(true)}
           currentUser={currentUser}
         />
 
         {/* Page Container */}
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
           <div className="max-w-7xl mx-auto space-y-6">
             {currentPage === 'overview' && (
               <PageExecutiveOverview
@@ -186,7 +200,23 @@ export const App: React.FC = () => {
         currentUser={currentUser}
         onAuthSuccess={(username, role) => setCurrentUser({ username, role })}
       />
+
+      {/* Interactive 6-Step Onboarding Modal */}
+      <OnboardingModal
+        isOpen={isOnboardingOpen}
+        onClose={handleCloseOnboarding}
+        currentMode={operatingMode}
+        onSelectMode={handleModeChange}
+      />
     </div>
+  );
+};
+
+export const App: React.FC = () => {
+  return (
+    <PresentationModeProvider>
+      <AppContent />
+    </PresentationModeProvider>
   );
 };
 

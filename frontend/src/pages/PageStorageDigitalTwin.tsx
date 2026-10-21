@@ -1,7 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { api, DeviceSummary, ScenarioSimulationResponse, TelemetryResponse } from '../api/client';
 import { ScientificForecastChart } from '../components/ScientificForecastChart';
-import { Layers, Play, AlertCircle, CheckCircle2, ShieldAlert, DollarSign, Clock, Zap, Cpu, ArrowRight } from 'lucide-react';
+import { ContextualHelp } from '../components/ContextualHelp';
+import { usePresentationMode } from '../context/PresentationModeContext';
+import {
+  Layers,
+  Play,
+  AlertCircle,
+  CheckCircle2,
+  ShieldAlert,
+  DollarSign,
+  Clock,
+  Zap,
+  Cpu,
+  ArrowRight,
+  ShieldCheck
+} from 'lucide-react';
 
 interface Props {
   initialDeviceId?: string;
@@ -22,6 +36,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
   const [telemetry, setTelemetry] = useState<TelemetryResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
+  const { isGuided } = usePresentationMode();
 
   useEffect(() => {
     loadDevices();
@@ -86,35 +101,37 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
 
   return (
     <div className="space-y-6">
-      {/* Page Header with Persistent Warning */}
+      {/* Page Header with Persistent Safe Warning */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent-cyan)]/15 border border-[var(--accent-cyan)]/30 flex items-center justify-center text-[var(--accent-cyan)] shadow-[0_0_12px_rgba(85,214,255,0.2)]">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent-cyan)]/15 border border-[var(--accent-cyan)]/30 flex items-center justify-center text-[var(--accent-cyan)] shadow-[0_0_12px_rgba(97,221,248,0.2)]">
               <Layers size={18} />
             </div>
             <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
-              Storage Resilience Digital Twin Studio
+              {isGuided ? 'Compare Possible Actions (Digital Twin Simulator)' : 'Storage Resilience Digital Twin Studio'}
             </h2>
           </div>
           <p className="text-xs text-[var(--text-secondary)] mt-1.5 leading-relaxed">
-            Safe, sandboxed counterfactual intervention simulation. Tests hypothetical remediations against an immutable Hard Safety Envelope.
+            {isGuided
+              ? 'Test hypothetical storage remediations virtually. Simulations calculate outcomes without modifying real physical disks.'
+              : 'Safe, sandboxed counterfactual intervention simulation. Tests hypothetical remediations against an immutable Hard Safety Envelope.'}
           </p>
         </div>
 
-        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[var(--color-warning)]/10 border border-[var(--color-warning)]/30 text-[var(--color-warning)] text-xs font-mono">
-          <AlertCircle size={14} />
-          <span>SIMULATION SANDBOX: NO PHYSICAL MUTATION</span>
+        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[var(--color-success)]/10 border border-[var(--color-success)]/30 text-[var(--color-success)] text-xs font-mono">
+          <ShieldCheck size={14} />
+          <span>VIRTUAL SANDBOX: ZERO HARDWARE CHANGES</span>
         </div>
       </div>
 
       {/* Control Sandbox Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left: Configuration Panel */}
-        <div className="glass-panel rounded-xl p-5 space-y-4">
+        <div className="glass-panel rounded-2xl p-5 space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)]">
             <h3 className="text-sm font-bold text-[var(--text-primary)]">
-              Intervention Parameters
+              {isGuided ? 'Choose Action to Simulate' : 'Intervention Parameters'}
             </h3>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--accent-cyan)]/15 text-[var(--accent-cyan)] border border-[var(--accent-cyan)]/30 font-semibold">
               SANDBOX v1.0
@@ -130,10 +147,11 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
               <select
                 value={selectedDeviceId}
                 onChange={(e) => setSelectedDeviceId(e.target.value)}
-                className="w-full bg-[var(--surface-raised)]/60 border border-[var(--border-subtle)] focus:border-[var(--accent-cyan)]/70 rounded-lg px-3 py-2 text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
+                className="w-full bg-[var(--surface-raised)] border border-[var(--border-visible)] focus:border-[var(--accent-cyan)] rounded-lg px-3 py-2 text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
+                aria-label="Target Storage Pool"
               >
                 {devices.map((d) => (
-                  <option key={d.id} value={d.id} className="bg-[var(--surface-panel)] text-[var(--text-primary)]">
+                  <option key={d.id} value={d.id} className="bg-[var(--surface-primary)] text-[var(--text-primary)]">
                     {d.name} ({d.id})
                   </option>
                 ))}
@@ -143,18 +161,19 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
             {/* Action Type */}
             <div>
               <label className="block text-[var(--text-secondary)] mb-1.5 font-medium text-[11px] uppercase tracking-wider">
-                Simulated Strategy:
+                Remediation Strategy:
               </label>
               <select
                 value={actionType}
                 onChange={(e) => setActionType(e.target.value)}
-                className="w-full bg-[var(--surface-raised)]/60 border border-[var(--border-subtle)] focus:border-[var(--accent-cyan)]/70 rounded-lg px-3 py-2 text-[var(--text-primary)] font-semibold focus:outline-none cursor-pointer"
+                className="w-full bg-[var(--surface-raised)] border border-[var(--border-visible)] focus:border-[var(--accent-cyan)] rounded-lg px-3 py-2 text-[var(--text-primary)] font-semibold focus:outline-none cursor-pointer"
+                aria-label="Remediation Strategy"
               >
-                <option value="TIER_COLD_DATA" className="bg-[var(--surface-panel)]">Move Inactive Cold Data to Tier 2/Archive</option>
-                <option value="EXPAND_CAPACITY" className="bg-[var(--surface-panel)]">Online Capacity Provisioning (+LUN Growth)</option>
-                <option value="RESCHEDULE_TASK" className="bg-[var(--surface-panel)]">Reschedule Background RAID Scrub / Backup</option>
-                <option value="REBALANCE_WORKLOAD" className="bg-[var(--surface-panel)]">Rebalance Noisy Workloads to Adjacent Pool</option>
-                <option value="DO_NOTHING" className="bg-[var(--surface-panel)]">Do Nothing (Observe Baseline Trajectory)</option>
+                <option value="TIER_COLD_DATA" className="bg-[var(--surface-primary)]">Move Inactive Cold Data to Tier 2/Archive</option>
+                <option value="EXPAND_CAPACITY" className="bg-[var(--surface-primary)]">Online Capacity Provisioning (+LUN Growth)</option>
+                <option value="RESCHEDULE_TASK" className="bg-[var(--surface-primary)]">Reschedule Background RAID Scrub / Backup</option>
+                <option value="REBALANCE_WORKLOAD" className="bg-[var(--surface-primary)]">Rebalance Noisy Workloads to Adjacent Pool</option>
+                <option value="DO_NOTHING" className="bg-[var(--surface-primary)]">Do Nothing (Observe Baseline Trajectory)</option>
               </select>
             </div>
 
@@ -179,7 +198,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
 
                 <div>
                   <div className="flex justify-between text-[var(--text-secondary)] mb-1.5 font-mono">
-                    <span>Migration I/O Throttling Rate:</span>
+                    <span>Migration I/O Rate:</span>
                     <span className="text-[var(--accent-cyan)] font-bold">{migrationRateMb} MB/s</span>
                   </div>
                   <input
@@ -238,10 +257,10 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
             <button
               onClick={runSimulation}
               disabled={loading}
-              className="w-full mt-4 py-2.5 px-4 rounded-lg btn-aurora-primary font-bold text-xs flex items-center justify-center gap-2"
+              className="w-full mt-4 py-2.5 px-4 rounded-xl btn-aurora-primary font-bold text-xs flex items-center justify-center gap-2"
             >
               <Play size={14} />
-              {loading ? 'Simulating Digital Twin Physics...' : 'Run Counterfactual Simulation'}
+              {loading ? 'Simulating Digital Twin Physics...' : 'Run Simulation'}
             </button>
           </div>
         </div>
@@ -252,7 +271,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
               <div className="glass-panel rounded-xl p-3.5 text-xs">
                 <div className="text-[var(--text-secondary)] flex items-center gap-1.5 font-medium">
-                  <Clock size={13} className="text-[var(--accent-cyan)]" /> Action Duration
+                  <Clock size={13} className="text-[var(--accent-cyan)]" /> Estimated Duration
                 </div>
                 <div className="text-base font-bold font-mono text-[var(--text-primary)] mt-1.5">
                   {simulation.duration_minutes > 60
@@ -272,7 +291,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
 
               <div className="glass-panel rounded-xl p-3.5 text-xs">
                 <div className="text-[var(--text-secondary)] flex items-center gap-1.5 font-medium">
-                  <Zap size={13} className="text-[var(--color-warning)]" /> Latency Overhead
+                  <Zap size={13} className="text-[var(--color-warning)]" /> Contention Penalty
                 </div>
                 <div className="text-base font-bold font-mono text-[var(--color-warning)] mt-1.5">
                   {simulation.overhead_io_penalty_pct > 0 ? `+${simulation.overhead_io_penalty_pct}%` : `${simulation.overhead_io_penalty_pct}%`}
@@ -281,7 +300,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
 
               <div className="glass-panel rounded-xl p-3.5 text-xs">
                 <div className="text-[var(--text-secondary)] flex items-center gap-1.5 font-medium">
-                  <ShieldAlert size={13} className="text-[var(--text-tertiary)]" /> Safety Envelope
+                  <ShieldAlert size={13} className="text-[var(--text-muted)]" /> Safety Envelope
                 </div>
                 <div className="mt-1.5">
                   {simulation.safety_envelope_passed ? (
@@ -300,7 +319,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
 
           {/* Hard Safety Envelope Violations Alert */}
           {simulation && !simulation.safety_envelope_passed && (
-            <div className="bg-[var(--color-critical)]/10 border border-[var(--color-critical)]/30 rounded-xl p-4 text-xs text-[var(--color-critical)] space-y-1.5">
+            <div className="bg-[var(--color-critical)]/10 border border-[var(--color-critical)]/30 rounded-2xl p-4 text-xs text-[var(--color-critical)] space-y-1.5">
               <div className="font-bold flex items-center gap-2">
                 <ShieldAlert size={16} /> Hard Safety Constraint Violated:
               </div>
@@ -315,7 +334,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
           {/* Side-by-Side Trajectory Chart */}
           {simulation && telemetry && (
             <ScientificForecastChart
-              title={`Digital Twin: Baseline vs Counterfactual (${actionType})`}
+              title={`Simulation Outcome: Baseline vs Remediated (${actionType})`}
               historicalTimestamps={telemetry.timestamps}
               historicalValues={telemetry.values}
               forecastTimestamps={simulation.timeline_timestamps}
@@ -329,7 +348,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
 
           {/* Documented Assumptions & Limitations */}
           {simulation && (
-            <div className="glass-panel rounded-xl p-4 text-xs">
+            <div className="glass-panel rounded-2xl p-4 text-xs">
               <h4 className="font-semibold text-[var(--text-primary)] mb-2 flex items-center gap-1.5">
                 <CheckCircle2 size={14} className="text-[var(--accent-cyan)]" /> Simulation Physics & Stated Assumptions:
               </h4>
