@@ -721,6 +721,132 @@ class AtlasEvidenceGap(Base):
     created_at = Column(DateTime, default=utc_now)
 
 
+# =========================================================================
+# AEGISSTOR ORACLE — Workload Attribution & Bottleneck Intelligence Models
+# =========================================================================
+
+class OracleWorkload(Base):
+    """
+    Known application, service, or background tenant running on storage resources.
+    Captures attribution capability flag to prevent fabricating unmeasured contributions.
+    """
+    __tablename__ = "oracle_workloads"
+
+    id = Column(String(64), primary_key=True, index=True)
+    name = Column(String(128), nullable=False)
+    target_device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    tier = Column(String(32), default="NVME_TIER1")
+    workload_type = Column(String(64), default="TRANSACTIONAL")  # TRANSACTIONAL, BATCH_ETL, BACKUP, STREAMING, RESIDUAL
+    priority = Column(String(32), default="P0_CRITICAL")        # P0_CRITICAL, P1_HIGH, P2_NORMAL, P3_BACKGROUND
+    sla_max_latency_ms = Column(Float, default=15.0)
+    sla_min_throughput_mb_s = Column(Float, default=50.0)
+    owner_team = Column(String(128), default="storage-sre@aegisstor.internal")
+    is_active = Column(Boolean, default=True)
+    attribution_available = Column(Boolean, default=True)      # When False, report "Workload attribution unavailable"
+    description = Column(Text, default="")
+    created_at = Column(DateTime, default=utc_now)
+
+
+class OracleWorkloadTelemetry(Base):
+    """
+    Time-series attribution records per workload.
+    Stores direct I/O measurements (IOPS, bytes read/write, queue depth, tail latency).
+    """
+    __tablename__ = "oracle_workload_telemetry"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    workload_id = Column(String(64), ForeignKey("oracle_workloads.id"), nullable=False, index=True)
+    device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    timestamp = Column(DateTime, nullable=False, index=True)
+    allocated_bytes = Column(Float, default=0.0)
+    read_bytes_sec = Column(Float, default=0.0)
+    write_bytes_sec = Column(Float, default=0.0)
+    read_iops = Column(Float, default=0.0)
+    write_iops = Column(Float, default=0.0)
+    latency_p95_ms = Column(Float, default=1.0)
+    avg_io_size_kb = Column(Float, default=32.0)
+    queue_depth = Column(Float, default=1.0)
+    is_synthetic = Column(Boolean, default=True)
+
+
+class OracleHypothesis(Base):
+    """
+    Structured investigation hypothesis.
+    Tracks lifecycle, supporting vs contradicting observations, and reviewer signoff.
+    Never states causation without experimental or verified counterfactual evidence.
+    """
+    __tablename__ = "oracle_hypotheses"
+
+    id = Column(String(64), primary_key=True, index=True)
+    question = Column(Text, nullable=False)
+    target_resource = Column(String(64), nullable=False, index=True)
+    workload_id = Column(String(64), nullable=True)
+    status = Column(String(64), default="DRAFT")
+    # Statuses: DRAFT, EVIDENCE_GATHERING, READY_FOR_TESTING, UNDER_EVALUATION,
+    #           SUPPORTED_WITHIN_CONDITIONS, NOT_SUPPORTED, INCONCLUSIVE, CLOSED
+    supporting_evidence_json = Column(Text, default="[]")
+    contradicting_evidence_json = Column(Text, default="[]")
+    confounding_variables_json = Column(Text, default="[]")
+    proposed_evaluation_method = Column(String(128), default="CONTROLLED_REPLAY_SIMULATION")
+    conclusion = Column(Text, nullable=True)
+    reviewer = Column(String(128), default="lead_sre@aegisstor.internal")
+    evidence_references_json = Column(Text, default="[]")
+    status_history_json = Column(Text, default="[]")
+    created_at = Column(DateTime, default=utc_now)
+    updated_at = Column(DateTime, default=utc_now)
+
+
+class OracleBottleneckCase(Base):
+    """
+    Transparent bottleneck investigation queue item.
+    Combines symptom observations, affected topology, evidence quality, and next recommended test.
+    """
+    __tablename__ = "oracle_bottleneck_cases"
+
+    id = Column(String(64), primary_key=True, index=True)
+    title = Column(String(255), nullable=False)
+    symptom_type = Column(String(64), nullable=False)
+    # Types: TAIL_LATENCY_SPIKE, QUEUE_SATURATION, THROUGHPUT_COLLAPSE, CAPACITY_ACCELERATION, RESOURCE_CONTENTION
+    target_device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    involved_workloads_json = Column(Text, default="[]")
+    measurement_window = Column(String(64), default="LAST_24_HOURS")
+    severity = Column(String(32), default="ELEVATED")  # CRITICAL, ELEVATED, MODERATE, LOW
+    evidence_quality_score = Column(Float, default=0.75)  # 0.0 to 1.0
+    supporting_evidence_json = Column(Text, default="[]")
+    conflicting_evidence_json = Column(Text, default="[]")
+    status = Column(String(32), default="ACTIVE")      # ACTIVE, INVESTIGATING, MITIGATED, DISMISSED, DEFERRED
+    assigned_to = Column(String(128), nullable=True)
+    recommended_test = Column(Text, default="Run counterfactual workload throttling simulation")
+    detected_at = Column(DateTime, default=utc_now)
+    updated_at = Column(DateTime, default=utc_now)
+
+
+class OracleCounterfactualExperiment(Base):
+    """
+    Controlled what-if workload simulation log.
+    Strictly isolated: simulations never execute real physical mutations or claim proven real causation.
+    """
+    __tablename__ = "oracle_counterfactual_experiments"
+
+    id = Column(String(64), primary_key=True, index=True)
+    title = Column(String(255), nullable=False)
+    target_device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    workload_id = Column(String(64), nullable=False)
+    intervention_type = Column(String(64), default="THROTTLE_INTENSITY")
+    # Types: THROTTLE_INTENSITY, RESCHEDULE_WINDOW, REBALANCE_TIER, EXPAND_BANDWIDTH
+    parameter_changes_json = Column(Text, default="{}")
+    baseline_metrics_json = Column(Text, default="{}")
+    simulated_metrics_json = Column(Text, default="{}")
+    is_causally_proven = Column(Boolean, default=False)
+    causality_disclaimer = Column(
+        Text,
+        default="Simulated counterfactual outcome. Observational attribution does not establish physical causation without real controlled measurement."
+    )
+    simulator_version = Column(String(64), default="DigitalTwin-Oracle-v5.0")
+    created_at = Column(DateTime, default=utc_now)
+
+
+
 
 
 

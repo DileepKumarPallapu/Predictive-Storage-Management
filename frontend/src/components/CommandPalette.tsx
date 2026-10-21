@@ -69,6 +69,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     { id: 'jurassic', label: 'Jurassic Resilience & Stress Lab', icon: Flame },
     { id: 'phoenix', label: 'Phoenix Safe Incident Orchestrator', icon: ShieldAlert },
     { id: 'atlas', label: 'Atlas Reality Calibration & Fidelity', icon: Compass },
+    { id: 'oracle', label: 'Oracle Workload Attribution & Bottlenecks', icon: Sparkles },
     { id: 'experiments', label: 'Ablation Experiments & Benchmarks', icon: FlaskConical },
     { id: 'datasets', label: 'Dataset Provenance & Quality Checks', icon: Database },
     { id: 'settings', label: 'Settings & Audit Governance', icon: Settings },

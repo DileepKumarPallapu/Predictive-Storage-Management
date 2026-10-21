@@ -21,6 +21,9 @@ from app.services.atlas import (
     DigitalTwinCalibrationEngine, ActionEffectEvidenceService,
     ValueOfExperimentPlanner, FidelityAssessor
 )
+from app.services.oracle import (
+    WorkloadCatalogService, BottleneckForensicsEngine, HypothesisManager
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("aegisstor")
@@ -208,6 +211,11 @@ def initialize_database_and_seed_demo():
         ActionEffectEvidenceService.seed_initial_evidence_if_missing(db, "vol-nvme-tier1-db")
         ValueOfExperimentPlanner.seed_initial_gaps_if_missing(db, "vol-nvme-tier1-db")
         FidelityAssessor.evaluate_device_fidelity(db, "vol-nvme-tier1-db")
+
+        # 9. Seed AEGISSTOR Oracle workload catalog, bottleneck cases, and initial hypotheses
+        WorkloadCatalogService.seed_workloads_if_missing(db)
+        BottleneckForensicsEngine.seed_initial_bottleneck_cases_if_missing(db)
+        HypothesisManager.seed_initial_hypotheses_if_missing(db)
 
         db.commit()
         logger.info("Demo database verified/seeded idempotently.")

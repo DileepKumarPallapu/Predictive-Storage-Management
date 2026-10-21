@@ -40,7 +40,8 @@ export type PageId =
   | 'omega'
   | 'jurassic'
   | 'phoenix'
-  | 'atlas';
+  | 'atlas'
+  | 'oracle';
 
 interface SidebarProps {
   currentPage: PageId;
@@ -183,6 +184,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
           guidedLabel: 'Reality Calibration',
           expertLabel: 'Atlas Reality Lab',
           icon: Compass,
+        },
+        {
+          id: 'oracle',
+          guidedLabel: 'Workload & Bottleneck AI',
+          expertLabel: 'Oracle Workload Attribution',
+          icon: Sparkles,
+          highlight: true,
         },
         {
           id: 'experiments',

@@ -143,6 +143,175 @@ export interface ExperimentItem {
   manifest: Record<string, any>;
 }
 
+export interface OracleWorkloadItem {
+  id: string;
+  name: string;
+  target_device_id: string;
+  tier: string;
+  workload_type: string;
+  priority: string;
+  sla_max_latency_ms: number;
+  sla_min_throughput_mb_s: number;
+  owner_team: string;
+  is_active: boolean;
+  attribution_available: boolean;
+  description: string;
+  latest_telemetry?: {
+    allocated_gb: number;
+    read_iops: number;
+    write_iops: number;
+    throughput_mb_s: number;
+    latency_p95_ms: number;
+    queue_depth: number;
+    data_freshness_timestamp: string;
+  };
+}
+
+export interface OracleAttributionResponse {
+  device_id: string;
+  device_name: string;
+  evaluation_window_hours: number;
+  device_aggregate_used_gb: number;
+  total_attributed_gb: number;
+  residual_unattributed_gb: number;
+  attribution_coverage_pct: number;
+  reconciliation_status: string;
+  workload_breakdown: Array<{
+    workload_id: string;
+    workload_name: string;
+    workload_type: string;
+    priority: string;
+    current_allocated_gb: number;
+    growth_delta_gb: number;
+    current_iops: number;
+    current_latency_p95_ms: number;
+    attribution_method: string;
+    attribution_confidence: number;
+  }>;
+  statistical_attribution: Array<{
+    workload_id: string;
+    workload_name: string;
+    capacity_growth_share_pct: number;
+    iops_contention_share_pct: number;
+    composite_attribution_score: number;
+    is_causally_proven: boolean;
+    method: string;
+  }>;
+  scientific_disclaimer: string;
+}
+
+export interface OracleCapacityForensicsResponse {
+  device_id: string;
+  window_hours: number;
+  current_used_gb: number;
+  growth_delta_gb: number;
+  growth_rate_gb_per_day: number;
+  acceleration_gb_per_day2: number;
+  growth_pattern: string;
+  historical_timestamps: string[];
+  historical_allocated_gb: number[];
+  workload_trajectories: Record<string, { name: string; allocated_gb: number[] }>;
+  changepoints_detected: Array<{
+    timestamp: string;
+    type: string;
+    delta_gb: number;
+    suspected_workload: string;
+    confidence: number;
+    description: string;
+  }>;
+  reserve_runway_projection: {
+    safe_reserve_ceiling_gb: number;
+    projected_days_to_breach: number | null;
+    acceleration_adjusted: boolean;
+  };
+}
+
+export interface OracleBottleneckResponse {
+  device_id: string;
+  hours: number;
+  latency_p95_current_ms: number;
+  sla_max_latency_ms: number;
+  sla_breached: boolean;
+  contention_index: number;
+  contention_level: string;
+  forensics_findings: Array<{
+    signal: string;
+    severity: string;
+    evidence: string;
+    contributing_workloads: string[];
+  }>;
+  concurrent_background_jobs: Array<{
+    workload_id: string;
+    workload_name: string;
+    type: string;
+    potential_contention: string;
+  }>;
+}
+
+export interface OracleContentionGraphResponse {
+  nodes: Array<{
+    id: string;
+    name: string;
+    type: string;
+    tier?: string;
+    utilization_pct?: number;
+    latency_p95_ms?: number;
+    priority?: string;
+    allocated_gb?: number;
+  }>;
+  edges: Array<{
+    source: string;
+    target: string;
+    relationship: string;
+    weight: number;
+    contention_level: string;
+    causal_status: string;
+  }>;
+  summary: {
+    total_nodes: number;
+    total_edges: number;
+    suspected_contention_hotspots: number;
+    graph_disclaimer: string;
+  };
+}
+
+export interface OracleHypothesisItem {
+  id: string;
+  question: string;
+  target_resource: string;
+  workload_id?: string;
+  status: string;
+  supporting_evidence: string[];
+  contradicting_evidence: string[];
+  confounding_variables: string[];
+  proposed_evaluation_method: string;
+  conclusion?: string;
+  reviewer: string;
+  evidence_references: string[];
+  status_history: Array<{
+    status: string;
+    timestamp: string;
+    reviewer: string;
+    rationale: string;
+  }>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface OracleBottleneckCaseItem {
+  id: string;
+  title: string;
+  target_device_id: string;
+  suspected_workload_id?: string;
+  severity: string;
+  status: string;
+  evidence_summary: string;
+  assigned_investigator?: string;
+  resolution_notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface ReliabilityMetrics {
   model_version: string;
   overall_interval_coverage: number;
@@ -576,6 +745,63 @@ export const api = {
   getAtlasVoeGaps: (deviceId?: string) => {
     const qs = deviceId ? `?device_id=${deviceId}` : "";
     return apiFetch<any[]>(`/atlas/voe-gaps${qs}`);
+  },
+
+  // ==========================================
+  // AEGISSTOR ORACLE WORKLOAD ATTRIBUTION API (Prompt 15.0)
+  // ==========================================
+  getOracleWorkloads: (targetDeviceId?: string) => {
+    const qs = targetDeviceId ? `?target_device_id=${targetDeviceId}` : "";
+    return apiFetch<any[]>(`/oracle/workloads${qs}`);
+  },
+  getOracleAttribution: (deviceId: string, hours = 72) =>
+    apiFetch<any>(`/oracle/attribution/${deviceId}?hours=${hours}`),
+  getOracleCapacityForensics: (deviceId: string, windowHours = 168) =>
+    apiFetch<any>(`/oracle/capacity-forensics/${deviceId}?window_hours=${windowHours}`),
+  getOracleBottlenecks: (deviceId: string, hours = 72) =>
+    apiFetch<any>(`/oracle/bottlenecks/${deviceId}?hours=${hours}`),
+  getOracleContentionGraph: (deviceId?: string) => {
+    const qs = deviceId ? `?target_device_id=${deviceId}` : "";
+    return apiFetch<any>(`/oracle/contention-graph${qs}`);
+  },
+  getOracleCases: (status?: string, deviceId?: string) => {
+    const params = new URLSearchParams();
+    if (status) params.append("status", status);
+    if (deviceId) params.append("target_device_id", deviceId);
+    const qs = params.toString() ? `?${params.toString()}` : "";
+    return apiFetch<any[]>(`/oracle/cases${qs}`);
+  },
+  updateOracleCase: (caseId: string, payload: { status: string; notes?: string; investigator?: string }) =>
+    apiFetch<any>(`/oracle/cases/${caseId}`, {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    }),
+  getOracleHypotheses: (targetResource?: string) => {
+    const qs = targetResource ? `?target_resource=${targetResource}` : "";
+    return apiFetch<any[]>(`/oracle/hypotheses${qs}`);
+  },
+  createOracleHypothesis: (payload: any) =>
+    apiFetch<any>("/oracle/hypotheses", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  updateOracleHypothesisStatus: (hypothesisId: string, payload: { new_status: string; rationale: string; reviewer: string; conclusion?: string }) =>
+    apiFetch<any>(`/oracle/hypotheses/${hypothesisId}/status`, {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    }),
+  runOracleCounterfactual: (payload: { target_device_id: string; workload_id: string; intervention_type: string; parameters?: any; horizon_hours?: number }) =>
+    apiFetch<any>("/oracle/counterfactual/run", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  getOracleCounterfactualExperiments: (deviceId?: string) => {
+    const qs = deviceId ? `?target_device_id=${deviceId}` : "";
+    return apiFetch<any[]>(`/oracle/counterfactual/experiments${qs}`);
+  },
+  getOracleInvestigationReport: (deviceId: string, hypothesisId?: string) => {
+    const qs = hypothesisId ? `?hypothesis_id=${hypothesisId}` : "";
+    return apiFetch<any>(`/oracle/report/${deviceId}${qs}`);
   },
 };
 

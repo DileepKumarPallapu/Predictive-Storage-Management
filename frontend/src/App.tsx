@@ -22,6 +22,7 @@ import { PageOmegaControlRoom } from './pages/PageOmegaControlRoom';
 import { PageJurassicLab } from './pages/PageJurassicLab';
 import { PagePhoenixOrchestrator } from './pages/PagePhoenixOrchestrator';
 import { PageAtlasRealityLab } from './pages/PageAtlasRealityLab';
+import { PageOracleIntelligence } from './pages/PageOracleIntelligence';
 import { api } from './api/client';
 
 const AppContent: React.FC = () => {
@@ -171,6 +172,7 @@ const AppContent: React.FC = () => {
             {currentPage === 'jurassic' && <PageJurassicLab />}
             {currentPage === 'phoenix' && <PagePhoenixOrchestrator />}
             {currentPage === 'atlas' && <PageAtlasRealityLab />}
+            {currentPage === 'oracle' && <PageOracleIntelligence />}
             {currentPage === 'interventions' && (
               <PageInterventionStudio initialDeviceId={selectedDeviceId} />
             )}

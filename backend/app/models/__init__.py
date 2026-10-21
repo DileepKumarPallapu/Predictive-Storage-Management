@@ -9,7 +9,9 @@ from app.models.entities import (
     PhoenixIncident, PhoenixRunbook, PhoenixPolicy,
     PhoenixActionProposal, PhoenixExecutionRecord, PhoenixRecoveryVerification,
     AtlasCalibrationConfig, AtlasCalibrationRun, AtlasDiscrepancyRecord,
-    AtlasActionEffectEvidence, AtlasExperiment, AtlasFidelityAssessment, AtlasEvidenceGap
+    AtlasActionEffectEvidence, AtlasExperiment, AtlasFidelityAssessment, AtlasEvidenceGap,
+    OracleWorkload, OracleWorkloadTelemetry, OracleHypothesis,
+    OracleBottleneckCase, OracleCounterfactualExperiment
 )
 
 __all__ = [
@@ -23,6 +25,8 @@ __all__ = [
     "PhoenixIncident", "PhoenixRunbook", "PhoenixPolicy",
     "PhoenixActionProposal", "PhoenixExecutionRecord", "PhoenixRecoveryVerification",
     "AtlasCalibrationConfig", "AtlasCalibrationRun", "AtlasDiscrepancyRecord",
-    "AtlasActionEffectEvidence", "AtlasExperiment", "AtlasFidelityAssessment", "AtlasEvidenceGap"
+    "AtlasActionEffectEvidence", "AtlasExperiment", "AtlasFidelityAssessment", "AtlasEvidenceGap",
+    "OracleWorkload", "OracleWorkloadTelemetry", "OracleHypothesis",
+    "OracleBottleneckCase", "OracleCounterfactualExperiment"
 ]
 
