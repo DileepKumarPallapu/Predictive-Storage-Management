@@ -310,6 +310,32 @@ export const api = {
   getRisks: (deviceId: string) =>
     apiFetch<RiskResponse>(`/devices/${deviceId}/risks`),
 
+  getReserveRunway: (deviceId: string) =>
+    apiFetch<any>(`/devices/${deviceId}/reserve-runway`),
+
+  getRiskAssessment: (deviceId: string) =>
+    apiFetch<any>(`/devices/${deviceId}/risk-assessment`),
+
+  evaluatePlanning: (deviceId: string) =>
+    apiFetch<any>("/planning/evaluate", {
+      method: "POST",
+      body: JSON.stringify({ device_id: deviceId }),
+    }),
+
+  listScenarios: (deviceId?: string) =>
+    apiFetch<any[]>(`/scenarios${deviceId ? `?device_id=${deviceId}` : ""}`),
+
+  getScenario: (scenarioId: string) =>
+    apiFetch<any>(`/scenarios/${scenarioId}`),
+
+  rerunScenario: (scenarioId: string, seed = 42) =>
+    apiFetch<ScenarioSimulationResponse>(`/scenarios/${scenarioId}/run?seed=${seed}`, {
+      method: "POST",
+    }),
+
+  getScenarioResults: (scenarioId: string) =>
+    apiFetch<any>(`/scenarios/${scenarioId}/results`),
+
   createScenario: (payload: {
     device_id: string;
     name: string;
