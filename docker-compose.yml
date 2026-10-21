@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: aegisstor-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - AEGISSTOR_MODE=demo
+      - DATABASE_URL=sqlite:///./aegisstor.db
+      - SHADOW_MODE_ENABLED=true
+    volumes:
+      - aegisstor_data:/app
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: aegisstor-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  aegisstor_data:
