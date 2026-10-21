@@ -12,12 +12,16 @@ from app.api.v1 import (
     endpoints_reliability,
     endpoints_alerts,
     endpoints_datasets,
-    endpoints_settings
+    endpoints_settings,
+    endpoints_auth,
+    endpoints_metrics
 )
 
 api_router = APIRouter()
 
 api_router.include_router(endpoints_health.router, tags=["Health & System"])
+api_router.include_router(endpoints_auth.router, tags=["Authentication & Access Control"])
+api_router.include_router(endpoints_metrics.router, tags=["Prometheus Telemetry"])
 api_router.include_router(endpoints_overview.router, tags=["Overview & Dashboard"])
 api_router.include_router(endpoints_devices.router, tags=["Devices & Storage Fleet"])
 api_router.include_router(endpoints_telemetry.router, tags=["Telemetry"])

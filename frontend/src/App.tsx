@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Sidebar, PageId } from './components/Sidebar';
 import { TopBar } from './components/TopBar';
+import { CommandPalette } from './components/CommandPalette';
+import { AuthModal } from './components/AuthModal';
 import { PageExecutiveOverview } from './pages/PageExecutiveOverview';
 import { PageStorageFleet } from './pages/PageStorageFleet';
 import { PageDeviceIntelligence } from './pages/PageDeviceIntelligence';
@@ -22,10 +24,27 @@ export const App: React.FC = () => {
   const [operatingMode, setOperatingMode] = useState<string>('demo');
   const [activeAlertsCount, setActiveAlertsCount] = useState<number>(3);
   const [selectedDeviceId, setSelectedDeviceId] = useState<string>('vol-nvme-tier1-db');
+  
+  // Modals state
+  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
+  const [isAuthOpen, setIsAuthOpen] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<{ username: string; role: string }>({
+    username: 'admin',
+    role: 'ADMIN',
+  });
 
   useEffect(() => {
-    // Check initial health and alerts
     checkHealth();
+    checkAuth();
+
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, []);
 
   const checkHealth = async () => {
@@ -38,6 +57,15 @@ export const App: React.FC = () => {
       setActiveAlertsCount(alerts.length);
     } catch (e) {
       console.warn("Backend not yet reached, operating in standard demo state:", e);
+    }
+  };
+
+  const checkAuth = async () => {
+    try {
+      const profile = await api.getCurrentUser();
+      setCurrentUser({ username: profile.username, role: profile.role });
+    } catch (e) {
+      // Keep default admin fallback in development
     }
   };
 
@@ -86,6 +114,9 @@ export const App: React.FC = () => {
           onToggleTheme={handleToggleTheme}
           activeAlertsCount={activeAlertsCount}
           onOpenAlerts={() => setCurrentPage('alerts')}
+          onOpenSearch={() => setIsSearchOpen(true)}
+          onOpenAuth={() => setIsAuthOpen(true)}
+          currentUser={currentUser}
         />
 
         {/* Page Container */}
@@ -123,6 +154,22 @@ export const App: React.FC = () => {
           </div>
         </main>
       </div>
+
+      {/* Quick Search Palette (Ctrl+K) */}
+      <CommandPalette
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+        onNavigatePage={(p) => setCurrentPage(p)}
+        onNavigateDevice={(id) => handleNavigateToDevice(id)}
+      />
+
+      {/* Identity & RBAC Modal */}
+      <AuthModal
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+        currentUser={currentUser}
+        onAuthSuccess={(username, role) => setCurrentUser({ username, role })}
+      />
     </div>
   );
 };

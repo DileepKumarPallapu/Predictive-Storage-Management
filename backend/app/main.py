@@ -1,14 +1,17 @@
 import logging
+import time
+import uuid
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import engine, Base, SessionLocal
 from app.api.v1.router import api_router
-from app.models.entities import Device, Telemetry, DatasetSource, Alert, Experiment
+from app.models.entities import Device, Telemetry, DatasetSource, Alert, Experiment, User
 from app.collector.synthetic import SyntheticGenerator
 from app.ml.models import run_forecast
 from app.ml.calibration import ModelCalibrator
+from app.auth.security import hash_password
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("aegisstor")
@@ -24,6 +27,20 @@ def initialize_database_and_seed_demo():
 
     db = SessionLocal()
     try:
+        # 0. Ensure default administrative and operator accounts exist
+        default_admin = db.query(User).filter(User.username == "admin").first()
+        if not default_admin:
+            admin_user = User(
+                id="usr-system-admin",
+                username="admin",
+                email="admin@aegisstor.internal",
+                hashed_password=hash_password("admin123"),
+                role="ADMIN",
+                is_active=True
+            )
+            db.add(admin_user)
+            db.flush()
+
         gen = SyntheticGenerator(seed=42)
         
         # 1. Register dataset source metadata idempotently
@@ -174,6 +191,27 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def request_tracing_middleware(request: Request, call_next):
+    """
+    Injects request tracing headers (X-Request-ID, X-Process-Time-Ms)
+    and provides structured timing logs for all API requests.
+    """
+    request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))
+    start_time = time.perf_counter()
+    
+    response = await call_next(request)
+    
+    process_time = (time.perf_counter() - start_time) * 1000.0
+    response.headers["X-Request-ID"] = request_id
+    response.headers["X-Process-Time-Ms"] = f"{process_time:.2f}"
+    
+    if request.url.path not in ["/metrics", "/api/v1/health"]:
+        logger.info(
+            f"[{request_id[:8]}] {request.method} {request.url.path} -> {response.status_code} ({process_time:.1f}ms)"
+        )
+    return response
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
 

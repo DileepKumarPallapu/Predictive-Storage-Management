@@ -178,20 +178,57 @@ export interface AuditItem {
   details: Record<string, any>;
 }
 
-// Helper fetch wrapper
-async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_BASE}${endpoint}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options?.headers,
-    },
-  });
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`API Error ${res.status}: ${errorText}`);
+export class ApiError extends Error {
+  status: number;
+  data: any;
+
+  constructor(status: number, message: string, data?: any) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+    this.data = data;
   }
-  return res.json() as Promise<T>;
+}
+
+// Token storage helpers
+export const authStorage = {
+  getToken: () => localStorage.getItem("aegisstor_jwt"),
+  setToken: (token: string) => localStorage.setItem("aegisstor_jwt", token),
+  clearToken: () => localStorage.removeItem("aegisstor_jwt"),
+};
+
+// Helper fetch wrapper with JWT attachment and standardized error parsing
+async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
+  const token = authStorage.getToken();
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(options?.headers as Record<string, string>),
+  };
+
+  try {
+    const res = await fetch(`${API_BASE}${endpoint}`, {
+      ...options,
+      headers,
+    });
+
+    if (!res.ok) {
+      let errData = null;
+      let errMsg = `HTTP ${res.status}`;
+      try {
+        errData = await res.json();
+        errMsg = errData.detail || errData.message || errMsg;
+      } catch {
+        errMsg = await res.text();
+      }
+      throw new ApiError(res.status, errMsg, errData);
+    }
+
+    return (await res.json()) as T;
+  } catch (err: any) {
+    if (err instanceof ApiError) throw err;
+    throw new ApiError(0, err.message || "Network request failed");
+  }
 }
 
 export interface RiskTimelineItem {
@@ -335,4 +372,35 @@ export const api = {
   getSettings: () => apiFetch<any>("/settings"),
 
   getAuditTrail: () => apiFetch<AuditItem[]>("/audit"),
+
+  // Authentication & RBAC methods
+  login: async (username: string, password: string) => {
+    const data = await apiFetch<{
+      access_token: string;
+      token_type: string;
+      user_id: string;
+      username: string;
+      role: string;
+    }>("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ username, password }),
+    });
+    if (data.access_token) {
+      authStorage.setToken(data.access_token);
+    }
+    return data;
+  },
+
+  getCurrentUser: () =>
+    apiFetch<{
+      id: string;
+      username: string;
+      email: string;
+      role: string;
+      is_active: boolean;
+    }>("/auth/me"),
+
+  logout: () => {
+    authStorage.clearToken();
+  },
 };

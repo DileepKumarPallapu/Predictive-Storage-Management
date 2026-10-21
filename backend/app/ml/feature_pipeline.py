@@ -68,8 +68,12 @@ class FeaturePipeline:
         if "queue_depth" in df.columns:
             df["queue_depth_lag_1"] = df["queue_depth"].shift(1)
 
-        # Drop initial rows containing NaN from lag shifting
-        feature_cols = [c for c in df.columns if c not in ["timestamp", "device_id", "source_label", "is_synthetic", target_col]]
+        # Filter to purely numeric feature columns to prevent string dtype issues in gradient boosters
+        feature_cols = [
+            c for c in df.columns
+            if c not in ["timestamp", "device_id", "source_label", "is_synthetic", "telemetry_quality", "scenario_type", target_col]
+            and pd.api.types.is_numeric_dtype(df[c])
+        ]
         valid_mask = df[feature_cols].notna().all(axis=1) & df[target_col].notna()
 
         X = df.loc[valid_mask, feature_cols].reset_index(drop=True)
