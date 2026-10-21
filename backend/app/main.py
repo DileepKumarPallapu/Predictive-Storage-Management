@@ -17,6 +17,10 @@ from app.services.outcome_ledger import OutcomeLedgerService
 from app.services.model_governance import ModelGovernanceService
 from app.services.jurassic.experiment_runner import ExperimentRunner
 from app.services.phoenix import PolicyGateway, RunbookEngine, IncidentCorrelationEngine
+from app.services.atlas import (
+    DigitalTwinCalibrationEngine, ActionEffectEvidenceService,
+    ValueOfExperimentPlanner, FidelityAssessor
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("aegisstor")
@@ -197,6 +201,13 @@ def initialize_database_and_seed_demo():
         PolicyGateway.get_active_policy(db)
         RunbookEngine.seed_standard_runbooks(db)
         IncidentCorrelationEngine.scan_and_create_incidents(db)
+
+        # 8. Seed AEGISSTOR Atlas reality calibration configs, action evidence & VOE gaps
+        cfg = DigitalTwinCalibrationEngine.get_or_create_default_config(db, "vol-nvme-tier1-db")
+        DigitalTwinCalibrationEngine.run_calibration(db, cfg.id)
+        ActionEffectEvidenceService.seed_initial_evidence_if_missing(db, "vol-nvme-tier1-db")
+        ValueOfExperimentPlanner.seed_initial_gaps_if_missing(db, "vol-nvme-tier1-db")
+        FidelityAssessor.evaluate_device_fidelity(db, "vol-nvme-tier1-db")
 
         db.commit()
         logger.info("Demo database verified/seeded idempotently.")

@@ -16,7 +16,8 @@ import {
   ChevronRight,
   Network,
   Flame,
-  ShieldAlert
+  ShieldAlert,
+  Compass
 } from 'lucide-react';
 
 export type PageId =
@@ -34,7 +35,8 @@ export type PageId =
   | 'settings'
   | 'omega'
   | 'jurassic'
-  | 'phoenix';
+  | 'phoenix'
+  | 'atlas';
 
 interface SidebarProps {
   currentPage: PageId;
@@ -59,6 +61,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'omega' as PageId, label: 'Omega Fleet Control', icon: Network, highlight: true },
     { id: 'jurassic' as PageId, label: 'Jurassic Resilience Lab', icon: Flame, highlight: true },
     { id: 'phoenix' as PageId, label: 'Phoenix Orchestration', icon: ShieldAlert, highlight: true },
+    { id: 'atlas' as PageId, label: 'Atlas Reality Lab', icon: Compass, highlight: true },
     { id: 'interventions' as PageId, label: 'Intervention Studio', icon: Sliders },
     { id: 'telemetry' as PageId, label: 'Telemetry Explorer', icon: LineChart },
     { id: 'ml-lab' as PageId, label: 'ML Prediction Lab', icon: Brain },
@@ -68,6 +71,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'datasets' as PageId, label: 'Datasets & Quality', icon: Database },
     { id: 'settings' as PageId, label: 'Settings & Audit', icon: Settings },
   ];
+
 
 
   return (

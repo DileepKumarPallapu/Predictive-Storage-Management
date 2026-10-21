@@ -591,5 +591,136 @@ class PhoenixRecoveryVerification(Base):
     verified_at = Column(DateTime, default=utc_now)
 
 
+# ============================================================================
+# ATLAS: REALITY CALIBRATION & EVIDENCE INTELLIGENCE ENTITIES (Prompt 9.0)
+# ============================================================================
+
+class AtlasCalibrationConfig(Base):
+    __tablename__ = "atlas_calibration_configs"
+
+    id = Column(String(64), primary_key=True, index=True)
+    name = Column(String(128), nullable=False)
+    version = Column(String(32), default="1.0.0")
+    device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    target_metric = Column(String(64), default="utilization_pct")
+    calibration_window_days = Column(Integer, default=14)
+    evaluation_window_days = Column(Integer, default=7)
+    parameter_overrides_json = Column(Text, default="{}")
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=utc_now)
+
+
+class AtlasCalibrationRun(Base):
+    __tablename__ = "atlas_calibration_runs"
+
+    id = Column(String(64), primary_key=True, index=True)
+    config_id = Column(String(64), ForeignKey("atlas_calibration_configs.id"), nullable=False, index=True)
+    simulator_version = Column(String(64), default="DigitalTwin-v4.0")
+    calibration_status = Column(String(64), default="CALIBRATED_FOR_SPECIFIED_CONDITIONS")
+    # Statuses: NOT_CALIBRATED, CALIBRATION_IN_PROGRESS, CALIBRATED_FOR_SPECIFIED_CONDITIONS, CALIBRATION_DEGRADATION_DETECTED, INSUFFICIENT_EVIDENCE
+    training_mae = Column(Float, default=0.0)
+    training_rmse = Column(Float, default=0.0)
+    evaluation_mae = Column(Float, default=0.0)
+    evaluation_rmse = Column(Float, default=0.0)
+    bias = Column(Float, default=0.0)
+    relative_error = Column(Float, default=0.0)
+    sample_count = Column(Integer, default=0)
+    condition_scope_json = Column(Text, default="{}")
+    calibration_report_json = Column(Text, default="{}")
+    started_at = Column(DateTime, default=utc_now)
+    completed_at = Column(DateTime, nullable=True)
+
+
+class AtlasDiscrepancyRecord(Base):
+    __tablename__ = "atlas_discrepancy_records"
+
+    id = Column(String(64), primary_key=True, index=True)
+    run_id = Column(String(64), ForeignKey("atlas_calibration_runs.id"), nullable=False, index=True)
+    device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    metric_name = Column(String(64), nullable=False)
+    evaluation_timestamp = Column(DateTime, nullable=False, index=True)
+    observed_value = Column(Float, nullable=False)
+    simulated_value = Column(Float, nullable=False)
+    residual = Column(Float, nullable=False)  # observed - simulated
+    relative_error = Column(Float, nullable=False)
+    workload_regime = Column(String(64), default="NORMAL_BALANCED")
+    is_outlier = Column(Boolean, default=False)
+    notes = Column(String(256), default="")
+
+
+class AtlasActionEffectEvidence(Base):
+    __tablename__ = "atlas_action_effect_evidence"
+
+    id = Column(String(64), primary_key=True, index=True)
+    action_type = Column(String(64), nullable=False, index=True)
+    target_device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    evidence_category = Column(String(64), default="SIMULATION_COUNTERFACTUAL")
+    # Categories: SIMULATION_COUNTERFACTUAL, CONTROLLED_EXPERIMENT, OBSERVED_OPERATIONAL_OUTCOME, ASSUMPTION_SUPPORTED
+    sample_size = Column(Integer, default=1)
+    primary_effect_mean = Column(Float, default=0.0)
+    primary_effect_std = Column(Float, default=0.0)
+    side_effects_json = Column(Text, default="{}")
+    confounding_factors_json = Column(Text, default="[]")
+    is_causally_verified = Column(Boolean, default=False)
+    evaluation_status = Column(String(64), default="ESTIMATED")
+    last_evaluated_at = Column(DateTime, default=utc_now)
+
+
+class AtlasExperiment(Base):
+    __tablename__ = "atlas_experiments"
+
+    id = Column(String(64), primary_key=True, index=True)
+    name = Column(String(128), nullable=False)
+    experiment_type = Column(String(64), default="SIM_TO_REAL_COMPARISON")
+    # Types: FORECAST_BACKTEST, SIM_TO_REAL_COMPARISON, WORKLOAD_REPLAY, MODEL_CALIBRATION, ACTION_DURATION_BENCHMARK, INTERVENTION_EFFECT_VALIDATION
+    status = Column(String(32), default="CREATED")  # CREATED, RUNNING, COMPLETED, FAILED, CANCELLED
+    objective = Column(Text, nullable=False)
+    hypothesis = Column(Text, nullable=False)
+    dataset_id = Column(String(64), nullable=True)
+    target_device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    configuration_json = Column(Text, default="{}")
+    safety_restrictions_json = Column(Text, default="{}")
+    results_json = Column(Text, default="{}")
+    limitations_json = Column(Text, default="[]")
+    started_at = Column(DateTime, nullable=True)
+    completed_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=utc_now)
+
+
+class AtlasFidelityAssessment(Base):
+    __tablename__ = "atlas_fidelity_assessments"
+
+    id = Column(String(64), primary_key=True, index=True)
+    device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    simulator_version = Column(String(64), default="DigitalTwin-v4.0")
+    assessment_status = Column(String(64), default="MODERATE_FIDELITY")
+    # Statuses: HIGH_FIDELITY, MODERATE_FIDELITY, LIMITED_SCOPE, DEGRADED, UNKNOWN
+    prediction_fidelity_score = Column(Float, default=85.0)
+    workload_coverage_score = Column(Float, default=80.0)
+    data_quality_score = Column(Float, default=90.0)
+    calibration_recency_score = Column(Float, default=88.0)
+    action_effect_evidence_score = Column(Float, default=75.0)
+    overall_fidelity_score = Column(Float, default=83.6)
+    evaluated_conditions_json = Column(Text, default="{}")
+    out_of_scope_warnings_json = Column(Text, default="[]")
+    evaluated_at = Column(DateTime, default=utc_now)
+
+
+class AtlasEvidenceGap(Base):
+    __tablename__ = "atlas_evidence_gaps"
+
+    id = Column(String(64), primary_key=True, index=True)
+    device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    metric_name = Column(String(64), nullable=False)
+    workload_regime = Column(String(64), nullable=False)
+    gap_description = Column(Text, nullable=False)
+    impact_level = Column(String(32), default="MEDIUM")  # HIGH, MEDIUM, LOW
+    uncertainty_score = Column(Float, default=0.65)
+    candidate_experiment_json = Column(Text, default="{}")
+    voe_rank = Column(Integer, default=1)
+    created_at = Column(DateTime, default=utc_now)
+
+
+
 
 

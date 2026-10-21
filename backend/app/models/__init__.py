@@ -7,7 +7,9 @@ from app.models.entities import (
     JurassicScenario, JurassicExperiment, JurassicFaultEvent,
     JurassicDriftRecord, JurassicResilienceReport,
     PhoenixIncident, PhoenixRunbook, PhoenixPolicy,
-    PhoenixActionProposal, PhoenixExecutionRecord, PhoenixRecoveryVerification
+    PhoenixActionProposal, PhoenixExecutionRecord, PhoenixRecoveryVerification,
+    AtlasCalibrationConfig, AtlasCalibrationRun, AtlasDiscrepancyRecord,
+    AtlasActionEffectEvidence, AtlasExperiment, AtlasFidelityAssessment, AtlasEvidenceGap
 )
 
 __all__ = [
@@ -19,5 +21,8 @@ __all__ = [
     "JurassicScenario", "JurassicExperiment", "JurassicFaultEvent",
     "JurassicDriftRecord", "JurassicResilienceReport",
     "PhoenixIncident", "PhoenixRunbook", "PhoenixPolicy",
-    "PhoenixActionProposal", "PhoenixExecutionRecord", "PhoenixRecoveryVerification"
+    "PhoenixActionProposal", "PhoenixExecutionRecord", "PhoenixRecoveryVerification",
+    "AtlasCalibrationConfig", "AtlasCalibrationRun", "AtlasDiscrepancyRecord",
+    "AtlasActionEffectEvidence", "AtlasExperiment", "AtlasFidelityAssessment", "AtlasEvidenceGap"
 ]
+

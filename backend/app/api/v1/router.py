@@ -17,7 +17,8 @@ from app.api.v1 import (
     endpoints_metrics,
     endpoints_omega,
     endpoints_jurassic,
-    endpoints_phoenix
+    endpoints_phoenix,
+    endpoints_atlas
 )
 
 api_router = APIRouter()
@@ -40,4 +41,6 @@ api_router.include_router(endpoints_settings.router, tags=["Settings & Audit"])
 api_router.include_router(endpoints_omega.router, tags=["AEGISSTOR Omega Intelligence"])
 api_router.include_router(endpoints_jurassic.router, tags=["AEGISSTOR Jurassic Resilience Lab"])
 api_router.include_router(endpoints_phoenix.router, tags=["AEGISSTOR Phoenix Incident Orchestration"])
+api_router.include_router(endpoints_atlas.router, tags=["AEGISSTOR Atlas Reality Calibration & Evidence Intelligence"])
+
 

@@ -541,4 +541,41 @@ export const api = {
   getPhoenixRepeatedPatterns: () =>
     apiFetch<any>("/phoenix/analytics/repeated-patterns"),
   getPhoenixExecutions: () => apiFetch<any[]>("/phoenix/executions"),
+
+  // ==========================================
+  // AEGISSTOR ATLAS REALITY CALIBRATION API (Prompt 9.0)
+  // ==========================================
+  getAtlasOverview: () => apiFetch<any>("/atlas/overview"),
+  getAtlasCalibrationConfigs: (deviceId?: string) => {
+    const qs = deviceId ? `?device_id=${deviceId}` : "";
+    return apiFetch<any[]>(`/atlas/calibration/configs${qs}`);
+  },
+  runAtlasCalibration: (payload: { device_id: string; config_id?: string; simulator_version?: string }) =>
+    apiFetch<any>("/atlas/calibration/run", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  getAtlasCalibrationRuns: () => apiFetch<any[]>("/atlas/calibration/runs"),
+  getAtlasDiscrepancy: (runId: string) => apiFetch<any>(`/atlas/discrepancy/${runId}`),
+  getAtlasActionEffects: (deviceId?: string) => {
+    const qs = deviceId ? `?device_id=${deviceId}` : "";
+    return apiFetch<any[]>(`/atlas/action-effects${qs}`);
+  },
+  getAtlasFidelity: (deviceId: string) => apiFetch<any>(`/atlas/fidelity/${deviceId}`),
+  evaluateAtlasGatedPlan: (payload: { device_id: string; candidates?: any[] }) =>
+    apiFetch<any>("/atlas/evidence-gated-plan", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  getAtlasExperiments: () => apiFetch<any[]>("/atlas/experiments"),
+  createAtlasExperiment: (payload: any) =>
+    apiFetch<any>("/atlas/experiments", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  getAtlasVoeGaps: (deviceId?: string) => {
+    const qs = deviceId ? `?device_id=${deviceId}` : "";
+    return apiFetch<any[]>(`/atlas/voe-gaps${qs}`);
+  },
 };
+

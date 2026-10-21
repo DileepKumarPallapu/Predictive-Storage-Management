@@ -57,6 +57,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     { id: 'omega', label: 'Omega Fleet Control Room', icon: Activity },
     { id: 'jurassic', label: 'Jurassic Resilience Lab', icon: Activity },
     { id: 'phoenix', label: 'Phoenix Incident Orchestrator', icon: Activity },
+    { id: 'atlas', label: 'Atlas Reality Calibration Lab', icon: Activity },
     { id: 'intelligence', label: 'Device Intelligence', icon: Cpu },
     { id: 'twin', label: 'Storage Digital Twin', icon: Activity },
     { id: 'interventions', label: 'Intervention Studio', icon: Sliders },
