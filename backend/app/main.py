@@ -235,9 +235,6 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Run idempotent schema initialization and demo seed immediately on startup
-initialize_database_and_seed_demo()
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

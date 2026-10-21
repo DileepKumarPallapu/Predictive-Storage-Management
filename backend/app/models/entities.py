@@ -768,6 +768,11 @@ class OracleWorkloadTelemetry(Base):
     queue_depth = Column(Float, default=1.0)
     is_synthetic = Column(Boolean, default=True)
 
+    __table_args__ = (
+        Index("idx_oracle_tel_dev_ts", "device_id", "timestamp"),
+        Index("idx_oracle_tel_wl_ts", "workload_id", "timestamp"),
+    )
+
 
 class OracleHypothesis(Base):
     """

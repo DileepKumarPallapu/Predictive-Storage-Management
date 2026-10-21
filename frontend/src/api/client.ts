@@ -1,4 +1,8 @@
-const API_BASE = "http://localhost:8000/api/v1";
+const API_BASE = (import.meta as any).env?.VITE_API_BASE_URL || (
+  typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1"
+    ? "/api/v1"
+    : "http://localhost:8000/api/v1"
+);
 
 export interface SystemHealth {
   status: string;
@@ -366,8 +370,61 @@ export const authStorage = {
   clearToken: () => localStorage.removeItem("aegisstor_jwt"),
 };
 
-// Helper fetch wrapper with JWT attachment and standardized error parsing
-async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
+// ==========================================
+// FLOWSTATE CLIENT QUERY CACHE & DEDUPLICATION (Prompt 16.0)
+// ==========================================
+interface CacheEntry<T> {
+  data: T;
+  timestamp: number;
+  expiresAt: number;
+}
+
+const queryCache = new Map<string, CacheEntry<any>>();
+const inFlightRequests = new Map<string, Promise<any>>();
+
+export interface FetchOptions extends RequestInit {
+  ttlMs?: number; // Cache TTL in ms (default 10,000 ms for GET; 0 for mutations)
+  forceFresh?: boolean;
+}
+
+export function invalidateApiCache(pattern?: string) {
+  if (!pattern) {
+    queryCache.clear();
+  } else {
+    for (const key of Array.from(queryCache.keys())) {
+      if (key.includes(pattern)) {
+        queryCache.delete(key);
+      }
+    }
+  }
+}
+
+// Helper fetch wrapper with JWT, caching, in-flight deduplication, and error parsing
+async function apiFetch<T>(endpoint: string, options?: FetchOptions): Promise<T> {
+  const method = (options?.method || "GET").toUpperCase();
+  const isGet = method === "GET";
+  const ttlMs = options?.ttlMs ?? (isGet ? 10000 : 0);
+  const cacheKey = `${method}:${endpoint}`;
+
+  // 1. Invalidate cache on mutations
+  if (!isGet) {
+    invalidateApiCache(endpoint.split("/")[1] || "");
+  }
+
+  // 2. Return cached response if valid and not force-fresh
+  if (isGet && !options?.forceFresh) {
+    const cached = queryCache.get(cacheKey);
+    if (cached && Date.now() < cached.expiresAt) {
+      return cached.data as T;
+    }
+
+    // 3. Request deduplication: return existing in-flight promise
+    const pending = inFlightRequests.get(cacheKey);
+    if (pending) {
+      return pending as Promise<T>;
+    }
+  }
+
   const token = authStorage.getToken();
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -375,29 +432,50 @@ async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> 
     ...(options?.headers as Record<string, string>),
   };
 
-  try {
-    const res = await fetch(`${API_BASE}${endpoint}`, {
-      ...options,
-      headers,
-    });
+  const fetchPromise = (async () => {
+    try {
+      const res = await fetch(`${API_BASE}${endpoint}`, {
+        ...options,
+        headers,
+      });
 
-    if (!res.ok) {
-      let errData = null;
-      let errMsg = `HTTP ${res.status}`;
-      try {
-        errData = await res.json();
-        errMsg = errData.detail || errData.message || errMsg;
-      } catch {
-        errMsg = await res.text();
+      if (!res.ok) {
+        let errData = null;
+        let errMsg = `HTTP ${res.status}`;
+        try {
+          errData = await res.json();
+          errMsg = errData.detail || errData.message || errMsg;
+        } catch {
+          errMsg = await res.text();
+        }
+        throw new ApiError(res.status, errMsg, errData);
       }
-      throw new ApiError(res.status, errMsg, errData);
-    }
 
-    return (await res.json()) as T;
-  } catch (err: any) {
-    if (err instanceof ApiError) throw err;
-    throw new ApiError(0, err.message || "Network request failed");
+      const data = (await res.json()) as T;
+
+      // Cache GET responses
+      if (isGet && ttlMs > 0) {
+        queryCache.set(cacheKey, {
+          data,
+          timestamp: Date.now(),
+          expiresAt: Date.now() + ttlMs,
+        });
+      }
+
+      return data;
+    } catch (err: any) {
+      if (err instanceof ApiError) throw err;
+      throw new ApiError(0, err.message || "Network request failed");
+    } finally {
+      inFlightRequests.delete(cacheKey);
+    }
+  })();
+
+  if (isGet) {
+    inFlightRequests.set(cacheKey, fetchPromise);
   }
+
+  return fetchPromise;
 }
 
 export interface RiskTimelineItem {

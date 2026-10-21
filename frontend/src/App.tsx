@@ -1,29 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Sidebar, PageId } from './components/Sidebar';
 import { TopBar } from './components/TopBar';
 import { CommandPalette } from './components/CommandPalette';
 import { AuthModal } from './components/AuthModal';
 import { OnboardingModal } from './components/OnboardingModal';
+import { FlowstatePageSkeleton } from './components/FlowstatePageSkeleton';
 import { PresentationModeProvider } from './context/PresentationModeContext';
-
-import { PageExecutiveOverview } from './pages/PageExecutiveOverview';
-import { PageStorageFleet } from './pages/PageStorageFleet';
-import { PageDeviceIntelligence } from './pages/PageDeviceIntelligence';
-import { PageStorageDigitalTwin } from './pages/PageStorageDigitalTwin';
-import { PageInterventionStudio } from './pages/PageInterventionStudio';
-import { PageTelemetryExplorer } from './pages/PageTelemetryExplorer';
-import { PageMLPredictionLab } from './pages/PageMLPredictionLab';
-import { PageExperimentWorkbench } from './pages/PageExperimentWorkbench';
-import { PageModelReliability } from './pages/PageModelReliability';
-import { PageAlertsIncidents } from './pages/PageAlertsIncidents';
-import { PageDatasetsQuality } from './pages/PageDatasetsQuality';
-import { PageSettingsAudit } from './pages/PageSettingsAudit';
-import { PageOmegaControlRoom } from './pages/PageOmegaControlRoom';
-import { PageJurassicLab } from './pages/PageJurassicLab';
-import { PagePhoenixOrchestrator } from './pages/PagePhoenixOrchestrator';
-import { PageAtlasRealityLab } from './pages/PageAtlasRealityLab';
-import { PageOracleIntelligence } from './pages/PageOracleIntelligence';
 import { api } from './api/client';
+
+// Route-Based Code Splitting via React.lazy
+const PageExecutiveOverview = lazy(() => import('./pages/PageExecutiveOverview').then(m => ({ default: m.PageExecutiveOverview })));
+const PageStorageFleet = lazy(() => import('./pages/PageStorageFleet').then(m => ({ default: m.PageStorageFleet })));
+const PageDeviceIntelligence = lazy(() => import('./pages/PageDeviceIntelligence').then(m => ({ default: m.PageDeviceIntelligence })));
+const PageStorageDigitalTwin = lazy(() => import('./pages/PageStorageDigitalTwin').then(m => ({ default: m.PageStorageDigitalTwin })));
+const PageInterventionStudio = lazy(() => import('./pages/PageInterventionStudio').then(m => ({ default: m.PageInterventionStudio })));
+const PageTelemetryExplorer = lazy(() => import('./pages/PageTelemetryExplorer').then(m => ({ default: m.PageTelemetryExplorer })));
+const PageMLPredictionLab = lazy(() => import('./pages/PageMLPredictionLab').then(m => ({ default: m.PageMLPredictionLab })));
+const PageExperimentWorkbench = lazy(() => import('./pages/PageExperimentWorkbench').then(m => ({ default: m.PageExperimentWorkbench })));
+const PageModelReliability = lazy(() => import('./pages/PageModelReliability').then(m => ({ default: m.PageModelReliability })));
+const PageAlertsIncidents = lazy(() => import('./pages/PageAlertsIncidents').then(m => ({ default: m.PageAlertsIncidents })));
+const PageDatasetsQuality = lazy(() => import('./pages/PageDatasetsQuality').then(m => ({ default: m.PageDatasetsQuality })));
+const PageSettingsAudit = lazy(() => import('./pages/PageSettingsAudit').then(m => ({ default: m.PageSettingsAudit })));
+const PageOmegaControlRoom = lazy(() => import('./pages/PageOmegaControlRoom').then(m => ({ default: m.PageOmegaControlRoom })));
+const PageJurassicLab = lazy(() => import('./pages/PageJurassicLab').then(m => ({ default: m.PageJurassicLab })));
+const PagePhoenixOrchestrator = lazy(() => import('./pages/PagePhoenixOrchestrator').then(m => ({ default: m.PagePhoenixOrchestrator })));
+const PageAtlasRealityLab = lazy(() => import('./pages/PageAtlasRealityLab').then(m => ({ default: m.PageAtlasRealityLab })));
+const PageOracleIntelligence = lazy(() => import('./pages/PageOracleIntelligence').then(m => ({ default: m.PageOracleIntelligence })));
 
 const AppContent: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<PageId>('overview');
@@ -149,40 +151,42 @@ const AppContent: React.FC = () => {
         {/* Page Container */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">
           <div className="max-w-7xl mx-auto space-y-6">
-            {currentPage === 'overview' && (
-              <PageExecutiveOverview
-                onNavigateToDevice={handleNavigateToDevice}
-                onNavigateToTwin={handleNavigateToTwin}
-              />
-            )}
-            {currentPage === 'fleet' && (
-              <PageStorageFleet onNavigateToIntelligence={handleNavigateToDevice} />
-            )}
-            {currentPage === 'intelligence' && (
-              <PageDeviceIntelligence
-                deviceId={selectedDeviceId}
-                onSelectDevice={setSelectedDeviceId}
-                onLaunchTwin={handleNavigateToTwin}
-              />
-            )}
-            {currentPage === 'twin' && (
-              <PageStorageDigitalTwin initialDeviceId={selectedDeviceId} />
-            )}
-            {currentPage === 'omega' && <PageOmegaControlRoom />}
-            {currentPage === 'jurassic' && <PageJurassicLab />}
-            {currentPage === 'phoenix' && <PagePhoenixOrchestrator />}
-            {currentPage === 'atlas' && <PageAtlasRealityLab />}
-            {currentPage === 'oracle' && <PageOracleIntelligence />}
-            {currentPage === 'interventions' && (
-              <PageInterventionStudio initialDeviceId={selectedDeviceId} />
-            )}
-            {currentPage === 'telemetry' && <PageTelemetryExplorer />}
-            {currentPage === 'ml-lab' && <PageMLPredictionLab />}
-            {currentPage === 'experiments' && <PageExperimentWorkbench />}
-            {currentPage === 'reliability' && <PageModelReliability />}
-            {currentPage === 'alerts' && <PageAlertsIncidents />}
-            {currentPage === 'datasets' && <PageDatasetsQuality />}
-            {currentPage === 'settings' && <PageSettingsAudit />}
+            <Suspense fallback={<FlowstatePageSkeleton />}>
+              {currentPage === 'overview' && (
+                <PageExecutiveOverview
+                  onNavigateToDevice={handleNavigateToDevice}
+                  onNavigateToTwin={handleNavigateToTwin}
+                />
+              )}
+              {currentPage === 'fleet' && (
+                <PageStorageFleet onNavigateToIntelligence={handleNavigateToDevice} />
+              )}
+              {currentPage === 'intelligence' && (
+                <PageDeviceIntelligence
+                  deviceId={selectedDeviceId}
+                  onSelectDevice={setSelectedDeviceId}
+                  onLaunchTwin={handleNavigateToTwin}
+                />
+              )}
+              {currentPage === 'twin' && (
+                <PageStorageDigitalTwin initialDeviceId={selectedDeviceId} />
+              )}
+              {currentPage === 'omega' && <PageOmegaControlRoom />}
+              {currentPage === 'jurassic' && <PageJurassicLab />}
+              {currentPage === 'phoenix' && <PagePhoenixOrchestrator />}
+              {currentPage === 'atlas' && <PageAtlasRealityLab />}
+              {currentPage === 'oracle' && <PageOracleIntelligence />}
+              {currentPage === 'interventions' && (
+                <PageInterventionStudio initialDeviceId={selectedDeviceId} />
+              )}
+              {currentPage === 'telemetry' && <PageTelemetryExplorer />}
+              {currentPage === 'ml-lab' && <PageMLPredictionLab />}
+              {currentPage === 'experiments' && <PageExperimentWorkbench />}
+              {currentPage === 'reliability' && <PageModelReliability />}
+              {currentPage === 'alerts' && <PageAlertsIncidents />}
+              {currentPage === 'datasets' && <PageDatasetsQuality />}
+              {currentPage === 'settings' && <PageSettingsAudit />}
+            </Suspense>
           </div>
         </main>
       </div>
