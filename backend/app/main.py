@@ -192,20 +192,47 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from fastapi.responses import JSONResponse
+
 @app.middleware("http")
-async def request_tracing_middleware(request: Request, call_next):
+async def request_tracing_and_security_middleware(request: Request, call_next):
     """
-    Injects request tracing headers (X-Request-ID, X-Process-Time-Ms)
-    and provides structured timing logs for all API requests.
+    Injects request tracing headers (X-Request-ID, X-Process-Time-Ms),
+    enforces enterprise HTTP security headers, and provides structured timing logs.
     """
     request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))
     start_time = time.perf_counter()
     
-    response = await call_next(request)
+    try:
+        response = await call_next(request)
+    except Exception as exc:
+        logger.error(f"[{request_id[:8]}] Unhandled application error: {exc}", exc_info=True)
+        return JSONResponse(
+            status_code=500,
+            headers={
+                "X-Request-ID": request_id,
+                "X-Content-Type-Options": "nosniff",
+                "X-Frame-Options": "DENY"
+            },
+            content={
+                "error": {
+                    "code": "INTERNAL_SERVER_ERROR",
+                    "message": "An internal error occurred. Please contact storage resilience support with reference ID.",
+                    "request_id": request_id,
+                    "timestamp": time.time()
+                }
+            }
+        )
     
     process_time = (time.perf_counter() - start_time) * 1000.0
     response.headers["X-Request-ID"] = request_id
     response.headers["X-Process-Time-Ms"] = f"{process_time:.2f}"
+    
+    # Enterprise Security Headers
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     
     if request.url.path not in ["/metrics", "/api/v1/health"]:
         logger.info(
