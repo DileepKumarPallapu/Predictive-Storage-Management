@@ -25,6 +25,7 @@ from app.services.oracle import (
     WorkloadCatalogService, BottleneckForensicsEngine, HypothesisManager
 )
 from app.services.gauntlet_service import GauntletService
+from app.services.sovereign_service import SovereignService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("aegisstor")
@@ -220,6 +221,9 @@ def initialize_database_and_seed_demo():
 
         # 10. Seed AEGISSTOR Gauntlet Validation & Examiner Workbench (Prompt 18.0)
         GauntletService.seed_initial_catalog(db)
+
+        # 11. Seed AEGISSTOR Sovereign Federated Intelligence (Prompt 19.0)
+        SovereignService.seed_initial_sites(db)
 
         # Ensure reviewer/examiner account exists
         examiner_user = db.query(User).filter(User.username == "examiner").first()

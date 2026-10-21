@@ -916,5 +916,29 @@ export const api = {
   getGauntletReproductions: () => apiFetch<any[]>("/gauntlet/reproductions"),
   getGauntletExportMarkdownUrl: () => `${API_BASE}/gauntlet/export/markdown`,
   getGauntletExportCsvUrl: () => `${API_BASE}/gauntlet/export/csv`,
+
+  // ==========================================
+  // AEGISSTOR SOVEREIGN FEDERATION (Prompt 19.0)
+  // ==========================================
+  getSovereignOverview: () => apiFetch<any>("/sovereign/overview"),
+  getSovereignSites: () => apiFetch<any[]>("/sovereign/sites"),
+  registerSovereignSite: (payload: any) =>
+    apiFetch<any>("/sovereign/sites", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  getSovereignRounds: () => apiFetch<any[]>("/sovereign/rounds"),
+  runSovereignRound: (payload: { round_number: number; aggregation_strategy: string; participating_site_ids?: string[]; dp_noise_sigma?: number; dp_clip_norm?: number }) =>
+    apiFetch<any>("/sovereign/rounds/run", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  getSovereignTournament: () => apiFetch<any>("/sovereign/tournament"),
+  getSovereignPrivacyAudit: () => apiFetch<any>("/sovereign/privacy-audit"),
+  runSovereignStressTest: () =>
+    apiFetch<any>("/sovereign/stress-test", {
+      method: "POST",
+    }),
+  getSovereignExportMarkdownUrl: () => `${API_BASE}/sovereign/export/markdown`,
 };
 

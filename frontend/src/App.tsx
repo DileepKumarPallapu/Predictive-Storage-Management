@@ -27,6 +27,7 @@ const PagePhoenixOrchestrator = lazy(() => import('./pages/PagePhoenixOrchestrat
 const PageAtlasRealityLab = lazy(() => import('./pages/PageAtlasRealityLab').then(m => ({ default: m.PageAtlasRealityLab })));
 const PageOracleIntelligence = lazy(() => import('./pages/PageOracleIntelligence').then(m => ({ default: m.PageOracleIntelligence })));
 const PageGauntletWorkbench = lazy(() => import('./pages/PageGauntletWorkbench').then(m => ({ default: m.PageGauntletWorkbench })));
+const PageSovereignFederation = lazy(() => import('./pages/PageSovereignFederation').then(m => ({ default: m.PageSovereignFederation })));
 
 const AppContent: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<PageId>('overview');
@@ -178,6 +179,7 @@ const AppContent: React.FC = () => {
               {currentPage === 'atlas' && <PageAtlasRealityLab />}
               {currentPage === 'oracle' && <PageOracleIntelligence />}
               {currentPage === 'gauntlet' && <PageGauntletWorkbench />}
+              {currentPage === 'sovereign' && <PageSovereignFederation />}
               {currentPage === 'interventions' && (
                 <PageInterventionStudio initialDeviceId={selectedDeviceId} />
               )}

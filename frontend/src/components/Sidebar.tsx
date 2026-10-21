@@ -8,6 +8,7 @@ import {
   LineChart,
   Brain,
   FlaskConical,
+  Shield,
   ShieldCheck,
   AlertTriangle,
   Database,
@@ -42,7 +43,8 @@ export type PageId =
   | 'phoenix'
   | 'atlas'
   | 'oracle'
-  | 'gauntlet';
+  | 'gauntlet'
+  | 'sovereign';
 
 interface SidebarProps {
   currentPage: PageId;
@@ -198,6 +200,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
           guidedLabel: 'Examiner Workbench',
           expertLabel: 'Gauntlet Research & Audit',
           icon: ShieldCheck,
+          highlight: true,
+        },
+        {
+          id: 'sovereign',
+          guidedLabel: 'Federated Intelligence',
+          expertLabel: 'Sovereign Federated Storage',
+          icon: Shield,
           highlight: true,
         },
         {
