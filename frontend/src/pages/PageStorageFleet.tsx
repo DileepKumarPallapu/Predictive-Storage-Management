@@ -77,7 +77,7 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
       {/* Page Header */}
       <div>
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[var(--accent-cyan)]/15 border border-[var(--accent-cyan)]/30 flex items-center justify-center text-[var(--accent-cyan)] shadow-[0_0_12px_rgba(97,221,248,0.2)]">
+          <div className="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)] shadow-glow-vermilion">
             <HardDrive size={18} />
           </div>
           <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
@@ -92,8 +92,8 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
       </div>
 
       {/* Safety Envelope Contextual Card */}
-      <div className="glass-panel rounded-2xl p-4 flex items-start gap-3 border-l-4 border-l-[var(--color-success)] text-xs">
-        <ShieldCheck size={18} className="text-[var(--color-success)] shrink-0 mt-0.5" />
+      <div className="glass-panel rounded-2xl p-4 flex items-start gap-3 border-l-4 border-l-[var(--status-success)] text-xs">
+        <ShieldCheck size={18} className="text-[var(--status-success)] shrink-0 mt-0.5" />
         <div>
           <span className="font-semibold text-[var(--text-primary)]">
             {isGuided ? 'What are Hard Safety Limits?' : 'Hard Safety Envelope Governance'}
@@ -113,7 +113,7 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
             placeholder="Search pool ID or name..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-[var(--surface-raised)] border border-[var(--border-visible)] focus:border-[var(--accent-cyan)] rounded-lg pl-9 pr-3 py-1.5 text-xs text-[var(--text-primary)] focus:outline-none transition-colors"
+            className="w-full bg-[var(--surface-secondary)] border border-[var(--border-normal)] focus:border-[var(--accent-primary)] rounded-lg pl-9 pr-3 py-1.5 text-xs text-[var(--text-primary)] focus:outline-none transition-colors"
           />
         </div>
 
@@ -122,7 +122,7 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
           <select
             value={tierFilter}
             onChange={(e) => setTierFilter(e.target.value)}
-            className="bg-[var(--surface-raised)] border border-[var(--border-visible)] focus:border-[var(--accent-cyan)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] focus:outline-none cursor-pointer"
+            className="bg-[var(--surface-secondary)] border border-[var(--border-normal)] focus:border-[var(--accent-primary)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] focus:outline-none cursor-pointer"
           >
             <option value="" className="bg-[var(--surface-primary)]">All Storage Tiers</option>
             <option value="NVME_TIER1" className="bg-[var(--surface-primary)]">Tier 1 NVMe (Fastest)</option>
@@ -137,19 +137,19 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
         {devices.map((d) => (
           <div
             key={d.id}
-            className="glass-panel rounded-2xl p-5 flex flex-col justify-between hover:border-[var(--accent-cyan)]/40 transition-all group"
+            className="glass-panel rounded-2xl p-5 flex flex-col justify-between hover:border-[var(--accent-primary)]/40 transition-all group"
           >
             <div>
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <h3 className="text-sm font-bold text-[var(--text-primary)]">{d.name}</h3>
-                  <div className="text-[11px] font-mono text-[var(--accent-cyan)] mt-0.5">{d.id}</div>
+                  <div className="text-[11px] font-mono text-[var(--accent-primary)] mt-0.5">{d.id}</div>
                 </div>
                 <span
                   className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono ${
                     d.status === 'HEALTHY'
-                      ? 'bg-[var(--color-success)]/15 text-[var(--color-success)] border border-[var(--color-success)]/40 shadow-sm'
-                      : 'bg-[var(--color-warning)]/15 text-[var(--color-warning)] border border-[var(--color-warning)]/40 shadow-sm'
+                      ? 'bg-[var(--status-success)]/15 text-[var(--status-success)] border border-[var(--status-success)]/40 shadow-sm'
+                      : 'bg-[var(--status-warning)]/15 text-[var(--status-warning)] border border-[var(--status-warning)]/40 shadow-sm'
                   }`}
                 >
                   {d.status}
@@ -157,14 +157,14 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
               </div>
 
               <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
-                <div className="bg-[var(--surface-raised)]/60 rounded-xl p-2.5 border border-[var(--border-subtle)]">
+                <div className="bg-[var(--surface-secondary)]/60 rounded-xl p-2.5 border border-[var(--border-subtle)]">
                   <div className="text-[var(--text-muted)] text-[10px] uppercase font-mono tracking-wider">
                     {isGuided ? 'Drive Tier' : 'Media & Tier'}
                   </div>
                   <div className="text-[var(--text-primary)] font-semibold mt-0.5 font-mono">{d.tier}</div>
                   <div className="text-[var(--text-secondary)] text-[10px] truncate">{d.media_type}</div>
                 </div>
-                <div className="bg-[var(--surface-raised)]/60 rounded-xl p-2.5 border border-[var(--border-subtle)]">
+                <div className="bg-[var(--surface-secondary)]/60 rounded-xl p-2.5 border border-[var(--border-subtle)]">
                   <div className="text-[var(--text-muted)] text-[10px] uppercase font-mono tracking-wider">
                     {isGuided ? 'Application' : 'Workload Profile'}
                   </div>
@@ -183,14 +183,14 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
                     {formatTB(d.current_used_bytes)} / {formatTB(d.total_capacity_bytes)} ({d.current_utilization_pct.toFixed(1)}%)
                   </span>
                 </div>
-                <div className="w-full bg-[var(--surface-raised)] h-2 rounded-full overflow-hidden p-0.5 border border-[var(--border-subtle)]">
+                <div className="w-full bg-[var(--surface-secondary)] h-2 rounded-full overflow-hidden p-0.5 border border-[var(--border-subtle)]">
                   <div
                     className={`h-full rounded-full transition-all ${
                       d.current_utilization_pct >= d.critical_threshold_pct
-                        ? 'bg-[var(--color-critical)] shadow-[0_0_6px_var(--color-critical)]'
+                        ? 'bg-[var(--status-critical)] shadow-[0_0_6px_var(--status-critical)]'
                         : d.current_utilization_pct >= d.warning_threshold_pct
-                        ? 'bg-[var(--color-warning)] shadow-[0_0_6px_var(--color-warning)]'
-                        : 'bg-gradient-to-r from-[var(--accent-sapphire)] to-[var(--accent-cyan)] shadow-[0_0_6px_var(--accent-cyan)]'
+                        ? 'bg-[var(--status-warning)] shadow-[0_0_6px_var(--status-warning)]'
+                        : 'bg-gradient-to-r from-[var(--accent-secondary)] to-[var(--accent-primary)] shadow-[0_0_6px_var(--accent-primary)]'
                     }`}
                     style={{ width: `${Math.min(100, d.current_utilization_pct)}%` }}
                   />
@@ -207,7 +207,7 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
             <div className="mt-5 pt-3.5 border-t border-[var(--border-subtle)] flex items-center justify-between gap-2">
               <button
                 onClick={() => openEditModal(d)}
-                className="px-3 py-1.5 rounded-lg btn-aurora-secondary text-xs flex items-center gap-1.5 font-medium"
+                className="px-3 py-1.5 rounded-lg btn-ember-secondary text-xs flex items-center gap-1.5 font-medium"
               >
                 <Sliders size={13} />
                 Adjust Safety Limits
@@ -215,7 +215,7 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
 
               <button
                 onClick={() => onNavigateToIntelligence(d.id)}
-                className="px-3.5 py-1.5 rounded-lg btn-aurora-primary text-xs flex items-center gap-1.5 font-semibold"
+                className="px-3.5 py-1.5 rounded-lg btn-ember-primary text-xs flex items-center gap-1.5 font-semibold"
               >
                 {isGuided ? 'Inspect Device' : 'Deep Intelligence'} <ArrowUpRight size={13} />
               </button>
@@ -230,7 +230,7 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
           <div className="glass-modal max-w-md w-full p-6 space-y-4 shadow-glass-modal rounded-2xl animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-[var(--accent-cyan)]/15 border border-[var(--accent-cyan)]/30 flex items-center justify-center text-[var(--accent-cyan)]">
+                <div className="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)]">
                   <Sliders size={16} />
                 </div>
                 <h3 className="text-sm font-bold text-[var(--text-primary)]">
@@ -260,7 +260,7 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
                   max="95"
                   value={warnThreshold}
                   onChange={(e) => setWarnThreshold(Number(e.target.value))}
-                  className="w-full bg-[var(--surface-primary)] border border-[var(--border-visible)] focus:border-[var(--accent-cyan)] rounded-lg px-3 py-2 text-[var(--text-primary)] font-mono focus:outline-none"
+                  className="w-full bg-[var(--surface-primary)] border border-[var(--border-normal)] focus:border-[var(--accent-primary)] rounded-lg px-3 py-2 text-[var(--text-primary)] font-mono focus:outline-none"
                 />
               </div>
 
@@ -274,7 +274,7 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
                   max="99"
                   value={critThreshold}
                   onChange={(e) => setCritThreshold(Number(e.target.value))}
-                  className="w-full bg-[var(--surface-primary)] border border-[var(--border-visible)] focus:border-[var(--accent-cyan)] rounded-lg px-3 py-2 text-[var(--text-primary)] font-mono focus:outline-none"
+                  className="w-full bg-[var(--surface-primary)] border border-[var(--border-normal)] focus:border-[var(--accent-primary)] rounded-lg px-3 py-2 text-[var(--text-primary)] font-mono focus:outline-none"
                 />
               </div>
 
@@ -288,13 +288,13 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
                   max="100"
                   value={maxLat}
                   onChange={(e) => setMaxLat(Number(e.target.value))}
-                  className="w-full bg-[var(--surface-primary)] border border-[var(--border-visible)] focus:border-[var(--accent-cyan)] rounded-lg px-3 py-2 text-[var(--text-primary)] font-mono focus:outline-none"
+                  className="w-full bg-[var(--surface-primary)] border border-[var(--border-normal)] focus:border-[var(--accent-primary)] rounded-lg px-3 py-2 text-[var(--text-primary)] font-mono focus:outline-none"
                 />
               </div>
             </div>
 
             {saveMsg && (
-              <div className="text-xs text-[var(--color-success)] bg-[var(--color-success)]/10 border border-[var(--color-success)]/30 p-2.5 rounded-lg font-medium font-mono">
+              <div className="text-xs text-[var(--status-success)] bg-[var(--status-success)]/10 border border-[var(--status-success)]/30 p-2.5 rounded-lg font-medium font-mono">
                 {saveMsg}
               </div>
             )}
@@ -302,13 +302,13 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
             <div className="flex justify-end gap-2.5 pt-3.5 border-t border-[var(--border-subtle)]">
               <button
                 onClick={() => setEditingDevice(null)}
-                className="px-3.5 py-1.5 rounded-lg btn-aurora-secondary text-xs font-medium"
+                className="px-3.5 py-1.5 rounded-lg btn-ember-secondary text-xs font-medium"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveThresholds}
-                className="px-4 py-1.5 rounded-lg btn-aurora-primary font-semibold text-xs"
+                className="px-4 py-1.5 rounded-lg btn-ember-primary font-semibold text-xs"
               >
                 Save Constraints
               </button>

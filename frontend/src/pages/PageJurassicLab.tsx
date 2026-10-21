@@ -150,8 +150,8 @@ export const PageJurassicLab: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <RefreshCw size={36} className="text-obsidian-amber animate-spin" />
-        <p className="text-sm font-mono text-obsidian-muted">
+        <RefreshCw size={36} className="text-[var(--status-warning)] animate-spin" />
+        <p className="text-sm font-mono text-[var(--text-secondary)]">
           Initializing AEGISSTOR Jurassic Failure Discovery Lab & Fault Engine...
         </p>
       </div>
@@ -161,25 +161,25 @@ export const PageJurassicLab: React.FC = () => {
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
       {/* Header Banner */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-obsidian-border pb-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
         <div>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-obsidian-amber/10 border border-obsidian-amber/30 text-obsidian-amber">
+            <div className="p-2 rounded-lg bg-[var(--status-warning)]/10 border border-[var(--status-warning)]/30 text-[var(--status-warning)]">
               <Flame size={24} />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold tracking-tight text-obsidian-text">
+                <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">
                   AEGISSTOR JURASSIC — Resilience & Failure Discovery Lab
                 </h1>
-                <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-obsidian-amber/20 text-obsidian-amber border border-obsidian-amber/40">
+                <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[var(--status-warning)]/20 text-[var(--status-warning)] border border-[var(--status-warning)]/40">
                   JURASSIC 7.0
                 </span>
-                <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-obsidian-cyan/20 text-obsidian-cyan border border-obsidian-cyan/40">
+                <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border border-[var(--accent-primary)]/40">
                   SHADOW SIMULATOR (ZERO HOST MUTATION)
                 </span>
               </div>
-              <p className="text-xs text-obsidian-muted font-mono mt-0.5">
+              <p className="text-xs text-[var(--text-secondary)] font-mono mt-0.5">
                 Official Project: Predictive Storage Capacity and Performance Management Using Machine Learning
               </p>
             </div>
@@ -189,7 +189,7 @@ export const PageJurassicLab: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={loadJurassicData}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-obsidian-panel border border-obsidian-border text-xs font-mono text-obsidian-muted hover:text-obsidian-text hover:border-obsidian-cyan transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-[var(--surface-primary)] border border-[var(--border-subtle)] text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--accent-primary)] transition-colors"
           >
             <RefreshCw size={14} />
             Sync Records
@@ -199,51 +199,51 @@ export const PageJurassicLab: React.FC = () => {
 
       {/* Global Resilience Metrics Summary */}
       {commandCenterData && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 rounded-xl bg-obsidian-panel border border-obsidian-border">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)]">
           <div className="space-y-1">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-obsidian-muted flex items-center gap-1.5">
-              <Server size={14} className="text-obsidian-cyan" /> Scenarios Tested
+            <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-secondary)] flex items-center gap-1.5">
+              <Server size={14} className="text-[var(--accent-primary)]" /> Scenarios Tested
             </span>
-            <div className="text-xl font-bold text-obsidian-text">
+            <div className="text-xl font-bold text-[var(--text-primary)]">
               {commandCenterData.summary.scenarios_tested} / {commandCenterData.summary.scenarios_available} Catalogued
             </div>
-            <p className="text-xs text-obsidian-muted font-mono">
-              Total Runs: <span className="text-obsidian-text font-bold">{commandCenterData.summary.total_experiments_run}</span>
+            <p className="text-xs text-[var(--text-secondary)] font-mono">
+              Total Runs: <span className="text-[var(--text-primary)] font-bold">{commandCenterData.summary.total_experiments_run}</span>
             </p>
           </div>
 
           <div className="space-y-1">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-obsidian-muted flex items-center gap-1.5">
-              <Shield size={14} className="text-obsidian-emerald" /> Unsafe Actions Blocked
+            <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-secondary)] flex items-center gap-1.5">
+              <Shield size={14} className="text-[var(--status-success)]" /> Unsafe Actions Blocked
             </span>
-            <div className="text-xl font-bold text-obsidian-emerald">
+            <div className="text-xl font-bold text-[var(--status-success)]">
               {commandCenterData.summary.unsafe_recommendations_blocked} Interventions
             </div>
-            <p className="text-xs text-obsidian-muted">
+            <p className="text-xs text-[var(--text-secondary)]">
               Hard Safety Envelope Enforced
             </p>
           </div>
 
           <div className="space-y-1">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-obsidian-muted flex items-center gap-1.5">
-              <AlertTriangle size={14} className="text-obsidian-amber" /> Drift Events Caught
+            <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-secondary)] flex items-center gap-1.5">
+              <AlertTriangle size={14} className="text-[var(--status-warning)]" /> Drift Events Caught
             </span>
-            <div className="text-xl font-bold text-obsidian-amber">
+            <div className="text-xl font-bold text-[var(--status-warning)]">
               {commandCenterData.summary.model_degradation_events_detected} Detected
             </div>
-            <p className="text-xs text-obsidian-muted font-mono">
+            <p className="text-xs text-[var(--text-secondary)] font-mono">
               Mean Recovery: {commandCenterData.summary.mean_recovery_time_hours}h
             </p>
           </div>
 
           <div className="space-y-1">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-obsidian-muted flex items-center gap-1.5">
-              <Activity size={14} className="text-obsidian-purple" /> Mean Resilience Score
+            <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-secondary)] flex items-center gap-1.5">
+              <Activity size={14} className="text-[var(--accent-tertiary)]" /> Mean Resilience Score
             </span>
-            <div className="text-xl font-bold text-obsidian-purple">
+            <div className="text-xl font-bold text-[var(--accent-tertiary)]">
               {commandCenterData.summary.mean_resilience_index} / 100.0
             </div>
-            <p className="text-xs text-obsidian-muted">
+            <p className="text-xs text-[var(--text-secondary)]">
               10-Dimension Composite Index
             </p>
           </div>
@@ -252,14 +252,14 @@ export const PageJurassicLab: React.FC = () => {
 
       {/* Execution Feedback Banner if any */}
       {executionMessage && (
-        <div className="p-3 rounded-lg bg-obsidian-emerald/10 border border-obsidian-emerald/40 text-obsidian-emerald text-xs font-mono flex items-center gap-2">
+        <div className="p-3 rounded-lg bg-[var(--status-success)]/10 border border-[var(--status-success)]/40 text-[var(--status-success)] text-xs font-mono flex items-center gap-2">
           <CheckCircle2 size={16} />
           {executionMessage}
         </div>
       )}
 
       {/* Navigation Tabs */}
-      <div className="flex border-b border-obsidian-border gap-2 overflow-x-auto pb-1">
+      <div className="flex border-b border-[var(--border-subtle)] gap-2 overflow-x-auto pb-1">
         {[
           { id: 'cmd_center', label: 'Command Center', icon: Activity },
           { id: 'designer', label: 'Scenario Designer', icon: Sliders },
@@ -277,8 +277,8 @@ export const PageJurassicLab: React.FC = () => {
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-t-lg font-medium text-xs transition-colors whitespace-nowrap ${
                 isActive
-                  ? 'bg-obsidian-panel border-t border-x border-obsidian-border text-obsidian-amber border-b-2 border-b-obsidian-amber'
-                  : 'text-obsidian-muted hover:text-obsidian-text hover:bg-obsidian-panel/50'
+                  ? 'bg-[var(--surface-primary)] border-t border-x border-[var(--border-subtle)] text-[var(--status-warning)] border-b-2 border-b-[var(--status-warning)]'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-primary)]/50'
               }`}
             >
               <Icon size={16} />
@@ -295,22 +295,22 @@ export const PageJurassicLab: React.FC = () => {
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Quick Launch Panel */}
-            <div className="p-4 rounded-xl bg-obsidian-panel border border-obsidian-border space-y-4">
-              <h3 className="text-sm font-semibold text-obsidian-text flex items-center gap-2">
-                <Zap size={16} className="text-obsidian-amber" /> Launch Stress Experiment Preset
+            <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-4">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)] flex items-center gap-2">
+                <Zap size={16} className="text-[var(--status-warning)]" /> Launch Stress Experiment Preset
               </h3>
-              <p className="text-xs text-obsidian-muted leading-relaxed">
+              <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
                 Execute a deterministic chaos stress test against the Resilience Digital Twin to evaluate model degradation,
                 prediction interval collapse, and fallback state transitions.
               </p>
 
               <div className="space-y-3">
                 <div>
-                  <label className="text-obsidian-muted block text-xs mb-1 font-mono">Select Preset Scenario:</label>
+                  <label className="text-[var(--text-secondary)] block text-xs mb-1 font-mono">Select Preset Scenario:</label>
                   <select
                     value={selectedPresetId}
                     onChange={(e) => setSelectedPresetId(e.target.value)}
-                    className="w-full bg-obsidian-bg border border-obsidian-border rounded p-2 text-xs font-mono text-obsidian-text focus:outline-none focus:border-obsidian-amber"
+                    className="w-full bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded p-2 text-xs font-mono text-[var(--text-primary)] focus:outline-none focus:border-[var(--status-warning)]"
                   >
                     {scenariosList.map((sc) => (
                       <option key={sc.id} value={sc.id}>
@@ -323,7 +323,7 @@ export const PageJurassicLab: React.FC = () => {
                 <button
                   onClick={() => handleRunExperiment()}
                   disabled={isRunningExperiment}
-                  className="w-full py-2.5 rounded-lg bg-obsidian-amber text-obsidian-bg font-bold text-xs hover:bg-obsidian-amber/90 transition-colors flex items-center justify-center gap-2 shadow-[0_0_12px_rgba(255,198,109,0.2)]"
+                  className="w-full py-2.5 rounded-lg bg-[var(--status-warning)] text-[var(--bg-primary)] font-bold text-xs hover:bg-[var(--status-warning)]/90 transition-colors flex items-center justify-center gap-2 shadow-[0_0_12px_rgba(255,198,109,0.2)]"
                 >
                   {isRunningExperiment ? <RefreshCw size={14} className="animate-spin" /> : <Flame size={14} />}
                   Execute Resilience Test Run
@@ -332,24 +332,24 @@ export const PageJurassicLab: React.FC = () => {
             </div>
 
             {/* Fallback States Summary */}
-            <div className="lg:col-span-2 p-4 rounded-xl bg-obsidian-panel border border-obsidian-border space-y-3">
-              <h3 className="text-sm font-semibold text-obsidian-text flex items-center gap-2">
-                <Lock size={16} className="text-obsidian-cyan" /> Formal Safe Fallback States Architecture
+            <div className="lg:col-span-2 p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-3">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)] flex items-center gap-2">
+                <Lock size={16} className="text-[var(--accent-primary)]" /> Formal Safe Fallback States Architecture
               </h3>
-              <p className="text-xs text-obsidian-muted">
+              <p className="text-xs text-[var(--text-secondary)]">
                 AEGISSTOR enforces deterministic safe states when evidence or models degrade:
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 {fallbackStates && Object.entries(fallbackStates).map(([key, val]: any) => (
-                  <div key={key} className="p-3 rounded-lg bg-obsidian-bg/70 border border-obsidian-border/70 space-y-1">
+                  <div key={key} className="p-3 rounded-lg bg-[var(--bg-primary)]/70 border border-[var(--border-subtle)]/70 space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-obsidian-text">{val.user_visible_status}</span>
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-obsidian-panel border border-obsidian-border text-obsidian-muted">
+                      <span className="text-xs font-bold text-[var(--text-primary)]">{val.user_visible_status}</span>
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[var(--surface-primary)] border border-[var(--border-subtle)] text-[var(--text-secondary)]">
                         {key.slice(0, 7)}
                       </span>
                     </div>
-                    <p className="text-[11px] text-obsidian-muted leading-tight">
+                    <p className="text-[11px] text-[var(--text-secondary)] leading-tight">
                       {val.description}
                     </p>
                   </div>
@@ -359,14 +359,14 @@ export const PageJurassicLab: React.FC = () => {
           </div>
 
           {/* Stored Experiments Table */}
-          <div className="p-4 rounded-xl bg-obsidian-panel border border-obsidian-border space-y-3">
-            <h3 className="text-sm font-semibold text-obsidian-text flex items-center gap-2">
-              <Database size={16} className="text-obsidian-cyan" /> Historical Resilience Experiment Runs (Audit Trail)
+          <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-3">
+            <h3 className="text-sm font-semibold text-[var(--text-primary)] flex items-center gap-2">
+              <Database size={16} className="text-[var(--accent-primary)]" /> Historical Resilience Experiment Runs (Audit Trail)
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse font-mono">
                 <thead>
-                  <tr className="border-b border-obsidian-border text-obsidian-muted text-[11px]">
+                  <tr className="border-b border-[var(--border-subtle)] text-[var(--text-secondary)] text-[11px]">
                     <th className="py-2.5 px-3">Experiment ID</th>
                     <th className="py-2.5 px-3">Scenario Name</th>
                     <th className="py-2.5 px-3">Target Volume</th>
@@ -376,39 +376,39 @@ export const PageJurassicLab: React.FC = () => {
                     <th className="py-2.5 px-3">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-obsidian-border/50 text-[11px]">
+                <tbody className="divide-y divide-[var(--border-subtle)]/50 text-[11px]">
                   {experimentsList.map((exp) => {
                     const isSelected = selectedExperiment?.id === exp.id;
                     return (
-                      <tr key={exp.id} className={isSelected ? 'bg-obsidian-amber/10' : 'hover:bg-obsidian-bg/50'}>
-                        <td className="py-2.5 px-3 font-semibold text-obsidian-text">{exp.id}</td>
-                        <td className="py-2.5 px-3 text-obsidian-muted truncate max-w-xs">{exp.scenario_name}</td>
-                        <td className="py-2.5 px-3 text-obsidian-cyan">{exp.target_device_id}</td>
+                      <tr key={exp.id} className={isSelected ? 'bg-[var(--status-warning)]/10' : 'hover:bg-[var(--bg-primary)]/50'}>
+                        <td className="py-2.5 px-3 font-semibold text-[var(--text-primary)]">{exp.id}</td>
+                        <td className="py-2.5 px-3 text-[var(--text-secondary)] truncate max-w-xs">{exp.scenario_name}</td>
+                        <td className="py-2.5 px-3 text-[var(--accent-primary)]">{exp.target_device_id}</td>
                         <td className="py-2.5 px-3">
                           <span className={`px-2 py-0.5 rounded text-[10px] border ${
                             exp.final_fallback_state === 'STATE_1_HEALTHY_EVIDENCE'
-                              ? 'bg-obsidian-emerald/10 text-obsidian-emerald border-obsidian-emerald/30'
+                              ? 'bg-[var(--status-success)]/10 text-[var(--status-success)] border-[var(--status-success)]/30'
                               : exp.final_fallback_state === 'STATE_4_PLANNING_UNSAFE'
-                              ? 'bg-obsidian-rose/10 text-obsidian-rose border-obsidian-rose/30'
-                              : 'bg-obsidian-amber/10 text-obsidian-amber border-obsidian-amber/30'
+                              ? 'bg-[var(--status-critical)]/10 text-[var(--status-critical)] border-[var(--status-critical)]/30'
+                              : 'bg-[var(--status-warning)]/10 text-[var(--status-warning)] border-[var(--status-warning)]/30'
                           }`}>
                             {exp.final_fallback_state}
                           </span>
                         </td>
                         <td className="py-2.5 px-3">
                           {exp.drift_detected ? (
-                            <span className="text-obsidian-amber font-bold">YES</span>
+                            <span className="text-[var(--status-warning)] font-bold">YES</span>
                           ) : (
-                            <span className="text-obsidian-emerald">NO</span>
+                            <span className="text-[var(--status-success)]">NO</span>
                           )}
                         </td>
-                        <td className="py-2.5 px-3 text-obsidian-text font-bold">
+                        <td className="py-2.5 px-3 text-[var(--text-primary)] font-bold">
                           {exp.resilience_score} / 100
                         </td>
                         <td className="py-2.5 px-3">
                           <button
                             onClick={() => handleSelectExperiment(exp.id)}
-                            className="px-2 py-1 rounded bg-obsidian-bg border border-obsidian-border text-[10px] text-obsidian-cyan hover:border-obsidian-cyan"
+                            className="px-2 py-1 rounded bg-[var(--bg-primary)] border border-[var(--border-subtle)] text-[10px] text-[var(--accent-primary)] hover:border-[var(--accent-primary)]"
                           >
                             Inspect Forensics &rarr;
                           </button>
@@ -428,40 +428,40 @@ export const PageJurassicLab: React.FC = () => {
       {/* ========================================================================= */}
       {activeTab === 'designer' && (
         <div className="space-y-6">
-          <div className="p-4 rounded-xl bg-obsidian-amber/5 border border-obsidian-amber/20 space-y-2">
-            <div className="flex items-center gap-2 text-obsidian-amber font-semibold text-sm">
+          <div className="p-4 rounded-xl bg-[var(--status-warning)]/5 border border-[var(--status-warning)]/20 space-y-2">
+            <div className="flex items-center gap-2 text-[var(--status-warning)] font-semibold text-sm">
               <Info size={16} /> Adversarial Scenario Designer & Parameter Generator
             </div>
-            <p className="text-xs text-obsidian-muted leading-relaxed">
+            <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
               Design synthetic stress-test scenarios with reproducible random seeds. Scenarios can simulate multi-burst write spikes,
               rapid organic growth acceleration, flash controller GC saturation, telemetry agent partitions, and destination saturation.
             </p>
           </div>
 
           <form onSubmit={handleSaveAndRunCustomScenario} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 p-4 rounded-xl bg-obsidian-panel border border-obsidian-border space-y-4">
-              <h3 className="text-sm font-semibold text-obsidian-text flex items-center gap-2">
-                <Sliders size={16} className="text-obsidian-amber" /> Disturbance Characteristics & Storage Parameters
+            <div className="lg:col-span-2 p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-4">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)] flex items-center gap-2">
+                <Sliders size={16} className="text-[var(--status-warning)]" /> Disturbance Characteristics & Storage Parameters
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
                 <div>
-                  <label className="text-obsidian-muted block mb-1">Scenario Name:</label>
+                  <label className="text-[var(--text-secondary)] block mb-1">Scenario Name:</label>
                   <input
                     type="text"
                     value={customName}
                     onChange={(e) => setCustomName(e.target.value)}
-                    className="w-full bg-obsidian-bg border border-obsidian-border rounded p-2 text-obsidian-text"
+                    className="w-full bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded p-2 text-[var(--text-primary)]"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="text-obsidian-muted block mb-1">Disturbance Family:</label>
+                  <label className="text-[var(--text-secondary)] block mb-1">Disturbance Family:</label>
                   <select
                     value={customFamily}
                     onChange={(e) => setCustomFamily(e.target.value)}
-                    className="w-full bg-obsidian-bg border border-obsidian-border rounded p-2 text-obsidian-text"
+                    className="w-full bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded p-2 text-[var(--text-primary)]"
                   >
                     <option value="CAPACITY_DISTURBANCE">Capacity Disturbance (Bursts & Growth)</option>
                     <option value="PERFORMANCE_DISTURBANCE">Performance Disturbance (GC Storm / Latency)</option>
@@ -472,11 +472,11 @@ export const PageJurassicLab: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="text-obsidian-muted block mb-1">Target Storage Volume:</label>
+                  <label className="text-[var(--text-secondary)] block mb-1">Target Storage Volume:</label>
                   <select
                     value={customDevice}
                     onChange={(e) => setCustomDevice(e.target.value)}
-                    className="w-full bg-obsidian-bg border border-obsidian-border rounded p-2 text-obsidian-text"
+                    className="w-full bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded p-2 text-[var(--text-primary)]"
                   >
                     <option value="vol-nvme-tier1-db">Production E-Commerce OLTP NVMe</option>
                     <option value="vol-sas-tier2-analytics">Corporate Analytics SAS</option>
@@ -486,58 +486,58 @@ export const PageJurassicLab: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="text-obsidian-muted block mb-1">Deterministic Random Seed:</label>
+                  <label className="text-[var(--text-secondary)] block mb-1">Deterministic Random Seed:</label>
                   <input
                     type="number"
                     value={customSeed}
                     onChange={(e) => setCustomSeed(Number(e.target.value))}
-                    className="w-full bg-obsidian-bg border border-obsidian-border rounded p-2 text-obsidian-text"
+                    className="w-full bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded p-2 text-[var(--text-primary)]"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="text-obsidian-muted block mb-1">Initial Capacity Utilization (%):</label>
+                  <label className="text-[var(--text-secondary)] block mb-1">Initial Capacity Utilization (%):</label>
                   <input
                     type="number"
                     value={customCapacityPct}
                     onChange={(e) => setCustomCapacityPct(Number(e.target.value))}
-                    className="w-full bg-obsidian-bg border border-obsidian-border rounded p-2 text-obsidian-text"
+                    className="w-full bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded p-2 text-[var(--text-primary)]"
                     min="10"
                     max="95"
                   />
                 </div>
 
                 <div>
-                  <label className="text-obsidian-muted block mb-1">Daily Growth Rate (GB/day):</label>
+                  <label className="text-[var(--text-secondary)] block mb-1">Daily Growth Rate (GB/day):</label>
                   <input
                     type="number"
                     value={customGrowthGb}
                     onChange={(e) => setCustomGrowthGb(Number(e.target.value))}
-                    className="w-full bg-obsidian-bg border border-obsidian-border rounded p-2 text-obsidian-text"
+                    className="w-full bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded p-2 text-[var(--text-primary)]"
                   />
                 </div>
 
                 <div>
-                  <label className="text-obsidian-muted block mb-1">Telemetry Dropout Rate (0.0 to 1.0):</label>
+                  <label className="text-[var(--text-secondary)] block mb-1">Telemetry Dropout Rate (0.0 to 1.0):</label>
                   <input
                     type="number"
                     step="0.05"
                     value={customDropRate}
                     onChange={(e) => setCustomDropRate(Number(e.target.value))}
-                    className="w-full bg-obsidian-bg border border-obsidian-border rounded p-2 text-obsidian-text"
+                    className="w-full bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded p-2 text-[var(--text-primary)]"
                     min="0"
                     max="1"
                   />
                 </div>
 
                 <div>
-                  <label className="text-obsidian-muted block mb-1">Simulation Duration (hours):</label>
+                  <label className="text-[var(--text-secondary)] block mb-1">Simulation Duration (hours):</label>
                   <input
                     type="number"
                     value={customDuration}
                     onChange={(e) => setCustomDuration(Number(e.target.value))}
-                    className="w-full bg-obsidian-bg border border-obsidian-border rounded p-2 text-obsidian-text"
+                    className="w-full bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded p-2 text-[var(--text-primary)]"
                     min="24"
                     max="720"
                   />
@@ -547,7 +547,7 @@ export const PageJurassicLab: React.FC = () => {
               <button
                 type="submit"
                 disabled={isRunningExperiment}
-                className="w-full py-2.5 rounded-lg bg-obsidian-amber text-obsidian-bg font-bold text-xs hover:bg-obsidian-amber/90 transition-colors flex items-center justify-center gap-2"
+                className="w-full py-2.5 rounded-lg bg-[var(--status-warning)] text-[var(--bg-primary)] font-bold text-xs hover:bg-[var(--status-warning)]/90 transition-colors flex items-center justify-center gap-2"
               >
                 {isRunningExperiment ? <RefreshCw size={14} className="animate-spin" /> : <Flame size={14} />}
                 Save Custom Scenario & Execute Resilience Run
@@ -555,9 +555,9 @@ export const PageJurassicLab: React.FC = () => {
             </div>
 
             {/* Presets Quick Selector */}
-            <div className="p-4 rounded-xl bg-obsidian-panel border border-obsidian-border space-y-3">
-              <h3 className="text-sm font-semibold text-obsidian-text flex items-center gap-2">
-                <Database size={16} className="text-obsidian-cyan" /> Preconfigured Catalog Presets
+            <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-3">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)] flex items-center gap-2">
+                <Database size={16} className="text-[var(--accent-primary)]" /> Preconfigured Catalog Presets
               </h3>
               <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
                 {scenariosList.map((sc) => (
@@ -575,14 +575,14 @@ export const PageJurassicLab: React.FC = () => {
                     }}
                     className={`p-3 rounded-lg border cursor-pointer transition-colors ${
                       selectedPresetId === sc.id
-                        ? 'bg-obsidian-amber/10 border-obsidian-amber'
-                        : 'bg-obsidian-bg/70 border-obsidian-border hover:border-obsidian-muted'
+                        ? 'bg-[var(--status-warning)]/10 border-[var(--status-warning)]'
+                        : 'bg-[var(--bg-primary)]/70 border-[var(--border-subtle)] hover:border-[var(--text-muted)]'
                     }`}
                   >
-                    <div className="flex items-center justify-between text-xs font-bold text-obsidian-text">
+                    <div className="flex items-center justify-between text-xs font-bold text-[var(--text-primary)]">
                       <span>{sc.name}</span>
                     </div>
-                    <p className="text-[10px] text-obsidian-muted mt-1 leading-tight font-mono">
+                    <p className="text-[10px] text-[var(--text-secondary)] mt-1 leading-tight font-mono">
                       Family: {sc.scenario_family} | Seed: {sc.seed}
                     </p>
                   </div>
@@ -598,17 +598,17 @@ export const PageJurassicLab: React.FC = () => {
       {/* ========================================================================= */}
       {activeTab === 'adversarial' && selectedExperiment && (
         <div className="space-y-6">
-          <div className="p-4 rounded-xl bg-obsidian-panel border border-obsidian-border space-y-3">
+          <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-semibold text-obsidian-text flex items-center gap-2">
-                  <Layers size={16} className="text-obsidian-amber" /> Adversarial Synthetic Telemetry Timeline — {selectedExperiment.scenario_name}
+                <h3 className="text-sm font-semibold text-[var(--text-primary)] flex items-center gap-2">
+                  <Layers size={16} className="text-[var(--status-warning)]" /> Adversarial Synthetic Telemetry Timeline — {selectedExperiment.scenario_name}
                 </h3>
-                <span className="text-[10px] font-mono text-obsidian-amber font-bold">
+                <span className="text-[10px] font-mono text-[var(--status-warning)] font-bold">
                   SYNTHETIC EXPERIMENTAL TELEMETRY — VALIDATED AGAINST FLASH CONTROLLER GC DYNAMICS
                 </span>
               </div>
-              <span className="text-xs font-mono text-obsidian-muted">
+              <span className="text-xs font-mono text-[var(--text-secondary)]">
                 Displaying first {selectedExperiment.telemetry_samples?.length || 0} hours
               </span>
             </div>
@@ -616,7 +616,7 @@ export const PageJurassicLab: React.FC = () => {
             {/* Telemetry Visual Table */}
             <div className="overflow-x-auto max-h-[480px]">
               <table className="w-full text-left text-xs border-collapse font-mono">
-                <thead className="sticky top-0 bg-obsidian-panel border-b border-obsidian-border text-obsidian-muted text-[11px]">
+                <thead className="sticky top-0 bg-[var(--surface-primary)] border-b border-[var(--border-subtle)] text-[var(--text-secondary)] text-[11px]">
                   <tr>
                     <th className="py-2.5 px-3">Hour</th>
                     <th className="py-2.5 px-3">Timestamp</th>
@@ -628,35 +628,35 @@ export const PageJurassicLab: React.FC = () => {
                     <th className="py-2.5 px-3">Active Fault / Anomaly</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-obsidian-border/50 text-[11px]">
+                <tbody className="divide-y divide-[var(--border-subtle)]/50 text-[11px]">
                   {selectedExperiment.telemetry_samples?.map((s: any) => (
-                    <tr key={s.step_hour} className={s.is_telemetry_dropped ? 'bg-obsidian-rose/10' : 'hover:bg-obsidian-bg/50'}>
-                      <td className="py-2 px-3 font-semibold text-obsidian-text">h+{s.step_hour}</td>
-                      <td className="py-2 px-3 text-obsidian-muted text-[10px]">{s.timestamp?.slice(0, 16).replace('T', ' ')}</td>
+                    <tr key={s.step_hour} className={s.is_telemetry_dropped ? 'bg-[var(--status-critical)]/10' : 'hover:bg-[var(--bg-primary)]/50'}>
+                      <td className="py-2 px-3 font-semibold text-[var(--text-primary)]">h+{s.step_hour}</td>
+                      <td className="py-2 px-3 text-[var(--text-secondary)] text-[10px]">{s.timestamp?.slice(0, 16).replace('T', ' ')}</td>
                       <td className="py-2 px-3">
-                        <span className={s.utilization_pct >= 90 ? 'text-obsidian-rose font-bold' : (s.utilization_pct >= 80 ? 'text-obsidian-amber font-bold' : 'text-obsidian-text')}>
+                        <span className={s.utilization_pct >= 90 ? 'text-[var(--status-critical)] font-bold' : (s.utilization_pct >= 80 ? 'text-[var(--status-warning)] font-bold' : 'text-[var(--text-primary)]')}>
                           {s.utilization_pct}%
                         </span>
                       </td>
                       <td className="py-2 px-3">{s.read_iops}</td>
                       <td className="py-2 px-3">{s.write_iops}</td>
-                      <td className="py-2 px-3 text-obsidian-cyan">{s.throughput_mb_s}</td>
+                      <td className="py-2 px-3 text-[var(--accent-primary)]">{s.throughput_mb_s}</td>
                       <td className="py-2 px-3">
-                        <span className={s.latency_p95_ms > 20 ? 'text-obsidian-rose font-bold' : 'text-obsidian-text'}>
+                        <span className={s.latency_p95_ms > 20 ? 'text-[var(--status-critical)] font-bold' : 'text-[var(--text-primary)]'}>
                           {s.latency_p95_ms} ms
                         </span>
                       </td>
                       <td className="py-2 px-3">
                         {s.is_telemetry_dropped ? (
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-obsidian-rose/20 text-obsidian-rose border border-obsidian-rose/40">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--status-critical)]/20 text-[var(--status-critical)] border border-[var(--status-critical)]/40">
                             TELEMETRY DROPPED
                           </span>
                         ) : s.active_fault ? (
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-obsidian-amber/20 text-obsidian-amber border border-obsidian-amber/40">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--status-warning)]/20 text-[var(--status-warning)] border border-[var(--status-warning)]/40">
                             {s.active_fault}
                           </span>
                         ) : (
-                          <span className="text-obsidian-muted text-[10px]">Nominal</span>
+                          <span className="text-[var(--text-secondary)] text-[10px]">Nominal</span>
                         )}
                       </td>
                     </tr>
@@ -675,60 +675,60 @@ export const PageJurassicLab: React.FC = () => {
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Distribution Shift Detection Card */}
-            <div className="p-4 rounded-xl bg-obsidian-panel border border-obsidian-border space-y-3">
-              <h3 className="text-sm font-semibold text-obsidian-text flex items-center gap-2">
-                <BarChart2 size={16} className="text-obsidian-amber" /> Workload Distribution Shift Assessment (Page-Hinkley)
+            <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-3">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)] flex items-center gap-2">
+                <BarChart2 size={16} className="text-[var(--status-warning)]" /> Workload Distribution Shift Assessment (Page-Hinkley)
               </h3>
               <div className="space-y-2 text-xs font-mono">
-                <div className="flex justify-between border-b border-obsidian-border/50 pb-1.5">
-                  <span className="text-obsidian-muted">Drift Status:</span>
+                <div className="flex justify-between border-b border-[var(--border-subtle)]/50 pb-1.5">
+                  <span className="text-[var(--text-secondary)]">Drift Status:</span>
                   <span className={`font-bold px-2 py-0.5 rounded ${
                     selectedExperiment.drift_detected
-                      ? 'bg-obsidian-rose/10 text-obsidian-rose border border-obsidian-rose/30'
-                      : 'bg-obsidian-emerald/10 text-obsidian-emerald border border-obsidian-emerald/30'
+                      ? 'bg-[var(--status-critical)]/10 text-[var(--status-critical)] border border-[var(--status-critical)]/30'
+                      : 'bg-[var(--status-success)]/10 text-[var(--status-success)] border border-[var(--status-success)]/30'
                   }`}>
                     {selectedExperiment.drift_details?.drift_status || "NO_DETECTED_SHIFT"}
                   </span>
                 </div>
-                <div className="flex justify-between border-b border-obsidian-border/50 pb-1.5">
-                  <span className="text-obsidian-muted">Page-Hinkley Statistic:</span>
-                  <span className="text-obsidian-text font-bold">{selectedExperiment.drift_details?.drift_statistic ?? 0.0}</span>
+                <div className="flex justify-between border-b border-[var(--border-subtle)]/50 pb-1.5">
+                  <span className="text-[var(--text-secondary)]">Page-Hinkley Statistic:</span>
+                  <span className="text-[var(--text-primary)] font-bold">{selectedExperiment.drift_details?.drift_statistic ?? 0.0}</span>
                 </div>
-                <div className="flex justify-between border-b border-obsidian-border/50 pb-1.5">
-                  <span className="text-obsidian-muted">Standardized Z-Score:</span>
-                  <span className="text-obsidian-text">{selectedExperiment.drift_details?.mean_shift_z_score ?? 0.0}</span>
+                <div className="flex justify-between border-b border-[var(--border-subtle)]/50 pb-1.5">
+                  <span className="text-[var(--text-secondary)]">Standardized Z-Score:</span>
+                  <span className="text-[var(--text-primary)]">{selectedExperiment.drift_details?.mean_shift_z_score ?? 0.0}</span>
                 </div>
-                <p className="text-[11px] text-obsidian-muted pt-2 font-sans leading-relaxed">
+                <p className="text-[11px] text-[var(--text-secondary)] pt-2 font-sans leading-relaxed">
                   {selectedExperiment.drift_details?.explanation || "Workload remains within training bounds."}
                 </p>
               </div>
             </div>
 
             {/* Prediction Interval Stress Testing Card */}
-            <div className="p-4 rounded-xl bg-obsidian-panel border border-obsidian-border space-y-3">
-              <h3 className="text-sm font-semibold text-obsidian-text flex items-center gap-2">
-                <Shield size={16} className="text-obsidian-cyan" /> Prediction Interval Stress Testing (q10 - q90)
+            <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-3">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)] flex items-center gap-2">
+                <Shield size={16} className="text-[var(--accent-primary)]" /> Prediction Interval Stress Testing (q10 - q90)
               </h3>
               <div className="space-y-2 text-xs font-mono">
-                <div className="flex justify-between border-b border-obsidian-border/50 pb-1.5">
-                  <span className="text-obsidian-muted">Target Nominal Coverage:</span>
-                  <span className="text-obsidian-text">80.0%</span>
+                <div className="flex justify-between border-b border-[var(--border-subtle)]/50 pb-1.5">
+                  <span className="text-[var(--text-secondary)]">Target Nominal Coverage:</span>
+                  <span className="text-[var(--text-primary)]">80.0%</span>
                 </div>
-                <div className="flex justify-between border-b border-obsidian-border/50 pb-1.5">
-                  <span className="text-obsidian-muted">Observed Empirical Coverage:</span>
+                <div className="flex justify-between border-b border-[var(--border-subtle)]/50 pb-1.5">
+                  <span className="text-[var(--text-secondary)]">Observed Empirical Coverage:</span>
                   <span className={`font-bold ${
                     selectedExperiment.forecast_evaluations?.calibration_passed
-                      ? 'text-obsidian-emerald'
-                      : 'text-obsidian-rose font-extrabold'
+                      ? 'text-[var(--status-success)]'
+                      : 'text-[var(--status-critical)] font-extrabold'
                   }`}>
                     {((selectedExperiment.forecast_evaluations?.empirical_coverage ?? 0.8) * 100).toFixed(1)}%
                   </span>
                 </div>
-                <div className="flex justify-between border-b border-obsidian-border/50 pb-1.5">
-                  <span className="text-obsidian-muted">Error Source Attribution:</span>
-                  <span className="text-obsidian-amber font-bold">{selectedExperiment.forecast_evaluations?.error_attribution || "NOMINAL"}</span>
+                <div className="flex justify-between border-b border-[var(--border-subtle)]/50 pb-1.5">
+                  <span className="text-[var(--text-secondary)]">Error Source Attribution:</span>
+                  <span className="text-[var(--status-warning)] font-bold">{selectedExperiment.forecast_evaluations?.error_attribution || "NOMINAL"}</span>
                 </div>
-                <p className="text-[11px] text-obsidian-muted pt-2 font-sans leading-relaxed">
+                <p className="text-[11px] text-[var(--text-secondary)] pt-2 font-sans leading-relaxed">
                   {selectedExperiment.forecast_evaluations?.breakdown_reason || "Conformal calibration maintained."}
                 </p>
               </div>
@@ -742,20 +742,20 @@ export const PageJurassicLab: React.FC = () => {
       {/* ========================================================================= */}
       {activeTab === 'timeline' && selectedExperiment && (
         <div className="space-y-6">
-          <div className="p-4 rounded-xl bg-obsidian-panel border border-obsidian-border space-y-3">
-            <h3 className="text-sm font-semibold text-obsidian-text flex items-center gap-2">
-              <Clock size={16} className="text-obsidian-amber" /> Chronological Experiment & Fallback Transition Timeline
+          <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-3">
+            <h3 className="text-sm font-semibold text-[var(--text-primary)] flex items-center gap-2">
+              <Clock size={16} className="text-[var(--status-warning)]" /> Chronological Experiment & Fallback Transition Timeline
             </h3>
 
-            <div className="space-y-3 pl-4 border-l-2 border-obsidian-border/80 my-4">
+            <div className="space-y-3 pl-4 border-l-2 border-[var(--border-subtle)]/80 my-4">
               {selectedExperiment.fallback_transitions?.map((trans: any, idx: number) => (
                 <div key={idx} className="relative space-y-1">
-                  <div className="absolute -left-[23px] top-1 w-3 h-3 rounded-full bg-obsidian-amber border-2 border-obsidian-bg" />
+                  <div className="absolute -left-[23px] top-1 w-3 h-3 rounded-full bg-[var(--status-warning)] border-2 border-[var(--bg-primary)]" />
                   <div className="flex items-center gap-2 text-xs font-mono">
-                    <span className="text-obsidian-muted">Hour +{trans.hour}:</span>
-                    <span className="font-bold text-obsidian-text">{trans.state}</span>
+                    <span className="text-[var(--text-secondary)]">Hour +{trans.hour}:</span>
+                    <span className="font-bold text-[var(--text-primary)]">{trans.state}</span>
                   </div>
-                  <p className="text-xs text-obsidian-muted font-sans pl-2">
+                  <p className="text-xs text-[var(--text-secondary)] font-sans pl-2">
                     {trans.trigger}
                   </p>
                 </div>
@@ -764,15 +764,15 @@ export const PageJurassicLab: React.FC = () => {
 
             {/* Injected Fault Events */}
             {selectedExperiment.fault_events?.length > 0 && (
-              <div className="pt-4 border-t border-obsidian-border/50 space-y-2">
-                <h4 className="text-xs font-mono font-bold text-obsidian-rose">INJECTED CHAOS FAULT LOG:</h4>
+              <div className="pt-4 border-t border-[var(--border-subtle)]/50 space-y-2">
+                <h4 className="text-xs font-mono font-bold text-[var(--status-critical)]">INJECTED CHAOS FAULT LOG:</h4>
                 {selectedExperiment.fault_events.map((fe: any, idx: number) => (
-                  <div key={idx} className="p-3 rounded-lg bg-obsidian-bg/70 border border-obsidian-border text-xs font-mono space-y-1">
+                  <div key={idx} className="p-3 rounded-lg bg-[var(--bg-primary)]/70 border border-[var(--border-subtle)] text-xs font-mono space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-obsidian-rose font-bold">{fe.fault_type}</span>
-                      <span className="text-[10px] text-obsidian-muted">Hour +{fe.injection_hour} (Duration: {fe.duration_hours}h)</span>
+                      <span className="text-[var(--status-critical)] font-bold">{fe.fault_type}</span>
+                      <span className="text-[10px] text-[var(--text-secondary)]">Hour +{fe.injection_hour} (Duration: {fe.duration_hours}h)</span>
                     </div>
-                    <p className="text-xs text-obsidian-muted font-sans">{fe.actual_outcome}</p>
+                    <p className="text-xs text-[var(--text-secondary)] font-sans">{fe.actual_outcome}</p>
                   </div>
                 ))}
               </div>
@@ -786,39 +786,39 @@ export const PageJurassicLab: React.FC = () => {
       {/* ========================================================================= */}
       {activeTab === 'forensics' && selectedExperiment && (
         <div className="space-y-6">
-          <div className="p-4 rounded-xl bg-obsidian-panel border border-obsidian-border space-y-4">
-            <h3 className="text-sm font-semibold text-obsidian-text flex items-center gap-2">
-              <Search size={16} className="text-obsidian-amber" /> Failure Forensics & Root-Cause Hypotheses — {selectedExperiment.scenario_name}
+          <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-4">
+            <h3 className="text-sm font-semibold text-[var(--text-primary)] flex items-center gap-2">
+              <Search size={16} className="text-[var(--status-warning)]" /> Failure Forensics & Root-Cause Hypotheses — {selectedExperiment.scenario_name}
             </h3>
 
             {/* First Detected Failure Banner */}
-            <div className="p-3.5 rounded-lg bg-obsidian-rose/10 border border-obsidian-rose/30 space-y-1">
-              <span className="text-[11px] font-mono text-obsidian-rose uppercase font-bold flex items-center gap-1.5">
+            <div className="p-3.5 rounded-lg bg-[var(--status-critical)]/10 border border-[var(--status-critical)]/30 space-y-1">
+              <span className="text-[11px] font-mono text-[var(--status-critical)] uppercase font-bold flex items-center gap-1.5">
                 <AlertTriangle size={14} /> First Detected Failure Event
               </span>
-              <p className="text-xs text-obsidian-text font-mono">
+              <p className="text-xs text-[var(--text-primary)] font-mono">
                 {selectedExperiment.forensics?.first_detected_failure || "No critical failures recorded."}
               </p>
             </div>
 
             {/* Causes Breakdown */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-3 rounded-lg bg-obsidian-bg/70 border border-obsidian-border space-y-2">
-                <span className="text-xs font-mono font-bold text-obsidian-emerald flex items-center gap-1.5">
+              <div className="p-3 rounded-lg bg-[var(--bg-primary)]/70 border border-[var(--border-subtle)] space-y-2">
+                <span className="text-xs font-mono font-bold text-[var(--status-success)] flex items-center gap-1.5">
                   <CheckCircle2 size={14} /> Confirmed Causes
                 </span>
-                <ul className="text-xs text-obsidian-muted space-y-1 list-disc list-inside font-sans">
+                <ul className="text-xs text-[var(--text-secondary)] space-y-1 list-disc list-inside font-sans">
                   {selectedExperiment.forensics?.confirmed_causes?.map((c: string, idx: number) => (
                     <li key={idx}>{c}</li>
                   ))}
                 </ul>
               </div>
 
-              <div className="p-3 rounded-lg bg-obsidian-bg/70 border border-obsidian-border space-y-2">
-                <span className="text-xs font-mono font-bold text-obsidian-amber flex items-center gap-1.5">
+              <div className="p-3 rounded-lg bg-[var(--bg-primary)]/70 border border-[var(--border-subtle)] space-y-2">
+                <span className="text-xs font-mono font-bold text-[var(--status-warning)] flex items-center gap-1.5">
                   <Info size={14} /> Suspected Causes
                 </span>
-                <ul className="text-xs text-obsidian-muted space-y-1 list-disc list-inside font-sans">
+                <ul className="text-xs text-[var(--text-secondary)] space-y-1 list-disc list-inside font-sans">
                   {selectedExperiment.forensics?.suspected_causes?.map((c: string, idx: number) => (
                     <li key={idx}>{c}</li>
                   ))}
@@ -827,14 +827,14 @@ export const PageJurassicLab: React.FC = () => {
             </div>
 
             {/* Hard Safety Envelope Blocked Actions */}
-            <div className="p-3 rounded-lg bg-obsidian-bg/70 border border-obsidian-border space-y-2">
-              <span className="text-xs font-mono font-bold text-obsidian-purple flex items-center gap-1.5">
+            <div className="p-3 rounded-lg bg-[var(--bg-primary)]/70 border border-[var(--border-subtle)] space-y-2">
+              <span className="text-xs font-mono font-bold text-[var(--accent-tertiary)] flex items-center gap-1.5">
                 <Shield size={14} /> Hard Safety Envelope Action Blocks
               </span>
-              <ul className="text-xs text-obsidian-muted space-y-1 list-disc list-inside font-sans">
+              <ul className="text-xs text-[var(--text-secondary)] space-y-1 list-disc list-inside font-sans">
                 {selectedExperiment.forensics?.rejected_actions?.length > 0 ? (
                   selectedExperiment.forensics.rejected_actions.map((a: string, idx: number) => (
-                    <li key={idx} className="text-obsidian-rose">{a}</li>
+                    <li key={idx} className="text-[var(--status-critical)]">{a}</li>
                   ))
                 ) : (
                   <li>No candidate actions were rejected; plan remained feasible.</li>
@@ -843,11 +843,11 @@ export const PageJurassicLab: React.FC = () => {
             </div>
 
             {/* Suggested Follow-Ups */}
-            <div className="p-3 rounded-lg bg-obsidian-bg/70 border border-obsidian-border space-y-2">
-              <span className="text-xs font-mono font-bold text-obsidian-cyan flex items-center gap-1.5">
+            <div className="p-3 rounded-lg bg-[var(--bg-primary)]/70 border border-[var(--border-subtle)] space-y-2">
+              <span className="text-xs font-mono font-bold text-[var(--accent-primary)] flex items-center gap-1.5">
                 <ArrowRight size={14} /> Recommended Follow-Up Resilience Experiments
               </span>
-              <ul className="text-xs text-obsidian-muted space-y-1 list-disc list-inside font-sans">
+              <ul className="text-xs text-[var(--text-secondary)] space-y-1 list-disc list-inside font-sans">
                 {selectedExperiment.forensics?.suggested_followups?.map((f: string, idx: number) => (
                   <li key={idx}>{f}</li>
                 ))}
@@ -862,13 +862,13 @@ export const PageJurassicLab: React.FC = () => {
       {/* ========================================================================= */}
       {activeTab === 'reports' && selectedExperiment && (
         <div className="space-y-6">
-          <div className="p-4 rounded-xl bg-obsidian-panel border border-obsidian-border space-y-4">
+          <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-semibold text-obsidian-text flex items-center gap-2">
-                  <FileText size={16} className="text-obsidian-cyan" /> Multi-Dimensional Resilience Scorecard & Report Export
+                <h3 className="text-sm font-semibold text-[var(--text-primary)] flex items-center gap-2">
+                  <FileText size={16} className="text-[var(--accent-primary)]" /> Multi-Dimensional Resilience Scorecard & Report Export
                 </h3>
-                <span className="text-xs text-obsidian-muted font-mono">
+                <span className="text-xs text-[var(--text-secondary)] font-mono">
                   Experiment ID: {selectedExperiment.id}
                 </span>
               </div>
@@ -878,7 +878,7 @@ export const PageJurassicLab: React.FC = () => {
                 <a
                   href={api.getJurassicReportUrl(selectedExperiment.id, "markdown")}
                   download={`jurassic_report_${selectedExperiment.id}.md`}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-obsidian-cyan text-obsidian-bg font-bold text-xs hover:bg-obsidian-cyan/90 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[var(--accent-primary)] text-[var(--bg-primary)] font-bold text-xs hover:bg-[var(--accent-primary)]/90 transition-colors"
                 >
                   <Download size={14} />
                   Export Markdown (.md)
@@ -886,7 +886,7 @@ export const PageJurassicLab: React.FC = () => {
                 <a
                   href={api.getJurassicReportUrl(selectedExperiment.id, "csv")}
                   download={`jurassic_metrics_${selectedExperiment.id}.csv`}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-obsidian-bg border border-obsidian-border text-obsidian-text text-xs hover:border-obsidian-muted transition-colors font-mono"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[var(--bg-primary)] border border-[var(--border-subtle)] text-[var(--text-primary)] text-xs hover:border-[var(--text-muted)] transition-colors font-mono"
                 >
                   <Download size={14} />
                   Export CSV (.csv)
@@ -897,16 +897,16 @@ export const PageJurassicLab: React.FC = () => {
             {/* Scorecard Dimensions Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs pt-2">
               {selectedExperiment.resilience_breakdown && Object.entries(selectedExperiment.resilience_breakdown).map(([dim, score]: any) => (
-                <div key={dim} className="flex justify-between p-2.5 rounded bg-obsidian-bg/70 border border-obsidian-border/70">
-                  <span className="text-obsidian-muted truncate max-w-[240px]">{dim.replace(/_/g, ' ')}:</span>
-                  <span className={`font-bold ${score >= 85 ? 'text-obsidian-emerald' : (score >= 70 ? 'text-obsidian-amber' : 'text-obsidian-rose')}`}>
+                <div key={dim} className="flex justify-between p-2.5 rounded bg-[var(--bg-primary)]/70 border border-[var(--border-subtle)]/70">
+                  <span className="text-[var(--text-secondary)] truncate max-w-[240px]">{dim.replace(/_/g, ' ')}:</span>
+                  <span className={`font-bold ${score >= 85 ? 'text-[var(--status-success)]' : (score >= 70 ? 'text-[var(--status-warning)]' : 'text-[var(--status-critical)]')}`}>
                     {score} / 100
                   </span>
                 </div>
               ))}
             </div>
 
-            <p className="text-[11px] text-obsidian-muted font-sans leading-relaxed pt-2">
+            <p className="text-[11px] text-[var(--text-secondary)] font-sans leading-relaxed pt-2">
               Notice: The AEGISSTOR Resilience Scorecard calculates empirical software reliability across ten auditable dimensions.
               It represents software tolerance to unseen regimes and compound faults, not a physical hardware failure probability.
             </p>

@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
-  Sparkles,
-  Database,
-  Layers,
+  X,
   ArrowRight,
   ArrowLeft,
-  X,
-  ShieldCheck,
-  CheckCircle2,
-  HardDrive,
-  Activity,
-  Cpu,
-  BarChart3,
+  Database,
   Sliders,
-  Compass
+  ShieldCheck,
+  BarChart3,
+  Sparkles,
+  Layers,
+  Compass,
+  CheckCircle2
 } from 'lucide-react';
 
 interface Props {
@@ -32,17 +29,6 @@ export const OnboardingModal: React.FC<Props> = ({
   const [step, setStep] = useState(1);
   const totalSteps = 6;
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isOpen) return;
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowRight' && step < totalSteps) setStep((s) => s + 1);
-      if (e.key === 'ArrowLeft' && step > 1) setStep((s) => s - 1);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, step]);
-
   if (!isOpen) return null;
 
   const nextStep = () => {
@@ -55,12 +41,12 @@ export const OnboardingModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="glass-modal max-w-xl w-full rounded-2xl overflow-hidden shadow-glass-modal animate-in fade-in zoom-in-95 duration-150 border border-[var(--border-visible)]">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+      <div className="glass-modal max-w-xl w-full rounded-2xl overflow-hidden shadow-glass-modal animate-in fade-in zoom-in-95 duration-150 border border-[var(--border-normal)]">
         {/* Header with Step Progress */}
-        <div className="px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--surface-raised)]/50 flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--surface-secondary)] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent-cyan)]/15 border border-[var(--accent-cyan)]/30 flex items-center justify-center text-[var(--accent-cyan)]">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)]">
               <Sparkles size={18} />
             </div>
             <div>
@@ -81,10 +67,10 @@ export const OnboardingModal: React.FC<Props> = ({
                   key={i}
                   className={`w-2 h-2 rounded-full transition-all ${
                     i + 1 === step
-                      ? 'w-6 bg-[var(--accent-cyan)] shadow-[0_0_8px_var(--accent-cyan)]'
+                      ? 'w-6 bg-[var(--accent-primary)] shadow-[0_0_8px_var(--accent-primary)]'
                       : i + 1 < step
-                      ? 'bg-[var(--accent-cyan)]/50'
-                      : 'bg-[var(--border-visible)]'
+                      ? 'bg-[var(--accent-primary)]/50'
+                      : 'bg-[var(--border-normal)]'
                   }`}
                 />
               ))}
@@ -104,7 +90,7 @@ export const OnboardingModal: React.FC<Props> = ({
         <div className="p-6 min-h-[280px] flex flex-col justify-between">
           {step === 1 && (
             <div className="space-y-4 animate-in fade-in">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[var(--accent-cyan)]/25 to-[var(--accent-sapphire)]/25 border border-[var(--accent-cyan)]/40 flex items-center justify-center text-[var(--accent-cyan)] shadow-inner">
+              <div className="w-12 h-12 rounded-xl bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)] shadow-inner">
                 <Database size={24} />
               </div>
               <h4 className="text-lg font-bold text-[var(--text-primary)] tracking-tight">
@@ -115,7 +101,7 @@ export const OnboardingModal: React.FC<Props> = ({
               </p>
               <div className="p-3.5 glass-panel rounded-xl text-xs text-[var(--text-secondary)] space-y-1">
                 <div className="font-semibold text-[var(--text-primary)] flex items-center gap-1.5">
-                  <CheckCircle2 size={14} className="text-[var(--color-success)]" /> Core Promise:
+                  <CheckCircle2 size={14} className="text-[var(--status-success)]" /> Core Promise:
                 </div>
                 <div>We tell you when disks will fill up and what actions you can take, with zero guesswork and zero physical danger to your hardware.</div>
               </div>
@@ -124,7 +110,7 @@ export const OnboardingModal: React.FC<Props> = ({
 
           {step === 2 && (
             <div className="space-y-4 animate-in fade-in">
-              <div className="w-12 h-12 rounded-xl bg-[var(--accent-sapphire)]/20 border border-[var(--accent-sapphire)]/40 flex items-center justify-center text-[var(--accent-sapphire)]">
+              <div className="w-12 h-12 rounded-xl bg-[var(--accent-secondary)]/20 border border-[var(--accent-secondary)]/40 flex items-center justify-center text-[var(--accent-secondary)]">
                 <Sliders size={24} />
               </div>
               <h4 className="text-base font-bold text-[var(--text-primary)]">
@@ -140,13 +126,13 @@ export const OnboardingModal: React.FC<Props> = ({
                   onClick={() => onSelectMode('demo')}
                   className={`p-4 rounded-xl border text-left transition-all ${
                     currentMode === 'demo'
-                      ? 'border-[var(--accent-cyan)] bg-[var(--accent-cyan)]/15 shadow-[0_0_12px_rgba(97,221,248,0.2)]'
-                      : 'glass-panel hover:border-[var(--border-visible)]'
+                      ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/15 shadow-[0_0_12px_rgba(255,103,71,0.2)]'
+                      : 'glass-panel hover:border-[var(--border-normal)]'
                   }`}
                 >
                   <div className="font-bold text-xs text-[var(--text-primary)] flex items-center justify-between">
                     <span>Demo Mode</span>
-                    {currentMode === 'demo' && <CheckCircle2 size={14} className="text-[var(--accent-cyan)]" />}
+                    {currentMode === 'demo' && <CheckCircle2 size={14} className="text-[var(--accent-primary)]" />}
                   </div>
                   <p className="text-[11px] text-[var(--text-secondary)] mt-1.5">
                     Preloaded with realistic enterprise NVMe, SAS, and Cold tier storage pools with synthetic telemetry.
@@ -158,13 +144,13 @@ export const OnboardingModal: React.FC<Props> = ({
                   onClick={() => onSelectMode('read_only')}
                   className={`p-4 rounded-xl border text-left transition-all ${
                     currentMode === 'read_only'
-                      ? 'border-[var(--accent-cyan)] bg-[var(--accent-cyan)]/15 shadow-[0_0_12px_rgba(97,221,248,0.2)]'
-                      : 'glass-panel hover:border-[var(--border-visible)]'
+                      ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/15 shadow-[0_0_12px_rgba(255,103,71,0.2)]'
+                      : 'glass-panel hover:border-[var(--border-normal)]'
                   }`}
                 >
                   <div className="font-bold text-xs text-[var(--text-primary)] flex items-center justify-between">
                     <span>Read-Only Live</span>
-                    {currentMode === 'read_only' && <CheckCircle2 size={14} className="text-[var(--accent-cyan)]" />}
+                    {currentMode === 'read_only' && <CheckCircle2 size={14} className="text-[var(--accent-primary)]" />}
                   </div>
                   <p className="text-[11px] text-[var(--text-secondary)] mt-1.5">
                     Connects to verified local host telemetry collector in passive monitoring mode.
@@ -176,7 +162,7 @@ export const OnboardingModal: React.FC<Props> = ({
 
           {step === 3 && (
             <div className="space-y-4 animate-in fade-in">
-              <div className="w-12 h-12 rounded-xl bg-[var(--color-warning)]/20 border border-[var(--color-warning)]/40 flex items-center justify-center text-[var(--color-warning)]">
+              <div className="w-12 h-12 rounded-xl bg-[var(--status-warning)]/20 border border-[var(--status-warning)]/40 flex items-center justify-center text-[var(--status-warning)]">
                 <ShieldCheck size={24} />
               </div>
               <h4 className="text-base font-bold text-[var(--text-primary)]">
@@ -188,7 +174,7 @@ export const OnboardingModal: React.FC<Props> = ({
 
               <div className="space-y-2 text-xs">
                 <div className="p-3 glass-panel rounded-xl flex items-start gap-3">
-                  <div className="w-2 h-2 rounded-full bg-[var(--accent-cyan)] mt-1.5 shrink-0" />
+                  <div className="w-2 h-2 rounded-full bg-[var(--accent-primary)] mt-1.5 shrink-0" />
                   <div>
                     <span className="font-semibold text-[var(--text-primary)]">Synthetic Demo Data:</span>
                     <p className="text-[11px] text-[var(--text-secondary)] mt-0.5">
@@ -198,7 +184,7 @@ export const OnboardingModal: React.FC<Props> = ({
                 </div>
 
                 <div className="p-3 glass-panel rounded-xl flex items-start gap-3">
-                  <div className="w-2 h-2 rounded-full bg-[var(--color-success)] mt-1.5 shrink-0" />
+                  <div className="w-2 h-2 rounded-full bg-[var(--status-success)] mt-1.5 shrink-0" />
                   <div>
                     <span className="font-semibold text-[var(--text-primary)]">Zero Hardware Fabrication Rule:</span>
                     <p className="text-[11px] text-[var(--text-secondary)] mt-0.5">
@@ -212,7 +198,7 @@ export const OnboardingModal: React.FC<Props> = ({
 
           {step === 4 && (
             <div className="space-y-4 animate-in fade-in">
-              <div className="w-12 h-12 rounded-xl bg-[var(--accent-violet)]/20 border border-[var(--accent-violet)]/40 flex items-center justify-center text-[var(--accent-violet)]">
+              <div className="w-12 h-12 rounded-xl bg-[var(--accent-tertiary)]/20 border border-[var(--accent-tertiary)]/40 flex items-center justify-center text-[var(--accent-tertiary)]">
                 <BarChart3 size={24} />
               </div>
               <h4 className="text-base font-bold text-[var(--text-primary)]">
@@ -225,15 +211,15 @@ export const OnboardingModal: React.FC<Props> = ({
               <div className="p-3.5 glass-panel rounded-xl space-y-2 text-xs font-mono">
                 <div className="flex items-center justify-between text-[var(--text-secondary)]">
                   <span>Median Estimate (q50):</span>
-                  <span className="text-[var(--accent-violet)] font-bold">Most probable future trend</span>
+                  <span className="text-[var(--accent-primary)] font-bold">Most probable future trend</span>
                 </div>
                 <div className="flex items-center justify-between text-[var(--text-secondary)]">
                   <span>Expected Range (80% CI):</span>
-                  <span className="text-[var(--accent-cyan)] font-bold">Safe operational boundary</span>
+                  <span className="text-[var(--accent-secondary)] font-bold">Safe operational boundary</span>
                 </div>
                 <div className="flex items-center justify-between text-[var(--text-secondary)]">
                   <span>Hard SLA Limit:</span>
-                  <span className="text-[var(--color-critical)] font-bold">Immutable safety ceiling</span>
+                  <span className="text-[var(--status-critical)] font-bold">Immutable safety ceiling</span>
                 </div>
               </div>
             </div>
@@ -241,7 +227,7 @@ export const OnboardingModal: React.FC<Props> = ({
 
           {step === 5 && (
             <div className="space-y-4 animate-in fade-in">
-              <div className="w-12 h-12 rounded-xl bg-[var(--color-success)]/20 border border-[var(--color-success)]/40 flex items-center justify-center text-[var(--color-success)]">
+              <div className="w-12 h-12 rounded-xl bg-[var(--status-success)]/20 border border-[var(--status-success)]/40 flex items-center justify-center text-[var(--status-success)]">
                 <Layers size={24} />
               </div>
               <h4 className="text-base font-bold text-[var(--text-primary)]">
@@ -252,7 +238,7 @@ export const OnboardingModal: React.FC<Props> = ({
               </p>
 
               <div className="p-3.5 glass-panel rounded-xl text-xs space-y-2">
-                <div className="font-semibold text-[var(--color-success)] flex items-center gap-1.5">
+                <div className="font-semibold text-[var(--status-success)] flex items-center gap-1.5">
                   <ShieldCheck size={15} /> Safety Guarantee:
                 </div>
                 <p className="text-[11px] text-[var(--text-secondary)] leading-relaxed">
@@ -264,7 +250,7 @@ export const OnboardingModal: React.FC<Props> = ({
 
           {step === 6 && (
             <div className="space-y-4 animate-in fade-in">
-              <div className="w-12 h-12 rounded-xl bg-[var(--accent-cyan)]/20 border border-[var(--accent-cyan)]/40 flex items-center justify-center text-[var(--accent-cyan)]">
+              <div className="w-12 h-12 rounded-xl bg-[var(--accent-primary)]/20 border border-[var(--accent-primary)]/40 flex items-center justify-center text-[var(--accent-primary)]">
                 <Compass size={24} />
               </div>
               <h4 className="text-base font-bold text-[var(--text-primary)]">
@@ -298,7 +284,7 @@ export const OnboardingModal: React.FC<Props> = ({
               {step > 1 && (
                 <button
                   onClick={prevStep}
-                  className="btn-aurora-secondary px-3.5 py-1.5 rounded-lg text-xs flex items-center gap-1"
+                  className="btn-ember-secondary px-3.5 py-1.5 rounded-lg text-xs flex items-center gap-1"
                 >
                   <ArrowLeft size={13} /> Back
                 </button>
@@ -306,7 +292,7 @@ export const OnboardingModal: React.FC<Props> = ({
 
               <button
                 onClick={nextStep}
-                className="btn-aurora-primary px-4 py-1.5 rounded-lg text-xs flex items-center gap-1 font-semibold"
+                className="btn-ember-primary px-4 py-1.5 rounded-lg text-xs flex items-center gap-1 font-semibold"
               >
                 {step === totalSteps ? 'Get Started' : 'Next'} <ArrowRight size={13} />
               </button>

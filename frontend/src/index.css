@@ -4,217 +4,281 @@
 
 :root {
   /* ========================================================
-     DARK THEME — AURORA MIDNIGHT (Exact Prompt 12 Tokens)
+     DARK THEME — EMBER NOIR (Prompt 13 Design Tokens)
      ======================================================== */
-  --color-bg: #070B14;
-  --color-bg-secondary: #0B1222;
-  --surface-primary: #111C32;
-  --surface-raised: #172541;
-  --surface-glass: rgba(21, 35, 61, 0.78);
+  --bg-primary: #171615;
+  --bg-secondary: #1C1A18;
+  --bg-tertiary: #211E1C;
 
-  --text-primary: #F3F6FF;
-  --text-secondary: #B0BED7;
-  --text-muted: #8596B5;
-  --text-disabled: #596781;
+  --surface-primary: rgba(37, 33, 31, 0.82);
+  --surface-secondary: rgba(45, 39, 36, 0.88);
+  --surface-elevated: rgba(53, 45, 41, 0.96);
+  --surface-glass: rgba(37, 33, 31, 0.82);
 
-  --border-subtle: rgba(167, 190, 229, 0.14);
-  --border-visible: rgba(167, 190, 229, 0.24);
-  --border-highlight: rgba(97, 221, 248, 0.40);
+  --text-primary: #F5F0E8;
+  --text-secondary: #D0C5BB;
+  --text-muted: #AAA198;
+  --text-disabled: #80776F;
 
-  --accent-cyan: #61DDF8;         /* Primary Accent: Ice Cyan */
-  --accent-sapphire: #6D91FF;     /* Secondary Accent: Sapphire */
-  --accent-violet: #B29AFF;       /* Tertiary Accent: Aurora Violet */
+  --border-subtle: rgba(235, 220, 205, 0.10);
+  --border-normal: rgba(235, 220, 205, 0.17);
+  --border-visible: rgba(235, 220, 205, 0.17);
+  --border-highlight: rgba(255, 103, 71, 0.48);
 
-  --color-success: #4ADBB5;
-  --color-warning: #FFD080;
-  --color-critical: #FF788D;
-  --color-neutral: #B0BCD0;
+  /* PRIMARY ACCENT: VERMILION */
+  --accent-primary: #FF6747;
+  --accent-primary-hover: #FF8267;
+  --accent-primary-pressed: #D94F32;
+
+  /* SECONDARY & TERTIARY ACCENTS: WARM CLAY & SMOKED TAUPE */
+  --accent-secondary: #E8A083;
+  --accent-tertiary: #C6B8AB;
+
+  /* OPERATIONAL STATUS TOKENS */
+  --status-success: #91B99A;
+  --status-warning: #F1C27D;
+  --status-critical: #FF7869;
+  --status-info: #C9BCAF;
+  --status-unknown: #AAA198;
+
+  /* Backward Compatibility Aliases */
+  --color-bg: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --accent-cyan: var(--accent-primary);
+  --accent-sapphire: var(--accent-secondary);
+  --accent-violet: var(--accent-tertiary);
+  --color-success: var(--status-success);
+  --color-warning: var(--status-warning);
+  --color-critical: var(--status-critical);
+  --color-neutral: var(--status-info);
 
   /* Semantic UI Tokens */
-  --btn-primary-bg: #61DDF8;
-  --btn-primary-text: #070B14;
-  --btn-primary-hover: #7ce4fa;
-  --btn-secondary-bg: rgba(23, 37, 65, 0.75);
-  --btn-secondary-text: #F3F6FF;
-  --btn-secondary-hover: rgba(30, 48, 82, 0.85);
+  --btn-primary-bg: #FF6747;
+  --btn-primary-text: #171615;
+  --btn-primary-hover: #FF8267;
+  --btn-primary-pressed: #D94F32;
 
-  --surface-hover: rgba(255, 255, 255, 0.05);
-  --surface-active: rgba(97, 221, 248, 0.12);
-  --focus-ring: 0 0 0 2px #070B14, 0 0 0 4px #61DDF8;
+  --btn-secondary-bg: rgba(45, 39, 36, 0.88);
+  --btn-secondary-text: #F5F0E8;
+  --btn-secondary-hover: rgba(53, 45, 41, 0.96);
 
-  --chart-primary: #61DDF8;
-  --chart-secondary: #6D91FF;
-  --chart-tertiary: #B29AFF;
-  --chart-warning: #FFD080;
-  --chart-critical: #FF788D;
-  --chart-neutral: #B0BCD0;
+  --surface-hover: rgba(235, 220, 205, 0.04);
+  --surface-active: rgba(255, 103, 71, 0.12);
+  --focus-ring: 0 0 0 2px #171615, 0 0 0 4px #FF6747;
 
-  --ambient-cyan: rgba(97, 221, 248, 0.07);
-  --ambient-sapphire: rgba(109, 145, 255, 0.06);
-  --ambient-violet: rgba(178, 154, 255, 0.05);
-  --grid-line: rgba(167, 190, 229, 0.035);
+  /* CHARTS WARM ANALYTICAL PALETTE (Prompt 13 Section 10) */
+  --chart-observation: #C9BCAF;
+  --chart-forecast: #FF6747;
+  --chart-alternative: #E8A083;
+  --chart-secondary: #A89A8D;
+  --chart-success: #91B99A;
+  --chart-warning: #F1C27D;
+  --chart-critical: #FF7869;
+
+  --chart-primary: var(--chart-forecast);
+  --chart-tertiary: var(--chart-secondary);
+  --chart-neutral: var(--chart-observation);
+
+  /* Smoked Charcoal & Burnt-Clay Illumination (No blue, cyan, or violet) */
+  --ambient-ember: rgba(255, 103, 71, 0.045);
+  --ambient-clay: rgba(232, 160, 131, 0.035);
+  --grid-line: rgba(235, 220, 205, 0.025);
 }
 
 .light-theme {
   /* ========================================================
-     LIGHT THEME — PEARL AURORA (Exact Prompt 12 Tokens)
+     LIGHT THEME — PORCELAIN ATELIER (Prompt 13 Tokens)
      ======================================================== */
-  --color-bg: #F2F5FB;
-  --color-bg-secondary: #E8EEF8;
-  --surface-primary: #FFFFFF;
-  --surface-raised: #F8FAFF;
-  --surface-glass: rgba(255, 255, 255, 0.86);
+  --bg-primary: #F5F0E8;
+  --bg-secondary: #EEE7DE;
+  --bg-tertiary: #E6DDD3;
 
-  --text-primary: #17223A;
-  --text-secondary: #4B5C76;
-  --text-muted: #687993;
-  --text-disabled: #A0AABC;
+  --surface-primary: rgba(255, 252, 246, 0.88);
+  --surface-secondary: rgba(255, 252, 246, 0.95);
+  --surface-elevated: #FFFCF6;
+  --surface-glass: rgba(255, 252, 246, 0.88);
 
-  --border-subtle: #DDE5F1;
-  --border-visible: #C8D6E9;
-  --border-highlight: rgba(0, 111, 145, 0.35);
+  --text-primary: #24211F;
+  --text-secondary: #554D46;
+  --text-muted: #776C62;
+  --text-disabled: #A39A90;
 
-  --accent-cyan: #006F91;         /* Primary Accent: Deep Ice Cyan */
-  --accent-sapphire: #315FE0;     /* Secondary Accent: Royal Sapphire */
-  --accent-violet: #7350C9;       /* Tertiary Accent: Pearl Violet */
+  --border-subtle: rgba(65, 50, 40, 0.10);
+  --border-normal: rgba(65, 50, 40, 0.17);
+  --border-visible: rgba(65, 50, 40, 0.17);
+  --border-highlight: rgba(217, 79, 50, 0.38);
 
-  --color-success: #087F68;
-  --color-warning: #875000;
-  --color-critical: #BF3452;
-  --color-neutral: #63738B;
+  /* PRIMARY ACCENT: DEEP VERMILION */
+  --accent-primary: #D94F32;
+  --accent-primary-hover: #BE4028;
+  --accent-primary-pressed: #A73521;
+
+  /* SECONDARY & TERTIARY ACCENT: WARM CLAY & SLATE TAUPE */
+  --accent-secondary: #8B6B5B;
+  --accent-tertiary: #71665D;
+
+  /* STATUS TOKENS */
+  --status-success: #34754D;
+  --status-warning: #89520E;
+  --status-critical: #AE382B;
+  --status-info: #66574C;
+  --status-unknown: #746A60;
+
+  /* Backward Compatibility Aliases */
+  --color-bg: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --accent-cyan: var(--accent-primary);
+  --accent-sapphire: var(--accent-secondary);
+  --accent-violet: var(--accent-tertiary);
+  --color-success: var(--status-success);
+  --color-warning: var(--status-warning);
+  --color-critical: var(--status-critical);
+  --color-neutral: var(--status-info);
 
   /* Semantic UI Tokens */
-  --btn-primary-bg: #006F91;
+  --btn-primary-bg: #D94F32;
   --btn-primary-text: #FFFFFF;
-  --btn-primary-hover: #0082aa;
-  --btn-secondary-bg: #E8EEF8;
-  --btn-secondary-text: #17223A;
-  --btn-secondary-hover: #DDE5F1;
+  --btn-primary-hover: #BE4028;
+  --btn-primary-pressed: #A73521;
 
-  --surface-hover: rgba(0, 0, 0, 0.035);
-  --surface-active: rgba(0, 111, 145, 0.09);
-  --focus-ring: 0 0 0 2px #FFFFFF, 0 0 0 4px #006F91;
+  --btn-secondary-bg: #EEE7DE;
+  --btn-secondary-text: #24211F;
+  --btn-secondary-hover: #E6DDD3;
 
-  --chart-primary: #006F91;
-  --chart-secondary: #315FE0;
-  --chart-tertiary: #7350C9;
-  --chart-warning: #875000;
-  --chart-critical: #BF3452;
-  --chart-neutral: #63738B;
+  --surface-hover: rgba(65, 50, 40, 0.04);
+  --surface-active: rgba(217, 79, 50, 0.08);
+  --focus-ring: 0 0 0 2px #FFFCF6, 0 0 0 4px #D94F32;
 
-  --ambient-cyan: rgba(0, 111, 145, 0.05);
-  --ambient-sapphire: rgba(49, 95, 224, 0.04);
-  --ambient-violet: rgba(115, 80, 201, 0.035);
-  --grid-line: rgba(75, 92, 118, 0.04);
+  /* CHARTS WARM ANALYTICAL PALETTE (Light Mode) */
+  --chart-observation: #66574C;
+  --chart-forecast: #D94F32;
+  --chart-alternative: #8B6B5B;
+  --chart-secondary: #71665D;
+  --chart-success: #34754D;
+  --chart-warning: #89520E;
+  --chart-critical: #AE382B;
+
+  --chart-primary: var(--chart-forecast);
+  --chart-tertiary: var(--chart-secondary);
+  --chart-neutral: var(--chart-observation);
+
+  --ambient-ember: rgba(217, 79, 50, 0.035);
+  --ambient-clay: rgba(139, 107, 91, 0.03);
+  --grid-line: rgba(65, 50, 40, 0.035);
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--color-bg);
+  background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
-  /* Multi-layered atmospheric lighting */
+  /* Architectural Graphite & Burnt Clay atmospheric illumination */
   background-image: 
-    radial-gradient(circle at 10% 10%, var(--ambient-cyan) 0%, transparent 45%),
-    radial-gradient(circle at 90% 90%, var(--ambient-sapphire) 0%, transparent 45%),
-    radial-gradient(circle at 50% 0%, var(--ambient-violet) 0%, transparent 40%),
+    radial-gradient(circle at 12% 12%, var(--ambient-ember) 0%, transparent 45%),
+    radial-gradient(circle at 88% 88%, var(--ambient-clay) 0%, transparent 45%),
     linear-gradient(var(--grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
   background-attachment: fixed;
 }
 
 /* ========================================================
-   THE 3-LEVEL GLASS SYSTEM (Prompt 12 Specification)
+   THE SMOKED-GLASS DESIGN SYSTEM (Ember Noir Architectural)
    ======================================================== */
 
-/* Level 1: Standard Glass (Cards, dashboards, charts) */
+/* Standard Smoked Glass Surface */
 .glass-panel,
 .glass-level-1 {
-  background-color: var(--surface-glass);
+  background-color: var(--surface-primary);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-subtle);
-  box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.32);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
   transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
 .glass-panel:hover,
 .glass-level-1:hover {
-  border-color: var(--border-visible);
+  border-color: var(--border-normal);
 }
 
-/* Level 2: Elevated Glass (Sticky action bars, floating popovers, dropdowns) */
+/* Elevated Smoked Glass (Sticky action bars, floating popovers, dropdowns) */
 .glass-panel-elevated,
 .glass-level-2 {
-  background-color: var(--surface-raised);
+  background-color: var(--surface-secondary);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border-visible);
-  box-shadow: 0 14px 40px 0 rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-normal);
+  box-shadow: 0 14px 44px 0 rgba(0, 0, 0, 0.50), inset 0 1px 0 0 rgba(235, 220, 205, 0.06);
 }
 
-/* Level 3: Focus Surface / Solid Glass (Forms, dense tables, dialogs, decisions) */
+/* Modal and Complex Forms (Higher opacity, minimal blur behind text, strong contrast) */
 .glass-modal,
 .glass-level-3,
 .glass-focus {
-  background-color: var(--surface-primary);
+  background-color: var(--surface-elevated);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--border-visible);
-  box-shadow: 0 24px 60px 0 rgba(0, 0, 0, 0.60), inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--border-normal);
+  box-shadow: 0 24px 64px 0 rgba(0, 0, 0, 0.65), inset 0 1px 0 0 rgba(235, 220, 205, 0.10);
 }
 
 /* Accessible fallbacks when backdrop-filter is unsupported */
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
   .glass-panel,
   .glass-level-1 {
-    background-color: var(--surface-primary);
+    background-color: var(--surface-secondary);
   }
   .glass-panel-elevated,
   .glass-level-2 {
-    background-color: var(--surface-raised);
+    background-color: var(--surface-elevated);
   }
 }
 
 /* ========================================================
-   STANDARDIZED ACTION BUTTONS & INTERACTION TOKENS
+   STANDARDIZED ACTION BUTTONS & INTERACTIONS
    ======================================================== */
 
+.btn-ember-primary,
 .btn-aurora-primary {
   background-color: var(--btn-primary-bg);
   color: var(--btn-primary-text);
   font-weight: 600;
   border: 1px solid transparent;
   transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 2px 8px -1px rgba(97, 221, 248, 0.35);
+  box-shadow: 0 2px 8px -1px rgba(255, 103, 71, 0.35);
 }
 
+.btn-ember-primary:hover:not(:disabled),
 .btn-aurora-primary:hover:not(:disabled) {
-  background-color: var(--btn-primary-hover);
-  box-shadow: 0 4px 16px 0 rgba(97, 221, 248, 0.45);
+  background-color: var(--accent-primary-hover);
+  box-shadow: 0 4px 16px 0 rgba(255, 103, 71, 0.45);
   transform: translateY(-1px);
 }
 
+.btn-ember-primary:active:not(:disabled),
 .btn-aurora-primary:active:not(:disabled) {
+  background-color: var(--accent-primary-pressed);
   transform: translateY(0);
 }
 
+.btn-ember-secondary,
 .btn-aurora-secondary {
   background-color: var(--btn-secondary-bg);
   color: var(--btn-secondary-text);
-  border: 1px solid var(--border-visible);
+  border: 1px solid var(--border-normal);
   font-weight: 500;
   transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.btn-ember-secondary:hover:not(:disabled),
 .btn-aurora-secondary:hover:not(:disabled) {
-  background-color: var(--btn-secondary-hover);
-  border-color: var(--accent-cyan);
+  background-color: var(--surface-elevated);
+  border-color: var(--border-highlight);
   color: var(--text-primary);
 }
 
@@ -224,7 +288,7 @@ body {
   box-shadow: var(--focus-ring);
 }
 
-/* Custom Scrollbars */
+/* Custom Smoked Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -235,7 +299,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-visible);
+  background: var(--border-normal);
   border-radius: 9999px;
 }
 

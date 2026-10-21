@@ -33,7 +33,7 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
   const [showAdvancedStats, setShowAdvancedStats] = useState(false);
   const { isGuided } = usePresentationMode();
 
-  // Downsample historical points if too dense (e.g. max 80 historical points for crisp SVG rendering)
+  // Downsample historical points if too dense (max 80 historical points for crisp SVG rendering)
   const step = Math.max(1, Math.floor(historicalValues.length / 80));
   const sampledHistTimes = historicalTimestamps.filter((_, i) => i % step === 0);
   const sampledHistVals = historicalValues.filter((_, i) => i % step === 0);
@@ -142,42 +142,42 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
       <div className="flex items-center justify-between flex-wrap gap-2.5">
         <div>
           <h4 className="text-sm font-semibold tracking-wide text-[var(--text-primary)] flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[var(--accent-cyan)] shadow-[0_0_8px_var(--accent-cyan)] animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-[var(--accent-primary)] shadow-[0_0_8px_var(--accent-primary)] animate-pulse" />
             {title}
           </h4>
           <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
             {isGuided
-              ? 'Past observations (cyan) followed by expected future range (shaded interval).'
+              ? 'Past observations (warm neutral) followed by expected future range (vermilion envelope).'
               : 'Empirical time-series telemetry with conformal quantile intervals [q10, q90].'}
           </p>
         </div>
 
         <div className="flex items-center gap-4 text-xs flex-wrap">
           <span className="flex items-center gap-1.5 text-[var(--text-secondary)]">
-            <span className="w-3 h-0.5 bg-[var(--accent-cyan)] inline-block rounded-full"></span>
+            <span className="w-3 h-0.5 bg-[var(--chart-observation)] inline-block rounded-full"></span>
             {isGuided ? 'Past Data' : 'Observed History'}
           </span>
           {q50.length > 0 && (
-            <span className="flex items-center gap-1.5 text-[var(--accent-violet)]">
-              <span className="w-3 h-0.5 bg-[var(--accent-violet)] inline-block rounded-full"></span>
+            <span className="flex items-center gap-1.5 text-[var(--chart-forecast)] font-medium">
+              <span className="w-3 h-0.5 bg-[var(--chart-forecast)] inline-block rounded-full"></span>
               {isGuided ? 'Expected Trend' : 'Forecast Median (q50)'}
             </span>
           )}
           {q10.length > 0 && (
             <span className="flex items-center gap-1.5 text-[var(--text-secondary)]">
-              <span className="w-3.5 h-2 bg-[var(--accent-cyan)] opacity-25 inline-block rounded-sm"></span>
+              <span className="w-3.5 h-2 bg-[var(--accent-primary)] opacity-25 inline-block rounded-sm"></span>
               {isGuided ? 'Expected Range (80%)' : '80% CI [q10, q90]'}
             </span>
           )}
           {counterfactualQ50.length > 0 && (
-            <span className="flex items-center gap-1.5 text-[var(--color-success)] font-medium">
-              <span className="w-3 h-0.5 border-t border-dashed border-[var(--color-success)] inline-block"></span>
+            <span className="flex items-center gap-1.5 text-[var(--chart-alternative)] font-medium">
+              <span className="w-3 h-0.5 border-t border-dashed border-[var(--chart-alternative)] inline-block"></span>
               {isGuided ? 'Virtual Action Test' : 'Counterfactual Simulation'}
             </span>
           )}
           {hardConstraint !== null && (
-            <span className="flex items-center gap-1.5 text-[var(--color-critical)] font-medium">
-              <span className="w-3 h-0.5 border-t border-dashed border-[var(--color-critical)] inline-block"></span>
+            <span className="flex items-center gap-1.5 text-[var(--status-critical)] font-medium">
+              <span className="w-3 h-0.5 border-t border-dashed border-[var(--status-critical)] inline-block"></span>
               {isGuided ? 'Hard Limit' : 'Hard SLA Constraint'}
             </span>
           )}
@@ -194,31 +194,31 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
       </div>
 
       {/* Dynamic Layperson Narrative Summary */}
-      <div className="bg-[var(--surface-raised)]/60 rounded-xl px-3.5 py-2 border border-[var(--border-subtle)] text-[11px] text-[var(--text-secondary)] flex items-start gap-2">
-        <Sparkles size={14} className="text-[var(--accent-cyan)] shrink-0 mt-0.5" />
+      <div className="bg-[var(--surface-secondary)] rounded-xl px-3.5 py-2 border border-[var(--border-subtle)] text-[11px] text-[var(--text-secondary)] flex items-start gap-2">
+        <Sparkles size={14} className="text-[var(--accent-primary)] shrink-0 mt-0.5" />
         <span className="leading-relaxed">{narrativeText}</span>
       </div>
 
       {/* Advanced Statistical Breakdown (Revealed when requested) */}
       {showAdvancedStats && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-[var(--surface-primary)] p-3 rounded-xl border border-[var(--border-visible)] text-xs font-mono animate-in fade-in duration-100">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-[var(--surface-secondary)] p-3 rounded-xl border border-[var(--border-normal)] text-xs font-mono animate-in fade-in duration-100">
           <div>
             <span className="text-[10px] text-[var(--text-muted)] block">Initial Observation:</span>
             <span className="font-bold text-[var(--text-primary)]">{formatVal(firstHist)}</span>
           </div>
           <div>
             <span className="text-[10px] text-[var(--text-muted)] block">Current Level:</span>
-            <span className="font-bold text-[var(--accent-cyan)]">{formatVal(lastHist)}</span>
+            <span className="font-bold text-[var(--chart-observation)]">{formatVal(lastHist)}</span>
           </div>
           <div>
             <span className="text-[10px] text-[var(--text-muted)] block">End Projected (q50):</span>
-            <span className="font-bold text-[var(--accent-violet)]">
+            <span className="font-bold text-[var(--chart-forecast)]">
               {lastFc !== null ? formatVal(lastFc) : 'N/A'}
             </span>
           </div>
           <div>
             <span className="text-[10px] text-[var(--text-muted)] block">SLA Headroom Margin:</span>
-            <span className="font-bold text-[var(--color-success)]">
+            <span className="font-bold text-[var(--status-success)]">
               {hardConstraint ? formatVal(Math.max(0, hardConstraint - lastHist)) : 'Unconstrained'}
             </span>
           </div>
@@ -232,15 +232,15 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
           className="w-full h-auto select-none"
           style={{ maxHeight: '340px' }}
         >
-          {/* Subtle gradient definitions */}
+          {/* Gradients */}
           <defs>
             <linearGradient id="uncertaintyGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--accent-cyan)" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="var(--accent-cyan)" stopOpacity="0.04" />
+              <stop offset="0%" stopColor="var(--accent-primary)" stopOpacity="0.22" />
+              <stop offset="100%" stopColor="var(--accent-primary)" stopOpacity="0.04" />
             </linearGradient>
             <linearGradient id="historyGradient" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="var(--accent-sapphire)" />
-              <stop offset="100%" stopColor="var(--accent-cyan)" />
+              <stop offset="0%" stopColor="var(--chart-secondary)" />
+              <stop offset="100%" stopColor="var(--chart-observation)" />
             </linearGradient>
           </defs>
 
@@ -257,7 +257,7 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
                   y2={y}
                   stroke="var(--border-subtle)"
                   strokeDasharray="3 3"
-                  strokeOpacity="0.5"
+                  strokeOpacity="0.6"
                 />
                 <text
                   x={padLeft - 10}
@@ -280,7 +280,7 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
                 y1={getY(hardConstraint)}
                 x2={width - padRight}
                 y2={getY(hardConstraint)}
-                stroke="var(--color-critical)"
+                stroke="var(--status-critical)"
                 strokeWidth="1.5"
                 strokeDasharray="5 3"
               />
@@ -288,7 +288,7 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
                 x={width - padRight - 5}
                 y={getY(hardConstraint) - 5}
                 textAnchor="end"
-                fill="var(--color-critical)"
+                fill="var(--status-critical)"
                 className="text-[10px] font-mono font-semibold"
               >
                 Hard SLA Limit: {formatVal(hardConstraint)}
@@ -304,15 +304,15 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
                 y1={padTop}
                 x2={splitX}
                 y2={padTop + plotHeight}
-                stroke="var(--accent-cyan)"
-                strokeOpacity="0.6"
+                stroke="var(--accent-primary)"
+                strokeOpacity="0.5"
                 strokeDasharray="2 2"
               />
               <text
                 x={splitX - 6}
                 y={padTop + 14}
                 textAnchor="end"
-                fill="var(--accent-cyan)"
+                fill="var(--accent-primary)"
                 className="text-[10px] font-mono font-semibold"
               >
                 Now (Cutoff)
@@ -341,7 +341,7 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
             <path
               d={fcMedianPath}
               fill="none"
-              stroke="var(--accent-violet)"
+              stroke="var(--chart-forecast)"
               strokeWidth="2.4"
             />
           )}
@@ -351,69 +351,99 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
             <path
               d={cfPath}
               fill="none"
-              stroke="var(--color-success)"
+              stroke="var(--chart-alternative)"
               strokeWidth="2.2"
               strokeDasharray="6 3"
             />
           )}
 
-          {/* Hover interaction points */}
-          {sampledHistVals.map((v, i) => (
-            <circle
-              key={`h-${i}`}
-              cx={getX(i)}
-              cy={getY(v)}
-              r="4.5"
-              className="opacity-0 hover:opacity-100 fill-[var(--accent-cyan)] cursor-pointer transition-opacity"
-              onMouseEnter={() => setHoveredIdx({ type: 'hist', index: i })}
-              onMouseLeave={() => setHoveredIdx(null)}
-            />
-          ))}
+          {/* Interactive Hover Points */}
+          {sampledHistVals.map((v, i) => {
+            const x = getX(i);
+            const y = getY(v);
+            const isHovered = hoveredIdx?.type === 'hist' && hoveredIdx.index === i;
+            return (
+              <circle
+                key={`hist-${i}`}
+                cx={x}
+                cy={y}
+                r={isHovered ? 5 : 2.5}
+                fill={isHovered ? 'var(--accent-primary)' : 'var(--chart-observation)'}
+                className="cursor-pointer transition-all duration-75"
+                onMouseEnter={() => setHoveredIdx({ type: 'hist', index: i })}
+                onMouseLeave={() => setHoveredIdx(null)}
+              />
+            );
+          })}
 
-          {q50.map((v, i) => (
-            <circle
-              key={`f-${i}`}
-              cx={getX(fcOffset + 1 + i)}
-              cy={getY(v)}
-              r="4.5"
-              className="opacity-0 hover:opacity-100 fill-[var(--accent-violet)] cursor-pointer transition-opacity"
-              onMouseEnter={() => setHoveredIdx({ type: 'fc', index: i })}
-              onMouseLeave={() => setHoveredIdx(null)}
-            />
-          ))}
+          {q50.map((v, i) => {
+            const x = getX(fcOffset + 1 + i);
+            const y = getY(v);
+            const isHovered = hoveredIdx?.type === 'fc' && hoveredIdx.index === i;
+            return (
+              <circle
+                key={`fc-${i}`}
+                cx={x}
+                cy={y}
+                r={isHovered ? 5 : 2.5}
+                fill={isHovered ? 'var(--chart-forecast)' : 'var(--chart-forecast)'}
+                className="cursor-pointer transition-all duration-75"
+                onMouseEnter={() => setHoveredIdx({ type: 'fc', index: i })}
+                onMouseLeave={() => setHoveredIdx(null)}
+              />
+            );
+          })}
         </svg>
 
-        {/* Floating Tooltip Info */}
+        {/* Hover Tooltip Box */}
         {hoveredIdx && (
-          <div className="absolute top-2 right-4 glass-panel-elevated rounded-xl px-3.5 py-2.5 shadow-glass text-xs font-mono">
+          <div
+            className="absolute top-2 right-4 glass-panel-elevated p-2.5 rounded-lg text-xs pointer-events-none shadow-lg border border-[var(--border-normal)]"
+            style={{ zIndex: 10 }}
+          >
             {hoveredIdx.type === 'hist' ? (
               <div>
-                <span className="text-[var(--text-secondary)]">Observed Value: </span>
-                <span className="text-[var(--accent-cyan)] font-bold">
+                <span className="text-[10px] text-[var(--chart-observation)] font-bold block uppercase tracking-wider">
+                  Observed Telemetry
+                </span>
+                <span className="text-[11px] text-[var(--text-muted)] block font-mono">
+                  {sampledHistTimes[hoveredIdx.index]?.slice(0, 19).replace('T', ' ')}
+                </span>
+                <span className="text-sm font-bold text-[var(--text-primary)] font-mono">
                   {formatVal(sampledHistVals[hoveredIdx.index])}
                 </span>
-                <div className="text-[10px] text-[var(--text-muted)]">
-                  {new Date(sampledHistTimes[hoveredIdx.index]).toLocaleString()}
-                </div>
               </div>
             ) : (
               <div>
-                <span className="text-[var(--text-secondary)]">Forecast Median: </span>
-                <span className="text-[var(--accent-violet)] font-bold">
+                <span className="text-[10px] text-[var(--chart-forecast)] font-bold block uppercase tracking-wider">
+                  Forecast (q50 Median)
+                </span>
+                <span className="text-[11px] text-[var(--text-muted)] block font-mono">
+                  {forecastTimestamps[hoveredIdx.index]?.slice(0, 19).replace('T', ' ')}
+                </span>
+                <span className="text-sm font-bold text-[var(--text-primary)] font-mono">
                   {formatVal(q50[hoveredIdx.index])}
                 </span>
-                {q10[hoveredIdx.index] && (
-                  <div className="text-[10px] text-[var(--text-muted)]">
-                    80% Expected Range: [{formatVal(q10[hoveredIdx.index])} — {formatVal(q90[hoveredIdx.index])}]
-                  </div>
+                {q10[hoveredIdx.index] !== undefined && q90[hoveredIdx.index] !== undefined && (
+                  <span className="text-[10px] text-[var(--text-secondary)] block font-mono mt-0.5">
+                    Range: [{formatVal(q10[hoveredIdx.index])} – {formatVal(q90[hoveredIdx.index])}]
+                  </span>
                 )}
-                <div className="text-[10px] text-[var(--text-muted)]">
-                  +{hoveredIdx.index + 1}h ({new Date(forecastTimestamps[hoveredIdx.index]).toLocaleDateString()})
-                </div>
               </div>
             )}
           </div>
         )}
+      </div>
+
+      {/* Axis Timestamps */}
+      <div className="flex items-center justify-between text-[10px] text-[var(--text-muted)] font-mono px-2 pt-1 border-t border-[var(--border-subtle)]">
+        <span>{sampledHistTimes[0]?.slice(5, 16).replace('T', ' ')}</span>
+        <span>{sampledHistTimes[sampledHistTimes.length - 1]?.slice(5, 16).replace('T', ' ')} (Cutoff)</span>
+        <span>
+          {forecastTimestamps.length > 0
+            ? forecastTimestamps[forecastTimestamps.length - 1]?.slice(5, 16).replace('T', ' ')
+            : 'Horizon End'}
+        </span>
       </div>
     </div>
   );

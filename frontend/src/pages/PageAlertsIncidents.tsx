@@ -49,7 +49,7 @@ export const PageAlertsIncidents: React.FC = () => {
       {/* Header */}
       <div>
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[var(--color-critical)]/15 border border-[var(--color-critical)]/30 flex items-center justify-center text-[var(--color-critical)] shadow-[0_0_12px_rgba(255,120,141,0.2)]">
+          <div className="w-8 h-8 rounded-lg bg-[var(--status-critical)]/15 border border-[var(--status-critical)]/30 flex items-center justify-center text-[var(--status-critical)] shadow-[0_0_12px_rgba(255,120,141,0.2)]">
             <AlertTriangle size={18} />
           </div>
           <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
@@ -71,7 +71,7 @@ export const PageAlertsIncidents: React.FC = () => {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="bg-[var(--surface-raised)] border border-[var(--border-visible)] focus:border-[var(--accent-cyan)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] focus:outline-none cursor-pointer"
+            className="bg-[var(--surface-secondary)] border border-[var(--border-normal)] focus:border-[var(--accent-primary)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] focus:outline-none cursor-pointer"
             aria-label="Category Filter"
           >
             <option value="" className="bg-[var(--surface-primary)]">All Categories</option>
@@ -87,7 +87,7 @@ export const PageAlertsIncidents: React.FC = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-[var(--surface-raised)] border border-[var(--border-visible)] focus:border-[var(--accent-cyan)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] focus:outline-none cursor-pointer"
+            className="bg-[var(--surface-secondary)] border border-[var(--border-normal)] focus:border-[var(--accent-primary)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] focus:outline-none cursor-pointer"
             aria-label="Status Filter"
           >
             <option value="" className="bg-[var(--surface-primary)]">All Statuses</option>
@@ -112,8 +112,8 @@ export const PageAlertsIncidents: React.FC = () => {
               className={`glass-panel rounded-2xl p-5 transition-all ${
                 a.status === 'ACTIVE'
                   ? a.severity === 'CRITICAL'
-                    ? 'border-[var(--color-critical)]/50 shadow-[0_0_12px_rgba(255,120,141,0.15)]'
-                    : 'border-[var(--color-warning)]/50 shadow-[0_0_12px_rgba(255,208,128,0.12)]'
+                    ? 'border-[var(--status-critical)]/50 shadow-[0_0_12px_rgba(255,120,141,0.15)]'
+                    : 'border-[var(--status-warning)]/50 shadow-[0_0_12px_rgba(255,208,128,0.12)]'
                   : 'opacity-70'
               }`}
             >
@@ -121,16 +121,16 @@ export const PageAlertsIncidents: React.FC = () => {
                 <div className="flex items-start gap-3.5 flex-1">
                   <span className="mt-0.5 shrink-0">
                     {a.severity === 'CRITICAL' ? (
-                      <ShieldAlert size={20} className="text-[var(--color-critical)]" />
+                      <ShieldAlert size={20} className="text-[var(--status-critical)]" />
                     ) : (
-                      <AlertTriangle size={20} className="text-[var(--color-warning)]" />
+                      <AlertTriangle size={20} className="text-[var(--status-warning)]" />
                     )}
                   </span>
                   <div className="space-y-3 flex-1">
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="text-sm font-bold text-[var(--text-primary)]">{a.title}</h3>
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-[var(--accent-cyan)]">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-[var(--surface-secondary)] border border-[var(--border-subtle)] text-[var(--accent-primary)]">
                           {a.category}
                         </span>
                       </div>
@@ -144,25 +144,25 @@ export const PageAlertsIncidents: React.FC = () => {
 
                     {/* 4-Question Framework */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-[var(--border-subtle)] text-[11px] font-sans">
-                      <div className="p-2.5 rounded-xl bg-[var(--surface-raised)]/40 border border-[var(--border-subtle)]">
+                      <div className="p-2.5 rounded-xl bg-[var(--surface-secondary)]/40 border border-[var(--border-subtle)]">
                         <strong className="text-[var(--text-primary)] block">1. What happened?</strong>
                         <span className="text-[var(--text-secondary)] mt-0.5 block leading-relaxed">
                           Storage growth on {a.device_id} is trending faster than historical rates.
                         </span>
                       </div>
-                      <div className="p-2.5 rounded-xl bg-[var(--surface-raised)]/40 border border-[var(--border-subtle)]">
+                      <div className="p-2.5 rounded-xl bg-[var(--surface-secondary)]/40 border border-[var(--border-subtle)]">
                         <strong className="text-[var(--text-primary)] block">2. Why does it matter?</strong>
                         <span className="text-[var(--text-secondary)] mt-0.5 block leading-relaxed">
                           Unmonitored growth risks hitting the 90% hard ceiling, triggering application I/O throttling.
                         </span>
                       </div>
-                      <div className="p-2.5 rounded-xl bg-[var(--surface-raised)]/40 border border-[var(--border-subtle)]">
+                      <div className="p-2.5 rounded-xl bg-[var(--surface-secondary)]/40 border border-[var(--border-subtle)]">
                         <strong className="text-[var(--text-primary)] block">3. Supporting Evidence:</strong>
                         <span className="text-[var(--text-secondary)] mt-0.5 block leading-relaxed">
                           Telemetry readings verified by calibrated quantile forecast with {a.status} severity status.
                         </span>
                       </div>
-                      <div className="p-2.5 rounded-xl bg-[var(--surface-raised)]/40 border border-[var(--border-subtle)]">
+                      <div className="p-2.5 rounded-xl bg-[var(--surface-secondary)]/40 border border-[var(--border-subtle)]">
                         <strong className="text-[var(--text-primary)] block">4. What to do next:</strong>
                         <span className="text-[var(--text-secondary)] mt-0.5 block leading-relaxed">
                           Acknowledge this notification and simulate cold data migration in the Digital Twin.
@@ -177,10 +177,10 @@ export const PageAlertsIncidents: React.FC = () => {
                   <span
                     className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold ${
                       a.status === 'ACTIVE'
-                        ? 'bg-[var(--color-critical)]/15 text-[var(--color-critical)] border border-[var(--color-critical)]/40 shadow-sm'
+                        ? 'bg-[var(--status-critical)]/15 text-[var(--status-critical)] border border-[var(--status-critical)]/40 shadow-sm'
                         : a.status === 'ACKNOWLEDGED'
-                        ? 'bg-[var(--color-warning)]/15 text-[var(--color-warning)] border border-[var(--color-warning)]/40 shadow-sm'
-                        : 'bg-[var(--color-success)]/15 text-[var(--color-success)] border border-[var(--color-success)]/40 shadow-sm'
+                        ? 'bg-[var(--status-warning)]/15 text-[var(--status-warning)] border border-[var(--status-warning)]/40 shadow-sm'
+                        : 'bg-[var(--status-success)]/15 text-[var(--status-success)] border border-[var(--status-success)]/40 shadow-sm'
                     }`}
                   >
                     {a.status}
@@ -189,7 +189,7 @@ export const PageAlertsIncidents: React.FC = () => {
                   {a.status === 'ACTIVE' && (
                     <button
                       onClick={() => handleAcknowledge(a.id)}
-                      className="btn-aurora-secondary px-3 py-1.5 rounded-lg text-xs font-medium"
+                      className="btn-ember-secondary px-3 py-1.5 rounded-lg text-xs font-medium"
                     >
                       Acknowledge
                     </button>
@@ -198,7 +198,7 @@ export const PageAlertsIncidents: React.FC = () => {
                   {a.status !== 'RESOLVED' && (
                     <button
                       onClick={() => handleResolve(a.id)}
-                      className="btn-aurora-primary px-3.5 py-1.5 rounded-lg text-xs font-semibold"
+                      className="btn-ember-primary px-3.5 py-1.5 rounded-lg text-xs font-semibold"
                     >
                       Resolve
                     </button>

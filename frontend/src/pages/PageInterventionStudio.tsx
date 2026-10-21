@@ -141,13 +141,13 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent-cyan)]/15 border border-[var(--accent-cyan)]/30 flex items-center justify-center text-[var(--accent-cyan)] shadow-[0_0_12px_rgba(97,221,248,0.2)]">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)] shadow-glow-vermilion">
               <Sliders size={18} />
             </div>
             <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
               {isGuided ? 'Compare Possible Actions & Action Planner' : 'Counterfactual Intervention Studio'}
             </h2>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[var(--color-success)]/15 text-[var(--color-success)] border border-[var(--color-success)]/40 shadow-sm">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[var(--status-success)]/15 text-[var(--status-success)] border border-[var(--status-success)]/40 shadow-sm">
               SHADOW MODE: SAFE
             </span>
           </div>
@@ -163,7 +163,7 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
           <select
             value={selectedDeviceId}
             onChange={(e) => setSelectedDeviceId(e.target.value)}
-            className="bg-[var(--surface-raised)] border border-[var(--border-visible)] focus:border-[var(--accent-cyan)] rounded-lg px-3.5 py-1.5 text-xs text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
+            className="bg-[var(--surface-secondary)] border border-[var(--border-normal)] focus:border-[var(--accent-primary)] rounded-lg px-3.5 py-1.5 text-xs text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
             aria-label="Storage Pool"
           >
             {devices.map((d) => (
@@ -176,7 +176,7 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
       </div>
 
       {actionStatusMsg && (
-        <div className="bg-[var(--color-success)]/15 border border-[var(--color-success)]/40 rounded-xl p-3 text-xs text-[var(--color-success)] font-mono flex items-center gap-2 shadow-sm animate-in fade-in">
+        <div className="bg-[var(--status-success)]/15 border border-[var(--status-success)]/40 rounded-xl p-3 text-xs text-[var(--status-success)] font-mono flex items-center gap-2 shadow-sm animate-in fade-in">
           <CheckCircle2 size={16} />
           <span>{actionStatusMsg}</span>
         </div>
@@ -190,23 +190,23 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
           {runwayData && (
             <div className={`p-5 rounded-2xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-all ${
               runwayData.estimated_runway_hours <= 48
-                ? 'bg-[var(--color-critical)]/10 border-[var(--color-critical)]/35 text-[var(--text-primary)]'
+                ? 'bg-[var(--status-critical)]/10 border-[var(--status-critical)]/35 text-[var(--text-primary)]'
                 : runwayData.estimated_runway_hours <= 96
-                ? 'bg-[var(--color-warning)]/10 border-[var(--color-warning)]/35 text-[var(--text-primary)]'
+                ? 'bg-[var(--status-warning)]/10 border-[var(--status-warning)]/35 text-[var(--text-primary)]'
                 : 'glass-panel text-[var(--text-primary)]'
             }`}>
               <div className="flex items-start gap-3.5">
                 <AlertTriangle
                   size={22}
-                  className={runwayData.estimated_runway_hours <= 48 ? 'text-[var(--color-critical)] mt-0.5' : 'text-[var(--color-warning)] mt-0.5'}
+                  className={runwayData.estimated_runway_hours <= 48 ? 'text-[var(--status-critical)] mt-0.5' : 'text-[var(--status-warning)] mt-0.5'}
                 />
                 <div>
                   <div className="text-xs font-bold flex items-center gap-2">
                     <span>{isGuided ? 'Projected Time to Critical Reserve:' : 'Projected Reserve Breach Horizon:'}</span>
-                    <span className="font-mono text-[var(--accent-cyan)] font-semibold">
+                    <span className="font-mono text-[var(--accent-primary)] font-semibold">
                       ~{runwayData.estimated_runway_hours.toFixed(0)} hours
                     </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-[var(--text-secondary)]">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--surface-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)]">
                       {runwayData.breach_status}
                     </span>
                   </div>
@@ -226,7 +226,7 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
                 </div>
                 <div className="px-3.5 py-2 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] text-center shadow-inner">
                   <div className="text-[10px] text-[var(--text-muted)]">Current Util</div>
-                  <div className={`font-bold ${runwayData.current_utilization_pct > 80 ? 'text-[var(--color-critical)]' : 'text-[var(--text-primary)]'}`}>
+                  <div className={`font-bold ${runwayData.current_utilization_pct > 80 ? 'text-[var(--status-critical)]' : 'text-[var(--text-primary)]'}`}>
                     {runwayData.current_utilization_pct}%
                   </div>
                 </div>
@@ -239,7 +239,7 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
                 <span>{isGuided ? 'Safe, Feasible Actions' : 'Feasible Preventive Candidates'}</span>
-                <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[var(--accent-cyan)]/15 text-[var(--accent-cyan)] border border-[var(--accent-cyan)]/30 font-semibold shadow-sm">
+                <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[var(--accent-primary)]/15 text-[var(--accent-primary)] border border-[var(--accent-primary)]/30 font-semibold shadow-sm">
                   {planningData?.feasible_candidates?.length || 0} FEASIBLE
                 </span>
               </h3>
@@ -261,15 +261,15 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
                     }}
                     className={`glass-panel rounded-2xl p-4.5 cursor-pointer transition-all ${
                       isSelected
-                        ? 'border-[var(--accent-cyan)] shadow-[0_0_15px_rgba(97,221,248,0.18)] bg-[var(--surface-raised)]'
-                        : 'hover:border-[var(--accent-cyan)]/40'
+                        ? 'border-[var(--accent-primary)] shadow-[0_0_15px_rgba(97,221,248,0.18)] bg-[var(--surface-secondary)]'
+                        : 'hover:border-[var(--accent-primary)]/40'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[var(--accent-cyan)]/15 text-[var(--accent-cyan)] border border-[var(--accent-cyan)]/40">
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[var(--accent-primary)]/15 text-[var(--accent-primary)] border border-[var(--accent-primary)]/40">
                         RANK #{candidate.rank}
                       </span>
-                      <span className="text-xs font-mono font-bold text-[var(--color-success)]">
+                      <span className="text-xs font-mono font-bold text-[var(--status-success)]">
                         Score: {candidate.utility_score}
                       </span>
                     </div>
@@ -284,7 +284,7 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
                     <div className="mt-3 pt-3 border-t border-[var(--border-subtle)] grid grid-cols-2 gap-2 text-[10px] font-mono">
                       <div>
                         <span className="text-[var(--text-muted)]">Runway Gain:</span>
-                        <div className="text-[var(--color-warning)] font-bold">+{candidate.estimated_runway_gain_hours} hrs</div>
+                        <div className="text-[var(--status-warning)] font-bold">+{candidate.estimated_runway_gain_hours} hrs</div>
                       </div>
                       <div>
                         <span className="text-[var(--text-muted)]">Duration:</span>
@@ -292,7 +292,7 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
                       </div>
                       <div>
                         <span className="text-[var(--text-muted)]">Contention:</span>
-                        <div className={candidate.io_overhead_pct > 15 ? 'text-[var(--color-critical)]' : 'text-[var(--color-success)]'}>
+                        <div className={candidate.io_overhead_pct > 15 ? 'text-[var(--status-critical)]' : 'text-[var(--status-success)]'}>
                           {candidate.io_overhead_pct > 0 ? `+${candidate.io_overhead_pct}%` : `${candidate.io_overhead_pct}%`}
                         </div>
                       </div>
@@ -303,7 +303,7 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
                     </div>
 
                     <div className="mt-3.5 flex items-center justify-between pt-2.5 border-t border-[var(--border-subtle)]">
-                      <span className="text-[10px] font-mono text-[var(--color-success)] flex items-center gap-1">
+                      <span className="text-[10px] font-mono text-[var(--status-success)] flex items-center gap-1">
                         <CheckCircle2 size={12} />
                         Safe to schedule
                       </span>
@@ -312,7 +312,7 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
                           e.stopPropagation();
                           handleApprove(candidate.id);
                         }}
-                        className="px-3 py-1 btn-aurora-primary rounded-lg text-[10px] font-bold"
+                        className="px-3 py-1 btn-ember-primary rounded-lg text-[10px] font-bold"
                       >
                         Approve
                       </button>
@@ -324,8 +324,8 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
 
             {/* Disqualified Candidates Section with 4-Point Explanation */}
             {planningData?.rejected_candidates?.length > 0 && (
-              <div className="mt-4 p-5 rounded-2xl glass-panel border border-[var(--color-critical)]/30 space-y-3">
-                <div className="text-xs font-bold text-[var(--color-critical)] flex items-center gap-2">
+              <div className="mt-4 p-5 rounded-2xl glass-panel border border-[var(--status-critical)]/30 space-y-3">
+                <div className="text-xs font-bold text-[var(--status-critical)] flex items-center gap-2">
                   <XCircle size={16} />
                   <span>Disqualified Actions (Rejected by Hard Safety Limits)</span>
                 </div>
@@ -333,13 +333,13 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
                   {planningData.rejected_candidates.map((rej: any) => (
                     <div
                       key={rej.id}
-                      className="text-xs p-3.5 rounded-xl bg-[var(--surface-raised)]/60 border border-[var(--border-subtle)] flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                      className="text-xs p-3.5 rounded-xl bg-[var(--surface-secondary)]/60 border border-[var(--border-subtle)] flex flex-col sm:flex-row sm:items-center justify-between gap-2"
                     >
                       <div>
                         <span className="font-semibold text-[var(--text-primary)]">{rej.title}: </span>
                         <span className="text-[var(--text-secondary)]">{rej.rejection_reason}</span>
                       </div>
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[var(--color-critical)]/15 text-[var(--color-critical)] border border-[var(--color-critical)]/40 shrink-0">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[var(--status-critical)]/15 text-[var(--status-critical)] border border-[var(--status-critical)]/40 shrink-0">
                         {rej.feasibility}
                       </span>
                     </div>
@@ -355,7 +355,7 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
-                    <Activity size={16} className="text-[var(--accent-cyan)]" />
+                    <Activity size={16} className="text-[var(--accent-primary)]" />
                     <span>Side-by-Side Scenario Trajectory</span>
                   </h3>
                   <p className="text-[11px] text-[var(--text-secondary)] mt-0.5">
@@ -367,22 +367,22 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
                     <span className="w-3 h-0.5 bg-[var(--text-muted)] inline-block"></span>
                     Baseline (Do Nothing)
                   </span>
-                  <span className="flex items-center gap-1.5 text-[var(--accent-cyan)] font-bold">
-                    <span className="w-3 h-0.5 bg-[var(--accent-cyan)] inline-block"></span>
+                  <span className="flex items-center gap-1.5 text-[var(--accent-primary)] font-bold">
+                    <span className="w-3 h-0.5 bg-[var(--accent-primary)] inline-block"></span>
                     Virtual Action Trajectory
                   </span>
                 </div>
               </div>
 
               {/* Trajectory Key Metrics Bar */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[var(--surface-raised)]/60 p-3.5 rounded-xl border border-[var(--border-subtle)] text-xs font-mono">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[var(--surface-secondary)]/60 p-3.5 rounded-xl border border-[var(--border-subtle)] text-xs font-mono">
                 <div>
                   <span className="text-[var(--text-muted)] text-[10px]">Action Duration:</span>
                   <div className="text-[var(--text-primary)] font-bold">{activeSimulation.duration_minutes} min</div>
                 </div>
                 <div>
                   <span className="text-[var(--text-muted)] text-[10px]">I/O Contention:</span>
-                  <div className="text-[var(--color-warning)] font-bold">+{activeSimulation.overhead_io_penalty_pct}%</div>
+                  <div className="text-[var(--status-warning)] font-bold">+{activeSimulation.overhead_io_penalty_pct}%</div>
                 </div>
                 <div>
                   <span className="text-[var(--text-muted)] text-[10px]">Estimated Cost:</span>
@@ -390,16 +390,16 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
                 </div>
                 <div>
                   <span className="text-[var(--text-muted)] text-[10px]">Safety Envelope:</span>
-                  <div className={activeSimulation.safety_envelope_passed ? 'text-[var(--color-success)] font-bold' : 'text-[var(--color-critical)] font-bold'}>
+                  <div className={activeSimulation.safety_envelope_passed ? 'text-[var(--status-success)] font-bold' : 'text-[var(--status-critical)] font-bold'}>
                     {activeSimulation.safety_envelope_passed ? 'PASSED (100%)' : 'VIOLATION'}
                   </div>
                 </div>
               </div>
 
               {/* Assumptions & Model Limitations */}
-              <div className="text-[11px] text-[var(--text-secondary)] bg-[var(--surface-raised)]/40 p-3.5 rounded-xl border border-[var(--border-subtle)] space-y-1.5">
+              <div className="text-[11px] text-[var(--text-secondary)] bg-[var(--surface-secondary)]/40 p-3.5 rounded-xl border border-[var(--border-subtle)] space-y-1.5">
                 <div className="text-[var(--text-primary)] font-semibold flex items-center gap-1.5">
-                  <Info size={13} className="text-[var(--accent-cyan)]" />
+                  <Info size={13} className="text-[var(--accent-primary)]" />
                   <span>Simulator Physical Assumptions:</span>
                 </div>
                 <ul className="list-disc pl-5 space-y-0.5">

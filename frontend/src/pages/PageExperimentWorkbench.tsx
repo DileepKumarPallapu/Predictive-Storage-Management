@@ -67,7 +67,7 @@ export const PageExperimentWorkbench: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent-cyan)]/15 border border-[var(--accent-cyan)]/30 flex items-center justify-center text-[var(--accent-cyan)] shadow-[0_0_12px_rgba(85,214,255,0.2)]">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)] shadow-glow-vermilion">
               <FlaskConical size={18} />
             </div>
             <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
@@ -85,7 +85,7 @@ export const PageExperimentWorkbench: React.FC = () => {
             onClick={() => setActiveTab('ablations')}
             className={`px-3.5 py-1.5 rounded-lg font-medium transition-all ${
               activeTab === 'ablations'
-                ? 'btn-aurora-primary font-bold shadow-sm'
+                ? 'btn-ember-primary font-bold shadow-sm'
                 : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             }`}
           >
@@ -95,7 +95,7 @@ export const PageExperimentWorkbench: React.FC = () => {
             onClick={() => setActiveTab('backtests')}
             className={`px-3.5 py-1.5 rounded-lg font-medium transition-all ${
               activeTab === 'backtests'
-                ? 'btn-aurora-primary font-bold shadow-sm'
+                ? 'btn-ember-primary font-bold shadow-sm'
                 : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             }`}
           >
@@ -113,7 +113,7 @@ export const PageExperimentWorkbench: React.FC = () => {
             <div className="space-y-6">
               {/* Study 1: Calibration */}
               <div className="glass-panel rounded-xl overflow-hidden">
-                <div className="px-5 py-4 border-b border-[var(--border-subtle)] bg-[var(--surface-raised)]/40 flex items-center justify-between">
+                <div className="px-5 py-4 border-b border-[var(--border-subtle)] bg-[var(--surface-secondary)]/40 flex items-center justify-between">
                   <div>
                     <h3 className="text-sm font-bold text-[var(--text-primary)]">
                       Ablation 1: Multi-Quantile Forecast Calibration (72h Horizon)
@@ -122,14 +122,14 @@ export const PageExperimentWorkbench: React.FC = () => {
                       Evaluates persistence vs seasonal-naive vs uncalibrated LightGBM vs conformal calibrated intervals.
                     </p>
                   </div>
-                  <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[var(--accent-cyan)]/15 text-[var(--accent-cyan)] border border-[var(--accent-cyan)]/35 font-semibold">
+                  <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[var(--accent-primary)]/15 text-[var(--accent-primary)] border border-[var(--accent-primary)]/35 font-semibold">
                     PROVENANCE: VOL-NVME-01
                   </span>
                 </div>
 
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs font-mono">
-                    <thead className="bg-[var(--surface-raised)]/60 text-[var(--text-secondary)] uppercase text-[10px] border-b border-[var(--border-subtle)]">
+                    <thead className="bg-[var(--surface-secondary)]/60 text-[var(--text-secondary)] uppercase text-[10px] border-b border-[var(--border-subtle)]">
                       <tr>
                         <th className="px-5 py-3 font-semibold">Architecture</th>
                         <th className="px-5 py-3 font-semibold">MAE (GB)</th>
@@ -141,18 +141,18 @@ export const PageExperimentWorkbench: React.FC = () => {
                     </thead>
                     <tbody className="divide-y divide-[var(--border-subtle)]">
                       {ablations.ablation_1_forecast_calibration.map((row: any, i: number) => (
-                        <tr key={i} className="hover:bg-[var(--surface-raised)]/50 transition-colors">
+                        <tr key={i} className="hover:bg-[var(--surface-secondary)]/50 transition-colors">
                           <td className="px-5 py-3.5 font-semibold text-[var(--text-primary)] font-sans">
                             {row.model_name}
                           </td>
-                          <td className="px-5 py-3.5 text-[var(--accent-cyan)] font-bold">{row.mae_gb} GB</td>
+                          <td className="px-5 py-3.5 text-[var(--accent-primary)] font-bold">{row.mae_gb} GB</td>
                           <td className="px-5 py-3.5 text-[var(--text-secondary)]">{row.rmse_gb} GB</td>
                           <td className="px-5 py-3.5">
                             <span
                               className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                                 row.empirical_coverage >= 0.8
-                                  ? 'bg-[var(--color-success)]/15 text-[var(--color-success)] border border-[var(--color-success)]/40 shadow-sm'
-                                  : 'bg-[var(--color-warning)]/15 text-[var(--color-warning)] border border-[var(--color-warning)]/40 shadow-sm'
+                                  ? 'bg-[var(--status-success)]/15 text-[var(--status-success)] border border-[var(--status-success)]/40 shadow-sm'
+                                  : 'bg-[var(--status-warning)]/15 text-[var(--status-warning)] border border-[var(--status-warning)]/40 shadow-sm'
                               }`}
                             >
                               {(row.empirical_coverage * 100).toFixed(1)}% (Nominal 80%)
@@ -182,15 +182,15 @@ export const PageExperimentWorkbench: React.FC = () => {
                     {ablations.ablation_2_lead_time_planning.map((row: any, i: number) => (
                       <div
                         key={i}
-                        className="bg-[var(--surface-raised)]/60 rounded-xl p-3.5 border border-[var(--border-subtle)] text-xs font-mono space-y-2"
+                        className="bg-[var(--surface-secondary)]/60 rounded-xl p-3.5 border border-[var(--border-subtle)] text-xs font-mono space-y-2"
                       >
                         <div className="flex items-center justify-between">
                           <span className="font-sans font-bold text-[var(--text-primary)]">{row.policy}</span>
                           <span
                             className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                               row.emergency_breach_occurred
-                                ? 'bg-[var(--color-critical)]/15 text-[var(--color-critical)] border border-[var(--color-critical)]/40 shadow-sm'
-                                : 'bg-[var(--color-success)]/15 text-[var(--color-success)] border border-[var(--color-success)]/40 shadow-sm'
+                                ? 'bg-[var(--status-critical)]/15 text-[var(--status-critical)] border border-[var(--status-critical)]/40 shadow-sm'
+                                : 'bg-[var(--status-success)]/15 text-[var(--status-success)] border border-[var(--status-success)]/40 shadow-sm'
                             }`}
                           >
                             {row.emergency_breach_occurred ? 'Breach Occurred' : 'Safely Remediated'}
@@ -198,7 +198,7 @@ export const PageExperimentWorkbench: React.FC = () => {
                         </div>
                         <div className="flex items-center justify-between text-[var(--text-secondary)]">
                           <span>Warning Lead Time:</span>
-                          <span className="text-[var(--accent-cyan)] font-bold text-sm">+{row.warning_lead_time_hours} hrs</span>
+                          <span className="text-[var(--accent-primary)] font-bold text-sm">+{row.warning_lead_time_hours} hrs</span>
                         </div>
                         <div className="text-[11px] text-[var(--text-secondary)] font-sans italic">
                           {row.operational_window}
@@ -221,15 +221,15 @@ export const PageExperimentWorkbench: React.FC = () => {
                     {ablations.ablation_3_intervention_overhead.map((row: any, i: number) => (
                       <div
                         key={i}
-                        className="bg-[var(--surface-raised)]/60 rounded-xl p-3.5 border border-[var(--border-subtle)] text-xs font-mono space-y-2"
+                        className="bg-[var(--surface-secondary)]/60 rounded-xl p-3.5 border border-[var(--border-subtle)] text-xs font-mono space-y-2"
                       >
                         <div className="flex items-center justify-between">
                           <span className="font-sans font-bold text-[var(--text-primary)]">{row.strategy}</span>
                           <span
                             className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                               row.recommendation_engine_action.includes('Ranked')
-                                ? 'bg-[var(--color-success)]/15 text-[var(--color-success)] border border-[var(--color-success)]/40 shadow-sm'
-                                : 'bg-[var(--color-warning)]/15 text-[var(--color-warning)] border border-[var(--color-warning)]/40 shadow-sm'
+                                ? 'bg-[var(--status-success)]/15 text-[var(--status-success)] border border-[var(--status-success)]/40 shadow-sm'
+                                : 'bg-[var(--status-warning)]/15 text-[var(--status-warning)] border border-[var(--status-warning)]/40 shadow-sm'
                             }`}
                           >
                             {row.recommendation_engine_action}
@@ -237,7 +237,7 @@ export const PageExperimentWorkbench: React.FC = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-[11px] text-[var(--text-secondary)]">
                           <div>Duration: <span className="text-[var(--text-primary)] font-bold">{row.migration_duration_hours}h</span></div>
-                          <div>Penalty: <span className="text-[var(--color-warning)] font-bold">+{row.latency_inflation_pct}%</span></div>
+                          <div>Penalty: <span className="text-[var(--status-warning)] font-bold">+{row.latency_inflation_pct}%</span></div>
                           <div>Peak P95: <span className="text-[var(--text-primary)] font-bold">{row.peak_latency_ms} ms</span></div>
                           <div>SLA Limit: <span className="text-[var(--text-primary)] font-bold">{row.sla_limit_ms} ms</span></div>
                         </div>
@@ -262,7 +262,7 @@ export const PageExperimentWorkbench: React.FC = () => {
                       type="text"
                       value={expName}
                       onChange={(e) => setExpName(e.target.value)}
-                      className="w-full bg-[var(--surface-raised)]/60 border border-[var(--border-subtle)] focus:border-[var(--accent-cyan)]/70 rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] focus:outline-none"
+                      className="w-full bg-[var(--surface-secondary)]/60 border border-[var(--border-subtle)] focus:border-[var(--accent-primary)]/70 rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] focus:outline-none"
                     />
                   </div>
 
@@ -271,7 +271,7 @@ export const PageExperimentWorkbench: React.FC = () => {
                     <select
                       value={modelType}
                       onChange={(e) => setModelType(e.target.value)}
-                      className="w-full bg-[var(--surface-raised)]/60 border border-[var(--border-subtle)] focus:border-[var(--accent-cyan)]/70 rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-semibold focus:outline-none cursor-pointer"
+                      className="w-full bg-[var(--surface-secondary)]/60 border border-[var(--border-subtle)] focus:border-[var(--accent-primary)]/70 rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-semibold focus:outline-none cursor-pointer"
                     >
                       <option value="LightGBM" className="bg-[var(--surface-panel)]">LightGBM Multi-Quantile Regressor</option>
                       <option value="SeasonalNaive" className="bg-[var(--surface-panel)]">Seasonal-Naive Baseline</option>
@@ -284,7 +284,7 @@ export const PageExperimentWorkbench: React.FC = () => {
                     <select
                       value={horizon}
                       onChange={(e) => setHorizon(Number(e.target.value))}
-                      className="w-full bg-[var(--surface-raised)]/60 border border-[var(--border-subtle)] focus:border-[var(--accent-cyan)]/70 rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
+                      className="w-full bg-[var(--surface-secondary)]/60 border border-[var(--border-subtle)] focus:border-[var(--accent-primary)]/70 rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
                     >
                       <option value={24} className="bg-[var(--surface-panel)]">24 Hours Lead Time</option>
                       <option value={72} className="bg-[var(--surface-panel)]">72 Hours Lead Time</option>
@@ -296,7 +296,7 @@ export const PageExperimentWorkbench: React.FC = () => {
                     <button
                       onClick={handleRunBacktest}
                       disabled={running}
-                      className="w-full btn-aurora-primary py-2 px-4 rounded-lg font-bold text-xs flex items-center justify-center gap-2"
+                      className="w-full btn-ember-primary py-2 px-4 rounded-lg font-bold text-xs flex items-center justify-center gap-2"
                     >
                       <Play size={14} />
                       {running ? 'Running Backtest...' : 'Execute Backtest'}
@@ -322,7 +322,7 @@ export const PageExperimentWorkbench: React.FC = () => {
 
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs font-mono">
-                      <thead className="bg-[var(--surface-raised)]/60 text-[var(--text-secondary)] uppercase text-[10px] border-b border-[var(--border-subtle)]">
+                      <thead className="bg-[var(--surface-secondary)]/60 text-[var(--text-secondary)] uppercase text-[10px] border-b border-[var(--border-subtle)]">
                         <tr>
                           <th className="px-5 py-3 font-semibold">Experiment & Model</th>
                           <th className="px-5 py-3 font-semibold">Horizon</th>
@@ -336,21 +336,21 @@ export const PageExperimentWorkbench: React.FC = () => {
                       </thead>
                       <tbody className="divide-y divide-[var(--border-subtle)]">
                         {experiments.map((exp) => (
-                          <tr key={exp.id} className="hover:bg-[var(--surface-raised)]/50 transition-colors">
+                          <tr key={exp.id} className="hover:bg-[var(--surface-secondary)]/50 transition-colors">
                             <td className="px-5 py-3.5 font-semibold text-[var(--text-primary)] font-sans">
                               {exp.name}
-                              <div className="text-[10px] font-mono text-[var(--accent-cyan)] font-normal">{exp.model_type}</div>
+                              <div className="text-[10px] font-mono text-[var(--accent-primary)] font-normal">{exp.model_type}</div>
                             </td>
                             <td className="px-5 py-3.5 text-[var(--text-primary)]">+{exp.horizon_hours}h</td>
                             <td className="px-5 py-3.5 text-[var(--text-secondary)]">{exp.train_samples} / {exp.test_samples}</td>
                             <td className="px-5 py-3.5 font-bold text-[var(--text-primary)]">{exp.mae.toFixed(1)} GB</td>
                             <td className="px-5 py-3.5 text-[var(--text-secondary)]">{exp.rmse.toFixed(1)} GB</td>
-                            <td className="px-5 py-3.5 text-[var(--accent-cyan)] font-bold">{exp.pinball_loss.toFixed(2)}</td>
+                            <td className="px-5 py-3.5 text-[var(--accent-primary)] font-bold">{exp.pinball_loss.toFixed(2)}</td>
                             <td className="px-5 py-3.5">
                               <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                                 exp.interval_coverage >= 0.78
-                                  ? 'bg-[var(--color-success)]/15 text-[var(--color-success)] border border-[var(--color-success)]/40 shadow-sm'
-                                  : 'bg-[var(--color-warning)]/15 text-[var(--color-warning)] border border-[var(--color-warning)]/40 shadow-sm'
+                                  ? 'bg-[var(--status-success)]/15 text-[var(--status-success)] border border-[var(--status-success)]/40 shadow-sm'
+                                  : 'bg-[var(--status-warning)]/15 text-[var(--status-warning)] border border-[var(--status-warning)]/40 shadow-sm'
                               }`}>
                                 {(exp.interval_coverage * 100).toFixed(1)}%
                               </span>
@@ -358,7 +358,7 @@ export const PageExperimentWorkbench: React.FC = () => {
                             <td className="px-5 py-3.5 text-right">
                               <button
                                 onClick={() => handleDownloadManifest(exp.manifest)}
-                                className="btn-aurora-secondary px-3 py-1.5 rounded-lg text-[11px] inline-flex items-center gap-1.5 font-sans font-medium"
+                                className="btn-ember-secondary px-3 py-1.5 rounded-lg text-[11px] inline-flex items-center gap-1.5 font-sans font-medium"
                               >
                                 <Download size={12} /> JSON
                               </button>

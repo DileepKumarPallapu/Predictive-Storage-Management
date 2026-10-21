@@ -53,12 +53,12 @@ export const TopBar: React.FC<TopBarProps> = ({
           <select
             value={currentMode}
             onChange={(e) => onModeChange(e.target.value)}
-            className="bg-[var(--surface-raised)] border border-[var(--border-visible)] text-[var(--text-primary)] text-xs rounded-lg px-2.5 py-1 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer transition-colors font-medium"
+            className="bg-[var(--surface-secondary)] border border-[var(--border-normal)] text-[var(--text-primary)] text-xs rounded-lg px-2.5 py-1 focus:outline-none focus:border-[var(--accent-primary)] cursor-pointer transition-colors font-medium"
             aria-label="Operating Mode"
           >
-            <option value="demo" className="bg-[var(--surface-primary)]">Demo Mode (Synthetic Telemetry)</option>
-            <option value="replay" className="bg-[var(--surface-primary)]">Replay Mode (Chronological Traces)</option>
-            <option value="live" className="bg-[var(--surface-primary)]">Live Read-Only (Passive Host)</option>
+            <option value="demo" className="bg-[var(--bg-secondary)]">Demo Mode (Synthetic Telemetry)</option>
+            <option value="replay" className="bg-[var(--bg-secondary)]">Replay Mode (Chronological Traces)</option>
+            <option value="live" className="bg-[var(--bg-secondary)]">Live Read-Only (Passive Host)</option>
           </select>
         </div>
 
@@ -69,7 +69,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             onClick={() => toggleMode()}
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
               isGuided
-                ? 'bg-[var(--accent-cyan)] text-[var(--color-bg)] font-bold shadow-sm'
+                ? 'bg-[var(--accent-primary)] text-[var(--bg-primary)] font-bold shadow-sm'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
             title="Guided Mode: Simplified plain-language explanations"
@@ -82,7 +82,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             onClick={() => toggleMode()}
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
               !isGuided
-                ? 'bg-[var(--accent-violet)] text-[var(--color-bg)] font-bold shadow-sm'
+                ? 'bg-[var(--accent-secondary)] text-[var(--bg-primary)] font-bold shadow-sm'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
             title="Expert Mode: Raw mathematical formulas and deep diagnostics"
@@ -98,13 +98,13 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* Quick Search Button */}
         <button
           onClick={onOpenSearch}
-          className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-lg glass-panel hover:border-[var(--accent-cyan)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-all"
+          className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-lg glass-panel hover:border-[var(--accent-primary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-all"
           title="Search storage pools and views (Ctrl+K)"
           aria-label="Search Commands"
         >
-          <Search size={13} className="text-[var(--accent-cyan)]" />
+          <Search size={13} className="text-[var(--accent-primary)]" />
           <span className="text-[11px] font-medium">Search Commands</span>
-          <kbd className="text-[9px] font-mono bg-[var(--surface-raised)] px-1.5 py-0.5 rounded border border-[var(--border-subtle)] text-[var(--text-secondary)]">
+          <kbd className="text-[9px] font-mono bg-[var(--surface-secondary)] px-1.5 py-0.5 rounded border border-[var(--border-subtle)] text-[var(--text-secondary)]">
             Ctrl+K
           </kbd>
         </button>
@@ -113,36 +113,36 @@ export const TopBar: React.FC<TopBarProps> = ({
         {onOpenTour && (
           <button
             onClick={onOpenTour}
-            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg glass-panel hover:border-[var(--accent-cyan)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-[11px]"
+            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg glass-panel hover:border-[var(--accent-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-[11px]"
             title="Open Interactive Guide"
           >
-            <BookOpen size={13} className="text-[var(--accent-cyan)]" />
+            <BookOpen size={13} className="text-[var(--accent-primary)]" />
             <span className="font-medium">Tour</span>
           </button>
         )}
 
         {/* Shadow Mode Safe Badge */}
-        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--color-success)]/15 border border-[var(--color-success)]/30 text-[var(--color-success)] text-[11px] font-mono font-semibold">
-          <Shield size={12} className="text-[var(--color-success)]" />
+        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--status-success)]/15 border border-[var(--status-success)]/30 text-[var(--status-success)] text-[11px] font-mono font-semibold">
+          <Shield size={12} className="text-[var(--status-success)]" />
           <span>SAFE SHADOW</span>
         </div>
 
         {/* Collector Status Pulse */}
         <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full glass-panel border border-[var(--border-subtle)] text-[11px] font-mono text-[var(--text-secondary)]">
-          <Radio size={12} className="text-[var(--color-success)] animate-pulse" />
+          <Radio size={12} className="text-[var(--status-success)] animate-pulse" />
           <span>SYNC ACTIVE</span>
         </div>
 
         {/* Alerts Pill */}
         <button
           onClick={onOpenAlerts}
-          className="relative p-2 rounded-lg glass-panel hover:border-[var(--accent-cyan)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+          className="relative p-2 rounded-lg glass-panel hover:border-[var(--accent-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
           title="View Incidents and Alerts"
           aria-label="Alerts"
         >
           <Bell size={14} />
           {activeAlertsCount > 0 && (
-            <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[var(--color-critical)] text-white text-[9px] font-bold flex items-center justify-center shadow-sm">
+            <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[var(--status-critical)] text-[var(--bg-primary)] text-[9px] font-bold flex items-center justify-center shadow-sm">
               {activeAlertsCount}
             </span>
           )}
@@ -151,27 +151,27 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* User / RBAC Session Pill */}
         <button
           onClick={onOpenAuth}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg glass-panel hover:border-[var(--accent-cyan)] text-[var(--text-primary)] transition-colors text-[11px] font-mono"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg glass-panel hover:border-[var(--accent-primary)] text-[var(--text-primary)] transition-colors text-[11px] font-mono"
           title="Session & Role-Based Access Control"
         >
-          <User size={13} className="text-[var(--accent-violet)]" />
+          <User size={13} className="text-[var(--accent-secondary)]" />
           <span className="font-bold hidden sm:inline">{currentUser.username}</span>
-          <span className="text-[9px] px-1 py-0.5 rounded bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-[var(--accent-cyan)]">
+          <span className="text-[9px] px-1 py-0.5 rounded bg-[var(--surface-secondary)] border border-[var(--border-subtle)] text-[var(--accent-primary)]">
             {currentUser.role}
           </span>
         </button>
 
-        {/* Theme Toggle (Dark / Light) */}
+        {/* Theme Toggle (Ember Noir / Porcelain Atelier) */}
         <button
           onClick={onToggleTheme}
-          className="p-2 rounded-lg glass-panel hover:border-[var(--accent-cyan)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-          title={isLightTheme ? 'Switch to Aurora Midnight Theme' : 'Switch to Pearl Aurora Light Theme'}
+          className="p-2 rounded-lg glass-panel hover:border-[var(--accent-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+          title={isLightTheme ? 'Switch to Ember Noir Dark Theme' : 'Switch to Porcelain Atelier Light Theme'}
           aria-label="Toggle Theme"
         >
           {isLightTheme ? (
-            <Moon size={14} className="text-[var(--accent-violet)]" />
+            <Moon size={14} className="text-[var(--accent-primary)]" />
           ) : (
-            <Sun size={14} className="text-[var(--color-warning)]" />
+            <Sun size={14} className="text-[var(--status-warning)]" />
           )}
         </button>
       </div>

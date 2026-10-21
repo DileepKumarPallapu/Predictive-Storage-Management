@@ -56,7 +56,7 @@ export const PageMLPredictionLab: React.FC = () => {
       {/* Header */}
       <div>
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[var(--accent-violet)]/15 border border-[var(--accent-violet)]/30 flex items-center justify-center text-[var(--accent-violet)] shadow-[0_0_12px_rgba(178,154,255,0.2)]">
+          <div className="w-8 h-8 rounded-lg bg-[var(--accent-tertiary)]/15 border border-[var(--accent-tertiary)]/30 flex items-center justify-center text-[var(--accent-tertiary)] shadow-[0_0_12px_rgba(178,154,255,0.2)]">
             <Brain size={18} />
           </div>
           <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
@@ -79,7 +79,7 @@ export const PageMLPredictionLab: React.FC = () => {
           <select
             value={selectedDevice}
             onChange={(e) => setSelectedDevice(e.target.value)}
-            className="w-full bg-[var(--surface-raised)] border border-[var(--border-visible)] focus:border-[var(--accent-cyan)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
+            className="w-full bg-[var(--surface-secondary)] border border-[var(--border-normal)] focus:border-[var(--accent-primary)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
             aria-label="Storage Pool"
           >
             {devices.map((d) => (
@@ -97,7 +97,7 @@ export const PageMLPredictionLab: React.FC = () => {
           <select
             value={selectedModel}
             onChange={(e) => setSelectedModel(e.target.value)}
-            className="w-full bg-[var(--surface-raised)] border border-[var(--border-visible)] focus:border-[var(--accent-cyan)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-semibold focus:outline-none cursor-pointer"
+            className="w-full bg-[var(--surface-secondary)] border border-[var(--border-normal)] focus:border-[var(--accent-primary)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-semibold focus:outline-none cursor-pointer"
             aria-label="Model Architecture"
           >
             <option value="lightgbm_quantile" className="bg-[var(--surface-primary)]">LightGBM Quantile (q10, q50, q90)</option>
@@ -113,7 +113,7 @@ export const PageMLPredictionLab: React.FC = () => {
           <select
             value={targetMetric}
             onChange={(e) => setTargetMetric(e.target.value)}
-            className="w-full bg-[var(--surface-raised)] border border-[var(--border-visible)] focus:border-[var(--accent-cyan)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
+            className="w-full bg-[var(--surface-secondary)] border border-[var(--border-normal)] focus:border-[var(--accent-primary)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
             aria-label="Target Dimension"
           >
             <option value="used_bytes" className="bg-[var(--surface-primary)]">Capacity (Bytes)</option>
@@ -134,7 +134,7 @@ export const PageMLPredictionLab: React.FC = () => {
                 onClick={() => setHorizonHours(h)}
                 className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-medium border transition-all ${
                   horizonHours === h
-                    ? 'bg-[var(--accent-cyan)]/15 border-[var(--accent-cyan)] text-[var(--accent-cyan)] font-bold shadow-[0_0_8px_rgba(97,221,248,0.2)]'
+                    ? 'bg-[var(--accent-primary)]/15 border-[var(--accent-primary)] text-[var(--accent-primary)] font-bold shadow-glow-vermilion'
                     : 'glass-panel text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
                 }`}
               >
@@ -151,7 +151,7 @@ export const PageMLPredictionLab: React.FC = () => {
           <div className="glass-panel rounded-xl p-3.5">
             <div className="text-[var(--text-secondary)] font-medium flex items-center justify-between">
               <span className="flex items-center gap-1.5">
-                <Brain size={13} className="text-[var(--accent-violet)]" /> Model Name
+                <Brain size={13} className="text-[var(--accent-tertiary)]" /> Model Name
               </span>
               <ContextualHelp
                 title="Model Algorithm"
@@ -167,7 +167,7 @@ export const PageMLPredictionLab: React.FC = () => {
           <div className="glass-panel rounded-xl p-3.5">
             <div className="text-[var(--text-secondary)] font-medium flex items-center justify-between">
               <span className="flex items-center gap-1.5">
-                <Zap size={13} className="text-[var(--accent-cyan)]" />
+                <Zap size={13} className="text-[var(--accent-primary)]" />
                 {isGuided ? 'Time to Generate Prediction' : 'Inference Latency'}
               </span>
               <ContextualHelp
@@ -175,7 +175,7 @@ export const PageMLPredictionLab: React.FC = () => {
                 simpleExplanation="Milliseconds required to compute the 72-hour forecast."
               />
             </div>
-            <div className="text-sm font-bold font-mono text-[var(--accent-cyan)] mt-1.5">
+            <div className="text-sm font-bold font-mono text-[var(--accent-primary)] mt-1.5">
               {forecast.inference_latency_ms.toFixed(1)} ms
             </div>
           </div>
@@ -183,7 +183,7 @@ export const PageMLPredictionLab: React.FC = () => {
           <div className="glass-panel rounded-xl p-3.5">
             <div className="text-[var(--text-secondary)] font-medium flex items-center justify-between">
               <span className="flex items-center gap-1.5">
-                <ShieldCheck size={13} className="text-[var(--color-success)]" />
+                <ShieldCheck size={13} className="text-[var(--status-success)]" />
                 {isGuided ? 'Expected Range Coverage' : 'Interval Calibration'}
               </span>
               <ContextualHelp
@@ -191,14 +191,14 @@ export const PageMLPredictionLab: React.FC = () => {
                 simpleExplanation="Percentage of test points falling cleanly between the expected bounds."
               />
             </div>
-            <div className="text-sm font-bold font-mono text-[var(--color-success)] mt-1.5">
+            <div className="text-sm font-bold font-mono text-[var(--status-success)] mt-1.5">
               {(forecast.interval_coverage * 100).toFixed(1)}% (Target: 80%)
             </div>
           </div>
 
           <div className="glass-panel rounded-xl p-3.5">
             <div className="text-[var(--text-secondary)] font-medium flex items-center gap-1.5">
-              <Clock size={13} className="text-[var(--color-warning)]" /> Training Cutoff
+              <Clock size={13} className="text-[var(--status-warning)]" /> Training Cutoff
             </div>
             <div className="text-sm font-bold font-mono text-[var(--text-secondary)] mt-1.5">
               {new Date(forecast.historical_cutoff).toLocaleTimeString()}

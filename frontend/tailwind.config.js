@@ -8,59 +8,89 @@ export default {
   theme: {
     extend: {
       colors: {
-        aurora: {
-          bg: 'var(--color-bg)',
-          bgSecondary: 'var(--color-bg-secondary)',
+        ember: {
+          bgPrimary: 'var(--bg-primary)',
+          bgSecondary: 'var(--bg-secondary)',
+          bgTertiary: 'var(--bg-tertiary)',
           surfacePrimary: 'var(--surface-primary)',
-          surfaceRaised: 'var(--surface-raised)',
-          surfaceGlass: 'var(--surface-glass)',
-          borderSubtle: 'var(--border-subtle)',
-          borderVisible: 'var(--border-visible)',
+          surfaceSecondary: 'var(--surface-secondary)',
+          surfaceElevated: 'var(--surface-elevated)',
           textPrimary: 'var(--text-primary)',
           textSecondary: 'var(--text-secondary)',
           textMuted: 'var(--text-muted)',
           textDisabled: 'var(--text-disabled)',
-          cyan: 'var(--accent-cyan)',
-          sapphire: 'var(--accent-sapphire)',
-          violet: 'var(--accent-violet)',
-          success: 'var(--color-success)',
-          warning: 'var(--color-warning)',
-          critical: 'var(--color-critical)',
-          neutral: 'var(--color-neutral)',
+          borderSubtle: 'var(--border-subtle)',
+          borderNormal: 'var(--border-normal)',
+          borderHighlight: 'var(--border-highlight)',
+          accentPrimary: 'var(--accent-primary)',
+          accentPrimaryHover: 'var(--accent-primary-hover)',
+          accentPrimaryPressed: 'var(--accent-primary-pressed)',
+          accentSecondary: 'var(--accent-secondary)',
+          accentTertiary: 'var(--accent-tertiary)',
+          statusSuccess: 'var(--status-success)',
+          statusWarning: 'var(--status-warning)',
+          statusCritical: 'var(--status-critical)',
+          statusInfo: 'var(--status-info)',
+          statusUnknown: 'var(--status-unknown)',
         },
-        // Backward compatibility mappings
+        // Mappings for aurora tokens redirected to Ember Noir palette
+        aurora: {
+          bg: 'var(--bg-primary)',
+          bgSecondary: 'var(--bg-secondary)',
+          surfacePrimary: 'var(--surface-primary)',
+          surfaceRaised: 'var(--surface-elevated)',
+          surfaceGlass: 'var(--surface-primary)',
+          borderSubtle: 'var(--border-subtle)',
+          borderVisible: 'var(--border-normal)',
+          textPrimary: 'var(--text-primary)',
+          textSecondary: 'var(--text-secondary)',
+          textMuted: 'var(--text-muted)',
+          textDisabled: 'var(--text-disabled)',
+          cyan: 'var(--accent-primary)',         // Mapped to Vermilion
+          sapphire: 'var(--accent-secondary)',   // Mapped to Warm Clay
+          violet: 'var(--accent-tertiary)',      // Mapped to Smoked Taupe
+          success: 'var(--status-success)',
+          warning: 'var(--status-warning)',
+          critical: 'var(--status-critical)',
+          neutral: 'var(--status-info)',
+        },
+        // Backward compatibility mappings redirected to Ember Noir palette
         obsidian: {
-          bg: 'var(--color-bg)',
+          bg: 'var(--bg-primary)',
           surface: 'var(--surface-primary)',
-          panel: 'var(--surface-glass)',
-          raised: 'var(--surface-raised)',
-          secondary: 'var(--surface-raised)',
+          panel: 'var(--surface-primary)',
+          card: 'var(--surface-secondary)',
+          raised: 'var(--surface-elevated)',
+          secondary: 'var(--surface-secondary)',
           border: 'var(--border-subtle)',
           text: 'var(--text-primary)',
           muted: 'var(--text-secondary)',
-          cyan: 'var(--accent-cyan)',
-          sapphire: 'var(--accent-sapphire)',
-          violet: 'var(--accent-violet)',
-          teal: 'var(--color-success)',
-          coral: 'var(--color-critical)',
-          amber: 'var(--color-warning)',
-          purple: 'var(--accent-violet)',
-          blue: 'var(--accent-sapphire)',
+          cyan: 'var(--accent-primary)',         // Vermilion
+          sapphire: 'var(--accent-secondary)',   // Warm Clay
+          violet: 'var(--accent-tertiary)',      // Smoked Taupe
+          teal: 'var(--status-success)',         // Muted Green
+          coral: 'var(--status-critical)',       // Terracotta/Red
+          amber: 'var(--status-warning)',        // Amber
+          purple: 'var(--accent-tertiary)',      // Smoked Taupe
+          blue: 'var(--accent-secondary)',       // Warm Clay
         }
       },
       fontFamily: {
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+        display: ['Inter', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
-        'glass-sm': '0 4px 16px 0 rgba(0, 0, 0, 0.25)',
-        'glass': '0 8px 30px 0 rgba(0, 0, 0, 0.35)',
-        'glass-elevated': '0 14px 40px 0 rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.08)',
-        'glass-modal': '0 24px 60px 0 rgba(0, 0, 0, 0.60), inset 0 1px 0 0 rgba(255, 255, 255, 0.12)',
-        'glow-cyan': '0 0 20px -3px rgba(97, 221, 248, 0.35)',
-        'glow-sapphire': '0 0 20px -3px rgba(109, 145, 255, 0.30)',
-        'glow-violet': '0 0 20px -3px rgba(178, 154, 255, 0.30)',
-        'glow-critical': '0 0 20px -3px rgba(255, 120, 141, 0.35)',
+        'glass-sm': '0 4px 16px 0 rgba(0, 0, 0, 0.30)',
+        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.40)',
+        'glass-elevated': '0 14px 44px 0 rgba(0, 0, 0, 0.52), inset 0 1px 0 0 rgba(235, 220, 205, 0.08)',
+        'glass-modal': '0 24px 64px 0 rgba(0, 0, 0, 0.65), inset 0 1px 0 0 rgba(235, 220, 205, 0.12)',
+        'glow-vermilion': '0 0 20px -3px rgba(255, 103, 71, 0.38)',
+        'glow-clay': '0 0 20px -3px rgba(232, 160, 131, 0.30)',
+        'glow-cyan': '0 0 20px -3px rgba(255, 103, 71, 0.38)', // Redirection
+        'glow-sapphire': '0 0 20px -3px rgba(232, 160, 131, 0.30)',
+        'glow-violet': '0 0 20px -3px rgba(198, 184, 171, 0.25)',
+        'glow-critical': '0 0 20px -3px rgba(255, 120, 105, 0.38)',
       },
       backdropBlur: {
         'xs': '4px',

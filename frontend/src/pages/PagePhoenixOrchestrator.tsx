@@ -232,13 +232,13 @@ export const PagePhoenixOrchestrator: React.FC = () => {
   const getSeverityBadgeClass = (sev: string) => {
     switch (sev) {
       case 'SEV1_CRITICAL':
-        return 'bg-obsidian-coral/20 text-obsidian-coral border-obsidian-coral/40';
+        return 'bg-[var(--status-critical)]/20 text-[var(--status-critical)] border-[var(--status-critical)]/40';
       case 'SEV2_HIGH':
         return 'bg-amber-500/20 text-amber-400 border-amber-500/40';
       case 'SEV3_MEDIUM':
-        return 'bg-obsidian-cyan/20 text-obsidian-cyan border-obsidian-cyan/40';
+        return 'bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border-[var(--accent-primary)]/40';
       default:
-        return 'bg-obsidian-border text-obsidian-muted border-obsidian-border';
+        return 'bg-[var(--border-subtle)] text-[var(--text-secondary)] border-[var(--border-subtle)]';
     }
   };
 
@@ -247,35 +247,35 @@ export const PagePhoenixOrchestrator: React.FC = () => {
       case 'RESOLVED':
         return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40';
       case 'FAILED':
-        return 'bg-obsidian-coral/20 text-obsidian-coral border-obsidian-coral/40';
+        return 'bg-[var(--status-critical)]/20 text-[var(--status-critical)] border-[var(--status-critical)]/40';
       case 'EXECUTING':
       case 'VERIFYING_RECOVERY':
-        return 'bg-obsidian-purple/20 text-obsidian-purple border-obsidian-purple/40 animate-pulse';
+        return 'bg-[var(--accent-secondary)]/20 text-[var(--accent-tertiary)] border-[var(--accent-secondary)]/40 animate-pulse';
       case 'APPROVED':
-        return 'bg-obsidian-cyan/20 text-obsidian-cyan border-obsidian-cyan/40';
+        return 'bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border-[var(--accent-primary)]/40';
       default:
-        return 'bg-obsidian-panel text-obsidian-text border-obsidian-border';
+        return 'bg-[var(--surface-primary)] text-[var(--text-primary)] border-[var(--border-subtle)]';
     }
   };
 
   return (
     <div className="space-y-6">
       {/* Top Banner & Safety Invariants */}
-      <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-obsidian-cyan/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--accent-primary)]/5 rounded-full blur-3xl pointer-events-none" />
         
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-obsidian-coral shadow-[0_0_10px_var(--accent-coral)]" />
-              <span className="text-xs font-mono uppercase tracking-widest text-obsidian-coral font-bold">
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--status-critical)] shadow-[0_0_10px_var(--accent-coral)]" />
+              <span className="text-xs font-mono uppercase tracking-widest text-[var(--status-critical)] font-bold">
                 AEGISSTOR PHOENIX ORCHESTRATION ENGINE
               </span>
             </div>
-            <h1 className="text-2xl font-black tracking-tight text-obsidian-text">
+            <h1 className="text-2xl font-black tracking-tight text-[var(--text-primary)]">
               Predictive Incident Orchestration & Safe Self-Healing
             </h1>
-            <p className="text-sm text-obsidian-muted mt-1 max-w-3xl">
+            <p className="text-sm text-[var(--text-secondary)] mt-1 max-w-3xl">
               Connects forecasting horizons, conformal uncertainty, and Policy-as-Code safety gates
               into an auditable 14-state recovery machine with strict zero physical mutations.
             </p>
@@ -285,7 +285,7 @@ export const PagePhoenixOrchestrator: React.FC = () => {
             <button
               onClick={handleFleetScan}
               disabled={actionLoading}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-obsidian-cyan/15 hover:bg-obsidian-cyan/25 border border-obsidian-cyan/40 text-obsidian-cyan text-xs font-bold transition-all disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--accent-primary)]/15 hover:bg-[var(--accent-primary)]/25 border border-[var(--accent-primary)]/40 text-[var(--accent-primary)] text-xs font-bold transition-all disabled:opacity-50"
             >
               <RefreshCw size={14} className={actionLoading ? 'animate-spin' : ''} />
               Scan Storage Fleet
@@ -294,21 +294,21 @@ export const PagePhoenixOrchestrator: React.FC = () => {
         </div>
 
         {/* Safety Invariant Badges */}
-        <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-obsidian-border/60">
+        <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-[var(--border-subtle)]/60">
           <div className="flex items-center gap-2 text-xs">
             <Lock size={14} className="text-emerald-400 shrink-0" />
-            <span className="text-obsidian-muted font-mono">Shadow Mode:</span>
+            <span className="text-[var(--text-secondary)] font-mono">Shadow Mode:</span>
             <span className="font-mono font-bold text-emerald-400">ENABLED (Zero Host Mutations)</span>
           </div>
           <div className="flex items-center gap-2 text-xs">
-            <Terminal size={14} className="text-obsidian-cyan shrink-0" />
-            <span className="text-obsidian-muted font-mono">Default Mode:</span>
-            <span className="font-mono font-bold text-obsidian-cyan">MODE_A_SIMULATE</span>
+            <Terminal size={14} className="text-[var(--accent-primary)] shrink-0" />
+            <span className="text-[var(--text-secondary)] font-mono">Default Mode:</span>
+            <span className="font-mono font-bold text-[var(--accent-primary)]">MODE_A_SIMULATE</span>
           </div>
           <div className="flex items-center gap-2 text-xs">
-            <ShieldCheck size={14} className="text-obsidian-purple shrink-0" />
-            <span className="text-obsidian-muted font-mono">Hard Safety Invariant:</span>
-            <span className="font-mono font-bold text-obsidian-purple">Reserve ≥ 10.0% | P95 ≤ 20ms</span>
+            <ShieldCheck size={14} className="text-[var(--accent-tertiary)] shrink-0" />
+            <span className="text-[var(--text-secondary)] font-mono">Hard Safety Invariant:</span>
+            <span className="font-mono font-bold text-[var(--accent-tertiary)]">Reserve ≥ 10.0% | P95 ≤ 20ms</span>
           </div>
         </div>
       </div>
@@ -320,8 +320,8 @@ export const PagePhoenixOrchestrator: React.FC = () => {
             message.type === 'success'
               ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
               : message.type === 'error'
-              ? 'bg-obsidian-coral/10 border-obsidian-coral/30 text-obsidian-coral'
-              : 'bg-obsidian-cyan/10 border-obsidian-cyan/30 text-obsidian-cyan'
+              ? 'bg-[var(--status-critical)]/10 border-[var(--status-critical)]/30 text-[var(--status-critical)]'
+              : 'bg-[var(--accent-primary)]/10 border-[var(--accent-primary)]/30 text-[var(--accent-primary)]'
           }`}
         >
           <div className="flex items-center gap-2">
@@ -334,14 +334,14 @@ export const PagePhoenixOrchestrator: React.FC = () => {
             )}
             <span>{message.text}</span>
           </div>
-          <button onClick={() => setMessage(null)} className="text-obsidian-muted hover:text-obsidian-text">
+          <button onClick={() => setMessage(null)} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
             ✕
           </button>
         </div>
       )}
 
       {/* Navigation Tabs */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-obsidian-border pb-3">
+      <div className="flex flex-wrap items-center gap-2 border-b border-[var(--border-subtle)] pb-3">
         {[
           { id: 'incidents', label: 'Incident Command Center', icon: ShieldAlert, badge: incidents.length },
           { id: 'detail', label: 'Detail & Evidence Graph', icon: Network },
@@ -358,14 +358,14 @@ export const PagePhoenixOrchestrator: React.FC = () => {
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${
                 isActive
-                  ? 'bg-obsidian-panel text-obsidian-cyan border border-obsidian-cyan/40 shadow-sm'
-                  : 'text-obsidian-muted hover:text-obsidian-text hover:bg-obsidian-panel/50 border border-transparent'
+                  ? 'bg-[var(--surface-primary)] text-[var(--accent-primary)] border border-[var(--accent-primary)]/40 shadow-sm'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-primary)]/50 border border-transparent'
               }`}
             >
-              <Icon size={14} className={isActive ? 'text-obsidian-cyan' : ''} />
+              <Icon size={14} className={isActive ? 'text-[var(--accent-primary)]' : ''} />
               <span>{tab.label}</span>
               {tab.badge !== undefined && (
-                <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-obsidian-panel border border-obsidian-border text-obsidian-text">
+                <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-[var(--surface-primary)] border border-[var(--border-subtle)] text-[var(--text-primary)]">
                   {tab.badge}
                 </span>
               )}
@@ -378,14 +378,14 @@ export const PagePhoenixOrchestrator: React.FC = () => {
       {activeTab === 'incidents' && (
         <div className="space-y-4">
           {/* Filter Bar */}
-          <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
+          <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-4 flex-wrap">
               <div className="flex items-center gap-2">
-                <span className="text-xs text-obsidian-muted">Severity:</span>
+                <span className="text-xs text-[var(--text-secondary)]">Severity:</span>
                 <select
                   value={severityFilter}
                   onChange={(e) => setSeverityFilter(e.target.value)}
-                  className="bg-obsidian-panel border border-obsidian-border rounded px-2.5 py-1 text-xs text-obsidian-text focus:outline-none focus:border-obsidian-cyan"
+                  className="bg-[var(--surface-primary)] border border-[var(--border-subtle)] rounded px-2.5 py-1 text-xs text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)]"
                 >
                   <option value="ALL">All Severities</option>
                   <option value="SEV1_CRITICAL">SEV1 Critical</option>
@@ -396,11 +396,11 @@ export const PagePhoenixOrchestrator: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-xs text-obsidian-muted">Lifecycle State:</span>
+                <span className="text-xs text-[var(--text-secondary)]">Lifecycle State:</span>
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="bg-obsidian-panel border border-obsidian-border rounded px-2.5 py-1 text-xs text-obsidian-text focus:outline-none focus:border-obsidian-cyan"
+                  className="bg-[var(--surface-primary)] border border-[var(--border-subtle)] rounded px-2.5 py-1 text-xs text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)]"
                 >
                   <option value="ALL">All States (14 Phases)</option>
                   <option value="DETECTED">DETECTED</option>
@@ -417,16 +417,16 @@ export const PagePhoenixOrchestrator: React.FC = () => {
               </div>
             </div>
 
-            <div className="text-xs text-obsidian-muted font-mono">
+            <div className="text-xs text-[var(--text-secondary)] font-mono">
               Displaying {filteredIncidents.length} of {incidents.length} incidents
             </div>
           </div>
 
           {/* Incidents Table */}
-          <div className="bg-obsidian-card border border-obsidian-border rounded-xl overflow-hidden shadow-lg">
+          <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl overflow-hidden shadow-lg">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-obsidian-panel/80 text-obsidian-muted border-b border-obsidian-border uppercase tracking-wider font-mono text-[10px]">
+                <thead className="bg-[var(--surface-primary)]/80 text-[var(--text-secondary)] border-b border-[var(--border-subtle)] uppercase tracking-wider font-mono text-[10px]">
                   <tr>
                     <th className="py-3 px-4">Severity / Category</th>
                     <th className="py-3 px-4">Incident Title</th>
@@ -438,13 +438,13 @@ export const PagePhoenixOrchestrator: React.FC = () => {
                     <th className="py-3 px-4 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-obsidian-border">
+                <tbody className="divide-y divide-[var(--border-subtle)]">
                   {filteredIncidents.map((inc) => (
                     <tr
                       key={inc.id}
                       onClick={() => handleSelectIncident(inc.id)}
-                      className={`hover:bg-obsidian-panel/40 cursor-pointer transition-colors ${
-                        selectedIncident?.id === inc.id ? 'bg-obsidian-panel/60 border-l-2 border-obsidian-cyan' : ''
+                      className={`hover:bg-[var(--surface-primary)]/40 cursor-pointer transition-colors ${
+                        selectedIncident?.id === inc.id ? 'bg-[var(--surface-primary)]/60 border-l-2 border-[var(--accent-primary)]' : ''
                       }`}
                     >
                       <td className="py-3 px-4 whitespace-nowrap">
@@ -456,12 +456,12 @@ export const PagePhoenixOrchestrator: React.FC = () => {
                           >
                             {inc.severity}
                           </span>
-                          <span className="text-[10px] text-obsidian-muted font-mono">{inc.category}</span>
+                          <span className="text-[10px] text-[var(--text-secondary)] font-mono">{inc.category}</span>
                         </div>
                       </td>
-                      <td className="py-3 px-4 font-medium text-obsidian-text">
+                      <td className="py-3 px-4 font-medium text-[var(--text-primary)]">
                         <div className="max-w-md truncate">{inc.title}</div>
-                        <div className="text-[10px] text-obsidian-muted font-mono">{inc.id}</div>
+                        <div className="text-[10px] text-[var(--text-secondary)] font-mono">{inc.id}</div>
                       </td>
                       <td className="py-3 px-4 whitespace-nowrap">
                         <span
@@ -472,18 +472,18 @@ export const PagePhoenixOrchestrator: React.FC = () => {
                           {inc.status}
                         </span>
                       </td>
-                      <td className="py-3 px-4 whitespace-nowrap font-mono text-obsidian-cyan">
-                        <span className="px-1.5 py-0.5 rounded bg-obsidian-cyan/10 border border-obsidian-cyan/30 text-[10px]">
+                      <td className="py-3 px-4 whitespace-nowrap font-mono text-[var(--accent-primary)]">
+                        <span className="px-1.5 py-0.5 rounded bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/30 text-[10px]">
                           {inc.evidence_type}
                         </span>
                       </td>
-                      <td className="py-3 px-4 whitespace-nowrap font-mono text-obsidian-text">
+                      <td className="py-3 px-4 whitespace-nowrap font-mono text-[var(--text-primary)]">
                         {inc.target_device_id || 'Fleet Wide'}
                       </td>
                       <td className="py-3 px-4 whitespace-nowrap font-mono text-amber-400">
                         {inc.time_to_breach_hours ? `${inc.time_to_breach_hours.toFixed(1)} hrs` : 'N/A'}
                       </td>
-                      <td className="py-3 px-4 whitespace-nowrap font-mono text-obsidian-purple">
+                      <td className="py-3 px-4 whitespace-nowrap font-mono text-[var(--accent-tertiary)]">
                         {(inc.confidence_score * 100).toFixed(0)}%
                       </td>
                       <td className="py-3 px-4 text-right whitespace-nowrap">
@@ -493,7 +493,7 @@ export const PagePhoenixOrchestrator: React.FC = () => {
                             handleSelectIncident(inc.id);
                             setActiveTab('detail');
                           }}
-                          className="px-2.5 py-1 rounded bg-obsidian-panel border border-obsidian-border text-obsidian-cyan hover:border-obsidian-cyan transition-colors text-[11px]"
+                          className="px-2.5 py-1 rounded bg-[var(--surface-primary)] border border-[var(--border-subtle)] text-[var(--accent-primary)] hover:border-[var(--accent-primary)] transition-colors text-[11px]"
                         >
                           Inspect →
                         </button>
@@ -502,7 +502,7 @@ export const PagePhoenixOrchestrator: React.FC = () => {
                   ))}
                   {filteredIncidents.length === 0 && (
                     <tr>
-                      <td colSpan={8} className="py-8 text-center text-obsidian-muted font-mono">
+                      <td colSpan={8} className="py-8 text-center text-[var(--text-secondary)] font-mono">
                         No incidents matching current filter criteria.
                       </td>
                     </tr>
@@ -519,7 +519,7 @@ export const PagePhoenixOrchestrator: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column: Incident Dossier & Lifecycle Controls */}
           <div className="space-y-6 lg:col-span-1">
-            <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-5 shadow-lg space-y-4">
+            <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-5 shadow-lg space-y-4">
               <div className="flex items-center justify-between">
                 <span
                   className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${getSeverityBadgeClass(
@@ -538,13 +538,13 @@ export const PagePhoenixOrchestrator: React.FC = () => {
               </div>
 
               <div>
-                <h2 className="text-base font-bold text-obsidian-text">{selectedIncident.title}</h2>
-                <p className="text-xs text-obsidian-muted font-mono mt-0.5">{selectedIncident.id}</p>
+                <h2 className="text-base font-bold text-[var(--text-primary)]">{selectedIncident.title}</h2>
+                <p className="text-xs text-[var(--text-secondary)] font-mono mt-0.5">{selectedIncident.id}</p>
               </div>
 
               {/* Lifecycle Machine Transitions */}
-              <div className="pt-3 border-t border-obsidian-border">
-                <h3 className="text-xs font-mono uppercase text-obsidian-muted tracking-wider mb-2">
+              <div className="pt-3 border-t border-[var(--border-subtle)]">
+                <h3 className="text-xs font-mono uppercase text-[var(--text-secondary)] tracking-wider mb-2">
                   State Machine: Allowed Transitions
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -553,24 +553,24 @@ export const PagePhoenixOrchestrator: React.FC = () => {
                       key={st}
                       onClick={() => handleTransitionState(st)}
                       disabled={actionLoading}
-                      className="px-2.5 py-1 rounded text-xs font-mono font-bold bg-obsidian-panel border border-obsidian-border text-obsidian-cyan hover:border-obsidian-cyan transition-colors disabled:opacity-50"
+                      className="px-2.5 py-1 rounded text-xs font-mono font-bold bg-[var(--surface-primary)] border border-[var(--border-subtle)] text-[var(--accent-primary)] hover:border-[var(--accent-primary)] transition-colors disabled:opacity-50"
                     >
                       → {st}
                     </button>
                   ))}
                   {(!selectedIncident.allowed_next_states || selectedIncident.allowed_next_states.length === 0) && (
-                    <span className="text-xs text-obsidian-muted font-mono">Terminal state reached.</span>
+                    <span className="text-xs text-[var(--text-secondary)] font-mono">Terminal state reached.</span>
                   )}
                 </div>
               </div>
 
               {/* Synthesize Proposal Action */}
-              <div className="pt-3 border-t border-obsidian-border">
+              <div className="pt-3 border-t border-[var(--border-subtle)]">
                 <button
                   onClick={() => {
                     setActiveTab('runbooks');
                   }}
-                  className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-obsidian-cyan/15 hover:bg-obsidian-cyan/25 border border-obsidian-cyan/40 text-obsidian-cyan text-xs font-bold transition-all"
+                  className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[var(--accent-primary)]/15 hover:bg-[var(--accent-primary)]/25 border border-[var(--accent-primary)]/40 text-[var(--accent-primary)] text-xs font-bold transition-all"
                 >
                   <Sparkles size={14} />
                   Synthesize Runbook Proposal
@@ -578,65 +578,65 @@ export const PagePhoenixOrchestrator: React.FC = () => {
               </div>
 
               {/* Key Metadata Grid */}
-              <div className="pt-3 border-t border-obsidian-border space-y-2 text-xs">
+              <div className="pt-3 border-t border-[var(--border-subtle)] space-y-2 text-xs">
                 <div className="flex justify-between">
-                  <span className="text-obsidian-muted font-mono">Target Resource:</span>
-                  <span className="font-mono text-obsidian-text">{selectedIncident.target_device_id}</span>
+                  <span className="text-[var(--text-secondary)] font-mono">Target Resource:</span>
+                  <span className="font-mono text-[var(--text-primary)]">{selectedIncident.target_device_id}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-obsidian-muted font-mono">Evidence Type:</span>
-                  <span className="font-mono text-obsidian-cyan">{selectedIncident.evidence_type}</span>
+                  <span className="text-[var(--text-secondary)] font-mono">Evidence Type:</span>
+                  <span className="font-mono text-[var(--accent-primary)]">{selectedIncident.evidence_type}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-obsidian-muted font-mono">Time to Breach:</span>
+                  <span className="text-[var(--text-secondary)] font-mono">Time to Breach:</span>
                   <span className="font-mono text-amber-400">
                     {selectedIncident.time_to_breach_hours ? `${selectedIncident.time_to_breach_hours.toFixed(1)} hrs` : 'N/A'}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-obsidian-muted font-mono">Confidence:</span>
-                  <span className="font-mono text-obsidian-purple">
+                  <span className="text-[var(--text-secondary)] font-mono">Confidence:</span>
+                  <span className="font-mono text-[var(--accent-tertiary)]">
                     {(selectedIncident.confidence_score * 100).toFixed(0)}%
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-obsidian-muted font-mono">Predictive Model:</span>
-                  <span className="font-mono text-obsidian-text">{selectedIncident.model_version}</span>
+                  <span className="text-[var(--text-secondary)] font-mono">Predictive Model:</span>
+                  <span className="font-mono text-[var(--text-primary)]">{selectedIncident.model_version}</span>
                 </div>
               </div>
             </div>
 
             {/* Structured Symptoms & Hypotheses */}
-            <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-5 shadow-lg space-y-4">
-              <h3 className="text-xs font-mono uppercase tracking-wider text-obsidian-muted font-bold">
+            <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-5 shadow-lg space-y-4">
+              <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--text-secondary)] font-bold">
                 Transparent Symptoms & Hypotheses
               </h3>
 
               <div className="space-y-2">
-                <span className="text-[11px] font-mono text-obsidian-cyan uppercase">Observed Symptoms:</span>
+                <span className="text-[11px] font-mono text-[var(--accent-primary)] uppercase">Observed Symptoms:</span>
                 {selectedIncident.symptoms?.map((sym: string, idx: number) => (
-                  <div key={idx} className="p-2 rounded bg-obsidian-panel/60 border border-obsidian-border text-xs text-obsidian-text flex items-start gap-2">
+                  <div key={idx} className="p-2 rounded bg-[var(--surface-primary)]/60 border border-[var(--border-subtle)] text-xs text-[var(--text-primary)] flex items-start gap-2">
                     <span className="text-amber-400 mt-0.5">•</span>
                     <span>{sym}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="space-y-2 pt-2 border-t border-obsidian-border">
-                <span className="text-[11px] font-mono text-obsidian-purple uppercase">Correlated Hypotheses:</span>
+              <div className="space-y-2 pt-2 border-t border-[var(--border-subtle)]">
+                <span className="text-[11px] font-mono text-[var(--accent-tertiary)] uppercase">Correlated Hypotheses:</span>
                 {selectedIncident.hypotheses?.map((hyp: any, idx: number) => (
-                  <div key={idx} className="p-2.5 rounded bg-obsidian-panel border border-obsidian-border space-y-1">
+                  <div key={idx} className="p-2.5 rounded bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-obsidian-purple/20 text-obsidian-purple border border-obsidian-purple/40">
+                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-[var(--accent-secondary)]/20 text-[var(--accent-tertiary)] border border-[var(--accent-secondary)]/40">
                         {hyp.status}
                       </span>
                       {hyp.value && (
-                        <span className="text-[10px] font-mono text-obsidian-muted">
+                        <span className="text-[10px] font-mono text-[var(--text-secondary)]">
                           {hyp.metric}: {Number(hyp.value).toFixed(1)}
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-obsidian-text">{hyp.hypothesis}</p>
+                    <p className="text-xs text-[var(--text-primary)]">{hyp.hypothesis}</p>
                   </div>
                 ))}
               </div>
@@ -644,87 +644,87 @@ export const PagePhoenixOrchestrator: React.FC = () => {
           </div>
 
           {/* Right Column: Interactive Incident Evidence Graph */}
-          <div className="lg:col-span-2 bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-lg flex flex-col justify-between">
+          <div className="lg:col-span-2 bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-lg flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <Network size={16} className="text-obsidian-cyan" />
-                  <h3 className="text-sm font-bold text-obsidian-text">
+                  <Network size={16} className="text-[var(--accent-primary)]" />
+                  <h3 className="text-sm font-bold text-[var(--text-primary)]">
                     Directed Incident Evidence Graph
                   </h3>
                 </div>
-                <span className="text-xs font-mono text-obsidian-muted">
+                <span className="text-xs font-mono text-[var(--text-secondary)]">
                   {evidenceGraph?.node_count || 0} Nodes • {evidenceGraph?.edge_count || 0} Relationships
                 </span>
               </div>
 
-              <p className="text-xs text-obsidian-muted mb-6">
+              <p className="text-xs text-[var(--text-secondary)] mb-6">
                 Visualizes the complete causality and governance chain connecting telemetry anomalies,
                 quantile forecast horizons, policy invariants, proposed runbooks, and recovery verifiers.
               </p>
 
               {/* Node Visualization Canvas */}
-              <div className="p-6 rounded-xl bg-obsidian-panel/50 border border-obsidian-border/80 min-h-[360px] flex flex-col justify-around gap-6">
+              <div className="p-6 rounded-xl bg-[var(--surface-primary)]/50 border border-[var(--border-subtle)]/80 min-h-[360px] flex flex-col justify-around gap-6">
                 {/* Layer 1: Incident & Resource */}
                 <div className="flex flex-wrap items-center justify-center gap-4">
-                  <div className="p-3 rounded-lg bg-obsidian-card border border-obsidian-coral/50 shadow-md text-center min-w-[200px]">
-                    <span className="text-[10px] font-mono uppercase text-obsidian-coral font-bold block">Incident Node</span>
-                    <span className="text-xs font-bold text-obsidian-text truncate block mt-1">{selectedIncident.title}</span>
-                    <span className="text-[10px] font-mono text-obsidian-muted">{selectedIncident.severity}</span>
+                  <div className="p-3 rounded-lg bg-[var(--surface-secondary)] border border-[var(--status-critical)]/50 shadow-md text-center min-w-[200px]">
+                    <span className="text-[10px] font-mono uppercase text-[var(--status-critical)] font-bold block">Incident Node</span>
+                    <span className="text-xs font-bold text-[var(--text-primary)] truncate block mt-1">{selectedIncident.title}</span>
+                    <span className="text-[10px] font-mono text-[var(--text-secondary)]">{selectedIncident.severity}</span>
                   </div>
 
-                  <span className="text-obsidian-muted font-mono text-xs">── AFFECTS ──►</span>
+                  <span className="text-[var(--text-secondary)] font-mono text-xs">── AFFECTS ──►</span>
 
-                  <div className="p-3 rounded-lg bg-obsidian-card border border-obsidian-cyan/50 shadow-md text-center min-w-[180px]">
-                    <span className="text-[10px] font-mono uppercase text-obsidian-cyan font-bold block">Storage Resource</span>
-                    <span className="text-xs font-bold text-obsidian-text block mt-1">{selectedIncident.target_device_id}</span>
-                    <span className="text-[10px] font-mono text-obsidian-muted">{selectedIncident.pool_id || 'Primary Pool'}</span>
+                  <div className="p-3 rounded-lg bg-[var(--surface-secondary)] border border-[var(--accent-primary)]/50 shadow-md text-center min-w-[180px]">
+                    <span className="text-[10px] font-mono uppercase text-[var(--accent-primary)] font-bold block">Storage Resource</span>
+                    <span className="text-xs font-bold text-[var(--text-primary)] block mt-1">{selectedIncident.target_device_id}</span>
+                    <span className="text-[10px] font-mono text-[var(--text-secondary)]">{selectedIncident.pool_id || 'Primary Pool'}</span>
                   </div>
                 </div>
 
                 {/* Layer 2: Predictive Horizon & Safety Policy */}
                 <div className="flex flex-wrap items-center justify-center gap-4">
-                  <div className="p-3 rounded-lg bg-obsidian-card border border-obsidian-purple/50 shadow-md text-center min-w-[200px]">
-                    <span className="text-[10px] font-mono uppercase text-obsidian-purple font-bold block">Conformal Horizon</span>
-                    <span className="text-xs font-bold text-obsidian-text block mt-1">
+                  <div className="p-3 rounded-lg bg-[var(--surface-secondary)] border border-[var(--accent-secondary)]/50 shadow-md text-center min-w-[200px]">
+                    <span className="text-[10px] font-mono uppercase text-[var(--accent-tertiary)] font-bold block">Conformal Horizon</span>
+                    <span className="text-xs font-bold text-[var(--text-primary)] block mt-1">
                       {selectedIncident.time_to_breach_hours ? `Runway: ${selectedIncident.time_to_breach_hours.toFixed(1)}h` : 'Historical Drift'}
                     </span>
-                    <span className="text-[10px] font-mono text-obsidian-muted">{selectedIncident.model_version}</span>
+                    <span className="text-[10px] font-mono text-[var(--text-secondary)]">{selectedIncident.model_version}</span>
                   </div>
 
-                  <span className="text-obsidian-muted font-mono text-xs">── GOVERNED ──►</span>
+                  <span className="text-[var(--text-secondary)] font-mono text-xs">── GOVERNED ──►</span>
 
-                  <div className="p-3 rounded-lg bg-obsidian-card border border-emerald-500/50 shadow-md text-center min-w-[200px]">
+                  <div className="p-3 rounded-lg bg-[var(--surface-secondary)] border border-emerald-500/50 shadow-md text-center min-w-[200px]">
                     <span className="text-[10px] font-mono uppercase text-emerald-400 font-bold block">Policy-as-Code Gateway</span>
                     <span className="text-xs font-bold text-emerald-300 block mt-1">Hard Reserve & Latency Ceilings</span>
-                    <span className="text-[10px] font-mono text-obsidian-muted">Non-Bypassable Hard Gate</span>
+                    <span className="text-[10px] font-mono text-[var(--text-secondary)]">Non-Bypassable Hard Gate</span>
                   </div>
                 </div>
 
                 {/* Layer 3: Runbook Proposal & Independent Recovery Verification */}
                 <div className="flex flex-wrap items-center justify-center gap-4">
-                  <div className="p-3 rounded-lg bg-obsidian-card border border-amber-500/50 shadow-md text-center min-w-[200px]">
+                  <div className="p-3 rounded-lg bg-[var(--surface-secondary)] border border-amber-500/50 shadow-md text-center min-w-[200px]">
                     <span className="text-[10px] font-mono uppercase text-amber-400 font-bold block">Runbook Plan</span>
-                    <span className="text-xs font-bold text-obsidian-text block mt-1">
+                    <span className="text-xs font-bold text-[var(--text-primary)] block mt-1">
                       {selectedIncident.active_proposal_id ? 'Synthesized Proposal' : 'Awaiting Synthesis'}
                     </span>
-                    <span className="text-[10px] font-mono text-obsidian-muted">Mode A (Simulation)</span>
+                    <span className="text-[10px] font-mono text-[var(--text-secondary)]">Mode A (Simulation)</span>
                   </div>
 
-                  <span className="text-obsidian-muted font-mono text-xs">── VERIFIED ──►</span>
+                  <span className="text-[var(--text-secondary)] font-mono text-xs">── VERIFIED ──►</span>
 
-                  <div className="p-3 rounded-lg bg-obsidian-card border border-obsidian-cyan/50 shadow-md text-center min-w-[200px]">
-                    <span className="text-[10px] font-mono uppercase text-obsidian-cyan font-bold block">Recovery Verifier</span>
-                    <span className="text-xs font-bold text-obsidian-text block mt-1">Independent Telemetry Audit</span>
-                    <span className="text-[10px] font-mono text-obsidian-muted">API Success ≠ Recovery</span>
+                  <div className="p-3 rounded-lg bg-[var(--surface-secondary)] border border-[var(--accent-primary)]/50 shadow-md text-center min-w-[200px]">
+                    <span className="text-[10px] font-mono uppercase text-[var(--accent-primary)] font-bold block">Recovery Verifier</span>
+                    <span className="text-xs font-bold text-[var(--text-primary)] block mt-1">Independent Telemetry Audit</span>
+                    <span className="text-[10px] font-mono text-[var(--text-secondary)]">API Success ≠ Recovery</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-obsidian-border text-xs text-obsidian-muted flex items-center justify-between">
+            <div className="mt-6 pt-4 border-t border-[var(--border-subtle)] text-xs text-[var(--text-secondary)] flex items-center justify-between">
               <span className="font-mono">AEGISSTOR Provenance Assurance</span>
-              <span className="font-mono text-obsidian-cyan">Audit Ledger Hash: SHA256-PHX-77F</span>
+              <span className="font-mono text-[var(--accent-primary)]">Audit Ledger Hash: SHA256-PHX-77F</span>
             </div>
           </div>
         </div>
@@ -734,24 +734,24 @@ export const PagePhoenixOrchestrator: React.FC = () => {
       {activeTab === 'runbooks' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left: Runbook Synthesizer */}
-          <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-lg space-y-4">
+          <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-lg space-y-4">
             <div className="flex items-center gap-2">
-              <FileCode size={16} className="text-obsidian-cyan" />
-              <h3 className="text-sm font-bold text-obsidian-text">
+              <FileCode size={16} className="text-[var(--accent-primary)]" />
+              <h3 className="text-sm font-bold text-[var(--text-primary)]">
                 Runbook Synthesizer & Proposal Generator
               </h3>
             </div>
-            <p className="text-xs text-obsidian-muted">
+            <p className="text-xs text-[var(--text-secondary)]">
               Select an allowlisted recovery runbook, configure mitigation parameters, and submit for Policy Gateway evaluation.
             </p>
 
             <div className="space-y-4 pt-2">
               <div>
-                <label className="text-xs font-mono text-obsidian-muted block mb-1">Target Incident:</label>
+                <label className="text-xs font-mono text-[var(--text-secondary)] block mb-1">Target Incident:</label>
                 <select
                   value={selectedIncident?.id || ''}
                   onChange={(e) => handleSelectIncident(e.target.value)}
-                  className="w-full bg-obsidian-panel border border-obsidian-border rounded px-3 py-2 text-xs text-obsidian-text focus:outline-none focus:border-obsidian-cyan"
+                  className="w-full bg-[var(--surface-primary)] border border-[var(--border-subtle)] rounded px-3 py-2 text-xs text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)]"
                 >
                   {incidents.map((i) => (
                     <option key={i.id} value={i.id}>
@@ -762,11 +762,11 @@ export const PagePhoenixOrchestrator: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-mono text-obsidian-muted block mb-1">Standard Runbook Template:</label>
+                <label className="text-xs font-mono text-[var(--text-secondary)] block mb-1">Standard Runbook Template:</label>
                 <select
                   value={selectedRunbookId}
                   onChange={(e) => setSelectedRunbookId(e.target.value)}
-                  className="w-full bg-obsidian-panel border border-obsidian-border rounded px-3 py-2 text-xs text-obsidian-text focus:outline-none focus:border-obsidian-cyan"
+                  className="w-full bg-[var(--surface-primary)] border border-[var(--border-subtle)] rounded px-3 py-2 text-xs text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)]"
                 >
                   <option value="">Default Category Best-Fit</option>
                   {runbooks.map((rb) => (
@@ -778,11 +778,11 @@ export const PagePhoenixOrchestrator: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-mono text-obsidian-muted block mb-1">Primary Action Type:</label>
+                <label className="text-xs font-mono text-[var(--text-secondary)] block mb-1">Primary Action Type:</label>
                 <select
                   value={selectedActionType}
                   onChange={(e) => setSelectedActionType(e.target.value)}
-                  className="w-full bg-obsidian-panel border border-obsidian-border rounded px-3 py-2 text-xs text-obsidian-text focus:outline-none focus:border-obsidian-cyan"
+                  className="w-full bg-[var(--surface-primary)] border border-[var(--border-subtle)] rounded px-3 py-2 text-xs text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)]"
                 >
                   <option value="COMPACT_SHADOW_SNAPSHOTS">COMPACT_SHADOW_SNAPSHOTS (Safe reclaim)</option>
                   <option value="WORKLOAD_RATE_LIMIT">WORKLOAD_RATE_LIMIT (Throttle ingest)</option>
@@ -794,8 +794,8 @@ export const PagePhoenixOrchestrator: React.FC = () => {
 
               <div>
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="font-mono text-obsidian-muted">Target Capacity Reclaim Ratio:</span>
-                  <span className="font-mono text-obsidian-cyan font-bold">{proposalParamReclaim}%</span>
+                  <span className="font-mono text-[var(--text-secondary)]">Target Capacity Reclaim Ratio:</span>
+                  <span className="font-mono text-[var(--accent-primary)] font-bold">{proposalParamReclaim}%</span>
                 </div>
                 <input
                   type="range"
@@ -804,14 +804,14 @@ export const PagePhoenixOrchestrator: React.FC = () => {
                   step={1}
                   value={proposalParamReclaim}
                   onChange={(e) => setProposalParamReclaim(Number(e.target.value))}
-                  className="w-full accent-obsidian-cyan cursor-pointer"
+                  className="w-full accent-[var(--accent-primary)] cursor-pointer"
                 />
               </div>
 
               <button
                 onClick={handleSynthesizeProposal}
                 disabled={actionLoading}
-                className="w-full py-2.5 rounded-lg bg-obsidian-cyan/20 hover:bg-obsidian-cyan/30 border border-obsidian-cyan/40 text-obsidian-cyan text-xs font-bold transition-all disabled:opacity-50"
+                className="w-full py-2.5 rounded-lg bg-[var(--accent-primary)]/20 hover:bg-[var(--accent-primary)]/30 border border-[var(--accent-primary)]/40 text-[var(--accent-primary)] text-xs font-bold transition-all disabled:opacity-50"
               >
                 Synthesize & Evaluate Against Safety Gateway →
               </button>
@@ -819,49 +819,49 @@ export const PagePhoenixOrchestrator: React.FC = () => {
           </div>
 
           {/* Right: Active Policy Invariants */}
-          <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-lg space-y-4">
+          <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-lg space-y-4">
             <div className="flex items-center gap-2">
               <ShieldCheck size={16} className="text-emerald-400" />
-              <h3 className="text-sm font-bold text-obsidian-text">
+              <h3 className="text-sm font-bold text-[var(--text-primary)]">
                 Policy-as-Code Invariant Rules
               </h3>
             </div>
-            <p className="text-xs text-obsidian-muted">
+            <p className="text-xs text-[var(--text-secondary)]">
               Hard constraints defined in code. Invariant rule: high recommendation scores can never override these limits.
             </p>
 
             {policy && (
               <div className="space-y-3 pt-2">
-                <div className="p-3 rounded-lg bg-obsidian-panel/60 border border-obsidian-border flex items-center justify-between">
+                <div className="p-3 rounded-lg bg-[var(--surface-primary)]/60 border border-[var(--border-subtle)] flex items-center justify-between">
                   <div>
-                    <span className="text-xs font-bold text-obsidian-text block">Minimum Free Capacity Reserve</span>
-                    <span className="text-[11px] text-obsidian-muted font-mono">Action cannot leave buffer below threshold</span>
+                    <span className="text-xs font-bold text-[var(--text-primary)] block">Minimum Free Capacity Reserve</span>
+                    <span className="text-[11px] text-[var(--text-secondary)] font-mono">Action cannot leave buffer below threshold</span>
                   </div>
                   <span className="font-mono text-sm font-bold text-emerald-400">≥ {policy.min_free_reserve_pct}%</span>
                 </div>
 
-                <div className="p-3 rounded-lg bg-obsidian-panel/60 border border-obsidian-border flex items-center justify-between">
+                <div className="p-3 rounded-lg bg-[var(--surface-primary)]/60 border border-[var(--border-subtle)] flex items-center justify-between">
                   <div>
-                    <span className="text-xs font-bold text-obsidian-text block">Maximum Acceptable P95 Latency</span>
-                    <span className="text-[11px] text-obsidian-muted font-mono">Controller tail latency ceiling</span>
+                    <span className="text-xs font-bold text-[var(--text-primary)] block">Maximum Acceptable P95 Latency</span>
+                    <span className="text-[11px] text-[var(--text-secondary)] font-mono">Controller tail latency ceiling</span>
                   </div>
                   <span className="font-mono text-sm font-bold text-emerald-400">≤ {policy.max_latency_ms} ms</span>
                 </div>
 
-                <div className="p-3 rounded-lg bg-obsidian-panel/60 border border-obsidian-border flex items-center justify-between">
+                <div className="p-3 rounded-lg bg-[var(--surface-primary)]/60 border border-[var(--border-subtle)] flex items-center justify-between">
                   <div>
-                    <span className="text-xs font-bold text-obsidian-text block">Interconnect Bandwidth Cap</span>
-                    <span className="text-[11px] text-obsidian-muted font-mono">Fabric saturation boundary</span>
+                    <span className="text-xs font-bold text-[var(--text-primary)] block">Interconnect Bandwidth Cap</span>
+                    <span className="text-[11px] text-[var(--text-secondary)] font-mono">Fabric saturation boundary</span>
                   </div>
                   <span className="font-mono text-sm font-bold text-emerald-400">≤ {policy.max_bandwidth_mb_s} MB/s</span>
                 </div>
 
-                <div className="p-3 rounded-lg bg-obsidian-panel/60 border border-obsidian-border flex items-center justify-between">
+                <div className="p-3 rounded-lg bg-[var(--surface-primary)]/60 border border-[var(--border-subtle)] flex items-center justify-between">
                   <div>
-                    <span className="text-xs font-bold text-obsidian-text block">Human Approval Enforcement</span>
-                    <span className="text-[11px] text-obsidian-muted font-mono">Operator signoff required before run</span>
+                    <span className="text-xs font-bold text-[var(--text-primary)] block">Human Approval Enforcement</span>
+                    <span className="text-[11px] text-[var(--text-secondary)] font-mono">Operator signoff required before run</span>
                   </div>
-                  <span className="font-mono text-xs font-bold text-obsidian-purple">MANDATORY</span>
+                  <span className="font-mono text-xs font-bold text-[var(--accent-tertiary)]">MANDATORY</span>
                 </div>
               </div>
             )}
@@ -872,11 +872,11 @@ export const PagePhoenixOrchestrator: React.FC = () => {
       {/* TAB 4: APPROVAL & EXECUTION QUEUE */}
       {activeTab === 'approvals' && (
         <div className="space-y-6">
-          <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-lg space-y-4">
+          <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-lg space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <CheckCircle2 size={16} className="text-obsidian-cyan" />
-                <h3 className="text-sm font-bold text-obsidian-text">
+                <CheckCircle2 size={16} className="text-[var(--accent-primary)]" />
+                <h3 className="text-sm font-bold text-[var(--text-primary)]">
                   Action Proposal Approval & Non-Destructive Execution
                 </h3>
               </div>
@@ -885,23 +885,23 @@ export const PagePhoenixOrchestrator: React.FC = () => {
               </span>
             </div>
 
-            <p className="text-xs text-obsidian-muted">
+            <p className="text-xs text-[var(--text-secondary)]">
               Inspect synthesized action proposals, verify SHA256 integrity hash against post-approval tampering,
               and trigger safe execution in MODE_A_SIMULATE.
             </p>
 
             {activeProposal ? (
-              <div className="p-5 rounded-xl bg-obsidian-panel border border-obsidian-border space-y-4 mt-4">
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-obsidian-border pb-3">
+              <div className="p-5 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-4 mt-4">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-subtle)] pb-3">
                   <div>
-                    <span className="text-xs font-bold text-obsidian-text">{activeProposal.action_type}</span>
-                    <span className="text-[11px] text-obsidian-muted font-mono block">Proposal ID: {activeProposal.proposal_id}</span>
+                    <span className="text-xs font-bold text-[var(--text-primary)]">{activeProposal.action_type}</span>
+                    <span className="text-[11px] text-[var(--text-secondary)] font-mono block">Proposal ID: {activeProposal.proposal_id}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40">
                       {activeProposal.policy_verdict}
                     </span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-obsidian-cyan/20 text-obsidian-cyan border border-obsidian-cyan/40">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border border-[var(--accent-primary)]/40">
                       Status: {activeProposal.approval_status}
                     </span>
                   </div>
@@ -910,14 +910,14 @@ export const PagePhoenixOrchestrator: React.FC = () => {
                 {/* Parameters & Proposal Hash */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                   <div>
-                    <span className="text-obsidian-muted font-mono block mb-1">Action Parameters:</span>
-                    <pre className="p-2.5 rounded bg-obsidian-card border border-obsidian-border text-[11px] font-mono text-obsidian-cyan overflow-x-auto">
+                    <span className="text-[var(--text-secondary)] font-mono block mb-1">Action Parameters:</span>
+                    <pre className="p-2.5 rounded bg-[var(--surface-secondary)] border border-[var(--border-subtle)] text-[11px] font-mono text-[var(--accent-primary)] overflow-x-auto">
                       {JSON.stringify(activeProposal.parameters, null, 2)}
                     </pre>
                   </div>
                   <div>
-                    <span className="text-obsidian-muted font-mono block mb-1">Tamper Integrity Hash (SHA256):</span>
-                    <div className="p-2.5 rounded bg-obsidian-card border border-obsidian-border text-[11px] font-mono text-obsidian-purple break-all">
+                    <span className="text-[var(--text-secondary)] font-mono block mb-1">Tamper Integrity Hash (SHA256):</span>
+                    <div className="p-2.5 rounded bg-[var(--surface-secondary)] border border-[var(--border-subtle)] text-[11px] font-mono text-[var(--accent-tertiary)] break-all">
                       {activeProposal.proposal_hash}
                     </div>
                   </div>
@@ -925,24 +925,24 @@ export const PagePhoenixOrchestrator: React.FC = () => {
 
                 {/* Approval Form */}
                 {activeProposal.approval_status === 'PENDING' && (
-                  <div className="pt-3 border-t border-obsidian-border space-y-3">
+                  <div className="pt-3 border-t border-[var(--border-subtle)] space-y-3">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
-                        <label className="text-xs font-mono text-obsidian-muted block mb-1">Reviewer ID:</label>
+                        <label className="text-xs font-mono text-[var(--text-secondary)] block mb-1">Reviewer ID:</label>
                         <input
                           type="text"
                           value={approvalReviewer}
                           onChange={(e) => setApprovalReviewer(e.target.value)}
-                          className="w-full bg-obsidian-card border border-obsidian-border rounded px-3 py-1.5 text-xs text-obsidian-text font-mono"
+                          className="w-full bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded px-3 py-1.5 text-xs text-[var(--text-primary)] font-mono"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-mono text-obsidian-muted block mb-1">Approval Justification:</label>
+                        <label className="text-xs font-mono text-[var(--text-secondary)] block mb-1">Approval Justification:</label>
                         <input
                           type="text"
                           value={approvalRationale}
                           onChange={(e) => setApprovalRationale(e.target.value)}
-                          className="w-full bg-obsidian-card border border-obsidian-border rounded px-3 py-1.5 text-xs text-obsidian-text"
+                          className="w-full bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded px-3 py-1.5 text-xs text-[var(--text-primary)]"
                         />
                       </div>
                     </div>
@@ -959,11 +959,11 @@ export const PagePhoenixOrchestrator: React.FC = () => {
 
                 {/* Execution Controls */}
                 {activeProposal.approval_status === 'APPROVED' && (
-                  <div className="pt-3 border-t border-obsidian-border flex items-center gap-3">
+                  <div className="pt-3 border-t border-[var(--border-subtle)] flex items-center gap-3">
                     <button
                       onClick={() => handleExecuteProposal(activeProposal.proposal_id, 'MODE_A_SIMULATE')}
                       disabled={actionLoading}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-obsidian-cyan/20 hover:bg-obsidian-cyan/30 border border-obsidian-cyan/40 text-obsidian-cyan text-xs font-bold transition-all disabled:opacity-50"
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--accent-primary)]/20 hover:bg-[var(--accent-primary)]/30 border border-[var(--accent-primary)]/40 text-[var(--accent-primary)] text-xs font-bold transition-all disabled:opacity-50"
                     >
                       <Play size={14} />
                       Execute in MODE_A_SIMULATE (Digital Twin)
@@ -972,7 +972,7 @@ export const PagePhoenixOrchestrator: React.FC = () => {
                     <button
                       onClick={() => handleExecuteProposal(activeProposal.proposal_id, 'MODE_B_DIAGNOSTIC_READONLY')}
                       disabled={actionLoading}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-obsidian-panel hover:bg-obsidian-card border border-obsidian-border text-obsidian-muted hover:text-obsidian-text text-xs font-bold transition-all disabled:opacity-50"
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--surface-primary)] hover:bg-[var(--surface-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-bold transition-all disabled:opacity-50"
                     >
                       <Eye size={14} />
                       Run MODE_B_DIAGNOSTIC_READONLY
@@ -981,24 +981,24 @@ export const PagePhoenixOrchestrator: React.FC = () => {
                 )}
               </div>
             ) : (
-              <div className="p-8 text-center text-obsidian-muted font-mono text-xs border border-dashed border-obsidian-border rounded-xl">
+              <div className="p-8 text-center text-[var(--text-secondary)] font-mono text-xs border border-dashed border-[var(--border-subtle)] rounded-xl">
                 No active proposal selected. Synthesize a proposal in the Runbook tab first.
               </div>
             )}
           </div>
 
           {/* Historical Execution Records */}
-          <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-5 shadow-lg space-y-3">
-            <h4 className="text-xs font-mono uppercase text-obsidian-muted font-bold">Recent Safe Execution Runs</h4>
-            <div className="divide-y divide-obsidian-border">
+          <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-5 shadow-lg space-y-3">
+            <h4 className="text-xs font-mono uppercase text-[var(--text-secondary)] font-bold">Recent Safe Execution Runs</h4>
+            <div className="divide-y divide-[var(--border-subtle)]">
               {executions.slice(0, 5).map((ex) => (
                 <div key={ex.id} className="py-2.5 flex items-center justify-between text-xs">
                   <div>
-                    <span className="font-mono text-obsidian-text font-bold">{ex.id}</span>
-                    <span className="text-[11px] text-obsidian-muted font-mono block">Incident: {ex.incident_id}</span>
+                    <span className="font-mono text-[var(--text-primary)] font-bold">{ex.id}</span>
+                    <span className="text-[11px] text-[var(--text-secondary)] font-mono block">Incident: {ex.incident_id}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-obsidian-cyan/15 text-obsidian-cyan border border-obsidian-cyan/30">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--accent-primary)]/15 text-[var(--accent-primary)] border border-[var(--accent-primary)]/30">
                       {ex.execution_mode}
                     </span>
                     <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
@@ -1008,7 +1008,7 @@ export const PagePhoenixOrchestrator: React.FC = () => {
                 </div>
               ))}
               {executions.length === 0 && (
-                <div className="py-4 text-center text-obsidian-muted font-mono text-xs">
+                <div className="py-4 text-center text-[var(--text-secondary)] font-mono text-xs">
                   No execution records yet.
                 </div>
               )}
@@ -1020,11 +1020,11 @@ export const PagePhoenixOrchestrator: React.FC = () => {
       {/* TAB 5: RECOVERY VERIFICATION LAB */}
       {activeTab === 'recovery' && (
         <div className="space-y-6">
-          <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-lg space-y-4">
+          <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-lg space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <RotateCcw size={16} className="text-obsidian-cyan" />
-                <h3 className="text-sm font-bold text-obsidian-text">
+                <RotateCcw size={16} className="text-[var(--accent-primary)]" />
+                <h3 className="text-sm font-bold text-[var(--text-primary)]">
                   Independent Post-Action Recovery Verification
                 </h3>
               </div>
@@ -1033,22 +1033,22 @@ export const PagePhoenixOrchestrator: React.FC = () => {
               </span>
             </div>
 
-            <p className="text-xs text-obsidian-muted">
+            <p className="text-xs text-[var(--text-secondary)]">
               Evaluates actual and simulated post-action telemetry across an observation window (e.g. 24 hours).
               Only resolves incidents if metrics stay below warning boundaries and zero secondary degradation is detected.
             </p>
 
-            <div className="p-4 rounded-xl bg-obsidian-panel border border-obsidian-border space-y-4 mt-4">
+            <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-4 mt-4">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-obsidian-muted font-mono">Current Target Incident:</span>
-                <span className="font-mono text-obsidian-text font-bold">{selectedIncident?.title || 'None Selected'}</span>
+                <span className="text-[var(--text-secondary)] font-mono">Current Target Incident:</span>
+                <span className="font-mono text-[var(--text-primary)] font-bold">{selectedIncident?.title || 'None Selected'}</span>
               </div>
 
               <div className="flex flex-wrap gap-3 pt-2">
                 <button
                   onClick={() => handleVerifyRecovery()}
                   disabled={actionLoading || !selectedIncident}
-                  className="px-4 py-2 rounded-lg bg-obsidian-cyan/20 hover:bg-obsidian-cyan/30 border border-obsidian-cyan/40 text-obsidian-cyan text-xs font-bold transition-all disabled:opacity-50"
+                  className="px-4 py-2 rounded-lg bg-[var(--accent-primary)]/20 hover:bg-[var(--accent-primary)]/30 border border-[var(--accent-primary)]/40 text-[var(--accent-primary)] text-xs font-bold transition-all disabled:opacity-50"
                 >
                   Verify Post-Action Telemetry Window
                 </button>
@@ -1064,7 +1064,7 @@ export const PagePhoenixOrchestrator: React.FC = () => {
                 <button
                   onClick={() => handleVerifyRecovery('UNSUCCESSFUL')}
                   disabled={actionLoading || !selectedIncident}
-                  className="px-4 py-2 rounded-lg bg-obsidian-coral/20 hover:bg-obsidian-coral/30 border border-obsidian-coral/40 text-obsidian-coral text-xs font-bold transition-all disabled:opacity-50"
+                  className="px-4 py-2 rounded-lg bg-[var(--status-critical)]/20 hover:bg-[var(--status-critical)]/30 border border-[var(--status-critical)]/40 text-[var(--status-critical)] text-xs font-bold transition-all disabled:opacity-50"
                 >
                   Simulate Verification Failure (FAILED)
                 </button>
@@ -1077,14 +1077,14 @@ export const PagePhoenixOrchestrator: React.FC = () => {
       {/* TAB 6: REPEATED INCIDENT LEARNING */}
       {activeTab === 'learning' && (
         <div className="space-y-6">
-          <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-lg space-y-4">
+          <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-lg space-y-4">
             <div className="flex items-center gap-2">
-              <TrendingUp size={16} className="text-obsidian-cyan" />
-              <h3 className="text-sm font-bold text-obsidian-text">
+              <TrendingUp size={16} className="text-[var(--accent-primary)]" />
+              <h3 className="text-sm font-bold text-[var(--text-primary)]">
                 Repeated Incident Learning & Post-Mortem Intelligence
               </h3>
             </div>
-            <p className="text-xs text-obsidian-muted">
+            <p className="text-xs text-[var(--text-secondary)]">
               Aggregates historical incidents to detect recurring failure patterns, hotspot devices, and mean time to recovery (MTTR).
             </p>
 
@@ -1092,24 +1092,24 @@ export const PagePhoenixOrchestrator: React.FC = () => {
               <div className="space-y-6 pt-2">
                 {/* Metric Summary Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="p-4 rounded-xl bg-obsidian-panel border border-obsidian-border">
-                    <span className="text-xs font-mono text-obsidian-muted">Total Tracked Incidents</span>
-                    <div className="text-2xl font-black text-obsidian-text mt-1">{repeatedPatterns.total_incidents}</div>
+                  <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)]">
+                    <span className="text-xs font-mono text-[var(--text-secondary)]">Total Tracked Incidents</span>
+                    <div className="text-2xl font-black text-[var(--text-primary)] mt-1">{repeatedPatterns.total_incidents}</div>
                   </div>
-                  <div className="p-4 rounded-xl bg-obsidian-panel border border-obsidian-border">
-                    <span className="text-xs font-mono text-obsidian-muted">Recurring Pattern Signature</span>
+                  <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)]">
+                    <span className="text-xs font-mono text-[var(--text-secondary)]">Recurring Pattern Signature</span>
                     <div className="text-base font-bold text-amber-400 mt-1">{repeatedPatterns.repeat_incident_signature}</div>
                   </div>
-                  <div className="p-4 rounded-xl bg-obsidian-panel border border-obsidian-border">
-                    <span className="text-xs font-mono text-obsidian-muted">Preventive Action Recommendation</span>
+                  <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)]">
+                    <span className="text-xs font-mono text-[var(--text-secondary)]">Preventive Action Recommendation</span>
                     <div className="text-xs text-emerald-300 mt-1">{repeatedPatterns.recommended_preventive_action}</div>
                   </div>
                 </div>
 
                 {/* Category MTTR Table */}
-                <div className="rounded-xl border border-obsidian-border overflow-hidden">
+                <div className="rounded-xl border border-[var(--border-subtle)] overflow-hidden">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-obsidian-panel text-obsidian-muted font-mono uppercase text-[10px]">
+                    <thead className="bg-[var(--surface-primary)] text-[var(--text-secondary)] font-mono uppercase text-[10px]">
                       <tr>
                         <th className="py-2.5 px-4">Category</th>
                         <th className="py-2.5 px-4">Total Incidents</th>
@@ -1118,14 +1118,14 @@ export const PagePhoenixOrchestrator: React.FC = () => {
                         <th className="py-2.5 px-4">Recurrence Rate</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-obsidian-border">
+                    <tbody className="divide-y divide-[var(--border-subtle)]">
                       {repeatedPatterns.category_distribution?.map((cat: any) => (
-                        <tr key={cat.category} className="hover:bg-obsidian-panel/30">
-                          <td className="py-2.5 px-4 font-mono font-bold text-obsidian-text">{cat.category}</td>
+                        <tr key={cat.category} className="hover:bg-[var(--surface-primary)]/30">
+                          <td className="py-2.5 px-4 font-mono font-bold text-[var(--text-primary)]">{cat.category}</td>
                           <td className="py-2.5 px-4 font-mono">{cat.total_count}</td>
                           <td className="py-2.5 px-4 font-mono text-emerald-400">{cat.resolved_count}</td>
                           <td className="py-2.5 px-4 font-mono text-amber-400">{cat.mttr_minutes} min</td>
-                          <td className="py-2.5 px-4 font-mono text-obsidian-purple">{(cat.recurrence_rate * 100).toFixed(0)}%</td>
+                          <td className="py-2.5 px-4 font-mono text-[var(--accent-tertiary)]">{(cat.recurrence_rate * 100).toFixed(0)}%</td>
                         </tr>
                       ))}
                     </tbody>

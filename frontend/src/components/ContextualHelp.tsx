@@ -25,7 +25,7 @@ export const ContextualHelp: React.FC<Props> = ({
         onClick={() => setIsOpen(!isOpen)}
         onMouseEnter={() => setIsOpen(true)}
         onMouseLeave={() => setIsOpen(false)}
-        className="text-[var(--text-muted)] hover:text-[var(--accent-cyan)] focus:outline-none transition-colors p-0.5 rounded"
+        className="text-[var(--text-muted)] hover:text-[var(--accent-primary)] focus:outline-none transition-colors p-0.5 rounded"
         aria-label="Contextual explanation"
       >
         <HelpCircle size={13} />
@@ -38,7 +38,7 @@ export const ContextualHelp: React.FC<Props> = ({
         >
           {title && (
             <div className="font-semibold text-[var(--text-primary)] mb-1 flex items-center gap-1.5 border-b border-[var(--border-subtle)] pb-1">
-              <Info size={13} className="text-[var(--accent-cyan)]" />
+              <Info size={13} className="text-[var(--accent-primary)]" />
               <span>{title}</span>
             </div>
           )}
@@ -48,9 +48,9 @@ export const ContextualHelp: React.FC<Props> = ({
           </p>
 
           {isExpert && technicalDetails && (
-            <div className="mt-2 pt-2 border-t border-[var(--border-subtle)] text-[11px] font-mono text-[var(--accent-sapphire)]">
+            <div className="mt-2 pt-2 border-t border-[var(--border-subtle)] text-[11px] font-mono text-[var(--accent-secondary)]">
               <span className="font-semibold uppercase tracking-wider block text-[10px] text-[var(--text-muted)]">
-                Statistical Definition:
+                Technical Specification:
               </span>
               {technicalDetails}
             </div>

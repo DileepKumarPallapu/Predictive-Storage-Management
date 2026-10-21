@@ -1,5 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, HardDrive, LayoutDashboard, Cpu, Activity, AlertTriangle, Shield, Sliders, X } from 'lucide-react';
+import {
+  Search,
+  HardDrive,
+  Activity,
+  Cpu,
+  Layers,
+  Sliders,
+  LineChart,
+  Brain,
+  ShieldCheck,
+  AlertTriangle,
+  Database,
+  Settings,
+  X,
+  Sparkles,
+  Flame,
+  ShieldAlert,
+  Compass,
+  FlaskConical,
+  Network
+} from 'lucide-react';
 import { PageId } from './Sidebar';
 
 interface CommandPaletteProps {
@@ -26,43 +46,32 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     }
   }, [isOpen]);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        if (isOpen) onClose();
-        else {
-          // Trigger open handled by parent or shortcut
-        }
-      } else if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
-
   if (!isOpen) return null;
 
   const devices = [
-    { id: 'vol-nvme-tier1-db', name: 'Production E-Commerce OLTP NVMe', tier: 'NVME_TIER1' },
-    { id: 'vol-sas-tier2-analytics', name: 'Corporate Data Warehouse & ETL SAS', tier: 'SAS_TIER2' },
-    { id: 'vol-hdd-archive', name: 'Long-term Regulatory Compliance HDD', tier: 'HDD_ARCHIVE' },
-    { id: 'vol-nvme-cache', name: 'Redis / Kafka High-Throughput NVMe Cache', tier: 'NVME_TIER1' },
+    { id: 'vol-nvme-tier1-db', name: 'PostgreSQL Primary Cluster', tier: 'NVMe' },
+    { id: 'vol-sas-tier2-analytics', name: 'Analytics & OLAP Pool', tier: 'SAS' },
+    { id: 'vol-cold-tier3-backup', name: 'Disaster Recovery Vault', tier: 'Cold' },
+    { id: 'vol-edge-cache-01', name: 'Edge Ingestion Buffer', tier: 'NVMe' },
   ];
 
   const pages: { id: PageId; label: string; icon: any }[] = [
-    { id: 'overview', label: 'Executive Overview', icon: LayoutDashboard },
-    { id: 'fleet', label: 'Storage Fleet', icon: HardDrive },
-    { id: 'omega', label: 'Omega Fleet Control Room', icon: Activity },
-    { id: 'jurassic', label: 'Jurassic Resilience Lab', icon: Activity },
-    { id: 'phoenix', label: 'Phoenix Incident Orchestrator', icon: Activity },
-    { id: 'atlas', label: 'Atlas Reality Calibration Lab', icon: Activity },
-    { id: 'intelligence', label: 'Device Intelligence', icon: Cpu },
-    { id: 'twin', label: 'Storage Digital Twin', icon: Activity },
-    { id: 'interventions', label: 'Intervention Studio', icon: Sliders },
-    { id: 'alerts', label: 'Alerts & Incidents', icon: AlertTriangle },
-    { id: 'settings', label: 'Settings & Audit Trail', icon: Shield },
+    { id: 'overview', label: 'Executive Overview & Condition', icon: Activity },
+    { id: 'fleet', label: 'Storage Fleet & Hardware Pools', icon: HardDrive },
+    { id: 'intelligence', label: 'Device Telemetry & Tail Risks', icon: Cpu },
+    { id: 'twin', label: 'Resilience Digital Twin Simulator', icon: Layers },
+    { id: 'interventions', label: 'Intervention Studio & Counterfactuals', icon: Sliders },
+    { id: 'telemetry', label: 'Raw Telemetry Signal Explorer', icon: LineChart },
+    { id: 'ml-lab', label: 'ML Prediction & Quantile Lab', icon: Brain },
+    { id: 'reliability', label: 'Model Reliability & Conformal Drift', icon: ShieldCheck },
+    { id: 'alerts', label: 'Alerts, Thresholds & Active Incidents', icon: AlertTriangle },
+    { id: 'omega', label: 'Omega Fleet Topology & Correlated Risk', icon: Network },
+    { id: 'jurassic', label: 'Jurassic Resilience & Stress Lab', icon: Flame },
+    { id: 'phoenix', label: 'Phoenix Safe Incident Orchestrator', icon: ShieldAlert },
+    { id: 'atlas', label: 'Atlas Reality Calibration & Fidelity', icon: Compass },
+    { id: 'experiments', label: 'Ablation Experiments & Benchmarks', icon: FlaskConical },
+    { id: 'datasets', label: 'Dataset Provenance & Quality Checks', icon: Database },
+    { id: 'settings', label: 'Settings & Audit Governance', icon: Settings },
   ];
 
   const filteredDevices = devices.filter(
@@ -76,22 +85,22 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   );
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-start justify-center pt-20 p-4">
-      <div className="bg-obsidian-surface border border-obsidian-border rounded-xl shadow-2xl w-full max-w-xl overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-start justify-center pt-20 p-4">
+      <div className="glass-modal border border-[var(--border-normal)] rounded-2xl shadow-glass-modal w-full max-w-xl overflow-hidden animate-in fade-in zoom-in-95 duration-100">
         {/* Search Input Header */}
-        <div className="flex items-center px-4 py-3 border-b border-obsidian-border bg-obsidian-raised">
-          <Search size={18} className="text-obsidian-cyan mr-3" />
+        <div className="flex items-center px-4 py-3 border-b border-[var(--border-subtle)] bg-[var(--surface-secondary)]">
+          <Search size={18} className="text-[var(--accent-primary)] mr-3" />
           <input
             ref={inputRef}
             type="text"
             placeholder="Search storage pools, pages, or commands (Ctrl+K)..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="flex-1 bg-transparent text-sm text-obsidian-text placeholder-obsidian-muted focus:outline-none"
+            className="flex-1 bg-transparent text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none"
           />
           <button
             onClick={onClose}
-            className="p-1 text-obsidian-muted hover:text-obsidian-text rounded hover:bg-obsidian-surface"
+            className="p-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] rounded hover:bg-[var(--surface-hover)]"
           >
             <X size={16} />
           </button>
@@ -102,7 +111,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           {/* Devices Section */}
           {filteredDevices.length > 0 && (
             <div>
-              <div className="text-[10px] uppercase font-mono font-bold text-obsidian-muted px-3 py-1">
+              <div className="text-[10px] uppercase font-mono font-bold text-[var(--text-muted)] px-3 py-1">
                 Storage Pools
               </div>
               <div className="space-y-1">
@@ -113,16 +122,16 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                       onNavigateDevice(dev.id);
                       onClose();
                     }}
-                    className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-left text-xs hover:bg-obsidian-cyan/15 group transition-colors"
+                    className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-left text-xs hover:bg-[var(--accent-primary)]/15 group transition-colors"
                   >
                     <div className="flex items-center gap-2.5">
-                      <HardDrive size={15} className="text-obsidian-cyan group-hover:scale-110 transition-transform" />
+                      <HardDrive size={15} className="text-[var(--accent-primary)] group-hover:scale-110 transition-transform" />
                       <div>
-                        <div className="font-semibold text-obsidian-text">{dev.name}</div>
-                        <div className="font-mono text-[10px] text-obsidian-muted">{dev.id}</div>
+                        <div className="font-semibold text-[var(--text-primary)]">{dev.name}</div>
+                        <div className="font-mono text-[10px] text-[var(--text-muted)]">{dev.id}</div>
                       </div>
                     </div>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-obsidian-panel border border-obsidian-border text-obsidian-cyan">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--surface-secondary)] border border-[var(--border-subtle)] text-[var(--accent-primary)]">
                       {dev.tier}
                     </span>
                   </button>
@@ -134,7 +143,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           {/* Navigation Section */}
           {filteredPages.length > 0 && (
             <div>
-              <div className="text-[10px] uppercase font-mono font-bold text-obsidian-muted px-3 py-1">
+              <div className="text-[10px] uppercase font-mono font-bold text-[var(--text-muted)] px-3 py-1">
                 Platform Views
               </div>
               <div className="space-y-1">
@@ -147,9 +156,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                         onNavigatePage(page.id);
                         onClose();
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left text-xs text-obsidian-text hover:bg-obsidian-raised group transition-colors"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left text-xs text-[var(--text-primary)] hover:bg-[var(--surface-hover)] group transition-colors"
                     >
-                      <Icon size={15} className="text-obsidian-muted group-hover:text-obsidian-cyan" />
+                      <Icon size={15} className="text-[var(--text-muted)] group-hover:text-[var(--accent-primary)]" />
                       <span className="font-medium">{page.label}</span>
                     </button>
                   );
@@ -159,16 +168,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           )}
 
           {filteredDevices.length === 0 && filteredPages.length === 0 && (
-            <div className="text-center py-8 text-xs text-obsidian-muted">
-              No matching storage volumes or pages found for "{query}".
+            <div className="py-8 text-center text-xs text-[var(--text-muted)] font-mono">
+              No matching storage devices or pages found.
             </div>
           )}
-        </div>
-
-        {/* Footer shortcuts */}
-        <div className="px-4 py-2 bg-obsidian-panel border-t border-obsidian-border flex items-center justify-between text-[11px] text-obsidian-muted font-mono">
-          <span>Navigate with click or arrow keys</span>
-          <span>ESC to dismiss</span>
         </div>
       </div>
     </div>

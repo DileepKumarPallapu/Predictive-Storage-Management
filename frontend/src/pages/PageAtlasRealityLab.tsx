@@ -159,13 +159,13 @@ export const PageAtlasRealityLab: React.FC = () => {
       case 'HIGH_FIDELITY':
         return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40';
       case 'MODERATE_FIDELITY':
-        return 'bg-obsidian-cyan/20 text-obsidian-cyan border-obsidian-cyan/40';
+        return 'bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border-[var(--accent-primary)]/40';
       case 'LIMITED_SCOPE':
         return 'bg-amber-500/20 text-amber-400 border-amber-500/40';
       case 'DEGRADED':
-        return 'bg-obsidian-coral/20 text-obsidian-coral border-obsidian-coral/40';
+        return 'bg-[var(--status-critical)]/20 text-[var(--status-critical)] border-[var(--status-critical)]/40';
       default:
-        return 'bg-obsidian-panel text-obsidian-muted border-obsidian-border';
+        return 'bg-[var(--surface-primary)] text-[var(--text-secondary)] border-[var(--border-subtle)]';
     }
   };
 
@@ -174,36 +174,36 @@ export const PageAtlasRealityLab: React.FC = () => {
       case 'SUPPORTED_RECOMMENDATION':
         return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40';
       case 'SAFE_TO_SIMULATE':
-        return 'bg-obsidian-cyan/20 text-obsidian-cyan border-obsidian-cyan/40';
+        return 'bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border-[var(--accent-primary)]/40';
       case 'REQUIRES_HUMAN_REVIEW':
         return 'bg-amber-500/20 text-amber-400 border-amber-500/40';
       case 'REQUIRES_ADDITIONAL_EVIDENCE':
-        return 'bg-obsidian-purple/20 text-obsidian-purple border-obsidian-purple/40';
+        return 'bg-[var(--accent-secondary)]/20 text-[var(--accent-tertiary)] border-[var(--accent-secondary)]/40';
       case 'REJECTED_BY_HARD_CONSTRAINT':
-        return 'bg-obsidian-coral/20 text-obsidian-coral border-obsidian-coral/40';
+        return 'bg-[var(--status-critical)]/20 text-[var(--status-critical)] border-[var(--status-critical)]/40';
       default:
-        return 'bg-obsidian-panel text-obsidian-muted border-obsidian-border';
+        return 'bg-[var(--surface-primary)] text-[var(--text-secondary)] border-[var(--border-subtle)]';
     }
   };
 
   return (
     <div className="space-y-6">
       {/* Top Banner & Reality Calibration Principles */}
-      <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-obsidian-cyan/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--accent-primary)]/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-obsidian-cyan shadow-[0_0_10px_var(--accent-cyan)]" />
-              <span className="text-xs font-mono uppercase tracking-widest text-obsidian-cyan font-bold">
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--accent-primary)] shadow-[0_0_10px_var(--accent-primary)]" />
+              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-primary)] font-bold">
                 AEGISSTOR ATLAS — REALITY CALIBRATION LAB
               </span>
             </div>
-            <h1 className="text-2xl font-black tracking-tight text-obsidian-text">
+            <h1 className="text-2xl font-black tracking-tight text-[var(--text-primary)]">
               Reality-Calibrated Storage Digital Twin & Sim-to-Real Validation
             </h1>
-            <p className="text-sm text-obsidian-muted mt-1 max-w-3xl">
+            <p className="text-sm text-[var(--text-secondary)] mt-1 max-w-3xl">
               Quantifies discrepancy between simulated predictions and actual storage measurements.
               Evaluates held-out error, defines empirical condition envelopes, and gates interventions
               to prevent unsupported simulations from being treated as established facts.
@@ -214,7 +214,7 @@ export const PageAtlasRealityLab: React.FC = () => {
             <select
               value={selectedDeviceId}
               onChange={(e) => setSelectedDeviceId(e.target.value)}
-              className="bg-obsidian-panel border border-obsidian-border rounded-lg px-3 py-2 text-xs text-obsidian-text font-mono focus:outline-none focus:border-obsidian-cyan"
+              className="bg-[var(--surface-primary)] border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-xs text-[var(--text-primary)] font-mono focus:outline-none focus:border-[var(--accent-primary)]"
             >
               <option value="vol-nvme-tier1-db">Production E-Commerce OLTP NVMe</option>
               <option value="vol-sas-tier2-analytics">Corporate Data Warehouse SAS</option>
@@ -225,7 +225,7 @@ export const PageAtlasRealityLab: React.FC = () => {
             <button
               onClick={handleTriggerCalibration}
               disabled={actionLoading}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-obsidian-cyan/15 hover:bg-obsidian-cyan/25 border border-obsidian-cyan/40 text-obsidian-cyan text-xs font-bold transition-all disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--accent-primary)]/15 hover:bg-[var(--accent-primary)]/25 border border-[var(--accent-primary)]/40 text-[var(--accent-primary)] text-xs font-bold transition-all disabled:opacity-50"
             >
               <Scale size={14} className={actionLoading ? 'animate-spin' : ''} />
               Run Held-Out Calibration
@@ -234,25 +234,25 @@ export const PageAtlasRealityLab: React.FC = () => {
         </div>
 
         {/* Guarantees & Active Status Badges */}
-        <div className="mt-5 grid grid-cols-1 sm:grid-cols-4 gap-3 pt-4 border-t border-obsidian-border/60 text-xs">
+        <div className="mt-5 grid grid-cols-1 sm:grid-cols-4 gap-3 pt-4 border-t border-[var(--border-subtle)]/60 text-xs">
           <div className="flex items-center gap-2">
-            <Scale size={14} className="text-obsidian-cyan shrink-0" />
-            <span className="text-obsidian-muted font-mono">Test Leakage:</span>
+            <Scale size={14} className="text-[var(--accent-primary)] shrink-0" />
+            <span className="text-[var(--text-secondary)] font-mono">Test Leakage:</span>
             <span className="font-mono font-bold text-emerald-400">PREVENTED (Held-Out Eval)</span>
           </div>
           <div className="flex items-center gap-2">
-            <Database size={14} className="text-obsidian-purple shrink-0" />
-            <span className="text-obsidian-muted font-mono">Missing Values:</span>
-            <span className="font-mono font-bold text-obsidian-purple">NEVER ZERO-SUBSTITUTED</span>
+            <Database size={14} className="text-[var(--accent-tertiary)] shrink-0" />
+            <span className="text-[var(--text-secondary)] font-mono">Missing Values:</span>
+            <span className="font-mono font-bold text-[var(--accent-tertiary)]">NEVER ZERO-SUBSTITUTED</span>
           </div>
           <div className="flex items-center gap-2">
             <ShieldCheck size={14} className="text-amber-400 shrink-0" />
-            <span className="text-obsidian-muted font-mono">Calibration Accuracy:</span>
+            <span className="text-[var(--text-secondary)] font-mono">Calibration Accuracy:</span>
             <span className="font-mono font-bold text-amber-400">NO 100% CLAIMS</span>
           </div>
           <div className="flex items-center gap-2">
             <Lock size={14} className="text-emerald-400 shrink-0" />
-            <span className="text-obsidian-muted font-mono">Physical Disks:</span>
+            <span className="text-[var(--text-secondary)] font-mono">Physical Disks:</span>
             <span className="font-mono font-bold text-emerald-400">ZERO MUTATIONS</span>
           </div>
         </div>
@@ -265,8 +265,8 @@ export const PageAtlasRealityLab: React.FC = () => {
             message.type === 'success'
               ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
               : message.type === 'error'
-              ? 'bg-obsidian-coral/10 border-obsidian-coral/30 text-obsidian-coral'
-              : 'bg-obsidian-cyan/10 border-obsidian-cyan/30 text-obsidian-cyan'
+              ? 'bg-[var(--status-critical)]/10 border-[var(--status-critical)]/30 text-[var(--status-critical)]'
+              : 'bg-[var(--accent-primary)]/10 border-[var(--accent-primary)]/30 text-[var(--accent-primary)]'
           }`}
         >
           <div className="flex items-center gap-2">
@@ -279,14 +279,14 @@ export const PageAtlasRealityLab: React.FC = () => {
             )}
             <span>{message.text}</span>
           </div>
-          <button onClick={() => setMessage(null)} className="text-obsidian-muted hover:text-obsidian-text">
+          <button onClick={() => setMessage(null)} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
             ✕
           </button>
         </div>
       )}
 
       {/* Navigation Tabs (7 Sub-Views) */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-obsidian-border pb-3">
+      <div className="flex flex-wrap items-center gap-2 border-b border-[var(--border-subtle)] pb-3">
         {[
           { id: 'overview', label: 'Reality Overview', icon: Compass },
           { id: 'comparison', label: 'Sim-to-Real Comparison', icon: BarChart3 },
@@ -304,14 +304,14 @@ export const PageAtlasRealityLab: React.FC = () => {
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all ${
                 isActive
-                  ? 'bg-obsidian-panel text-obsidian-cyan border border-obsidian-cyan/40 shadow-sm'
-                  : 'text-obsidian-muted hover:text-obsidian-text hover:bg-obsidian-panel/50 border border-transparent'
+                  ? 'bg-[var(--surface-primary)] text-[var(--accent-primary)] border border-[var(--accent-primary)]/40 shadow-sm'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-primary)]/50 border border-transparent'
               }`}
             >
-              <Icon size={14} className={isActive ? 'text-obsidian-cyan' : ''} />
+              <Icon size={14} className={isActive ? 'text-[var(--accent-primary)]' : ''} />
               <span>{tab.label}</span>
               {tab.badge !== undefined && (
-                <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-obsidian-panel border border-obsidian-border text-obsidian-text">
+                <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-[var(--surface-primary)] border border-[var(--border-subtle)] text-[var(--text-primary)]">
                   {tab.badge}
                 </span>
               )}
@@ -325,37 +325,37 @@ export const PageAtlasRealityLab: React.FC = () => {
         <div className="space-y-6">
           {/* Key Metric Highlights */}
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-            <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-4 shadow-md">
-              <span className="text-xs font-mono text-obsidian-muted">Total Storage Fleet</span>
-              <div className="text-2xl font-black text-obsidian-text mt-1">{overviewData.total_storage_devices} Volumes</div>
+            <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-4 shadow-md">
+              <span className="text-xs font-mono text-[var(--text-secondary)]">Total Storage Fleet</span>
+              <div className="text-2xl font-black text-[var(--text-primary)] mt-1">{overviewData.total_storage_devices} Volumes</div>
             </div>
-            <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-4 shadow-md">
-              <span className="text-xs font-mono text-obsidian-muted">Calibrated Configs</span>
-              <div className="text-2xl font-black text-obsidian-cyan mt-1">{overviewData.calibrated_devices_count} Active</div>
+            <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-4 shadow-md">
+              <span className="text-xs font-mono text-[var(--text-secondary)]">Calibrated Configs</span>
+              <div className="text-2xl font-black text-[var(--accent-primary)] mt-1">{overviewData.calibrated_devices_count} Active</div>
             </div>
-            <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-4 shadow-md">
-              <span className="text-xs font-mono text-obsidian-muted">Calibration Coverage</span>
+            <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-4 shadow-md">
+              <span className="text-xs font-mono text-[var(--text-secondary)]">Calibration Coverage</span>
               <div className="text-2xl font-black text-emerald-400 mt-1">{overviewData.calibration_coverage_pct}%</div>
             </div>
-            <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-4 shadow-md">
-              <span className="text-xs font-mono text-obsidian-muted">Digital Twin Version</span>
-              <div className="text-2xl font-black text-obsidian-purple mt-1">v4.0 Held-Out</div>
+            <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-4 shadow-md">
+              <span className="text-xs font-mono text-[var(--text-secondary)]">Digital Twin Version</span>
+              <div className="text-2xl font-black text-[var(--accent-tertiary)] mt-1">v4.0 Held-Out</div>
             </div>
           </div>
 
           {/* Data Sources & Reality Connectors */}
-          <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-lg space-y-4">
+          <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-lg space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Database size={16} className="text-obsidian-cyan" />
-                <h3 className="text-sm font-bold text-obsidian-text">Connected Storage Reality Adapters</h3>
+                <Database size={16} className="text-[var(--accent-primary)]" />
+                <h3 className="text-sm font-bold text-[var(--text-primary)]">Connected Storage Reality Adapters</h3>
               </div>
-              <span className="text-xs font-mono text-obsidian-muted">Provenance Explicitly Tracked</span>
+              <span className="text-xs font-mono text-[var(--text-secondary)]">Provenance Explicitly Tracked</span>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-obsidian-panel/80 text-obsidian-muted font-mono uppercase text-[10px]">
+                <thead className="bg-[var(--surface-primary)]/80 text-[var(--text-secondary)] font-mono uppercase text-[10px]">
                   <tr>
                     <th className="py-2.5 px-4">Data Source Name</th>
                     <th className="py-2.5 px-4">Adapter Implementation</th>
@@ -364,18 +364,18 @@ export const PageAtlasRealityLab: React.FC = () => {
                     <th className="py-2.5 px-4">Heartbeat Freshness</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-obsidian-border">
+                <tbody className="divide-y divide-[var(--border-subtle)]">
                   {overviewData.data_sources?.map((src: any) => (
-                    <tr key={src.name} className="hover:bg-obsidian-panel/30">
-                      <td className="py-2.5 px-4 font-bold text-obsidian-text">{src.name}</td>
-                      <td className="py-2.5 px-4 font-mono text-obsidian-cyan">{src.adapter}</td>
+                    <tr key={src.name} className="hover:bg-[var(--surface-primary)]/30">
+                      <td className="py-2.5 px-4 font-bold text-[var(--text-primary)]">{src.name}</td>
+                      <td className="py-2.5 px-4 font-mono text-[var(--accent-primary)]">{src.adapter}</td>
                       <td className="py-2.5 px-4 font-mono">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-obsidian-panel border border-obsidian-border text-obsidian-text">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[var(--surface-primary)] border border-[var(--border-subtle)] text-[var(--text-primary)]">
                           {src.provenance}
                         </span>
                       </td>
                       <td className="py-2.5 px-4 font-mono text-emerald-400">{src.status}</td>
-                      <td className="py-2.5 px-4 font-mono text-obsidian-muted">
+                      <td className="py-2.5 px-4 font-mono text-[var(--text-secondary)]">
                         {src.freshness_seconds > 0 ? `${src.freshness_seconds}s ago` : 'Static Benchmark'}
                       </td>
                     </tr>
@@ -386,11 +386,11 @@ export const PageAtlasRealityLab: React.FC = () => {
           </div>
 
           {/* Recent Calibration Runs */}
-          <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-lg space-y-4">
-            <h3 className="text-sm font-bold text-obsidian-text">Recent Out-of-Sample Calibration Runs</h3>
+          <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-lg space-y-4">
+            <h3 className="text-sm font-bold text-[var(--text-primary)]">Recent Out-of-Sample Calibration Runs</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-obsidian-panel/80 text-obsidian-muted font-mono uppercase text-[10px]">
+                <thead className="bg-[var(--surface-primary)]/80 text-[var(--text-secondary)] font-mono uppercase text-[10px]">
                   <tr>
                     <th className="py-2.5 px-4">Run ID</th>
                     <th className="py-2.5 px-4">Simulator Version</th>
@@ -400,10 +400,10 @@ export const PageAtlasRealityLab: React.FC = () => {
                     <th className="py-2.5 px-4">Systematic Bias</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-obsidian-border">
+                <tbody className="divide-y divide-[var(--border-subtle)]">
                   {overviewData.recent_runs?.map((r: any) => (
-                    <tr key={r.id} className="hover:bg-obsidian-panel/30">
-                      <td className="py-2.5 px-4 font-mono text-obsidian-cyan font-bold">{r.id}</td>
+                    <tr key={r.id} className="hover:bg-[var(--surface-primary)]/30">
+                      <td className="py-2.5 px-4 font-mono text-[var(--accent-primary)] font-bold">{r.id}</td>
                       <td className="py-2.5 px-4 font-mono">{r.simulator_version}</td>
                       <td className="py-2.5 px-4 font-mono">
                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getFidelityBadgeClass(r.status)}`}>
@@ -411,7 +411,7 @@ export const PageAtlasRealityLab: React.FC = () => {
                         </span>
                       </td>
                       <td className="py-2.5 px-4 font-mono text-emerald-400 font-bold">{r.evaluation_rmse}%</td>
-                      <td className="py-2.5 px-4 font-mono text-obsidian-text">{r.evaluation_mae}%</td>
+                      <td className="py-2.5 px-4 font-mono text-[var(--text-primary)]">{r.evaluation_mae}%</td>
                       <td className="py-2.5 px-4 font-mono text-amber-400">{r.bias > 0 ? `+${r.bias}` : r.bias}%</td>
                     </tr>
                   ))}
@@ -427,47 +427,47 @@ export const PageAtlasRealityLab: React.FC = () => {
         <div className="space-y-6">
           {/* Discrepancy KPI Summary */}
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-            <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-4 shadow-md">
-              <span className="text-xs font-mono text-obsidian-muted">Overall Held-Out RMSE</span>
+            <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-4 shadow-md">
+              <span className="text-xs font-mono text-[var(--text-secondary)]">Overall Held-Out RMSE</span>
               <div className="text-2xl font-black text-emerald-400 mt-1">{discrepancyData.overall_rmse}%</div>
             </div>
-            <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-4 shadow-md">
-              <span className="text-xs font-mono text-obsidian-muted">Systematic Bias Direction</span>
+            <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-4 shadow-md">
+              <span className="text-xs font-mono text-[var(--text-secondary)]">Systematic Bias Direction</span>
               <div className="text-base font-bold text-amber-400 mt-1">
                 {discrepancyData.bias_direction} ({discrepancyData.systematic_bias > 0 ? `+${discrepancyData.systematic_bias}` : discrepancyData.systematic_bias}%)
               </div>
             </div>
-            <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-4 shadow-md">
-              <span className="text-xs font-mono text-obsidian-muted">Horizon Error Drift</span>
-              <div className="text-base font-bold text-obsidian-cyan mt-1">{discrepancyData.time_dependent_drift}</div>
-              <span className="text-[10px] font-mono text-obsidian-muted">Expansion ratio: {discrepancyData.drift_expansion_ratio}x</span>
+            <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-4 shadow-md">
+              <span className="text-xs font-mono text-[var(--text-secondary)]">Horizon Error Drift</span>
+              <div className="text-base font-bold text-[var(--accent-primary)] mt-1">{discrepancyData.time_dependent_drift}</div>
+              <span className="text-[10px] font-mono text-[var(--text-secondary)]">Expansion ratio: {discrepancyData.drift_expansion_ratio}x</span>
             </div>
-            <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-4 shadow-md">
-              <span className="text-xs font-mono text-obsidian-muted">Evaluated Samples</span>
-              <div className="text-2xl font-black text-obsidian-purple mt-1">{discrepancyData.discrepancy_count} Hours</div>
+            <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-4 shadow-md">
+              <span className="text-xs font-mono text-[var(--text-secondary)]">Evaluated Samples</span>
+              <div className="text-2xl font-black text-[var(--accent-tertiary)] mt-1">{discrepancyData.discrepancy_count} Hours</div>
             </div>
           </div>
 
           {/* Workload Regime Error Breakdown */}
-          <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-lg space-y-4">
-            <h3 className="text-sm font-bold text-obsidian-text">Discrepancy Breakdown by Workload Regime</h3>
+          <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-lg space-y-4">
+            <h3 className="text-sm font-bold text-[var(--text-primary)]">Discrepancy Breakdown by Workload Regime</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {Object.entries(discrepancyData.regime_breakdown || {}).map(([regime, stats]: [string, any]) => (
-                <div key={regime} className="p-4 rounded-xl bg-obsidian-panel border border-obsidian-border space-y-2">
+                <div key={regime} className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-obsidian-text">{regime}</span>
-                    <span className="text-[10px] font-mono text-obsidian-muted">{stats.sample_count} points</span>
+                    <span className="text-xs font-mono font-bold text-[var(--text-primary)]">{regime}</span>
+                    <span className="text-[10px] font-mono text-[var(--text-secondary)]">{stats.sample_count} points</span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-obsidian-muted font-mono">Regime RMSE:</span>
+                    <span className="text-[var(--text-secondary)] font-mono">Regime RMSE:</span>
                     <span className="font-mono font-bold text-emerald-400">{stats.rmse}%</span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-obsidian-muted font-mono">Regime MAE:</span>
-                    <span className="font-mono text-obsidian-text">{stats.mae}%</span>
+                    <span className="text-[var(--text-secondary)] font-mono">Regime MAE:</span>
+                    <span className="font-mono text-[var(--text-primary)]">{stats.mae}%</span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-obsidian-muted font-mono">Mean Bias:</span>
+                    <span className="text-[var(--text-secondary)] font-mono">Mean Bias:</span>
                     <span className="font-mono text-amber-400">{stats.mean_bias > 0 ? `+${stats.mean_bias}` : stats.mean_bias}%</span>
                   </div>
                 </div>
@@ -476,15 +476,15 @@ export const PageAtlasRealityLab: React.FC = () => {
           </div>
 
           {/* Synchronized Timeline & Residuals Table */}
-          <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-lg space-y-4">
+          <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-lg space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-obsidian-text">Chronological Sim-to-Real Residual Timeline</h3>
-              <span className="text-xs font-mono text-obsidian-muted">e_t = Observed - Simulated</span>
+              <h3 className="text-sm font-bold text-[var(--text-primary)]">Chronological Sim-to-Real Residual Timeline</h3>
+              <span className="text-xs font-mono text-[var(--text-secondary)]">e_t = Observed - Simulated</span>
             </div>
 
             <div className="overflow-x-auto max-h-96">
               <table className="w-full text-left text-xs">
-                <thead className="bg-obsidian-panel text-obsidian-muted font-mono uppercase text-[10px] sticky top-0">
+                <thead className="bg-[var(--surface-primary)] text-[var(--text-secondary)] font-mono uppercase text-[10px] sticky top-0">
                   <tr>
                     <th className="py-2.5 px-4">Evaluation Timestamp</th>
                     <th className="py-2.5 px-4">Observed Value</th>
@@ -494,17 +494,17 @@ export const PageAtlasRealityLab: React.FC = () => {
                     <th className="py-2.5 px-4">Workload Regime</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-obsidian-border font-mono">
+                <tbody className="divide-y divide-[var(--border-subtle)] font-mono">
                   {discrepancyData.timeline?.slice(0, 30).map((pt: any, idx: number) => (
-                    <tr key={idx} className="hover:bg-obsidian-panel/30">
-                      <td className="py-2 px-4 text-obsidian-muted">{pt.timestamp}</td>
-                      <td className="py-2 px-4 text-obsidian-text font-bold">{pt.observed.toFixed(2)}%</td>
-                      <td className="py-2 px-4 text-obsidian-cyan">{pt.simulated.toFixed(2)}%</td>
-                      <td className={`py-2 px-4 font-bold ${pt.residual > 0 ? 'text-amber-400' : 'text-obsidian-purple'}`}>
+                    <tr key={idx} className="hover:bg-[var(--surface-primary)]/30">
+                      <td className="py-2 px-4 text-[var(--text-secondary)]">{pt.timestamp}</td>
+                      <td className="py-2 px-4 text-[var(--text-primary)] font-bold">{pt.observed.toFixed(2)}%</td>
+                      <td className="py-2 px-4 text-[var(--accent-primary)]">{pt.simulated.toFixed(2)}%</td>
+                      <td className={`py-2 px-4 font-bold ${pt.residual > 0 ? 'text-amber-400' : 'text-[var(--accent-tertiary)]'}`}>
                         {pt.residual > 0 ? `+${pt.residual.toFixed(2)}` : pt.residual.toFixed(2)}%
                       </td>
-                      <td className="py-2 px-4 text-obsidian-text">{(pt.relative_error * 100).toFixed(2)}%</td>
-                      <td className="py-2 px-4 text-[10px] text-obsidian-muted">{pt.workload_regime}</td>
+                      <td className="py-2 px-4 text-[var(--text-primary)]">{(pt.relative_error * 100).toFixed(2)}%</td>
+                      <td className="py-2 px-4 text-[10px] text-[var(--text-secondary)]">{pt.workload_regime}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -517,29 +517,29 @@ export const PageAtlasRealityLab: React.FC = () => {
       {/* TAB C: CALIBRATION LAB */}
       {activeTab === 'calibration' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-lg space-y-4">
+          <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-lg space-y-4">
             <div className="flex items-center gap-2">
-              <Scale size={16} className="text-obsidian-cyan" />
-              <h3 className="text-sm font-bold text-obsidian-text">Digital Twin Calibration Controls</h3>
+              <Scale size={16} className="text-[var(--accent-primary)]" />
+              <h3 className="text-sm font-bold text-[var(--text-primary)]">Digital Twin Calibration Controls</h3>
             </div>
-            <p className="text-xs text-obsidian-muted">
+            <p className="text-xs text-[var(--text-secondary)]">
               Executes parameter alignment across a calibration window (e.g. 14 days) and verifies generalization on a held-out evaluation window (7 days).
             </p>
 
             <div className="space-y-4 pt-2">
               <div>
-                <label className="text-xs font-mono text-obsidian-muted block mb-1">Target Volume Identifier:</label>
+                <label className="text-xs font-mono text-[var(--text-secondary)] block mb-1">Target Volume Identifier:</label>
                 <input
                   type="text"
                   value={selectedDeviceId}
                   readOnly
-                  className="w-full bg-obsidian-panel border border-obsidian-border rounded px-3 py-2 text-xs font-mono text-obsidian-cyan"
+                  className="w-full bg-[var(--surface-primary)] border border-[var(--border-subtle)] rounded px-3 py-2 text-xs font-mono text-[var(--accent-primary)]"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-mono text-obsidian-muted block mb-1">Calibration Target Metric:</label>
-                <select className="w-full bg-obsidian-panel border border-obsidian-border rounded px-3 py-2 text-xs text-obsidian-text">
+                <label className="text-xs font-mono text-[var(--text-secondary)] block mb-1">Calibration Target Metric:</label>
+                <select className="w-full bg-[var(--surface-primary)] border border-[var(--border-subtle)] rounded px-3 py-2 text-xs text-[var(--text-primary)]">
                   <option value="utilization_pct">Storage Capacity Utilization (%)</option>
                   <option value="latency_p95_ms">P95 Tail Latency (ms)</option>
                   <option value="throughput_mb_s">Throughput (MB/s)</option>
@@ -548,19 +548,19 @@ export const PageAtlasRealityLab: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <span className="text-xs font-mono text-obsidian-muted block mb-1">Calibration Window:</span>
+                  <span className="text-xs font-mono text-[var(--text-secondary)] block mb-1">Calibration Window:</span>
                   <input
                     type="number"
                     defaultValue={14}
-                    className="w-full bg-obsidian-panel border border-obsidian-border rounded px-3 py-1.5 text-xs text-obsidian-text font-mono"
+                    className="w-full bg-[var(--surface-primary)] border border-[var(--border-subtle)] rounded px-3 py-1.5 text-xs text-[var(--text-primary)] font-mono"
                   />
                 </div>
                 <div>
-                  <span className="text-xs font-mono text-obsidian-muted block mb-1">Held-out Evaluation:</span>
+                  <span className="text-xs font-mono text-[var(--text-secondary)] block mb-1">Held-out Evaluation:</span>
                   <input
                     type="number"
                     defaultValue={7}
-                    className="w-full bg-obsidian-panel border border-obsidian-border rounded px-3 py-1.5 text-xs text-obsidian-text font-mono"
+                    className="w-full bg-[var(--surface-primary)] border border-[var(--border-subtle)] rounded px-3 py-1.5 text-xs text-[var(--text-primary)] font-mono"
                   />
                 </div>
               </div>
@@ -568,7 +568,7 @@ export const PageAtlasRealityLab: React.FC = () => {
               <button
                 onClick={handleTriggerCalibration}
                 disabled={actionLoading}
-                className="w-full py-2.5 rounded-lg bg-obsidian-cyan/20 hover:bg-obsidian-cyan/30 border border-obsidian-cyan/40 text-obsidian-cyan text-xs font-bold transition-all disabled:opacity-50"
+                className="w-full py-2.5 rounded-lg bg-[var(--accent-primary)]/20 hover:bg-[var(--accent-primary)]/30 border border-[var(--accent-primary)]/40 text-[var(--accent-primary)] text-xs font-bold transition-all disabled:opacity-50"
               >
                 Execute Controlled Calibration Run →
               </button>
@@ -576,19 +576,19 @@ export const PageAtlasRealityLab: React.FC = () => {
           </div>
 
           {/* Calibration Configs List */}
-          <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-lg space-y-4">
-            <h3 className="text-sm font-bold text-obsidian-text">Active Calibration Configurations</h3>
+          <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-lg space-y-4">
+            <h3 className="text-sm font-bold text-[var(--text-primary)]">Active Calibration Configurations</h3>
             <div className="space-y-3">
               {configs.map((c) => (
-                <div key={c.id} className="p-4 rounded-xl bg-obsidian-panel border border-obsidian-border space-y-2">
+                <div key={c.id} className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-obsidian-text">{c.name}</span>
-                    <span className="text-[10px] font-mono text-obsidian-cyan">v{c.version}</span>
+                    <span className="text-xs font-bold text-[var(--text-primary)]">{c.name}</span>
+                    <span className="text-[10px] font-mono text-[var(--accent-primary)]">v{c.version}</span>
                   </div>
-                  <div className="text-[11px] font-mono text-obsidian-muted">
+                  <div className="text-[11px] font-mono text-[var(--text-secondary)]">
                     Device: {c.device_id} • Metric: {c.target_metric}
                   </div>
-                  <div className="text-[11px] font-mono text-obsidian-muted">
+                  <div className="text-[11px] font-mono text-[var(--text-secondary)]">
                     Window: {c.calibration_window_days}d cal / {c.evaluation_window_days}d eval
                   </div>
                 </div>
@@ -601,24 +601,24 @@ export const PageAtlasRealityLab: React.FC = () => {
       {/* TAB D: ACTION-EFFECT EVIDENCE */}
       {activeTab === 'effects' && (
         <div className="space-y-6">
-          <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-lg space-y-4">
+          <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-lg space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Sliders size={16} className="text-obsidian-cyan" />
-                <h3 className="text-sm font-bold text-obsidian-text">Reality-Calibrated Action-Effect Model</h3>
+                <Sliders size={16} className="text-[var(--accent-primary)]" />
+                <h3 className="text-sm font-bold text-[var(--text-primary)]">Reality-Calibrated Action-Effect Model</h3>
               </div>
               <span className="text-xs font-mono text-amber-400 font-bold">
                 Causal Verification Explicitly Separated from Correlation
               </span>
             </div>
-            <p className="text-xs text-obsidian-muted">
+            <p className="text-xs text-[var(--text-secondary)]">
               Distinguishes simulation counterfactuals, controlled benchmark measurements, operational outcomes,
               and theoretical assumptions. Includes migration overhead, fabric contention, and secondary penalties.
             </p>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-obsidian-panel/80 text-obsidian-muted font-mono uppercase text-[10px]">
+                <thead className="bg-[var(--surface-primary)]/80 text-[var(--text-secondary)] font-mono uppercase text-[10px]">
                   <tr>
                     <th className="py-2.5 px-4">Action Type</th>
                     <th className="py-2.5 px-4">Evidence Category</th>
@@ -628,20 +628,20 @@ export const PageAtlasRealityLab: React.FC = () => {
                     <th className="py-2.5 px-4">Causal Verification</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-obsidian-border">
+                <tbody className="divide-y divide-[var(--border-subtle)]">
                   {actionEffects.map((act) => (
-                    <tr key={act.id} className="hover:bg-obsidian-panel/30">
-                      <td className="py-3 px-4 font-mono font-bold text-obsidian-text">{act.action_type}</td>
+                    <tr key={act.id} className="hover:bg-[var(--surface-primary)]/30">
+                      <td className="py-3 px-4 font-mono font-bold text-[var(--text-primary)]">{act.action_type}</td>
                       <td className="py-3 px-4 font-mono">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-obsidian-panel border border-obsidian-border text-obsidian-cyan">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[var(--surface-primary)] border border-[var(--border-subtle)] text-[var(--accent-primary)]">
                           {act.evidence_category}
                         </span>
                       </td>
-                      <td className="py-3 px-4 font-mono text-obsidian-muted">{act.sample_size} trials</td>
+                      <td className="py-3 px-4 font-mono text-[var(--text-secondary)]">{act.sample_size} trials</td>
                       <td className="py-3 px-4 font-mono font-bold text-emerald-400">
                         {act.primary_effect_mean > 0 ? `+${act.primary_effect_mean} GB` : `${act.primary_effect_mean} ms`}
                       </td>
-                      <td className="py-3 px-4 text-[11px] text-obsidian-muted">
+                      <td className="py-3 px-4 text-[11px] text-[var(--text-secondary)]">
                         {Object.entries(act.side_effects || {}).map(([k, v]) => (
                           <div key={k} className="font-mono">
                             {k}: <span className="text-amber-400">{String(v)}</span>
@@ -671,36 +671,36 @@ export const PageAtlasRealityLab: React.FC = () => {
       {/* TAB E: EXPERIMENT WORKBENCH */}
       {activeTab === 'experiments' && (
         <div className="space-y-6">
-          <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-lg space-y-4">
+          <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-lg space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <FlaskConical size={16} className="text-obsidian-cyan" />
-                <h3 className="text-sm font-bold text-obsidian-text">Controlled Experiment Workbench</h3>
+                <FlaskConical size={16} className="text-[var(--accent-primary)]" />
+                <h3 className="text-sm font-bold text-[var(--text-primary)]">Controlled Experiment Workbench</h3>
               </div>
               <span className="text-xs font-mono text-emerald-400 font-bold">Isolated Sandbox Testing</span>
             </div>
 
-            <p className="text-xs text-obsidian-muted">
+            <p className="text-xs text-[var(--text-secondary)]">
               Executes controlled benchmark measurements to validate action effects, queue depth inflation, and model calibration without affecting production storage.
             </p>
 
-            <div className="p-4 rounded-xl bg-obsidian-panel border border-obsidian-border space-y-3">
+            <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-3">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-mono text-obsidian-muted block mb-1">Experiment Name:</label>
+                  <label className="text-xs font-mono text-[var(--text-secondary)] block mb-1">Experiment Name:</label>
                   <input
                     type="text"
                     value={expName}
                     onChange={(e) => setExpName(e.target.value)}
-                    className="w-full bg-obsidian-card border border-obsidian-border rounded px-3 py-1.5 text-xs text-obsidian-text"
+                    className="w-full bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded px-3 py-1.5 text-xs text-[var(--text-primary)]"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-mono text-obsidian-muted block mb-1">Experiment Type:</label>
+                  <label className="text-xs font-mono text-[var(--text-secondary)] block mb-1">Experiment Type:</label>
                   <select
                     value={expType}
                     onChange={(e) => setExpType(e.target.value)}
-                    className="w-full bg-obsidian-card border border-obsidian-border rounded px-3 py-1.5 text-xs text-obsidian-text"
+                    className="w-full bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded px-3 py-1.5 text-xs text-[var(--text-primary)]"
                   >
                     <option value="SIM_TO_REAL_COMPARISON">SIM_TO_REAL_COMPARISON</option>
                     <option value="FORECAST_BACKTEST">FORECAST_BACKTEST</option>
@@ -712,34 +712,34 @@ export const PageAtlasRealityLab: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-mono text-obsidian-muted block mb-1">Research Question & Hypothesis:</label>
+                <label className="text-xs font-mono text-[var(--text-secondary)] block mb-1">Research Question & Hypothesis:</label>
                 <input
                   type="text"
                   value={expHypothesis}
                   onChange={(e) => setExpHypothesis(e.target.value)}
-                  className="w-full bg-obsidian-card border border-obsidian-border rounded px-3 py-1.5 text-xs text-obsidian-text"
+                  className="w-full bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded px-3 py-1.5 text-xs text-[var(--text-primary)]"
                 />
               </div>
 
               <button
                 onClick={handleCreateExperiment}
                 disabled={actionLoading}
-                className="px-4 py-2 rounded-lg bg-obsidian-cyan/20 hover:bg-obsidian-cyan/30 border border-obsidian-cyan/40 text-obsidian-cyan text-xs font-bold transition-all disabled:opacity-50"
+                className="px-4 py-2 rounded-lg bg-[var(--accent-primary)]/20 hover:bg-[var(--accent-primary)]/30 border border-[var(--accent-primary)]/40 text-[var(--accent-primary)] text-xs font-bold transition-all disabled:opacity-50"
               >
                 Dispatch Controlled Experiment Trial →
               </button>
             </div>
 
             {/* Experiment History List */}
-            <div className="pt-4 border-t border-obsidian-border space-y-3">
-              <h4 className="text-xs font-mono uppercase text-obsidian-muted font-bold">Executed Experiments History</h4>
-              <div className="divide-y divide-obsidian-border">
+            <div className="pt-4 border-t border-[var(--border-subtle)] space-y-3">
+              <h4 className="text-xs font-mono uppercase text-[var(--text-secondary)] font-bold">Executed Experiments History</h4>
+              <div className="divide-y divide-[var(--border-subtle)]">
                 {experiments.map((e) => (
                   <div key={e.id} className="py-3 flex flex-col md:flex-row justify-between items-start md:items-center gap-2 text-xs">
                     <div>
-                      <span className="font-bold text-obsidian-text">{e.name}</span>
-                      <span className="text-[11px] font-mono text-obsidian-muted block">{e.id} • {e.experiment_type}</span>
-                      <p className="text-[11px] text-obsidian-muted mt-0.5">Hypothesis: {e.hypothesis}</p>
+                      <span className="font-bold text-[var(--text-primary)]">{e.name}</span>
+                      <span className="text-[11px] font-mono text-[var(--text-secondary)] block">{e.id} • {e.experiment_type}</span>
+                      <p className="text-[11px] text-[var(--text-secondary)] mt-0.5">Hypothesis: {e.hypothesis}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
@@ -759,11 +759,11 @@ export const PageAtlasRealityLab: React.FC = () => {
         <div className="space-y-6">
           {/* Multi-indicator Fidelity Scorecard */}
           {fidelityData && (
-            <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-lg space-y-4">
+            <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-lg space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-obsidian-text">Digital Twin Fidelity Assessment Envelope</h3>
-                  <span className="text-xs font-mono text-obsidian-muted">Target: {fidelityData.device_id}</span>
+                  <h3 className="text-sm font-bold text-[var(--text-primary)]">Digital Twin Fidelity Assessment Envelope</h3>
+                  <span className="text-xs font-mono text-[var(--text-secondary)]">Target: {fidelityData.device_id}</span>
                 </div>
                 <span className={`px-2.5 py-1 rounded text-xs font-mono font-bold border ${getFidelityBadgeClass(fidelityData.assessment_status)}`}>
                   {fidelityData.assessment_status} ({fidelityData.overall_fidelity_score}/100)
@@ -772,25 +772,25 @@ export const PageAtlasRealityLab: React.FC = () => {
 
               {/* Multi-Indicators Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 pt-2">
-                <div className="p-3 rounded-lg bg-obsidian-panel border border-obsidian-border">
-                  <span className="text-[10px] font-mono text-obsidian-muted block">Prediction Fidelity</span>
+                <div className="p-3 rounded-lg bg-[var(--surface-primary)] border border-[var(--border-subtle)]">
+                  <span className="text-[10px] font-mono text-[var(--text-secondary)] block">Prediction Fidelity</span>
                   <span className="text-base font-bold text-emerald-400">{fidelityData.prediction_fidelity_score}%</span>
                 </div>
-                <div className="p-3 rounded-lg bg-obsidian-panel border border-obsidian-border">
-                  <span className="text-[10px] font-mono text-obsidian-muted block">Workload Coverage</span>
-                  <span className="text-base font-bold text-obsidian-cyan">{fidelityData.workload_coverage_score}%</span>
+                <div className="p-3 rounded-lg bg-[var(--surface-primary)] border border-[var(--border-subtle)]">
+                  <span className="text-[10px] font-mono text-[var(--text-secondary)] block">Workload Coverage</span>
+                  <span className="text-base font-bold text-[var(--accent-primary)]">{fidelityData.workload_coverage_score}%</span>
                 </div>
-                <div className="p-3 rounded-lg bg-obsidian-panel border border-obsidian-border">
-                  <span className="text-[10px] font-mono text-obsidian-muted block">Data Quality</span>
-                  <span className="text-base font-bold text-obsidian-purple">{fidelityData.data_quality_score}%</span>
+                <div className="p-3 rounded-lg bg-[var(--surface-primary)] border border-[var(--border-subtle)]">
+                  <span className="text-[10px] font-mono text-[var(--text-secondary)] block">Data Quality</span>
+                  <span className="text-base font-bold text-[var(--accent-tertiary)]">{fidelityData.data_quality_score}%</span>
                 </div>
-                <div className="p-3 rounded-lg bg-obsidian-panel border border-obsidian-border">
-                  <span className="text-[10px] font-mono text-obsidian-muted block">Calibration Recency</span>
+                <div className="p-3 rounded-lg bg-[var(--surface-primary)] border border-[var(--border-subtle)]">
+                  <span className="text-[10px] font-mono text-[var(--text-secondary)] block">Calibration Recency</span>
                   <span className="text-base font-bold text-amber-400">{fidelityData.calibration_recency_score}%</span>
                 </div>
-                <div className="p-3 rounded-lg bg-obsidian-panel border border-obsidian-border">
-                  <span className="text-[10px] font-mono text-obsidian-muted block">Action Evidence</span>
-                  <span className="text-base font-bold text-obsidian-text">{fidelityData.action_effect_evidence_score}%</span>
+                <div className="p-3 rounded-lg bg-[var(--surface-primary)] border border-[var(--border-subtle)]">
+                  <span className="text-[10px] font-mono text-[var(--text-secondary)] block">Action Evidence</span>
+                  <span className="text-base font-bold text-[var(--text-primary)]">{fidelityData.action_effect_evidence_score}%</span>
                 </div>
               </div>
 
@@ -811,15 +811,15 @@ export const PageAtlasRealityLab: React.FC = () => {
 
           {/* Evidence-Gated Interventions Table */}
           {gatedPlan && (
-            <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-lg space-y-4">
+            <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-lg space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-obsidian-text">Evidence-Gated Action Recommendations</h3>
-                <span className="text-xs font-mono text-obsidian-muted">Sorted by Evidence Support & Safety Feasibility</span>
+                <h3 className="text-sm font-bold text-[var(--text-primary)]">Evidence-Gated Action Recommendations</h3>
+                <span className="text-xs font-mono text-[var(--text-secondary)]">Sorted by Evidence Support & Safety Feasibility</span>
               </div>
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-obsidian-panel text-obsidian-muted font-mono uppercase text-[10px]">
+                  <thead className="bg-[var(--surface-primary)] text-[var(--text-secondary)] font-mono uppercase text-[10px]">
                     <tr>
                       <th className="py-2.5 px-4">Action Type</th>
                       <th className="py-2.5 px-4">Gating Classification</th>
@@ -827,19 +827,19 @@ export const PageAtlasRealityLab: React.FC = () => {
                       <th className="py-2.5 px-4">Operational Rationale</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-obsidian-border">
+                  <tbody className="divide-y divide-[var(--border-subtle)]">
                     {gatedPlan.recommendations?.map((rec: any) => (
-                      <tr key={rec.action_type} className="hover:bg-obsidian-panel/30">
-                        <td className="py-3 px-4 font-mono font-bold text-obsidian-text">{rec.action_type}</td>
+                      <tr key={rec.action_type} className="hover:bg-[var(--surface-primary)]/30">
+                        <td className="py-3 px-4 font-mono font-bold text-[var(--text-primary)]">{rec.action_type}</td>
                         <td className="py-3 px-4 font-mono">
                           <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getVerdictBadgeClass(rec.gating_verdict)}`}>
                             {rec.gating_verdict}
                           </span>
                         </td>
-                        <td className="py-3 px-4 font-mono text-obsidian-cyan">
+                        <td className="py-3 px-4 font-mono text-[var(--accent-primary)]">
                           {rec.evidence_category} ({rec.sample_size} trials)
                         </td>
-                        <td className="py-3 px-4 text-obsidian-muted">{rec.gating_rationale}</td>
+                        <td className="py-3 px-4 text-[var(--text-secondary)]">{rec.gating_rationale}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -853,52 +853,52 @@ export const PageAtlasRealityLab: React.FC = () => {
       {/* TAB G: CALIBRATION COVERAGE & VALUE-OF-EXPERIMENT */}
       {activeTab === 'voe_coverage' && (
         <div className="space-y-6">
-          <div className="bg-obsidian-card border border-obsidian-border rounded-xl p-6 shadow-lg space-y-4">
+          <div className="bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-lg space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <TrendingUp size={16} className="text-obsidian-cyan" />
-                <h3 className="text-sm font-bold text-obsidian-text">Value-of-Experiment (VOE) Priority Ranking</h3>
+                <TrendingUp size={16} className="text-[var(--accent-primary)]" />
+                <h3 className="text-sm font-bold text-[var(--text-primary)]">Value-of-Experiment (VOE) Priority Ranking</h3>
               </div>
               <span className="text-xs font-mono text-amber-400 font-bold">Ranks Experiments by Uncertainty Reduction</span>
             </div>
-            <p className="text-xs text-obsidian-muted">
+            <p className="text-xs text-[var(--text-secondary)]">
               Prioritizes follow-up measurements where simulation discrepancy is highest and operational stakes are critical.
             </p>
 
             <div className="space-y-4 pt-2">
               {voeGaps.map((gap) => (
-                <div key={gap.id} className="p-4 rounded-xl bg-obsidian-panel border border-obsidian-border space-y-3">
-                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-obsidian-border pb-2">
+                <div key={gap.id} className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-subtle)] pb-2">
                     <div className="flex items-center gap-2">
-                      <span className="w-5 h-5 rounded-full bg-obsidian-cyan/20 border border-obsidian-cyan/40 text-obsidian-cyan flex items-center justify-center font-mono text-xs font-bold">
+                      <span className="w-5 h-5 rounded-full bg-[var(--accent-primary)]/20 border border-[var(--accent-primary)]/40 text-[var(--accent-primary)] flex items-center justify-center font-mono text-xs font-bold">
                         #{gap.voe_rank}
                       </span>
-                      <span className="text-xs font-bold text-obsidian-text">{gap.candidate_experiment?.title}</span>
+                      <span className="text-xs font-bold text-[var(--text-primary)]">{gap.candidate_experiment?.title}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-obsidian-coral/20 text-obsidian-coral border border-obsidian-coral/40 font-bold">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--status-critical)]/20 text-[var(--status-critical)] border border-[var(--status-critical)]/40 font-bold">
                         Impact: {gap.impact_level}
                       </span>
-                      <span className="text-[11px] font-mono text-obsidian-muted">
+                      <span className="text-[11px] font-mono text-[var(--text-secondary)]">
                         Uncertainty: {(gap.uncertainty_score * 100).toFixed(0)}%
                       </span>
                     </div>
                   </div>
 
-                  <p className="text-xs text-obsidian-text">{gap.gap_description}</p>
+                  <p className="text-xs text-[var(--text-primary)]">{gap.gap_description}</p>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs bg-obsidian-card/60 p-3 rounded-lg border border-obsidian-border">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs bg-[var(--surface-secondary)]/60 p-3 rounded-lg border border-[var(--border-subtle)]">
                     <div>
-                      <span className="text-obsidian-cyan font-mono text-[11px] block font-bold">Research Question:</span>
-                      <p className="text-obsidian-muted">{gap.candidate_experiment?.research_question}</p>
+                      <span className="text-[var(--accent-primary)] font-mono text-[11px] block font-bold">Research Question:</span>
+                      <p className="text-[var(--text-secondary)]">{gap.candidate_experiment?.research_question}</p>
                     </div>
                     <div>
                       <span className="text-emerald-400 font-mono text-[11px] block font-bold">Learning Objective:</span>
-                      <p className="text-obsidian-muted">{gap.candidate_experiment?.learning_objective}</p>
+                      <p className="text-[var(--text-secondary)]">{gap.candidate_experiment?.learning_objective}</p>
                     </div>
                   </div>
 
-                  <div className="text-[11px] font-mono text-obsidian-muted flex justify-between">
+                  <div className="text-[11px] font-mono text-[var(--text-secondary)] flex justify-between">
                     <span>Safety: {gap.candidate_experiment?.safety_constraints}</span>
                     <span className="text-amber-400">Regime: {gap.workload_regime}</span>
                   </div>
