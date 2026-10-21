@@ -15,6 +15,7 @@ from app.auth.security import hash_password
 from app.services.fleet_topology_service import FleetTopologyService
 from app.services.outcome_ledger import OutcomeLedgerService
 from app.services.model_governance import ModelGovernanceService
+from app.services.jurassic.experiment_runner import ExperimentRunner
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("aegisstor")
@@ -187,6 +188,9 @@ def initialize_database_and_seed_demo():
         FleetTopologyService.seed_fleet_topology_if_missing(db)
         OutcomeLedgerService.seed_ledger_if_missing(db)
         ModelGovernanceService.seed_governance_if_missing(db)
+
+        # 6. Seed AEGISSTOR Jurassic Resilience Lab initial presets & experiment runs
+        ExperimentRunner.seed_initial_experiments_if_missing(db)
 
         db.commit()
         logger.info("Demo database verified/seeded idempotently.")

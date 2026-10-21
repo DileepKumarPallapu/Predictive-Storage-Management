@@ -14,7 +14,8 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  Network
+  Network,
+  Flame
 } from 'lucide-react';
 
 export type PageId =
@@ -30,7 +31,8 @@ export type PageId =
   | 'alerts'
   | 'datasets'
   | 'settings'
-  | 'omega';
+  | 'omega'
+  | 'jurassic';
 
 interface SidebarProps {
   currentPage: PageId;
@@ -53,6 +55,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'intelligence' as PageId, label: 'Device Intelligence', icon: Cpu },
     { id: 'twin' as PageId, label: 'Storage Digital Twin', icon: Layers, highlight: true },
     { id: 'omega' as PageId, label: 'Omega Fleet Control', icon: Network, highlight: true },
+    { id: 'jurassic' as PageId, label: 'Jurassic Resilience Lab', icon: Flame, highlight: true },
     { id: 'interventions' as PageId, label: 'Intervention Studio', icon: Sliders },
     { id: 'telemetry' as PageId, label: 'Telemetry Explorer', icon: LineChart },
     { id: 'ml-lab' as PageId, label: 'ML Prediction Lab', icon: Brain },

@@ -3,7 +3,9 @@ from app.models.entities import (
     SimulatedOutcome, Recommendation, Alert, Experiment, AuditLog,
     DatasetSource, User, WorkloadEvent, ModelVersion,
     StorageSystem, StoragePool, ResourceRelationship, WorkloadDependency,
-    OutcomeLedgerRecord, GovernancePromotionGate
+    OutcomeLedgerRecord, GovernancePromotionGate,
+    JurassicScenario, JurassicExperiment, JurassicFaultEvent,
+    JurassicDriftRecord, JurassicResilienceReport
 )
 
 __all__ = [
@@ -11,5 +13,7 @@ __all__ = [
     "SimulatedOutcome", "Recommendation", "Alert", "Experiment", "AuditLog",
     "DatasetSource", "User", "WorkloadEvent", "ModelVersion",
     "StorageSystem", "StoragePool", "ResourceRelationship", "WorkloadDependency",
-    "OutcomeLedgerRecord", "GovernancePromotionGate"
+    "OutcomeLedgerRecord", "GovernancePromotionGate",
+    "JurassicScenario", "JurassicExperiment", "JurassicFaultEvent",
+    "JurassicDriftRecord", "JurassicResilienceReport"
 ]

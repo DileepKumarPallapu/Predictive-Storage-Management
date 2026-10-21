@@ -457,4 +457,31 @@ export const api = {
       method: "POST",
       body: JSON.stringify(candidate),
     }),
+
+  // ==========================================
+  // AEGISSTOR JURASSIC RESILIENCE LAB API
+  // ==========================================
+  getJurassicCommandCenter: () => apiFetch<any>("/jurassic/command-center"),
+  getJurassicScenarios: (family?: string) => {
+    const params = family ? `?family=${family}` : "";
+    return apiFetch<any[]>(`/jurassic/scenarios${params}`);
+  },
+  getJurassicScenario: (id: string) => apiFetch<any>(`/jurassic/scenarios/${id}`),
+  createJurassicScenario: (scenario: any) =>
+    apiFetch<any>("/jurassic/scenarios", {
+      method: "POST",
+      body: JSON.stringify(scenario),
+    }),
+  runJurassicExperiment: (scenarioId: string, targetDeviceId?: string) =>
+    apiFetch<any>("/jurassic/experiments/run", {
+      method: "POST",
+      body: JSON.stringify({ scenario_id: scenarioId, target_device_id: targetDeviceId }),
+    }),
+  getJurassicExperiments: (limit = 20) =>
+    apiFetch<any[]>(`/jurassic/experiments?limit=${limit}`),
+  getJurassicExperimentDetails: (id: string) =>
+    apiFetch<any>(`/jurassic/experiments/${id}`),
+  getJurassicFallbackStates: () => apiFetch<any>("/jurassic/fallback-states"),
+  getJurassicReportUrl: (experimentId: string, format: "markdown" | "csv" = "markdown") =>
+    `${API_BASE}/jurassic/experiments/${experimentId}/report?format=${format}`,
 };

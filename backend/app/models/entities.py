@@ -353,3 +353,101 @@ class GovernancePromotionGate(Base):
     evaluated_by = Column(String(64), default="aegisstor_governance_engine")
 
 
+# =====================================================================
+# AEGISSTOR JURASSIC RESILIENCE LAB MODELS
+# =====================================================================
+
+class JurassicScenario(Base):
+    __tablename__ = "jurassic_scenarios"
+
+    id = Column(String(64), primary_key=True)
+    name = Column(String(128), nullable=False)
+    scenario_family = Column(String(64), nullable=False)  # CAPACITY_DISTURBANCE, PERFORMANCE_DISTURBANCE, TEMPORAL_DISTURBANCE, TELEMETRY_DISTURBANCE, COMPOUND_DISTURBANCE
+    description = Column(Text, default="")
+    target_device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    seed = Column(Integer, default=42)
+    simulation_duration_hours = Column(Integer, default=168)
+    initial_capacity_pct = Column(Float, default=70.0)
+    capacity_growth_gb_day = Column(Float, default=45.0)
+    burst_events_json = Column(Text, default="[]")
+    read_iops_base = Column(Float, default=10000.0)
+    write_iops_base = Column(Float, default=8000.0)
+    latency_noise_ms = Column(Float, default=0.5)
+    telemetry_drop_rate = Column(Float, default=0.0)
+    telemetry_delay_s = Column(Integer, default=0)
+    chaos_faults_json = Column(Text, default="[]")
+    is_preset = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=utc_now)
+    created_by = Column(String(64), default="resilience_architect")
+
+
+class JurassicExperiment(Base):
+    __tablename__ = "jurassic_experiments"
+
+    id = Column(String(64), primary_key=True)
+    scenario_id = Column(String(64), ForeignKey("jurassic_scenarios.id"), nullable=False, index=True)
+    status = Column(String(32), default="CREATED")  # CREATED, QUEUED, RUNNING, PAUSED, COMPLETED, FAILED, CANCELLED
+    target_device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    model_version = Column(String(64), default="LightGBM-Conformal-Quantile-v1.8")
+    dataset_identifier = Column(String(64), default="ds-synthetic-enterprise-v1")
+    started_at = Column(DateTime, nullable=True)
+    completed_at = Column(DateTime, nullable=True)
+    current_step_hour = Column(Integer, default=0)
+    total_steps_hours = Column(Integer, default=168)
+    final_fallback_state = Column(String(64), default="STATE_1_HEALTHY_EVIDENCE")  # STATE_1 to STATE_5
+    fallback_transitions_json = Column(Text, default="[]")
+    fault_events_json = Column(Text, default="[]")
+    telemetry_history_json = Column(Text, default="[]")
+    forecast_evaluations_json = Column(Text, default="[]")
+    drift_detected = Column(Boolean, default=False)
+    drift_details_json = Column(Text, default="{}")
+    resilience_score = Column(Float, default=100.0)
+    resilience_breakdown_json = Column(Text, default="{}")
+    forensics_json = Column(Text, default="{}")
+    created_at = Column(DateTime, default=utc_now)
+
+
+class JurassicFaultEvent(Base):
+    __tablename__ = "jurassic_fault_events"
+
+    id = Column(String(64), primary_key=True)
+    experiment_id = Column(String(64), ForeignKey("jurassic_experiments.id"), nullable=False, index=True)
+    injection_hour = Column(Integer, nullable=False)
+    duration_hours = Column(Integer, nullable=False)
+    fault_type = Column(String(64), nullable=False)
+    target_module = Column(String(64), nullable=False)
+    expected_symptom = Column(String(256), default="")
+    recovery_condition = Column(String(256), default="")
+    actual_outcome = Column(String(256), default="")
+    test_passed = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=utc_now)
+
+
+class JurassicDriftRecord(Base):
+    __tablename__ = "jurassic_drift_records"
+
+    id = Column(String(64), primary_key=True)
+    experiment_id = Column(String(64), ForeignKey("jurassic_experiments.id"), nullable=False, index=True)
+    evaluation_step_hour = Column(Integer, nullable=False)
+    metric_name = Column(String(64), nullable=False)
+    drift_statistic = Column(Float, nullable=False)
+    threshold_value = Column(Float, nullable=False)
+    drift_status = Column(String(64), default="NO_DETECTED_SHIFT")  # NO_DETECTED_SHIFT, POSSIBLE_SHIFT, CONFIRMED_EVALUATION_MISMATCH, INSUFFICIENT_DATA
+    p_value = Column(Float, nullable=True)
+    explanation = Column(Text, default="")
+    created_at = Column(DateTime, default=utc_now)
+
+
+class JurassicResilienceReport(Base):
+    __tablename__ = "jurassic_resilience_reports"
+
+    id = Column(String(64), primary_key=True)
+    experiment_id = Column(String(64), ForeignKey("jurassic_experiments.id"), nullable=False, index=True)
+    title = Column(String(128), nullable=False)
+    scenario_name = Column(String(128), nullable=False)
+    summary_markdown = Column(Text, nullable=False)
+    csv_metrics_data = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=utc_now)
+
+
+

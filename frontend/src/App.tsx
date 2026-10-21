@@ -16,6 +16,7 @@ import { PageAlertsIncidents } from './pages/PageAlertsIncidents';
 import { PageDatasetsQuality } from './pages/PageDatasetsQuality';
 import { PageSettingsAudit } from './pages/PageSettingsAudit';
 import { PageOmegaControlRoom } from './pages/PageOmegaControlRoom';
+import { PageJurassicLab } from './pages/PageJurassicLab';
 import { api } from './api/client';
 
 export const App: React.FC = () => {
@@ -143,6 +144,7 @@ export const App: React.FC = () => {
               <PageStorageDigitalTwin initialDeviceId={selectedDeviceId} />
             )}
             {currentPage === 'omega' && <PageOmegaControlRoom />}
+            {currentPage === 'jurassic' && <PageJurassicLab />}
             {currentPage === 'interventions' && (
               <PageInterventionStudio initialDeviceId={selectedDeviceId} />
             )}
