@@ -851,6 +851,132 @@ class OracleCounterfactualExperiment(Base):
     created_at = Column(DateTime, default=utc_now)
 
 
+# ==============================================================================
+# AEGISSTOR GAUNTLET — INDEPENDENT VALIDATION & EVIDENCE WORKBENCH (Prompt 18.0)
+# ==============================================================================
+
+class GauntletSuite(Base):
+    """
+    Catalog of documented, reproducible evaluation benchmark suites.
+    Defines objectives, required datasets, baseline methods, constraints, and acceptance criteria.
+    """
+    __tablename__ = "gauntlet_suites"
+
+    id = Column(String(64), primary_key=True, index=True)
+    name = Column(String(128), nullable=False)
+    version = Column(String(32), default="1.0.0")
+    category = Column(String(64), nullable=False)  # CAPACITY_FORECAST, PERFORMANCE_FORECAST, STORAGE_DECISION_QUALITY, ROBUSTNESS_SAFETY
+    objective = Column(Text, nullable=False)
+    supported_capabilities_json = Column(Text, default="[]")
+    required_dataset = Column(String(128), default="enterprise-telemetry-primary")
+    baseline_methods_json = Column(Text, default="[]")
+    test_scenarios_json = Column(Text, default="[]")
+    expected_outputs_json = Column(Text, default="[]")
+    safety_constraints_json = Column(Text, default="[]")
+    acceptance_criteria_json = Column(Text, default="[]")
+    known_limitations = Column(Text, default="")
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=utc_now)
+
+
+class GauntletRun(Base):
+    """
+    Versioned record of an executed benchmark experiment with reproducible manifest and SHA-256 hash.
+    Preserves historical records; never silently overwrites prior results.
+    """
+    __tablename__ = "gauntlet_runs"
+
+    id = Column(String(64), primary_key=True, index=True)
+    suite_id = Column(String(64), ForeignKey("gauntlet_suites.id"), nullable=False, index=True)
+    device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    status = Column(String(32), default="QUEUED")  # QUEUED, RUNNING, COMPLETED, FAILED, CANCELLED
+    manifest_json = Column(Text, nullable=False)   # Full versioned run manifest
+    manifest_sha256 = Column(String(64), nullable=False, index=True)
+    dataset_id = Column(String(64), nullable=False)
+    dataset_checksum = Column(String(64), default="")
+    evaluation_period_json = Column(Text, default="{}")
+    split_ratio_json = Column(Text, default='{"train": 0.70, "val": 0.15, "test": 0.15}')
+    models_evaluated_json = Column(Text, default="[]")
+    baselines_evaluated_json = Column(Text, default="[]")
+    parameters_json = Column(Text, default="{}")
+    results_json = Column(Text, default="{}")
+    exit_status = Column(String(32), default="SUCCESS")  # SUCCESS, CRITERIA_MET, CRITERIA_UNMET, ABORTED
+    reproducibility_package_path = Column(String(255), nullable=True)
+    started_at = Column(DateTime, default=utc_now)
+    completed_at = Column(DateTime, nullable=True)
+    execution_seconds = Column(Float, default=0.0)
+
+
+class GauntletClaim(Base):
+    """
+    Central ledger connecting technical project claims to verifiable artifacts and run outputs.
+    Guarantees that unverified or insufficiently supported claims are never marked as verified.
+    """
+    __tablename__ = "gauntlet_claims"
+
+    id = Column(String(64), primary_key=True, index=True)
+    claim_text = Column(Text, nullable=False)
+    category = Column(String(64), nullable=False)  # FEATURE_IMPLEMENTATION, TEST_PASS, FORECAST_ACCURACY, OPERATIONAL_SAFETY, SIMULATOR_FIDELITY, INTERVENTION_QUALITY
+    verification_status = Column(String(64), default="DRAFT")
+    # Statuses: DRAFT, AWAITING_EVIDENCE, SUPPORTED_WITHIN_TESTED_CONDITIONS,
+    #           PARTIALLY_SUPPORTED, CONTRADICTED_BY_EVIDENCE, UNVERIFIED, RETIRED
+    supporting_run_ids_json = Column(Text, default="[]")
+    relevant_model_versions_json = Column(Text, default="[]")
+    relevant_test_ids_json = Column(Text, default="[]")
+    evidence_artifacts_json = Column(Text, default="[]")
+    applicable_scope = Column(Text, default="")
+    known_limitations = Column(Text, default="")
+    last_verified_at = Column(DateTime, default=utc_now)
+    created_at = Column(DateTime, default=utc_now)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
+
+
+class GauntletFailure(Base):
+    """
+    Transparent failure and anomaly record.
+    Preserves negative test outcomes, out-of-distribution shocks, and rejection events without overwriting.
+    """
+    __tablename__ = "gauntlet_failures"
+
+    id = Column(String(64), primary_key=True, index=True)
+    run_id = Column(String(64), nullable=True, index=True)
+    failure_category = Column(String(64), nullable=False)
+    # Categories: OUT_OF_BOUNDS_ERROR, TEMPORAL_LEAKAGE, TELEMETRY_DROPOUT,
+    #             INTERCONNECT_SATURATION, INFEASIBLE_ACTION, REPRODUCTION_DRIFT, TEST_ASSERTION_FAILURE
+    exact_configuration_json = Column(Text, default="{}")
+    error_summary = Column(Text, nullable=False)
+    detailed_logs = Column(Text, default="")
+    inputs_and_versions_json = Column(Text, default="{}")
+    reproduction_steps = Column(Text, default="")
+    expected_behavior = Column(Text, default="")
+    actual_behavior = Column(Text, default="")
+    severity = Column(String(32), default="MEDIUM")  # CRITICAL, HIGH, MEDIUM, LOW
+    resolution_state = Column(String(32), default="OPEN")  # OPEN, INVESTIGATING, MITIGATED, RESOLVED, ACCEPTED_LIMITATION
+    follow_up_verification = Column(Text, default="")
+    recorded_at = Column(DateTime, default=utc_now)
+
+
+class GauntletReproduction(Base):
+    """
+    One-click reproduction comparison record.
+    Tracks numerical differences between original run and reproduced run within defined tolerances.
+    """
+    __tablename__ = "gauntlet_reproductions"
+
+    id = Column(String(64), primary_key=True, index=True)
+    original_run_id = Column(String(64), ForeignKey("gauntlet_runs.id"), nullable=False, index=True)
+    reproduced_run_id = Column(String(64), nullable=False, index=True)
+    status = Column(String(32), default="REPRODUCED_WITHIN_TOLERANCE")
+    # Statuses: REPRODUCED_WITHIN_TOLERANCE, REPRODUCED_WITH_DRIFT, FAILED_TO_REPRODUCE, INCONCLUSIVE
+    metric_deltas_json = Column(Text, default="{}")
+    max_relative_drift_pct = Column(Float, default=0.0)
+    tolerance_threshold_pct = Column(Float, default=3.0)
+    reproduction_report_md = Column(Text, default="")
+    verified_by = Column(String(128), default="automated_verifier")
+    created_at = Column(DateTime, default=utc_now)
+
+
+
 
 
 

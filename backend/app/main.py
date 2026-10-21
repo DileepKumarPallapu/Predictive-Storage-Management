@@ -24,6 +24,7 @@ from app.services.atlas import (
 from app.services.oracle import (
     WorkloadCatalogService, BottleneckForensicsEngine, HypothesisManager
 )
+from app.services.gauntlet_service import GauntletService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("aegisstor")
@@ -216,6 +217,23 @@ def initialize_database_and_seed_demo():
         WorkloadCatalogService.seed_workloads_if_missing(db)
         BottleneckForensicsEngine.seed_initial_bottleneck_cases_if_missing(db)
         HypothesisManager.seed_initial_hypotheses_if_missing(db)
+
+        # 10. Seed AEGISSTOR Gauntlet Validation & Examiner Workbench (Prompt 18.0)
+        GauntletService.seed_initial_catalog(db)
+
+        # Ensure reviewer/examiner account exists
+        examiner_user = db.query(User).filter(User.username == "examiner").first()
+        if not examiner_user:
+            ex_user = User(
+                id="usr-system-examiner",
+                username="examiner",
+                email="examiner@review.internal",
+                hashed_password=hash_password("examiner123"),
+                role="REVIEWER",
+                is_active=True
+            )
+            db.add(ex_user)
+            db.flush()
 
         db.commit()
         logger.info("Demo database verified/seeded idempotently.")

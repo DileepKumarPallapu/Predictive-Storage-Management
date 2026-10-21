@@ -41,7 +41,8 @@ export type PageId =
   | 'jurassic'
   | 'phoenix'
   | 'atlas'
-  | 'oracle';
+  | 'oracle'
+  | 'gauntlet';
 
 interface SidebarProps {
   currentPage: PageId;
@@ -190,6 +191,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
           guidedLabel: 'Workload & Bottleneck AI',
           expertLabel: 'Oracle Workload Attribution',
           icon: Sparkles,
+          highlight: true,
+        },
+        {
+          id: 'gauntlet',
+          guidedLabel: 'Examiner Workbench',
+          expertLabel: 'Gauntlet Research & Audit',
+          icon: ShieldCheck,
           highlight: true,
         },
         {

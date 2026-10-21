@@ -20,7 +20,8 @@ from app.api.v1 import (
     endpoints_phoenix,
     endpoints_atlas,
     endpoints_oracle,
-    endpoints_evidence_gated
+    endpoints_evidence_gated,
+    endpoints_gauntlet
 )
 
 api_router = APIRouter()
@@ -46,5 +47,6 @@ api_router.include_router(endpoints_phoenix.router, tags=["AEGISSTOR Phoenix Inc
 api_router.include_router(endpoints_atlas.router, tags=["AEGISSTOR Atlas Reality Calibration & Evidence Intelligence"])
 api_router.include_router(endpoints_oracle.router, tags=["AEGISSTOR Oracle Workload Attribution & Bottleneck Intelligence"])
 api_router.include_router(endpoints_evidence_gated.router, tags=["Research Contribution & Benchmarks (Prompt 17.0)"])
+api_router.include_router(endpoints_gauntlet.router, tags=["AEGISSTOR Gauntlet Validation & Examiner Workbench"])
 
 

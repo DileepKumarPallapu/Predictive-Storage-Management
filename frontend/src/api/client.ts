@@ -881,5 +881,40 @@ export const api = {
     const qs = hypothesisId ? `?hypothesis_id=${hypothesisId}` : "";
     return apiFetch<any>(`/oracle/report/${deviceId}${qs}`);
   },
+
+  // ==========================================
+  // AEGISSTOR GAUNTLET WORKBENCH (Prompt 18.0)
+  // ==========================================
+  getGauntletOverview: () => apiFetch<any>("/gauntlet/overview"),
+  getGauntletCatalog: () => apiFetch<any[]>("/gauntlet/catalog"),
+  runGauntletBenchmark: (payload: { suite_id: string; device_id: string; parameters?: any }) =>
+    apiFetch<any>("/gauntlet/run", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  getGauntletRuns: (suiteId?: string) => {
+    const qs = suiteId ? `?suite_id=${suiteId}` : "";
+    return apiFetch<any[]>(`/gauntlet/runs${qs}`);
+  },
+  getGauntletRun: (runId: string) => apiFetch<any>(`/gauntlet/runs/${runId}`),
+  getGauntletTournament: (deviceId?: string) => {
+    const qs = deviceId ? `?device_id=${deviceId}` : "";
+    return apiFetch<any>(`/gauntlet/tournament${qs}`);
+  },
+  getGauntletClaims: () => apiFetch<any[]>("/gauntlet/claims"),
+  createGauntletClaim: (payload: any) =>
+    apiFetch<any>("/gauntlet/claims", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  getGauntletFailures: () => apiFetch<any[]>("/gauntlet/failures"),
+  reproduceGauntletRun: (runId: string, payload?: { tolerance_pct: number }) =>
+    apiFetch<any>(`/gauntlet/reproduce/${runId}`, {
+      method: "POST",
+      body: JSON.stringify(payload || {}),
+    }),
+  getGauntletReproductions: () => apiFetch<any[]>("/gauntlet/reproductions"),
+  getGauntletExportMarkdownUrl: () => `${API_BASE}/gauntlet/export/markdown`,
+  getGauntletExportCsvUrl: () => `${API_BASE}/gauntlet/export/csv`,
 };
 
