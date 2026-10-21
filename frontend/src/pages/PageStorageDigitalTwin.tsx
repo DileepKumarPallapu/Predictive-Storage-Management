@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api, DeviceSummary, ScenarioSimulationResponse, TelemetryResponse } from '../api/client';
 import { ScientificForecastChart } from '../components/ScientificForecastChart';
-import { Layers, Play, AlertCircle, CheckCircle2, ShieldAlert, DollarSign, Clock, Zap } from 'lucide-react';
+import { Layers, Play, AlertCircle, CheckCircle2, ShieldAlert, DollarSign, Clock, Zap, Cpu, ArrowRight } from 'lucide-react';
 
 interface Props {
   initialDeviceId?: string;
@@ -89,16 +89,20 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
       {/* Page Header with Persistent Warning */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-obsidian-text tracking-tight flex items-center gap-2">
-            <Layers className="text-obsidian-cyan" size={22} />
-            Storage Resilience Digital Twin Studio
-          </h2>
-          <p className="text-xs text-obsidian-muted mt-1">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent-cyan)]/15 border border-[var(--accent-cyan)]/30 flex items-center justify-center text-[var(--accent-cyan)] shadow-[0_0_12px_rgba(85,214,255,0.2)]">
+              <Layers size={18} />
+            </div>
+            <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
+              Storage Resilience Digital Twin Studio
+            </h2>
+          </div>
+          <p className="text-xs text-[var(--text-secondary)] mt-1.5 leading-relaxed">
             Safe, sandboxed counterfactual intervention simulation. Tests hypothetical remediations against an immutable Hard Safety Envelope.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded bg-obsidian-amber/10 border border-obsidian-amber/30 text-obsidian-amber text-xs font-mono">
+        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[var(--color-warning)]/10 border border-[var(--color-warning)]/30 text-[var(--color-warning)] text-xs font-mono">
           <AlertCircle size={14} />
           <span>SIMULATION SANDBOX: NO PHYSICAL MUTATION</span>
         </div>
@@ -107,23 +111,29 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
       {/* Control Sandbox Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left: Configuration Panel */}
-        <div className="bg-obsidian-panel border border-obsidian-border rounded-lg p-5 space-y-4">
-          <h3 className="text-sm font-bold text-obsidian-text flex items-center justify-between">
-            <span>Intervention Parameters</span>
-            <span className="text-[10px] font-mono text-obsidian-cyan">SANDBOX v1.0</span>
-          </h3>
+        <div className="glass-panel rounded-xl p-5 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)]">
+            <h3 className="text-sm font-bold text-[var(--text-primary)]">
+              Intervention Parameters
+            </h3>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--accent-cyan)]/15 text-[var(--accent-cyan)] border border-[var(--accent-cyan)]/30 font-semibold">
+              SANDBOX v1.0
+            </span>
+          </div>
 
-          <div className="space-y-3 text-xs">
+          <div className="space-y-4 text-xs">
             {/* Target Pool */}
             <div>
-              <label className="block text-obsidian-muted mb-1 font-medium">Target Storage Pool:</label>
+              <label className="block text-[var(--text-secondary)] mb-1.5 font-medium text-[11px] uppercase tracking-wider">
+                Target Storage Pool:
+              </label>
               <select
                 value={selectedDeviceId}
                 onChange={(e) => setSelectedDeviceId(e.target.value)}
-                className="w-full bg-obsidian-secondary border border-obsidian-border rounded px-3 py-1.5 text-obsidian-text font-mono focus:border-obsidian-cyan"
+                className="w-full bg-[var(--surface-raised)]/60 border border-[var(--border-subtle)] focus:border-[var(--accent-cyan)]/70 rounded-lg px-3 py-2 text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
               >
                 {devices.map((d) => (
-                  <option key={d.id} value={d.id}>
+                  <option key={d.id} value={d.id} className="bg-[var(--surface-panel)] text-[var(--text-primary)]">
                     {d.name} ({d.id})
                   </option>
                 ))}
@@ -132,27 +142,29 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
 
             {/* Action Type */}
             <div>
-              <label className="block text-obsidian-muted mb-1 font-medium">Simulated Intervention Strategy:</label>
+              <label className="block text-[var(--text-secondary)] mb-1.5 font-medium text-[11px] uppercase tracking-wider">
+                Simulated Strategy:
+              </label>
               <select
                 value={actionType}
                 onChange={(e) => setActionType(e.target.value)}
-                className="w-full bg-obsidian-secondary border border-obsidian-border rounded px-3 py-1.5 text-obsidian-text font-semibold focus:border-obsidian-cyan cursor-pointer"
+                className="w-full bg-[var(--surface-raised)]/60 border border-[var(--border-subtle)] focus:border-[var(--accent-cyan)]/70 rounded-lg px-3 py-2 text-[var(--text-primary)] font-semibold focus:outline-none cursor-pointer"
               >
-                <option value="TIER_COLD_DATA">Move Inactive Cold Data to Tier 2/Archive</option>
-                <option value="EXPAND_CAPACITY">Online Capacity Provisioning (+LUN Growth)</option>
-                <option value="RESCHEDULE_TASK">Reschedule Background RAID Scrub / Backup</option>
-                <option value="REBALANCE_WORKLOAD">Rebalance Noisy Workloads to Adjacent Pool</option>
-                <option value="DO_NOTHING">Do Nothing (Observe Baseline Risk Trajectory)</option>
+                <option value="TIER_COLD_DATA" className="bg-[var(--surface-panel)]">Move Inactive Cold Data to Tier 2/Archive</option>
+                <option value="EXPAND_CAPACITY" className="bg-[var(--surface-panel)]">Online Capacity Provisioning (+LUN Growth)</option>
+                <option value="RESCHEDULE_TASK" className="bg-[var(--surface-panel)]">Reschedule Background RAID Scrub / Backup</option>
+                <option value="REBALANCE_WORKLOAD" className="bg-[var(--surface-panel)]">Rebalance Noisy Workloads to Adjacent Pool</option>
+                <option value="DO_NOTHING" className="bg-[var(--surface-panel)]">Do Nothing (Observe Baseline Trajectory)</option>
               </select>
             </div>
 
             {/* Dynamic Parameter Sliders */}
             {actionType === 'TIER_COLD_DATA' && (
-              <div className="space-y-3 pt-2 border-t border-obsidian-border">
+              <div className="space-y-4 pt-3 border-t border-[var(--border-subtle)]">
                 <div>
-                  <div className="flex justify-between text-obsidian-muted mb-1 font-mono">
+                  <div className="flex justify-between text-[var(--text-secondary)] mb-1.5 font-mono">
                     <span>Migrated Data Volume:</span>
-                    <span className="text-obsidian-cyan font-bold">{dataVolumeGb} GB</span>
+                    <span className="text-[var(--accent-cyan)] font-bold">{dataVolumeGb} GB</span>
                   </div>
                   <input
                     type="range"
@@ -161,14 +173,14 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
                     step="100"
                     value={dataVolumeGb}
                     onChange={(e) => setDataVolumeGb(Number(e.target.value))}
-                    className="w-full accent-obsidian-cyan cursor-pointer"
+                    className="w-full accent-[var(--accent-cyan)] cursor-pointer"
                   />
                 </div>
 
                 <div>
-                  <div className="flex justify-between text-obsidian-muted mb-1 font-mono">
+                  <div className="flex justify-between text-[var(--text-secondary)] mb-1.5 font-mono">
                     <span>Migration I/O Throttling Rate:</span>
-                    <span className="text-obsidian-cyan font-bold">{migrationRateMb} MB/s</span>
+                    <span className="text-[var(--accent-cyan)] font-bold">{migrationRateMb} MB/s</span>
                   </div>
                   <input
                     type="range"
@@ -177,18 +189,18 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
                     step="25"
                     value={migrationRateMb}
                     onChange={(e) => setMigrationRateMb(Number(e.target.value))}
-                    className="w-full accent-obsidian-cyan cursor-pointer"
+                    className="w-full accent-[var(--accent-cyan)] cursor-pointer"
                   />
                 </div>
               </div>
             )}
 
             {actionType === 'EXPAND_CAPACITY' && (
-              <div className="space-y-3 pt-2 border-t border-obsidian-border">
+              <div className="space-y-4 pt-3 border-t border-[var(--border-subtle)]">
                 <div>
-                  <div className="flex justify-between text-obsidian-muted mb-1 font-mono">
+                  <div className="flex justify-between text-[var(--text-secondary)] mb-1.5 font-mono">
                     <span>Additional Block Storage:</span>
-                    <span className="text-obsidian-cyan font-bold">{addedCapacityGb} GB</span>
+                    <span className="text-[var(--accent-cyan)] font-bold">{addedCapacityGb} GB</span>
                   </div>
                   <input
                     type="range"
@@ -197,18 +209,18 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
                     step="500"
                     value={addedCapacityGb}
                     onChange={(e) => setAddedCapacityGb(Number(e.target.value))}
-                    className="w-full accent-obsidian-cyan cursor-pointer"
+                    className="w-full accent-[var(--accent-cyan)] cursor-pointer"
                   />
                 </div>
               </div>
             )}
 
             {actionType === 'REBALANCE_WORKLOAD' && (
-              <div className="space-y-3 pt-2 border-t border-obsidian-border">
+              <div className="space-y-4 pt-3 border-t border-[var(--border-subtle)]">
                 <div>
-                  <div className="flex justify-between text-obsidian-muted mb-1 font-mono">
+                  <div className="flex justify-between text-[var(--text-secondary)] mb-1.5 font-mono">
                     <span>Tenant Partition Relocated:</span>
-                    <span className="text-obsidian-cyan font-bold">{relocatedIopsPct}% IOPS</span>
+                    <span className="text-[var(--accent-cyan)] font-bold">{relocatedIopsPct}% IOPS</span>
                   </div>
                   <input
                     type="range"
@@ -217,7 +229,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
                     step="5"
                     value={relocatedIopsPct}
                     onChange={(e) => setRelocatedIopsPct(Number(e.target.value))}
-                    className="w-full accent-obsidian-cyan cursor-pointer"
+                    className="w-full accent-[var(--accent-cyan)] cursor-pointer"
                   />
                 </div>
               </div>
@@ -226,7 +238,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
             <button
               onClick={runSimulation}
               disabled={loading}
-              className="w-full mt-4 py-2 px-4 rounded bg-obsidian-cyan hover:opacity-90 text-obsidian-bg font-bold text-xs flex items-center justify-center gap-2 transition-opacity"
+              className="w-full mt-4 py-2.5 px-4 rounded-lg btn-aurora-primary font-bold text-xs flex items-center justify-center gap-2"
             >
               <Play size={14} />
               {loading ? 'Simulating Digital Twin Physics...' : 'Run Counterfactual Simulation'}
@@ -238,46 +250,46 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
         <div className="lg:col-span-2 space-y-4">
           {simulation && (
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-              <div className="bg-obsidian-panel border border-obsidian-border rounded p-3 text-xs">
-                <div className="text-obsidian-muted flex items-center gap-1.5 font-medium">
-                  <Clock size={13} className="text-obsidian-cyan" /> Action Duration
+              <div className="glass-panel rounded-xl p-3.5 text-xs">
+                <div className="text-[var(--text-secondary)] flex items-center gap-1.5 font-medium">
+                  <Clock size={13} className="text-[var(--accent-cyan)]" /> Action Duration
                 </div>
-                <div className="text-base font-bold font-mono text-obsidian-text mt-1">
+                <div className="text-base font-bold font-mono text-[var(--text-primary)] mt-1.5">
                   {simulation.duration_minutes > 60
                     ? `${(simulation.duration_minutes / 60).toFixed(1)} hrs`
                     : `${simulation.duration_minutes.toFixed(0)} min`}
                 </div>
               </div>
 
-              <div className="bg-obsidian-panel border border-obsidian-border rounded p-3 text-xs">
-                <div className="text-obsidian-muted flex items-center gap-1.5 font-medium">
-                  <DollarSign size={13} className="text-obsidian-teal" /> Estimated Cost
+              <div className="glass-panel rounded-xl p-3.5 text-xs">
+                <div className="text-[var(--text-secondary)] flex items-center gap-1.5 font-medium">
+                  <DollarSign size={13} className="text-[var(--color-success)]" /> Estimated Cost
                 </div>
-                <div className="text-base font-bold font-mono text-obsidian-teal mt-1">
+                <div className="text-base font-bold font-mono text-[var(--color-success)] mt-1.5">
                   ${simulation.estimated_cost_usd.toFixed(2)}
                 </div>
               </div>
 
-              <div className="bg-obsidian-panel border border-obsidian-border rounded p-3 text-xs">
-                <div className="text-obsidian-muted flex items-center gap-1.5 font-medium">
-                  <Zap size={13} className="text-obsidian-amber" /> Latency Overhead
+              <div className="glass-panel rounded-xl p-3.5 text-xs">
+                <div className="text-[var(--text-secondary)] flex items-center gap-1.5 font-medium">
+                  <Zap size={13} className="text-[var(--color-warning)]" /> Latency Overhead
                 </div>
-                <div className="text-base font-bold font-mono text-obsidian-amber mt-1">
+                <div className="text-base font-bold font-mono text-[var(--color-warning)] mt-1.5">
                   {simulation.overhead_io_penalty_pct > 0 ? `+${simulation.overhead_io_penalty_pct}%` : `${simulation.overhead_io_penalty_pct}%`}
                 </div>
               </div>
 
-              <div className="bg-obsidian-panel border border-obsidian-border rounded p-3 text-xs">
-                <div className="text-obsidian-muted flex items-center gap-1.5 font-medium">
-                  <ShieldAlert size={13} /> Safety Envelope
+              <div className="glass-panel rounded-xl p-3.5 text-xs">
+                <div className="text-[var(--text-secondary)] flex items-center gap-1.5 font-medium">
+                  <ShieldAlert size={13} className="text-[var(--text-tertiary)]" /> Safety Envelope
                 </div>
-                <div className="mt-1">
+                <div className="mt-1.5">
                   {simulation.safety_envelope_passed ? (
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-obsidian-teal/20 text-obsidian-teal border border-obsidian-teal/40">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono bg-[var(--color-success)]/15 text-[var(--color-success)] border border-[var(--color-success)]/40 shadow-sm">
                       PASSED (SAFE)
                     </span>
                   ) : (
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-obsidian-coral/20 text-obsidian-coral border border-obsidian-coral/40">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono bg-[var(--color-critical)]/15 text-[var(--color-critical)] border border-[var(--color-critical)]/40 shadow-sm">
                       SAFETY VIOLATED
                     </span>
                   )}
@@ -288,7 +300,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
 
           {/* Hard Safety Envelope Violations Alert */}
           {simulation && !simulation.safety_envelope_passed && (
-            <div className="bg-obsidian-coral/10 border border-obsidian-coral/30 rounded-lg p-4 text-xs text-obsidian-coral space-y-1">
+            <div className="bg-[var(--color-critical)]/10 border border-[var(--color-critical)]/30 rounded-xl p-4 text-xs text-[var(--color-critical)] space-y-1.5">
               <div className="font-bold flex items-center gap-2">
                 <ShieldAlert size={16} /> Hard Safety Constraint Violated:
               </div>
@@ -317,9 +329,11 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
 
           {/* Documented Assumptions & Limitations */}
           {simulation && (
-            <div className="bg-obsidian-panel border border-obsidian-border rounded-lg p-4 text-xs">
-              <h4 className="font-semibold text-obsidian-text mb-2">Simulation Physics & Stated Assumptions:</h4>
-              <ul className="list-disc pl-5 space-y-1 text-obsidian-muted font-mono text-[11px]">
+            <div className="glass-panel rounded-xl p-4 text-xs">
+              <h4 className="font-semibold text-[var(--text-primary)] mb-2 flex items-center gap-1.5">
+                <CheckCircle2 size={14} className="text-[var(--accent-cyan)]" /> Simulation Physics & Stated Assumptions:
+              </h4>
+              <ul className="list-disc pl-5 space-y-1 text-[var(--text-secondary)] font-mono text-[11px]">
                 {simulation.assumptions.map((a, i) => (
                   <li key={i}>{a}</li>
                 ))}

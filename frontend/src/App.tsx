@@ -51,6 +51,14 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, []);
 
+  useEffect(() => {
+    if (isLightTheme) {
+      document.documentElement.classList.add('light-theme');
+    } else {
+      document.documentElement.classList.remove('light-theme');
+    }
+  }, [isLightTheme]);
+
   const checkHealth = async () => {
     try {
       const [h, alerts] = await Promise.all([
@@ -98,7 +106,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className={`min-h-screen flex ${isLightTheme ? 'light-theme' : ''} bg-obsidian-bg text-obsidian-text transition-colors duration-200`}>
+    <div className={`min-h-screen flex ${isLightTheme ? 'light-theme' : ''} bg-transparent text-[var(--text-primary)] transition-colors duration-200`}>
       {/* Sidebar Navigation */}
       <Sidebar
         currentPage={currentPage}

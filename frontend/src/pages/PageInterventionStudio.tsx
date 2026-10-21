@@ -13,9 +13,6 @@ import {
   Layers,
   ArrowRight,
   ShieldAlert,
-  HelpCircle,
-  RotateCcw,
-  Check,
   Info
 } from 'lucide-react';
 import { EmptyState } from '../components/EmptyState';
@@ -134,36 +131,36 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
     }
   };
 
-  const selectedDevice = devices.find((d) => d.id === selectedDeviceId);
-
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <h2 className="text-xl font-bold text-obsidian-text tracking-tight flex items-center gap-2">
-              <Sliders className="text-obsidian-cyan" size={22} />
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent-cyan)]/15 border border-[var(--accent-cyan)]/30 flex items-center justify-center text-[var(--accent-cyan)] shadow-[0_0_12px_rgba(85,214,255,0.2)]">
+              <Sliders size={18} />
+            </div>
+            <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
               Counterfactual Intervention Studio
             </h2>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-obsidian-teal/15 text-obsidian-teal border border-obsidian-teal/40">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[var(--color-success)]/15 text-[var(--color-success)] border border-[var(--color-success)]/40 shadow-sm">
               SHADOW MODE: SAFE
             </span>
           </div>
-          <p className="text-xs text-obsidian-muted mt-1 leading-relaxed">
+          <p className="text-xs text-[var(--text-secondary)] mt-1.5 leading-relaxed">
             Lead-time-aware preventive action planning. Evaluates whether candidate interventions can complete before predicted capacity or latency SLA breach.
           </p>
         </div>
 
-        {/* Storage Pool Selector & Horizon */}
+        {/* Storage Pool Selector */}
         <div className="flex items-center gap-3">
           <select
             value={selectedDeviceId}
             onChange={(e) => setSelectedDeviceId(e.target.value)}
-            className="bg-obsidian-panel border border-obsidian-border rounded px-3 py-1.5 text-xs text-obsidian-text font-mono focus:border-obsidian-cyan cursor-pointer"
+            className="bg-[var(--surface-panel)] border border-[var(--border-subtle)] focus:border-[var(--accent-cyan)]/70 rounded-lg px-3.5 py-1.5 text-xs text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
           >
             {devices.map((d) => (
-              <option key={d.id} value={d.id}>
+              <option key={d.id} value={d.id} className="bg-[var(--surface-panel)] text-[var(--text-primary)]">
                 {d.name} ({d.tier})
               </option>
             ))}
@@ -172,57 +169,57 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
       </div>
 
       {actionStatusMsg && (
-        <div className="bg-obsidian-teal/15 border border-obsidian-teal/40 rounded-lg p-3 text-xs text-obsidian-teal font-mono flex items-center gap-2">
+        <div className="bg-[var(--color-success)]/15 border border-[var(--color-success)]/40 rounded-xl p-3 text-xs text-[var(--color-success)] font-mono flex items-center gap-2 shadow-sm animate-in fade-in">
           <CheckCircle2 size={16} />
           <span>{actionStatusMsg}</span>
         </div>
       )}
 
       {loading ? (
-        <LoadingSkeleton />
+        <LoadingSkeleton rows={6} height="h-10" />
       ) : (
         <>
           {/* STEP 1 & 2: Risk Breach Diagnostic Banner */}
           {runwayData && (
-            <div className={`p-4 rounded-xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${
+            <div className={`p-5 rounded-xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-all ${
               runwayData.estimated_runway_hours <= 48
-                ? 'bg-obsidian-coral/10 border-obsidian-coral/40 text-obsidian-text'
+                ? 'bg-[var(--color-critical)]/10 border-[var(--color-critical)]/35 text-[var(--text-primary)]'
                 : runwayData.estimated_runway_hours <= 96
-                ? 'bg-obsidian-amber/10 border-obsidian-amber/40 text-obsidian-text'
-                : 'bg-obsidian-panel border-obsidian-border text-obsidian-text'
+                ? 'bg-[var(--color-warning)]/10 border-[var(--color-warning)]/35 text-[var(--text-primary)]'
+                : 'glass-panel text-[var(--text-primary)]'
             }`}>
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-3.5">
                 <AlertTriangle
-                  size={20}
-                  className={runwayData.estimated_runway_hours <= 48 ? 'text-obsidian-coral mt-0.5' : 'text-obsidian-amber mt-0.5'}
+                  size={22}
+                  className={runwayData.estimated_runway_hours <= 48 ? 'text-[var(--color-critical)] mt-0.5' : 'text-[var(--color-warning)] mt-0.5'}
                 />
                 <div>
                   <div className="text-xs font-bold flex items-center gap-2">
                     <span>Projected Reserve Breach Horizon:</span>
-                    <span className="font-mono text-obsidian-cyan">
+                    <span className="font-mono text-[var(--accent-cyan)] font-semibold">
                       ~{runwayData.estimated_runway_hours.toFixed(1)} hours
                     </span>
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-obsidian-surface border border-obsidian-border text-obsidian-muted">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-[var(--text-secondary)]">
                       {runwayData.breach_status}
                     </span>
                   </div>
-                  <p className="text-[11px] text-obsidian-muted mt-1 leading-relaxed">
+                  <p className="text-[11px] text-[var(--text-secondary)] mt-1.5 leading-relaxed">
                     Under current write growth (+{runwayData.growth_rate_daily_gb} GB/day), free reserve drops below {runwayData.configured_critical_threshold_pct}% critical threshold.
-                    Sensitivity range: <span className="font-mono text-obsidian-text">[{runwayData.sensitivity_pessimistic_hours}h pessimistic .. {runwayData.sensitivity_optimistic_hours}h optimistic]</span>.
+                    Sensitivity range: <span className="font-mono text-[var(--text-primary)] font-semibold">[{runwayData.sensitivity_pessimistic_hours}h pessimistic .. {runwayData.sensitivity_optimistic_hours}h optimistic]</span>.
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-3 text-xs font-mono shrink-0">
-                <div className="px-3 py-1.5 rounded bg-obsidian-panel border border-obsidian-border text-center">
-                  <div className="text-[10px] text-obsidian-muted">Usable Capacity</div>
-                  <div className="font-bold text-obsidian-text">
+                <div className="px-3.5 py-2 rounded-xl bg-[var(--surface-panel)] border border-[var(--border-subtle)] text-center shadow-inner">
+                  <div className="text-[10px] text-[var(--text-tertiary)]">Usable Capacity</div>
+                  <div className="font-bold text-[var(--text-primary)]">
                     {(runwayData.total_capacity_bytes / 1e12).toFixed(1)} TB
                   </div>
                 </div>
-                <div className="px-3 py-1.5 rounded bg-obsidian-panel border border-obsidian-border text-center">
-                  <div className="text-[10px] text-obsidian-muted">Current Util</div>
-                  <div className={`font-bold ${runwayData.current_utilization_pct > 80 ? 'text-obsidian-coral' : 'text-obsidian-text'}`}>
+                <div className="px-3.5 py-2 rounded-xl bg-[var(--surface-panel)] border border-[var(--border-subtle)] text-center shadow-inner">
+                  <div className="text-[10px] text-[var(--text-tertiary)]">Current Util</div>
+                  <div className={`font-bold ${runwayData.current_utilization_pct > 80 ? 'text-[var(--color-critical)]' : 'text-[var(--text-primary)]'}`}>
                     {runwayData.current_utilization_pct}%
                   </div>
                 </div>
@@ -233,13 +230,13 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
           {/* STEP 3 & 4: Action Candidates Matrix (Feasible vs Disqualified) */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-obsidian-text flex items-center gap-2">
+              <h3 className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
                 <span>Feasible Preventive Candidates</span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-obsidian-cyan/15 text-obsidian-cyan border border-obsidian-cyan/30">
+                <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[var(--accent-cyan)]/15 text-[var(--accent-cyan)] border border-[var(--accent-cyan)]/30 font-semibold shadow-sm">
                   {planningData?.feasible_candidates?.length || 0} FEASIBLE
                 </span>
               </h3>
-              <span className="text-[11px] text-obsidian-muted">
+              <span className="text-[11px] text-[var(--text-secondary)]">
                 Objective: Maximize Runway Headroom while Minimizing Contention Penalty
               </span>
             </div>
@@ -255,52 +252,52 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
                       setSelectedCandidateId(candidate.id);
                       runComparativeSimulation(candidate.action_type);
                     }}
-                    className={`bg-obsidian-panel border rounded-xl p-4 cursor-pointer transition-all ${
+                    className={`glass-panel rounded-xl p-4.5 cursor-pointer transition-all ${
                       isSelected
-                        ? 'border-obsidian-cyan shadow-[0_0_15px_rgba(85,214,255,0.12)] bg-obsidian-raised'
-                        : 'border-obsidian-border hover:border-obsidian-cyan/40'
+                        ? 'border-[var(--accent-cyan)] shadow-[0_0_15px_rgba(85,214,255,0.18)] bg-[var(--surface-raised)]/70'
+                        : 'hover:border-[var(--accent-cyan)]/40'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-obsidian-cyan/20 text-obsidian-cyan border border-obsidian-cyan/40">
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[var(--accent-cyan)]/15 text-[var(--accent-cyan)] border border-[var(--accent-cyan)]/40">
                         RANK #{candidate.rank}
                       </span>
-                      <span className="text-xs font-mono font-bold text-obsidian-teal">
+                      <span className="text-xs font-mono font-bold text-[var(--color-success)]">
                         Score: {candidate.utility_score}
                       </span>
                     </div>
 
-                    <h4 className="text-xs font-bold text-obsidian-text mt-2.5 line-clamp-1">
+                    <h4 className="text-xs font-bold text-[var(--text-primary)] mt-2.5 line-clamp-1">
                       {candidate.title}
                     </h4>
-                    <p className="text-[11px] text-obsidian-muted mt-1 line-clamp-2">
+                    <p className="text-[11px] text-[var(--text-secondary)] mt-1 line-clamp-2">
                       {candidate.description}
                     </p>
 
-                    <div className="mt-3 pt-3 border-t border-obsidian-border/60 grid grid-cols-2 gap-2 text-[10px] font-mono">
+                    <div className="mt-3 pt-3 border-t border-[var(--border-subtle)] grid grid-cols-2 gap-2 text-[10px] font-mono">
                       <div>
-                        <span className="text-obsidian-muted">Runway Gain:</span>
-                        <div className="text-obsidian-amber font-bold">+{candidate.estimated_runway_gain_hours} hrs</div>
+                        <span className="text-[var(--text-tertiary)]">Runway Gain:</span>
+                        <div className="text-[var(--color-warning)] font-bold">+{candidate.estimated_runway_gain_hours} hrs</div>
                       </div>
                       <div>
-                        <span className="text-obsidian-muted">Action Duration:</span>
-                        <div className="text-obsidian-text font-bold">{candidate.estimated_duration_hours} hrs</div>
+                        <span className="text-[var(--text-tertiary)]">Action Duration:</span>
+                        <div className="text-[var(--text-primary)] font-bold">{candidate.estimated_duration_hours} hrs</div>
                       </div>
                       <div>
-                        <span className="text-obsidian-muted">Contention:</span>
-                        <div className={candidate.io_overhead_pct > 15 ? 'text-obsidian-coral' : 'text-obsidian-teal'}>
+                        <span className="text-[var(--text-tertiary)]">Contention:</span>
+                        <div className={candidate.io_overhead_pct > 15 ? 'text-[var(--color-critical)]' : 'text-[var(--color-success)]'}>
                           {candidate.io_overhead_pct > 0 ? `+${candidate.io_overhead_pct}%` : `${candidate.io_overhead_pct}%`}
                         </div>
                       </div>
                       <div>
-                        <span className="text-obsidian-muted">Estimated Cost:</span>
-                        <div className="text-obsidian-text font-bold">${candidate.estimated_cost_usd}</div>
+                        <span className="text-[var(--text-tertiary)]">Estimated Cost:</span>
+                        <div className="text-[var(--text-primary)] font-bold">${candidate.estimated_cost_usd}</div>
                       </div>
                     </div>
 
-                    <div className="mt-3 flex items-center justify-between pt-2 border-t border-obsidian-border/40">
-                      <span className="text-[9px] font-mono text-obsidian-teal flex items-center gap-1">
-                        <CheckCircle2 size={11} />
+                    <div className="mt-3.5 flex items-center justify-between pt-2.5 border-t border-[var(--border-subtle)]">
+                      <span className="text-[10px] font-mono text-[var(--color-success)] flex items-center gap-1">
+                        <CheckCircle2 size={12} />
                         Prerequisites Satisfied
                       </span>
                       <button
@@ -308,7 +305,7 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
                           e.stopPropagation();
                           handleApprove(candidate.id);
                         }}
-                        className="px-2.5 py-1 bg-obsidian-cyan text-obsidian-bg rounded text-[10px] font-bold hover:opacity-90 transition-opacity"
+                        className="px-3 py-1 btn-aurora-primary rounded-lg text-[10px] font-bold"
                       >
                         Approve
                       </button>
@@ -320,8 +317,8 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
 
             {/* Disqualified Candidates Section */}
             {planningData?.rejected_candidates?.length > 0 && (
-              <div className="mt-4 p-4 rounded-xl bg-obsidian-panel/60 border border-obsidian-coral/30 space-y-3">
-                <div className="text-xs font-bold text-obsidian-coral flex items-center gap-2">
+              <div className="mt-4 p-4.5 rounded-xl glass-panel border border-[var(--color-critical)]/30 space-y-3">
+                <div className="text-xs font-bold text-[var(--color-critical)] flex items-center gap-2">
                   <XCircle size={15} />
                   <span>Disqualified Candidate Actions (Hard Safety Envelope Rejections)</span>
                 </div>
@@ -329,13 +326,13 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
                   {planningData.rejected_candidates.map((rej: any) => (
                     <div
                       key={rej.id}
-                      className="text-xs p-2.5 rounded bg-obsidian-secondary/60 border border-obsidian-border/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                      className="text-xs p-3 rounded-lg bg-[var(--surface-raised)]/60 border border-[var(--border-subtle)] flex flex-col sm:flex-row sm:items-center justify-between gap-2"
                     >
                       <div>
-                        <span className="font-semibold text-obsidian-text">{rej.title}: </span>
-                        <span className="text-obsidian-muted">{rej.rejection_reason}</span>
+                        <span className="font-semibold text-[var(--text-primary)]">{rej.title}: </span>
+                        <span className="text-[var(--text-secondary)]">{rej.rejection_reason}</span>
                       </div>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-obsidian-coral/20 text-obsidian-coral border border-obsidian-coral/40 shrink-0">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[var(--color-critical)]/15 text-[var(--color-critical)] border border-[var(--color-critical)]/40 shrink-0">
                         {rej.feasibility}
                       </span>
                     </div>
@@ -347,55 +344,55 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
 
           {/* STEP 5: Side-by-Side Simulation Trajectory Inspector */}
           {activeSimulation && (
-            <div className="bg-obsidian-panel border border-obsidian-border rounded-xl p-5 space-y-4">
+            <div className="glass-panel rounded-xl p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-obsidian-text flex items-center gap-2">
-                    <Activity size={16} className="text-obsidian-cyan" />
+                  <h3 className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
+                    <Activity size={16} className="text-[var(--accent-cyan)]" />
                     <span>Side-by-Side Scenario Trajectory</span>
                   </h3>
-                  <p className="text-[11px] text-obsidian-muted mt-0.5">
+                  <p className="text-[11px] text-[var(--text-secondary)] mt-0.5">
                     Comparing Baseline organic growth (Do Nothing) versus {activeSimulation.action_type}.
                   </p>
                 </div>
                 <div className="flex items-center gap-4 text-xs font-mono">
-                  <span className="flex items-center gap-1.5 text-obsidian-muted">
-                    <span className="w-3 h-0.5 bg-obsidian-muted inline-block"></span>
+                  <span className="flex items-center gap-1.5 text-[var(--text-secondary)]">
+                    <span className="w-3 h-0.5 bg-[var(--text-tertiary)] inline-block"></span>
                     Baseline (Do Nothing)
                   </span>
-                  <span className="flex items-center gap-1.5 text-obsidian-cyan font-bold">
-                    <span className="w-3 h-0.5 bg-obsidian-cyan inline-block"></span>
+                  <span className="flex items-center gap-1.5 text-[var(--accent-cyan)] font-bold">
+                    <span className="w-3 h-0.5 bg-[var(--accent-cyan)] inline-block"></span>
                     Counterfactual Trajectory
                   </span>
                 </div>
               </div>
 
               {/* Trajectory Key Metrics Bar */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-obsidian-secondary p-3 rounded-lg text-xs font-mono">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[var(--surface-raised)]/60 p-3.5 rounded-xl border border-[var(--border-subtle)] text-xs font-mono">
                 <div>
-                  <span className="text-obsidian-muted text-[10px]">Action Duration:</span>
-                  <div className="text-obsidian-text font-bold">{activeSimulation.duration_minutes} min</div>
+                  <span className="text-[var(--text-tertiary)] text-[10px]">Action Duration:</span>
+                  <div className="text-[var(--text-primary)] font-bold">{activeSimulation.duration_minutes} min</div>
                 </div>
                 <div>
-                  <span className="text-obsidian-muted text-[10px]">I/O Contention:</span>
-                  <div className="text-obsidian-amber font-bold">+{activeSimulation.overhead_io_penalty_pct}%</div>
+                  <span className="text-[var(--text-tertiary)] text-[10px]">I/O Contention:</span>
+                  <div className="text-[var(--color-warning)] font-bold">+{activeSimulation.overhead_io_penalty_pct}%</div>
                 </div>
                 <div>
-                  <span className="text-obsidian-muted text-[10px]">Estimated Cost:</span>
-                  <div className="text-obsidian-text font-bold">${activeSimulation.estimated_cost_usd}</div>
+                  <span className="text-[var(--text-tertiary)] text-[10px]">Estimated Cost:</span>
+                  <div className="text-[var(--text-primary)] font-bold">${activeSimulation.estimated_cost_usd}</div>
                 </div>
                 <div>
-                  <span className="text-obsidian-muted text-[10px]">Safety Envelope:</span>
-                  <div className={activeSimulation.safety_envelope_passed ? 'text-obsidian-teal font-bold' : 'text-obsidian-coral font-bold'}>
+                  <span className="text-[var(--text-tertiary)] text-[10px]">Safety Envelope:</span>
+                  <div className={activeSimulation.safety_envelope_passed ? 'text-[var(--color-success)] font-bold' : 'text-[var(--color-critical)] font-bold'}>
                     {activeSimulation.safety_envelope_passed ? 'PASSED (100%)' : 'VIOLATION'}
                   </div>
                 </div>
               </div>
 
               {/* Assumptions & Model Limitations */}
-              <div className="text-[11px] text-obsidian-muted bg-obsidian-secondary/50 p-3 rounded-lg border border-obsidian-border/40 space-y-1">
-                <div className="text-obsidian-text font-semibold flex items-center gap-1.5">
-                  <Info size={13} className="text-obsidian-cyan" />
+              <div className="text-[11px] text-[var(--text-secondary)] bg-[var(--surface-raised)]/40 p-3.5 rounded-xl border border-[var(--border-subtle)] space-y-1.5">
+                <div className="text-[var(--text-primary)] font-semibold flex items-center gap-1.5">
+                  <Info size={13} className="text-[var(--accent-cyan)]" />
                   <span>Simulator Physical Assumptions:</span>
                 </div>
                 <ul className="list-disc pl-5 space-y-0.5">

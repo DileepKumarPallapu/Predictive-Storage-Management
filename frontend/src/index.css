@@ -3,51 +3,189 @@
 @tailwind utilities;
 
 :root {
-  /* DARK MODE (Default - Obsidian Aurora) */
-  --bg-main: #080D18;
-  --bg-secondary: #0C1424;
-  --bg-sidebar: #0A1220;
-  --bg-panel: #101B2E;
-  --bg-raised: #15233A;
+  /* ========================================================
+     MASTER DARK THEME — AURORA GLASS INFINITY (Exact Tokens)
+     ======================================================== */
+  --bg-primary: #070B18;
+  --bg-secondary: #0B1222;
+  --bg-tertiary: #101A2D;
+  --surface-primary: rgba(15, 25, 45, 0.72);
+  --surface-secondary: rgba(22, 35, 59, 0.74);
+  --surface-elevated: rgba(27, 42, 69, 0.88);
+
+  --border-subtle: rgba(157, 185, 229, 0.12);
+  --border-normal: rgba(157, 185, 229, 0.20);
+  --border-highlight: rgba(103, 214, 255, 0.38);
+
   --accent-cyan: #55D6FF;
-  --accent-violet: #9B87FF;
-  --color-success: #48E0C1;
-  --color-warning: #FFC66D;
-  --color-critical: #FF718A;
-  --text-primary: #EDF4FF;
-  --text-secondary: #A3B2CA;
-  --border-subtle: #26364D;
-  --grid-line: rgba(85, 214, 255, 0.03);
+  --accent-electric-blue: #668CFF;
+  --accent-violet: #AB8CFF;
+  --accent-lavender: #D0BEFF;
+
+  --success: #43E6BD;
+  --warning: #FFCB70;
+  --danger: #FF718A;
+  --info: #76A9FF;
+
+  --text-primary: #F2F6FF;
+  --text-secondary: #A8B7D1;
+  --text-muted: #7788A6;
+  --text-disabled: #596781;
+
+  --chart-cyan: #55D6FF;
+  --chart-blue: #668CFF;
+  --chart-violet: #AB8CFF;
+  --chart-mint: #43E6BD;
+  --chart-amber: #FFCB70;
+  --chart-coral: #FF718A;
+
+  /* Ambient light glow parameters */
+  --glow-cyan-alpha: rgba(85, 214, 255, 0.08);
+  --glow-violet-alpha: rgba(171, 140, 255, 0.07);
+  --glow-blue-alpha: rgba(102, 140, 255, 0.06);
+  --grid-line-color: rgba(157, 185, 229, 0.035);
 }
 
 .light-theme {
-  /* LIGHT MODE */
-  --bg-main: #F4F7FB;
-  --bg-secondary: #EAF0F7;
-  --bg-sidebar: #FFFFFF;
-  --bg-panel: #FFFFFF;
-  --bg-raised: #EAF0F7;
+  /* ========================================================
+     LIGHT THEME — PREMIUM PEARL GLASS (Exact Tokens)
+     ======================================================== */
+  --bg-primary: #F3F6FC;
+  --bg-secondary: #EAF0FA;
+  --bg-tertiary: #E2EAF7;
+  --surface-primary: rgba(255, 255, 255, 0.82);
+  --surface-secondary: rgba(255, 255, 255, 0.92);
+  --surface-elevated: #FFFFFF;
+
+  --border-subtle: rgba(58, 83, 128, 0.10);
+  --border-normal: rgba(58, 83, 128, 0.17);
+  --border-highlight: rgba(8, 126, 164, 0.34);
+
   --accent-cyan: #087EA4;
-  --accent-violet: #6755D9;
-  --color-success: #087F69;
-  --color-warning: #9A5700;
-  --color-critical: #C52D51;
-  --text-primary: #142035;
+  --accent-electric-blue: #356BEE;
+  --accent-violet: #7656D9;
+  --accent-lavender: #8B71DF;
+
+  --success: #087F69;
+  --warning: #945400;
+  --danger: #C52D51;
+  --info: #315FC7;
+
+  --text-primary: #15213A;
   --text-secondary: #52627A;
-  --border-subtle: #D9E2EE;
-  --grid-line: rgba(8, 126, 164, 0.04);
+  --text-muted: #76849A;
+  --text-disabled: #A0AABC;
+
+  --chart-cyan: #087EA4;
+  --chart-blue: #356BEE;
+  --chart-violet: #7656D9;
+  --chart-mint: #087F69;
+  --chart-amber: #945400;
+  --chart-coral: #C52D51;
+
+  --glow-cyan-alpha: rgba(8, 126, 164, 0.06);
+  --glow-violet-alpha: rgba(118, 86, 217, 0.05);
+  --glow-blue-alpha: rgba(53, 107, 238, 0.04);
+  --grid-line-color: rgba(58, 83, 128, 0.04);
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--bg-main);
+  background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: radial-gradient(var(--grid-line) 1px, transparent 1px);
-  background-size: 24px 24px;
+  min-height: 100vh;
+  /* Ambient Layered Lighting Composition */
+  background-image: 
+    radial-gradient(circle at 8% 12%, var(--glow-cyan-alpha) 0%, transparent 40%),
+    radial-gradient(circle at 92% 88%, var(--glow-violet-alpha) 0%, transparent 45%),
+    radial-gradient(circle at 50% 0%, var(--glow-blue-alpha) 0%, transparent 40%),
+    linear-gradient(var(--grid-line-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line-color) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+  background-attachment: fixed;
+}
+
+/* ========================================================
+   AURORA GLASS SYSTEM (Levels 1, 2, 3 & Component Utilities)
+   ======================================================== */
+
+/* Level 1: Primary Glass Panels & Cards */
+.glass-panel {
+  background-color: var(--surface-primary);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
+  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0) 100%);
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.glass-panel:hover {
+  border-color: var(--border-normal);
+}
+
+/* Level 2: Elevated Panels, Popovers & Dropdowns */
+.glass-panel-elevated {
+  background-color: var(--surface-secondary);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border: 1px solid var(--border-normal);
+  box-shadow: 0 14px 44px 0 rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+/* Level 3: Modals & Overlays */
+.glass-modal {
+  background-color: var(--surface-elevated);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid var(--border-highlight);
+  box-shadow: 0 24px 64px 0 rgba(0, 0, 0, 0.65), 0 0 24px 0 rgba(85, 214, 255, 0.12);
+}
+
+/* Glass Interactive Buttons */
+.btn-aurora-primary {
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-electric-blue) 100%);
+  color: #070B18;
+  font-weight: 700;
+  border: none;
+  box-shadow: 0 0 16px -2px rgba(85, 214, 255, 0.35);
+  transition: transform 150ms ease, box-shadow 150ms ease, opacity 150ms ease;
+}
+
+.btn-aurora-primary:hover:not(:disabled) {
+  opacity: 0.92;
+  box-shadow: 0 0 24px 0 rgba(85, 214, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-aurora-secondary {
+  background-color: var(--surface-primary);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  backdrop-filter: blur(12px);
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
+}
+
+.btn-aurora-secondary:hover:not(:disabled) {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  background-color: var(--surface-secondary);
+}
+
+/* Luminous Accent Borders */
+.border-luminous-cyan {
+  border-color: var(--border-highlight);
+  box-shadow: 0 0 14px -2px rgba(85, 214, 255, 0.25);
+}
+
+.border-luminous-violet {
+  border-color: rgba(171, 140, 255, 0.38);
+  box-shadow: 0 0 14px -2px rgba(171, 140, 255, 0.25);
 }
 
 /* Custom Scrollbar */
@@ -56,17 +194,22 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-main);
+  background: var(--bg-primary);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--border-subtle);
+  background: var(--border-normal);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-secondary);
 }
 
-/* Transition utility */
-.theme-transition {
-  transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
+/* Accessibility & Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -5,13 +5,13 @@ export const LoadingSkeleton: React.FC<{ rows?: number; height?: string }> = ({
   height = 'h-4',
 }) => {
   return (
-    <div className="space-y-3 animate-pulse p-4">
+    <div className="space-y-3 p-4">
       {Array.from({ length: rows }).map((_, i) => (
         <div
           key={i}
-          className={`w-full bg-obsidian-secondary/60 rounded ${height}`}
+          className={`w-full bg-[var(--surface-raised)]/70 rounded-lg animate-pulse border border-[var(--border-subtle)] ${height}`}
           style={{ width: `${100 - (i % 3) * 15}%` }}
-        ></div>
+        />
       ))}
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Shield, Key, LogOut, CheckCircle, AlertCircle, X } from 'lucide-react';
+import { Shield, Key, LogOut, CheckCircle2, AlertCircle, X, Sparkles, UserCheck } from 'lucide-react';
 import { api } from '../api/client';
 
 interface AuthModalProps {
@@ -38,7 +38,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       onAuthSuccess(res.username, res.role);
       setTimeout(() => {
         onClose();
-      }, 1000);
+      }, 900);
     } catch (err: any) {
       setError(err.message || 'Authentication failed. Check credentials.');
     } finally {
@@ -52,46 +52,62 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     onClose();
   };
 
+  const setDemoRole = (u: string, p: string) => {
+    setUsername(u);
+    setPassword(p);
+    setError(null);
+  };
+
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-obsidian-surface border border-obsidian-border rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
+      <div className="glass-modal w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-150 shadow-glass-modal">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-obsidian-border bg-obsidian-raised">
-          <div className="flex items-center gap-2.5">
-            <Shield size={18} className="text-obsidian-cyan" />
-            <h3 className="text-sm font-bold text-obsidian-text">
-              Role-Based Access Control & Identity
-            </h3>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--surface-raised)]/40">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent-cyan)]/15 border border-[var(--accent-cyan)]/30 flex items-center justify-center text-[var(--accent-cyan)]">
+              <Shield size={18} />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold tracking-wide text-[var(--text-primary)]">
+                Access Control & Identity
+              </h3>
+              <p className="text-[11px] text-[var(--text-tertiary)] font-mono">
+                Cryptographic RBAC Token Session
+              </p>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 text-obsidian-muted hover:text-obsidian-text rounded"
+            className="p-1.5 text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-raised)] rounded-lg transition-colors"
           >
             <X size={16} />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-5 space-y-4">
+        <div className="p-6 space-y-5">
           {/* Active Session Status */}
-          <div className="p-3 bg-obsidian-panel border border-obsidian-border rounded-lg flex items-center justify-between">
+          <div className="p-3.5 glass-panel rounded-xl flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-obsidian-cyan/15 border border-obsidian-cyan/30 flex items-center justify-center text-obsidian-cyan font-bold text-xs">
+              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[var(--accent-cyan)]/30 to-[var(--accent-violet)]/30 border border-[var(--accent-cyan)]/40 flex items-center justify-center text-[var(--accent-cyan)] font-bold text-xs shadow-inner">
                 {currentUser.username[0]?.toUpperCase() || 'U'}
               </div>
               <div>
-                <div className="text-xs font-bold text-obsidian-text">
+                <div className="text-xs font-semibold text-[var(--text-primary)] flex items-center gap-1.5">
                   {currentUser.username}
+                  {currentUser.username !== 'anonymous' && (
+                    <UserCheck size={13} className="text-[var(--color-success)]" />
+                  )}
                 </div>
-                <div className="text-[10px] text-obsidian-muted font-mono">
-                  Role: <span className="text-obsidian-cyan">{currentUser.role}</span>
+                <div className="text-[11px] text-[var(--text-secondary)] font-mono flex items-center gap-1">
+                  Role: <span className="text-[var(--accent-cyan)] font-semibold">{currentUser.role}</span>
                 </div>
               </div>
             </div>
             {currentUser.username !== 'anonymous' && (
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-1.5 px-2.5 py-1 bg-obsidian-coral/10 hover:bg-obsidian-coral/20 border border-obsidian-coral/30 text-obsidian-coral rounded text-[11px] font-medium transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--color-critical)]/12 hover:bg-[var(--color-critical)]/22 border border-[var(--color-critical)]/30 text-[var(--color-critical)] rounded-lg text-[11px] font-medium transition-colors"
               >
                 <LogOut size={12} />
                 Logout
@@ -99,19 +115,41 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             )}
           </div>
 
-          {/* Quick Demo Credentials Info */}
-          <div className="text-[11px] text-obsidian-muted bg-obsidian-secondary/60 p-2.5 rounded border border-obsidian-border/50">
-            <div className="font-semibold text-obsidian-text mb-1">Pre-configured Demo Credentials:</div>
-            <div className="font-mono text-[10px] space-y-0.5">
-              <div>Administrator: <span className="text-obsidian-cyan">admin</span> / <span className="text-obsidian-text">admin123</span></div>
-              <div>Operator: <span className="text-obsidian-cyan">operator</span> / <span className="text-obsidian-text">operator123</span></div>
+          {/* Quick Demo Credentials Info & Fill Buttons */}
+          <div className="text-xs text-[var(--text-secondary)] bg-[var(--surface-raised)]/50 p-3.5 rounded-xl border border-[var(--border-subtle)] space-y-2">
+            <div className="font-medium text-[var(--text-primary)] flex items-center gap-1.5 text-[11px] uppercase tracking-wider">
+              <Sparkles size={13} className="text-[var(--accent-cyan)]" /> Quick Role Presets:
+            </div>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setDemoRole('admin', 'admin123')}
+                className={`flex-1 px-2.5 py-1.5 rounded-lg border text-[11px] font-mono transition-colors text-center ${
+                  username === 'admin'
+                    ? 'border-[var(--accent-cyan)]/60 bg-[var(--accent-cyan)]/15 text-[var(--accent-cyan)] font-semibold'
+                    : 'border-[var(--border-subtle)] bg-[var(--surface-panel)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                }`}
+              >
+                Admin (Full Access)
+              </button>
+              <button
+                type="button"
+                onClick={() => setDemoRole('operator', 'operator123')}
+                className={`flex-1 px-2.5 py-1.5 rounded-lg border text-[11px] font-mono transition-colors text-center ${
+                  username === 'operator'
+                    ? 'border-[var(--accent-cyan)]/60 bg-[var(--accent-cyan)]/15 text-[var(--accent-cyan)] font-semibold'
+                    : 'border-[var(--border-subtle)] bg-[var(--surface-panel)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                }`}
+              >
+                Operator (Standard)
+              </button>
             </div>
           </div>
 
           {/* Login Form */}
-          <form onSubmit={handleLogin} className="space-y-3">
+          <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-[11px] font-medium text-obsidian-muted mb-1">
+              <label className="block text-[11px] font-medium text-[var(--text-secondary)] mb-1.5 uppercase tracking-wider">
                 Username
               </label>
               <input
@@ -119,11 +157,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                className="w-full bg-obsidian-panel border border-obsidian-border rounded px-3 py-1.5 text-xs text-obsidian-text font-mono focus:border-obsidian-cyan focus:outline-none"
+                className="w-full bg-[var(--surface-panel)] border border-[var(--border-subtle)] focus:border-[var(--accent-cyan)]/70 rounded-lg px-3.5 py-2 text-xs text-[var(--text-primary)] font-mono focus:outline-none transition-colors"
               />
             </div>
             <div>
-              <label className="block text-[11px] font-medium text-obsidian-muted mb-1">
+              <label className="block text-[11px] font-medium text-[var(--text-secondary)] mb-1.5 uppercase tracking-wider">
                 Password
               </label>
               <input
@@ -131,20 +169,20 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full bg-obsidian-panel border border-obsidian-border rounded px-3 py-1.5 text-xs text-obsidian-text font-mono focus:border-obsidian-cyan focus:outline-none"
+                className="w-full bg-[var(--surface-panel)] border border-[var(--border-subtle)] focus:border-[var(--accent-cyan)]/70 rounded-lg px-3.5 py-2 text-xs text-[var(--text-primary)] font-mono focus:outline-none transition-colors"
               />
             </div>
 
             {error && (
-              <div className="flex items-center gap-2 text-obsidian-coral text-xs bg-obsidian-coral/10 p-2.5 rounded border border-obsidian-coral/30">
-                <AlertCircle size={14} />
+              <div className="flex items-center gap-2 text-[var(--color-critical)] text-xs bg-[var(--color-critical)]/10 p-3 rounded-lg border border-[var(--color-critical)]/30 animate-in fade-in">
+                <AlertCircle size={15} />
                 <span>{error}</span>
               </div>
             )}
 
             {success && (
-              <div className="flex items-center gap-2 text-obsidian-teal text-xs bg-obsidian-teal/10 p-2.5 rounded border border-obsidian-teal/30">
-                <CheckCircle size={14} />
+              <div className="flex items-center gap-2 text-[var(--color-success)] text-xs bg-[var(--color-success)]/10 p-3 rounded-lg border border-[var(--color-success)]/30 animate-in fade-in">
+                <CheckCircle2 size={15} />
                 <span>{success}</span>
               </div>
             )}
@@ -152,7 +190,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 flex items-center justify-center gap-2 px-4 py-2 bg-obsidian-cyan/15 hover:bg-obsidian-cyan/25 border border-obsidian-cyan/40 text-obsidian-cyan rounded-lg text-xs font-semibold transition-colors disabled:opacity-50"
+              className="w-full mt-2 btn-aurora-primary flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold disabled:opacity-50"
             >
               <Key size={14} />
               {loading ? 'Authenticating...' : 'Sign In with JWT'}

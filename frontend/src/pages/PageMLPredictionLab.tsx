@@ -52,26 +52,32 @@ export const PageMLPredictionLab: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-obsidian-text tracking-tight flex items-center gap-2">
-          <Brain className="text-obsidian-cyan" size={22} />
-          ML Multi-Horizon Prediction Lab
-        </h2>
-        <p className="text-xs text-obsidian-muted mt-1">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-[var(--accent-violet)]/15 border border-[var(--accent-violet)]/30 flex items-center justify-center text-[var(--accent-violet)] shadow-[0_0_12px_rgba(171,140,255,0.2)]">
+            <Brain size={18} />
+          </div>
+          <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
+            ML Multi-Horizon Prediction Lab
+          </h2>
+        </div>
+        <p className="text-xs text-[var(--text-secondary)] mt-1.5 leading-relaxed">
           Interactive evaluation of non-parametric quantile regressors vs statistical & persistence baselines.
         </p>
       </div>
 
       {/* Control Grid */}
-      <div className="bg-obsidian-panel border border-obsidian-border rounded-lg p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+      <div className="glass-panel rounded-xl p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
         <div>
-          <label className="block text-obsidian-muted mb-1 font-medium">Storage Pool:</label>
+          <label className="block text-[var(--text-secondary)] mb-1.5 font-medium text-[11px] uppercase tracking-wider">
+            Storage Pool:
+          </label>
           <select
             value={selectedDevice}
             onChange={(e) => setSelectedDevice(e.target.value)}
-            className="w-full bg-obsidian-secondary border border-obsidian-border rounded px-3 py-1.5 text-obsidian-text font-mono focus:border-obsidian-cyan cursor-pointer"
+            className="w-full bg-[var(--surface-raised)]/60 border border-[var(--border-subtle)] focus:border-[var(--accent-cyan)]/70 rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
           >
             {devices.map((d) => (
-              <option key={d.id} value={d.id}>
+              <option key={d.id} value={d.id} className="bg-[var(--surface-panel)] text-[var(--text-primary)]">
                 {d.name} ({d.id})
               </option>
             ))}
@@ -79,43 +85,49 @@ export const PageMLPredictionLab: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-obsidian-muted mb-1 font-medium">Model Architecture:</label>
+          <label className="block text-[var(--text-secondary)] mb-1.5 font-medium text-[11px] uppercase tracking-wider">
+            Model Architecture:
+          </label>
           <select
             value={selectedModel}
             onChange={(e) => setSelectedModel(e.target.value)}
-            className="w-full bg-obsidian-secondary border border-obsidian-border rounded px-3 py-1.5 text-obsidian-text font-semibold focus:border-obsidian-cyan cursor-pointer"
+            className="w-full bg-[var(--surface-raised)]/60 border border-[var(--border-subtle)] focus:border-[var(--accent-cyan)]/70 rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-semibold focus:outline-none cursor-pointer"
           >
-            <option value="lightgbm_quantile">LightGBM Multi-Quantile (q10, q50, q90)</option>
-            <option value="seasonal_naive">Seasonal-Naive Diurnal Baseline</option>
-            <option value="persistence">Persistence Baseline (Random Walk)</option>
+            <option value="lightgbm_quantile" className="bg-[var(--surface-panel)]">LightGBM Multi-Quantile (q10, q50, q90)</option>
+            <option value="seasonal_naive" className="bg-[var(--surface-panel)]">Seasonal-Naive Diurnal Baseline</option>
+            <option value="persistence" className="bg-[var(--surface-panel)]">Persistence Baseline (Random Walk)</option>
           </select>
         </div>
 
         <div>
-          <label className="block text-obsidian-muted mb-1 font-medium">Target Dimension:</label>
+          <label className="block text-[var(--text-secondary)] mb-1.5 font-medium text-[11px] uppercase tracking-wider">
+            Target Dimension:
+          </label>
           <select
             value={targetMetric}
             onChange={(e) => setTargetMetric(e.target.value)}
-            className="w-full bg-obsidian-secondary border border-obsidian-border rounded px-3 py-1.5 text-obsidian-text font-mono focus:border-obsidian-cyan cursor-pointer"
+            className="w-full bg-[var(--surface-raised)]/60 border border-[var(--border-subtle)] focus:border-[var(--accent-cyan)]/70 rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
           >
-            <option value="used_bytes">Capacity (Bytes)</option>
-            <option value="latency_p95_ms">P95 Tail Latency (ms)</option>
-            <option value="read_iops">Read IOPS</option>
-            <option value="write_iops">Write IOPS</option>
+            <option value="used_bytes" className="bg-[var(--surface-panel)]">Capacity (Bytes)</option>
+            <option value="latency_p95_ms" className="bg-[var(--surface-panel)]">P95 Tail Latency (ms)</option>
+            <option value="read_iops" className="bg-[var(--surface-panel)]">Read IOPS</option>
+            <option value="write_iops" className="bg-[var(--surface-panel)]">Write IOPS</option>
           </select>
         </div>
 
         <div>
-          <label className="block text-obsidian-muted mb-1 font-medium">Forecast Horizon:</label>
+          <label className="block text-[var(--text-secondary)] mb-1.5 font-medium text-[11px] uppercase tracking-wider">
+            Forecast Horizon:
+          </label>
           <div className="flex gap-2">
             {[24, 72, 168].map((h) => (
               <button
                 key={h}
                 onClick={() => setHorizonHours(h)}
-                className={`flex-1 py-1.5 rounded text-xs font-mono font-medium border transition-colors ${
+                className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-medium border transition-all ${
                   horizonHours === h
-                    ? 'bg-obsidian-cyan/15 border-obsidian-cyan text-obsidian-cyan'
-                    : 'bg-obsidian-secondary border-obsidian-border text-obsidian-muted hover:text-obsidian-text'
+                    ? 'bg-[var(--accent-cyan)]/15 border-[var(--accent-cyan)] text-[var(--accent-cyan)] font-bold shadow-[0_0_8px_rgba(85,214,255,0.2)]'
+                    : 'glass-panel text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
                 }`}
               >
                 +{h}h
@@ -128,38 +140,38 @@ export const PageMLPredictionLab: React.FC = () => {
       {/* Model Diagnostics Metadata */}
       {forecast && (
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
-          <div className="bg-obsidian-panel border border-obsidian-border rounded p-3">
-            <div className="text-obsidian-muted font-medium flex items-center gap-1.5">
-              <Brain size={13} className="text-obsidian-violet" /> Model Instance
+          <div className="glass-panel rounded-xl p-3.5">
+            <div className="text-[var(--text-secondary)] font-medium flex items-center gap-1.5">
+              <Brain size={13} className="text-[var(--accent-violet)]" /> Model Instance
             </div>
-            <div className="text-sm font-bold text-obsidian-text mt-1 truncate">
+            <div className="text-sm font-bold text-[var(--text-primary)] mt-1.5 truncate">
               {forecast.model_name}
             </div>
           </div>
 
-          <div className="bg-obsidian-panel border border-obsidian-border rounded p-3">
-            <div className="text-obsidian-muted font-medium flex items-center gap-1.5">
-              <Zap size={13} className="text-obsidian-cyan" /> Inference Latency
+          <div className="glass-panel rounded-xl p-3.5">
+            <div className="text-[var(--text-secondary)] font-medium flex items-center gap-1.5">
+              <Zap size={13} className="text-[var(--accent-cyan)]" /> Inference Latency
             </div>
-            <div className="text-sm font-bold font-mono text-obsidian-cyan mt-1">
+            <div className="text-sm font-bold font-mono text-[var(--accent-cyan)] mt-1.5">
               {forecast.inference_latency_ms.toFixed(1)} ms
             </div>
           </div>
 
-          <div className="bg-obsidian-panel border border-obsidian-border rounded p-3">
-            <div className="text-obsidian-muted font-medium flex items-center gap-1.5">
-              <ShieldCheck size={13} className="text-obsidian-teal" /> Interval Coverage
+          <div className="glass-panel rounded-xl p-3.5">
+            <div className="text-[var(--text-secondary)] font-medium flex items-center gap-1.5">
+              <ShieldCheck size={13} className="text-[var(--color-success)]" /> Interval Coverage
             </div>
-            <div className="text-sm font-bold font-mono text-obsidian-teal mt-1">
+            <div className="text-sm font-bold font-mono text-[var(--color-success)] mt-1.5">
               {(forecast.interval_coverage * 100).toFixed(1)}% (Nominal 80%)
             </div>
           </div>
 
-          <div className="bg-obsidian-panel border border-obsidian-border rounded p-3">
-            <div className="text-obsidian-muted font-medium flex items-center gap-1.5">
-              <Clock size={13} className="text-obsidian-amber" /> Training Cutoff
+          <div className="glass-panel rounded-xl p-3.5">
+            <div className="text-[var(--text-secondary)] font-medium flex items-center gap-1.5">
+              <Clock size={13} className="text-[var(--color-warning)]" /> Training Cutoff
             </div>
-            <div className="text-sm font-bold font-mono text-obsidian-muted mt-1">
+            <div className="text-sm font-bold font-mono text-[var(--text-secondary)] mt-1.5">
               {new Date(forecast.historical_cutoff).toLocaleTimeString()}
             </div>
           </div>

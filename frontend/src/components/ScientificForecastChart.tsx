@@ -46,7 +46,7 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
 
   if (allVals.length === 0) {
     return (
-      <div className="h-64 flex items-center justify-center text-obsidian-muted bg-obsidian-panel rounded-lg border border-obsidian-border text-sm">
+      <div className="h-64 flex items-center justify-center text-[var(--text-tertiary)] glass-panel rounded-xl border border-[var(--border-subtle)] text-sm">
         No telemetry records available for rendering.
       </div>
     );
@@ -111,34 +111,34 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
     : '';
 
   return (
-    <div className="bg-obsidian-panel border border-obsidian-border rounded-lg p-4 flex flex-col gap-3">
+    <div className="glass-panel rounded-xl p-5 flex flex-col gap-3">
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <h4 className="text-sm font-semibold tracking-wide text-obsidian-text flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-obsidian-cyan animate-pulse"></span>
+        <h4 className="text-sm font-semibold tracking-wide text-[var(--text-primary)] flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-[var(--accent-cyan)] shadow-[0_0_8px_var(--accent-cyan)] animate-pulse" />
           {title}
         </h4>
-        <div className="flex items-center gap-4 text-xs">
-          <span className="flex items-center gap-1.5 text-obsidian-muted">
-            <span className="w-3 h-0.5 bg-obsidian-cyan inline-block"></span> Observed History
+        <div className="flex items-center gap-4 text-xs flex-wrap">
+          <span className="flex items-center gap-1.5 text-[var(--text-secondary)]">
+            <span className="w-3 h-0.5 bg-[var(--accent-cyan)] inline-block rounded-full"></span> Observed History
           </span>
           {q50.length > 0 && (
-            <span className="flex items-center gap-1.5 text-obsidian-cyan">
-              <span className="w-3 h-0.5 bg-obsidian-violet inline-block"></span> Forecast Median (q50)
+            <span className="flex items-center gap-1.5 text-[var(--accent-violet)]">
+              <span className="w-3 h-0.5 bg-[var(--accent-violet)] inline-block rounded-full"></span> Forecast Median (q50)
             </span>
           )}
           {q10.length > 0 && (
-            <span className="flex items-center gap-1.5 text-obsidian-muted">
-              <span className="w-3 h-2 bg-obsidian-cyan opacity-25 inline-block rounded-sm"></span> 80% Confidence [q10, q90]
+            <span className="flex items-center gap-1.5 text-[var(--text-secondary)]">
+              <span className="w-3 h-2 bg-[var(--accent-cyan)] opacity-25 inline-block rounded-sm"></span> 80% CI [q10, q90]
             </span>
           )}
           {counterfactualQ50.length > 0 && (
-            <span className="flex items-center gap-1.5 text-obsidian-teal font-medium">
-              <span className="w-3 h-0.5 border-t border-dashed border-obsidian-teal inline-block"></span> Counterfactual Simulation
+            <span className="flex items-center gap-1.5 text-[var(--color-success)] font-medium">
+              <span className="w-3 h-0.5 border-t border-dashed border-[var(--color-success)] inline-block"></span> Counterfactual Simulation
             </span>
           )}
           {hardConstraint !== null && (
-            <span className="flex items-center gap-1.5 text-obsidian-coral font-medium">
-              <span className="w-3 h-0.5 border-t border-dashed border-obsidian-coral inline-block"></span> Hard Constraint
+            <span className="flex items-center gap-1.5 text-[var(--color-critical)] font-medium">
+              <span className="w-3 h-0.5 border-t border-dashed border-[var(--color-critical)] inline-block"></span> Hard Constraint
             </span>
           )}
         </div>
@@ -150,6 +150,18 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
           className="w-full h-auto select-none"
           style={{ maxHeight: '340px' }}
         >
+          {/* Subtle gradient definitions */}
+          <defs>
+            <linearGradient id="uncertaintyGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--accent-cyan)" stopOpacity="0.22" />
+              <stop offset="100%" stopColor="var(--accent-cyan)" stopOpacity="0.04" />
+            </linearGradient>
+            <linearGradient id="historyGradient" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="var(--accent-blue)" />
+              <stop offset="100%" stopColor="var(--accent-cyan)" />
+            </linearGradient>
+          </defs>
+
           {/* Grid lines */}
           {[0, 0.25, 0.5, 0.75, 1].map((pct) => {
             const y = padTop + plotHeight * pct;
@@ -163,13 +175,13 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
                   y2={y}
                   stroke="var(--border-subtle)"
                   strokeDasharray="3 3"
-                  strokeOpacity="0.4"
+                  strokeOpacity="0.5"
                 />
                 <text
-                  x={padLeft - 8}
+                  x={padLeft - 10}
                   y={y + 4}
                   textAnchor="end"
-                  fill="var(--text-secondary)"
+                  fill="var(--text-tertiary)"
                   className="text-[10px] font-mono"
                 >
                   {formatVal(val)}
@@ -221,7 +233,7 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
                 fill="var(--accent-cyan)"
                 className="text-[10px] font-mono font-semibold"
               >
-                Now (Cutoff)
+                Cutoff (Now)
               </text>
             </g>
           )}
@@ -230,8 +242,7 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
           {bandPolygon && (
             <polygon
               points={bandPolygon}
-              fill="var(--accent-cyan)"
-              fillOpacity="0.12"
+              fill="url(#uncertaintyGradient)"
             />
           )}
 
@@ -239,8 +250,8 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
           <path
             d={histPath}
             fill="none"
-            stroke="var(--accent-cyan)"
-            strokeWidth="2"
+            stroke="url(#historyGradient)"
+            strokeWidth="2.2"
           />
 
           {/* Forecast Median Line */}
@@ -249,7 +260,7 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
               d={fcMedianPath}
               fill="none"
               stroke="var(--accent-violet)"
-              strokeWidth="2.2"
+              strokeWidth="2.4"
             />
           )}
 
@@ -270,8 +281,8 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
               key={`h-${i}`}
               cx={getX(i)}
               cy={getY(v)}
-              r="4"
-              className="opacity-0 hover:opacity-100 fill-obsidian-cyan cursor-pointer transition-opacity"
+              r="4.5"
+              className="opacity-0 hover:opacity-100 fill-[var(--accent-cyan)] cursor-pointer transition-opacity"
               onMouseEnter={() => setHoveredIdx({ type: 'hist', index: i })}
               onMouseLeave={() => setHoveredIdx(null)}
             />
@@ -282,8 +293,8 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
               key={`f-${i}`}
               cx={getX(fcOffset + 1 + i)}
               cy={getY(v)}
-              r="4"
-              className="opacity-0 hover:opacity-100 fill-obsidian-violet cursor-pointer transition-opacity"
+              r="4.5"
+              className="opacity-0 hover:opacity-100 fill-[var(--accent-violet)] cursor-pointer transition-opacity"
               onMouseEnter={() => setHoveredIdx({ type: 'fc', index: i })}
               onMouseLeave={() => setHoveredIdx(null)}
             />
@@ -292,29 +303,29 @@ export const ScientificForecastChart: React.FC<ChartProps> = ({
 
         {/* Floating Tooltip Info */}
         {hoveredIdx && (
-          <div className="absolute top-2 right-4 bg-obsidian-raised border border-obsidian-border rounded px-3 py-1.5 shadow-lg text-xs font-mono">
+          <div className="absolute top-2 right-4 glass-panel-elevated rounded-lg px-3.5 py-2 shadow-glass text-xs font-mono">
             {hoveredIdx.type === 'hist' ? (
               <div>
-                <span className="text-obsidian-muted">Observed: </span>
-                <span className="text-obsidian-cyan font-bold">
+                <span className="text-[var(--text-secondary)]">Observed: </span>
+                <span className="text-[var(--accent-cyan)] font-bold">
                   {formatVal(sampledHistVals[hoveredIdx.index])}
                 </span>
-                <div className="text-[10px] text-obsidian-muted">
+                <div className="text-[10px] text-[var(--text-tertiary)]">
                   {new Date(sampledHistTimes[hoveredIdx.index]).toLocaleString()}
                 </div>
               </div>
             ) : (
               <div>
-                <span className="text-obsidian-muted">Forecast (q50): </span>
-                <span className="text-obsidian-violet font-bold">
+                <span className="text-[var(--text-secondary)]">Forecast (q50): </span>
+                <span className="text-[var(--accent-violet)] font-bold">
                   {formatVal(q50[hoveredIdx.index])}
                 </span>
                 {q10[hoveredIdx.index] && (
-                  <div className="text-[10px] text-obsidian-muted">
+                  <div className="text-[10px] text-[var(--text-tertiary)]">
                     80% Interval: [{formatVal(q10[hoveredIdx.index])} — {formatVal(q90[hoveredIdx.index])}]
                   </div>
                 )}
-                <div className="text-[10px] text-obsidian-muted">
+                <div className="text-[10px] text-[var(--text-tertiary)]">
                   +{hoveredIdx.index + 1}h ({new Date(forecastTimestamps[hoveredIdx.index]).toLocaleDateString()})
                 </div>
               </div>

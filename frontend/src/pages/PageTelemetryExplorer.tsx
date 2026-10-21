@@ -63,37 +63,41 @@ export const PageTelemetryExplorer: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-obsidian-text tracking-tight flex items-center gap-2">
-            <LineChart className="text-obsidian-cyan" size={22} />
-            Telemetry Explorer & Raw Signal Diagnostics
-          </h2>
-          <p className="text-xs text-obsidian-muted mt-1">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent-cyan)]/15 border border-[var(--accent-cyan)]/30 flex items-center justify-center text-[var(--accent-cyan)] shadow-[0_0_12px_rgba(85,214,255,0.2)]">
+              <LineChart size={18} />
+            </div>
+            <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
+              Telemetry Explorer & Raw Signal Diagnostics
+            </h2>
+          </div>
+          <p className="text-xs text-[var(--text-secondary)] mt-1.5 leading-relaxed">
             High-fidelity time-series telemetry inspection, missingness detection, and empirical data export.
           </p>
         </div>
 
         <button
           onClick={handleExportCsv}
-          className="flex items-center gap-2 px-3.5 py-1.5 rounded bg-obsidian-secondary hover:bg-obsidian-raised border border-obsidian-border text-obsidian-text hover:border-obsidian-cyan text-xs font-semibold transition-colors font-mono"
+          className="btn-aurora-secondary flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold font-mono"
         >
-          <Download size={14} className="text-obsidian-cyan" />
+          <Download size={14} className="text-[var(--accent-cyan)]" />
           Export Dataset (CSV)
         </button>
       </div>
 
       {/* Control Bar */}
-      <div className="bg-obsidian-panel border border-obsidian-border rounded-lg p-4 flex flex-wrap items-center justify-between gap-4">
+      <div className="glass-panel rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
         {/* Device select */}
         <div className="flex items-center gap-2">
-          <HardDrive size={15} className="text-obsidian-muted" />
-          <span className="text-xs text-obsidian-muted font-medium">Device:</span>
+          <HardDrive size={15} className="text-[var(--text-tertiary)]" />
+          <span className="text-xs text-[var(--text-secondary)] font-medium">Device:</span>
           <select
             value={selectedDevice}
             onChange={(e) => setSelectedDevice(e.target.value)}
-            className="bg-obsidian-secondary border border-obsidian-border rounded px-3 py-1 text-xs text-obsidian-text font-mono focus:border-obsidian-cyan cursor-pointer"
+            className="bg-[var(--surface-raised)]/60 border border-[var(--border-subtle)] focus:border-[var(--accent-cyan)]/70 rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
           >
             {devices.map((d) => (
-              <option key={d.id} value={d.id}>
+              <option key={d.id} value={d.id} className="bg-[var(--surface-panel)] text-[var(--text-primary)]">
                 {d.name} ({d.id})
               </option>
             ))}
@@ -102,8 +106,8 @@ export const PageTelemetryExplorer: React.FC = () => {
 
         {/* Time range */}
         <div className="flex items-center gap-2">
-          <Calendar size={15} className="text-obsidian-muted" />
-          <span className="text-xs text-obsidian-muted font-medium">Window:</span>
+          <Calendar size={15} className="text-[var(--text-tertiary)]" />
+          <span className="text-xs text-[var(--text-secondary)] font-medium">Window:</span>
           {[
             { hours: 24, label: '24 Hours' },
             { hours: 72, label: '3 Days' },
@@ -113,10 +117,10 @@ export const PageTelemetryExplorer: React.FC = () => {
             <button
               key={t.hours}
               onClick={() => setTimeRangeHours(t.hours)}
-              className={`px-2.5 py-1 rounded text-xs font-mono font-medium border transition-colors ${
+              className={`px-3 py-1 rounded-lg text-xs font-mono font-medium border transition-all ${
                 timeRangeHours === t.hours
-                  ? 'bg-obsidian-cyan/15 border-obsidian-cyan text-obsidian-cyan'
-                  : 'bg-obsidian-secondary border-obsidian-border text-obsidian-muted hover:text-obsidian-text'
+                  ? 'bg-[var(--accent-cyan)]/15 border-[var(--accent-cyan)] text-[var(--accent-cyan)] font-bold shadow-[0_0_8px_rgba(85,214,255,0.2)]'
+                  : 'glass-panel text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
               }`}
             >
               {t.label}
@@ -131,10 +135,10 @@ export const PageTelemetryExplorer: React.FC = () => {
           <button
             key={m.id}
             onClick={() => setSelectedMetric(m.id)}
-            className={`px-3 py-1.5 rounded text-xs font-medium border transition-all ${
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-medium border transition-all ${
               selectedMetric === m.id
-                ? 'bg-obsidian-panel border-obsidian-cyan text-obsidian-cyan shadow-sm font-semibold'
-                : 'bg-obsidian-secondary border-obsidian-border text-obsidian-muted hover:text-obsidian-text'
+                ? 'bg-[var(--accent-cyan)]/15 border-[var(--accent-cyan)] text-[var(--accent-cyan)] shadow-[0_0_10px_rgba(85,214,255,0.2)] font-semibold'
+                : 'glass-panel text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
             }`}
           >
             {m.label}
@@ -155,11 +159,11 @@ export const PageTelemetryExplorer: React.FC = () => {
 
       {/* Missingness Notification if present */}
       {telemetry && telemetry.missing_intervals.length > 0 && (
-        <div className="bg-obsidian-amber/10 border border-obsidian-amber/30 rounded-lg p-4 text-xs text-obsidian-amber space-y-1">
+        <div className="bg-[var(--color-warning)]/10 border border-[var(--color-warning)]/30 rounded-xl p-4 text-xs text-[var(--color-warning)] space-y-1">
           <div className="font-bold flex items-center gap-2">
             <AlertTriangle size={15} /> Telemetry Gaps Detected (Never Fabricated):
           </div>
-          <p className="text-[11px] text-obsidian-muted font-mono">
+          <p className="text-[11px] text-[var(--text-secondary)] font-mono">
             Collector recorded {telemetry.missing_intervals.length} intermittent dropout window(s).
           </p>
         </div>
