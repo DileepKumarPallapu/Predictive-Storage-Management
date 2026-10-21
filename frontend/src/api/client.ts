@@ -429,4 +429,32 @@ export const api = {
   logout: () => {
     authStorage.clearToken();
   },
+
+  // ==========================================
+  // AEGISSTOR OMEGA FLEET INTELLIGENCE API
+  // ==========================================
+  getOmegaTopology: () => apiFetch<any>("/omega/topology"),
+  getOmegaFleetRisk: () => apiFetch<any>("/omega/fleet-risk"),
+  getOmegaDecisionEvaluation: (deviceId = "vol-nvme-tier1-db", horizonHours = 72) =>
+    apiFetch<any>(`/omega/decision-evaluation?device_id=${deviceId}&horizon_hours=${horizonHours}`),
+  getOmegaAdaptiveMonitoring: (simulationDays = 30) =>
+    apiFetch<any>(`/omega/adaptive-monitoring?simulation_days=${simulationDays}`),
+  simulateOmegaFleetPlan: (plan: {
+    source_device_id: string;
+    destination_device_id: string;
+    migration_size_gb: number;
+    bandwidth_cap_mb_s: number;
+  }) =>
+    apiFetch<any>("/omega/fleet-plan", {
+      method: "POST",
+      body: JSON.stringify(plan),
+    }),
+  getOmegaOutcomeLedger: (limit = 50) =>
+    apiFetch<any>(`/omega/outcome-ledger?limit=${limit}`),
+  getOmegaGovernance: () => apiFetch<any>("/omega/governance"),
+  evaluateOmegaCandidate: (candidate: any) =>
+    apiFetch<any>("/omega/governance/evaluate", {
+      method: "POST",
+      body: JSON.stringify(candidate),
+    }),
 };

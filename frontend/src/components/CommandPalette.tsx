@@ -54,6 +54,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   const pages: { id: PageId; label: string; icon: any }[] = [
     { id: 'overview', label: 'Executive Overview', icon: LayoutDashboard },
     { id: 'fleet', label: 'Storage Fleet', icon: HardDrive },
+    { id: 'omega', label: 'Omega Fleet Control Room', icon: Activity },
     { id: 'intelligence', label: 'Device Intelligence', icon: Cpu },
     { id: 'twin', label: 'Storage Digital Twin', icon: Activity },
     { id: 'interventions', label: 'Intervention Studio', icon: Sliders },

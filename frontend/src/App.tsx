@@ -15,6 +15,7 @@ import { PageModelReliability } from './pages/PageModelReliability';
 import { PageAlertsIncidents } from './pages/PageAlertsIncidents';
 import { PageDatasetsQuality } from './pages/PageDatasetsQuality';
 import { PageSettingsAudit } from './pages/PageSettingsAudit';
+import { PageOmegaControlRoom } from './pages/PageOmegaControlRoom';
 import { api } from './api/client';
 
 export const App: React.FC = () => {
@@ -141,6 +142,7 @@ export const App: React.FC = () => {
             {currentPage === 'twin' && (
               <PageStorageDigitalTwin initialDeviceId={selectedDeviceId} />
             )}
+            {currentPage === 'omega' && <PageOmegaControlRoom />}
             {currentPage === 'interventions' && (
               <PageInterventionStudio initialDeviceId={selectedDeviceId} />
             )}

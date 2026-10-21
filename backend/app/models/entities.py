@@ -19,6 +19,8 @@ class Device(Base):
     min_free_reserve_pct = Column(Float, default=10.0)
     status = Column(String(32), default="HEALTHY")  # HEALTHY, WARNING, CRITICAL, MAINTENANCE
     workload_profile = Column(String(64), default="OLTP Database")
+    pool_id = Column(String(64), nullable=True)
+    system_id = Column(String(64), nullable=True)
     created_at = Column(DateTime, default=utc_now)
     updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
 
@@ -245,4 +247,109 @@ class ModelVersion(Base):
     interval_coverage = Column(Float, default=0.80)
     is_active = Column(Boolean, default=True)
     trained_at = Column(DateTime, default=utc_now)
+
+
+# =====================================================================
+# AEGISSTOR OMEGA FLEET & GOVERNANCE MODELS
+# =====================================================================
+
+class StorageSystem(Base):
+    __tablename__ = "storage_systems"
+
+    id = Column(String(64), primary_key=True)
+    name = Column(String(128), nullable=False)
+    system_type = Column(String(64), nullable=False)  # ALL_FLASH_ARRAY, HYBRID_SAN, OBJECT_STORAGE_CLUSTER
+    vendor_family = Column(String(64), default="Enterprise SDS")
+    interconnect_type = Column(String(64), default="NVMe-oF / PCIe Gen4")
+    total_bus_bandwidth_mb_s = Column(Float, default=12800.0)
+    max_iops_capacity = Column(Float, default=1500000.0)
+    status = Column(String(32), default="HEALTHY")
+    created_at = Column(DateTime, default=utc_now)
+
+
+class StoragePool(Base):
+    __tablename__ = "storage_pools"
+
+    id = Column(String(64), primary_key=True)
+    system_id = Column(String(64), ForeignKey("storage_systems.id"), nullable=False)
+    name = Column(String(128), nullable=False)
+    tier = Column(String(32), nullable=False)  # NVME_TIER1, SAS_TIER2, HDD_ARCHIVE, CLOUD_S3
+    redundancy_policy = Column(String(64), default="RAID10")
+    total_raw_bytes = Column(BigInteger, nullable=False)
+    usable_capacity_bytes = Column(BigInteger, nullable=False)
+    allocated_bytes = Column(BigInteger, default=0)
+    overcommit_ratio = Column(Float, default=1.0)
+    status = Column(String(32), default="HEALTHY")
+    created_at = Column(DateTime, default=utc_now)
+
+
+class ResourceRelationship(Base):
+    __tablename__ = "resource_relationships"
+
+    id = Column(String(64), primary_key=True)
+    source_id = Column(String(64), nullable=False, index=True)
+    source_type = Column(String(32), nullable=False)  # DEVICE, POOL, SYSTEM, WORKLOAD
+    target_id = Column(String(64), nullable=False, index=True)
+    target_type = Column(String(32), nullable=False)
+    relationship_type = Column(String(64), nullable=False)  # POOL_MEMBER, SHARED_BUS_CONCURRENCY, REPLICATION_TARGET, TIERING_PARTNER, BACKUP_DEPENDENCY
+    provenance = Column(String(32), default="DISCOVERED")  # DISCOVERED, USER_DEFINED, INFERRED
+    confidence_score = Column(Float, default=1.0)  # 0.0 to 1.0
+    contention_weight = Column(Float, default=0.5)  # coupling strength for performance degradation
+    metadata_json = Column(Text, default="{}")
+    created_at = Column(DateTime, default=utc_now)
+
+
+class WorkloadDependency(Base):
+    __tablename__ = "workload_dependencies"
+
+    id = Column(String(64), primary_key=True)
+    workload_name = Column(String(128), nullable=False)
+    primary_device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    secondary_device_id = Column(String(64), nullable=True)
+    criticality = Column(String(32), default="PRODUCTION")  # MISSION_CRITICAL, PRODUCTION, BATCH_ANALYTICS, COLD_ARCHIVE
+    sla_max_latency_ms = Column(Float, default=15.0)
+    sla_min_throughput_mb_s = Column(Float, default=100.0)
+    io_pattern = Column(String(64), default="RANDOM_WRITE_DOMINANT")
+    cross_volume_lock = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=utc_now)
+
+
+class OutcomeLedgerRecord(Base):
+    __tablename__ = "outcome_ledger_records"
+
+    id = Column(String(64), primary_key=True)
+    timestamp = Column(DateTime, default=utc_now, index=True)
+    device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    evaluation_window_hours = Column(Integer, default=24)
+    forecasted_used_pct = Column(Float, nullable=False)
+    simulated_used_pct = Column(Float, nullable=False)
+    observed_used_pct = Column(Float, nullable=False)
+    forecast_error_mae = Column(Float, default=0.0)
+    action_taken = Column(String(64), default="NO_ACTION")
+    counterfactual_outcome_class = Column(String(64), nullable=False)  # CORRECT_PREVENTIVE_SUCCESS, UNNECESSARY_INTERVENTION, MISSED_BREACH, INEFFECTIVE_INTERVENTION
+    runway_hours_gained = Column(Float, default=0.0)
+    decision_cost_usd = Column(Float, default=0.0)
+    net_decision_loss = Column(Float, default=0.0)
+    metadata_json = Column(Text, default="{}")
+
+
+class GovernancePromotionGate(Base):
+    __tablename__ = "governance_promotion_gates"
+
+    id = Column(String(64), primary_key=True)
+    candidate_model_name = Column(String(128), nullable=False)
+    baseline_model_name = Column(String(128), nullable=False)
+    candidate_version = Column(String(32), nullable=False)
+    candidate_mae = Column(Float, default=0.0)
+    baseline_mae = Column(Float, default=0.0)
+    candidate_decision_loss = Column(Float, default=0.0)
+    baseline_decision_loss = Column(Float, default=0.0)
+    candidate_calibration_error = Column(Float, default=0.0)
+    baseline_calibration_error = Column(Float, default=0.0)
+    hard_safety_check_passed = Column(Boolean, default=True)
+    gate_verdict = Column(String(32), default="PROMOTED")  # PROMOTED, REJECTED, CANARY_TRIAL
+    verdict_rationale = Column(Text, default="")
+    evaluated_at = Column(DateTime, default=utc_now)
+    evaluated_by = Column(String(64), default="aegisstor_governance_engine")
+
 

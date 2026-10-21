@@ -13,7 +13,8 @@ import {
   Database,
   Settings,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Network
 } from 'lucide-react';
 
 export type PageId =
@@ -28,7 +29,8 @@ export type PageId =
   | 'reliability'
   | 'alerts'
   | 'datasets'
-  | 'settings';
+  | 'settings'
+  | 'omega';
 
 interface SidebarProps {
   currentPage: PageId;
@@ -50,6 +52,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'fleet' as PageId, label: 'Storage Fleet', icon: HardDrive },
     { id: 'intelligence' as PageId, label: 'Device Intelligence', icon: Cpu },
     { id: 'twin' as PageId, label: 'Storage Digital Twin', icon: Layers, highlight: true },
+    { id: 'omega' as PageId, label: 'Omega Fleet Control', icon: Network, highlight: true },
     { id: 'interventions' as PageId, label: 'Intervention Studio', icon: Sliders },
     { id: 'telemetry' as PageId, label: 'Telemetry Explorer', icon: LineChart },
     { id: 'ml-lab' as PageId, label: 'ML Prediction Lab', icon: Brain },

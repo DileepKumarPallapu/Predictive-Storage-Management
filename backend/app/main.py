@@ -12,6 +12,9 @@ from app.collector.synthetic import SyntheticGenerator
 from app.ml.models import run_forecast
 from app.ml.calibration import ModelCalibrator
 from app.auth.security import hash_password
+from app.services.fleet_topology_service import FleetTopologyService
+from app.services.outcome_ledger import OutcomeLedgerService
+from app.services.model_governance import ModelGovernanceService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("aegisstor")
@@ -24,6 +27,20 @@ def initialize_database_and_seed_demo():
     """
     logger.info("Initializing AEGISSTOR database tables...")
     Base.metadata.create_all(bind=engine)
+
+    from sqlalchemy import inspect as sa_inspect, text
+    try:
+        with engine.connect() as conn:
+            inspector = sa_inspect(engine)
+            if "devices" in inspector.get_table_names():
+                columns = [c["name"] for c in inspector.get_columns("devices")]
+                if "pool_id" not in columns:
+                    conn.execute(text("ALTER TABLE devices ADD COLUMN pool_id VARCHAR(64)"))
+                if "system_id" not in columns:
+                    conn.execute(text("ALTER TABLE devices ADD COLUMN system_id VARCHAR(64)"))
+                conn.commit()
+    except Exception as e:
+        logger.warning(f"Column migration check note: {e}")
 
     db = SessionLocal()
     try:
@@ -166,6 +183,11 @@ def initialize_database_and_seed_demo():
             )
             db.add(exp1)
 
+        # 5. Seed AEGISSTOR Omega fleet topology, outcome ledger, and governance
+        FleetTopologyService.seed_fleet_topology_if_missing(db)
+        OutcomeLedgerService.seed_ledger_if_missing(db)
+        ModelGovernanceService.seed_governance_if_missing(db)
+
         db.commit()
         logger.info("Demo database verified/seeded idempotently.")
     finally:
@@ -183,6 +205,9 @@ app = FastAPI(
     version=settings.PROJECT_VERSION,
     lifespan=lifespan
 )
+
+# Run idempotent schema initialization and demo seed immediately on startup
+initialize_database_and_seed_demo()
 
 app.add_middleware(
     CORSMiddleware,

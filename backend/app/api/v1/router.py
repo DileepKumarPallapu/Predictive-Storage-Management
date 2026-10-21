@@ -14,7 +14,8 @@ from app.api.v1 import (
     endpoints_datasets,
     endpoints_settings,
     endpoints_auth,
-    endpoints_metrics
+    endpoints_metrics,
+    endpoints_omega
 )
 
 api_router = APIRouter()
@@ -34,3 +35,4 @@ api_router.include_router(endpoints_reliability.router, tags=["Model Reliability
 api_router.include_router(endpoints_alerts.router, tags=["Alerts & Incidents"])
 api_router.include_router(endpoints_datasets.router, tags=["Datasets & Provenance"])
 api_router.include_router(endpoints_settings.router, tags=["Settings & Audit"])
+api_router.include_router(endpoints_omega.router, tags=["AEGISSTOR Omega Intelligence"])
