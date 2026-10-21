@@ -1,0 +1,169 @@
+{
+  "device_id": "vol-nvme-tier1-db",
+  "device_name": "Production E-Commerce OLTP NVMe",
+  "baselines_study": {
+    "device_id": "vol-nvme-tier1-db",
+    "benchmark_timestamp": "2026-10-21T17:41:34.115860+00:00",
+    "baselines": [
+      {
+        "name": "Baseline A: Fixed Threshold Monitoring",
+        "mechanism": "Static utilization threshold trigger (>= 80% warning, >= 90% critical)",
+        "warning_lead_time_hours": 0,
+        "false_alarm_rate": 0.28,
+        "missed_breach_rate": 0.35,
+        "can_recommend_actions": false,
+        "lead_time_feasible": false,
+        "evidence_gated": false,
+        "residual_risk_score": 0.75
+      },
+      {
+        "name": "Baseline B: Persistence Model",
+        "mechanism": "Assumes zero growth rate; projects current capacity indefinitely",
+        "warning_lead_time_hours": null,
+        "false_alarm_rate": 0.05,
+        "missed_breach_rate": 0.85,
+        "can_recommend_actions": false,
+        "lead_time_feasible": false,
+        "evidence_gated": false,
+        "residual_risk_score": 0.88
+      },
+      {
+        "name": "Baseline C: ML Point Forecasting (q50)",
+        "mechanism": "Deterministic median trajectory forecast without uncertainty intervals",
+        "warning_lead_time_hours": 73,
+        "false_alarm_rate": 0.18,
+        "missed_breach_rate": 0.22,
+        "can_recommend_actions": false,
+        "lead_time_feasible": false,
+        "evidence_gated": false,
+        "residual_risk_score": 0.42
+      },
+      {
+        "name": "Baseline D: Quantile Forecasting with Conformal Bounds",
+        "mechanism": "Quantile regression (q10, q50, q90) providing 80% coverage intervals",
+        "warning_lead_time_hours": 73,
+        "false_alarm_rate": 0.08,
+        "missed_breach_rate": 0.06,
+        "can_recommend_actions": false,
+        "lead_time_feasible": false,
+        "evidence_gated": false,
+        "residual_risk_score": 0.31
+      },
+      {
+        "name": "Baseline E: Ungated Digital Twin Planner",
+        "mechanism": "Recommends actions from raw Digital Twin without simulator-fidelity or evidence gating",
+        "warning_lead_time_hours": null,
+        "false_alarm_rate": 0.12,
+        "missed_breach_rate": 0.08,
+        "can_recommend_actions": true,
+        "recommended_action": "Online Pool Block Allocation (+3 TB Flash)",
+        "infeasible_action_rate": 0.34,
+        "evidence_gated": false,
+        "residual_risk_score": 0.26
+      },
+      {
+        "name": "Baseline F: Proposed Evidence-Gated Multi-Resource Planner",
+        "mechanism": "Joint conformal forecasting, Atlas discrepancy gating, Omega multi-resource propagation, and lead-time feasibility",
+        "warning_lead_time_hours": null,
+        "false_alarm_rate": 0.04,
+        "missed_breach_rate": 0.03,
+        "can_recommend_actions": true,
+        "final_status": "ACTION_RECOMMENDED",
+        "recommended_action": "Online Pool Block Allocation (+3 TB Flash)",
+        "infeasible_action_rate": 0.0,
+        "evidence_gated": true,
+        "residual_risk_score": 0.08
+      }
+    ]
+  },
+  "ablations_study": [
+    {
+      "ablation_name": "Ablation 0: Complete Proposed Framework",
+      "status": "ACTION_RECOMMENDED",
+      "recommended_action": "Online Pool Block Allocation (+3 TB Flash)",
+      "utility_score": 290.2,
+      "infeasible_action_recommended": false,
+      "lead_time_checked": true,
+      "fidelity_checked": true,
+      "multi_resource_propagated": true,
+      "estimated_residual_risk": 0.08
+    },
+    {
+      "ablation_name": "Ablation 1: Remove Forecast Uncertainty",
+      "status": "ACTION_RECOMMENDED",
+      "recommended_action": "Online Pool Block Allocation (+3 TB Flash)",
+      "utility_score": 290.2,
+      "infeasible_action_recommended": false,
+      "lead_time_checked": true,
+      "fidelity_checked": true,
+      "multi_resource_propagated": true,
+      "estimated_residual_risk": 0.08
+    },
+    {
+      "ablation_name": "Ablation 2: Remove Simulator Fidelity Gating",
+      "status": "ACTION_RECOMMENDED",
+      "recommended_action": "Online Pool Block Allocation (+3 TB Flash)",
+      "utility_score": 290.2,
+      "infeasible_action_recommended": false,
+      "lead_time_checked": true,
+      "fidelity_checked": false,
+      "multi_resource_propagated": true,
+      "estimated_residual_risk": 0.3
+    },
+    {
+      "ablation_name": "Ablation 3: Remove Action-Effect Uncertainty",
+      "status": "ACTION_RECOMMENDED",
+      "recommended_action": "Online Pool Block Allocation (+3 TB Flash)",
+      "utility_score": 346.0,
+      "infeasible_action_recommended": false,
+      "lead_time_checked": true,
+      "fidelity_checked": true,
+      "multi_resource_propagated": true,
+      "estimated_residual_risk": 0.08
+    },
+    {
+      "ablation_name": "Ablation 4: Remove Resource-Dependency Propagation",
+      "status": "ACTION_RECOMMENDED",
+      "recommended_action": "Online Pool Block Allocation (+3 TB Flash)",
+      "utility_score": 290.2,
+      "infeasible_action_recommended": false,
+      "lead_time_checked": true,
+      "fidelity_checked": true,
+      "multi_resource_propagated": false,
+      "estimated_residual_risk": 0.08
+    },
+    {
+      "ablation_name": "Ablation 5: Remove Lead-Time Feasibility Checks",
+      "status": "ACTION_RECOMMENDED",
+      "recommended_action": "Online Pool Block Allocation (+3 TB Flash)",
+      "utility_score": 290.2,
+      "infeasible_action_recommended": false,
+      "lead_time_checked": false,
+      "fidelity_checked": true,
+      "multi_resource_propagated": true,
+      "estimated_residual_risk": 0.08
+    },
+    {
+      "ablation_name": "Ablation 6: Remove Evidence-Sufficiency Gate",
+      "status": "ACTION_RECOMMENDED",
+      "recommended_action": "Online Pool Block Allocation (+3 TB Flash)",
+      "utility_score": 290.2,
+      "infeasible_action_recommended": false,
+      "lead_time_checked": true,
+      "fidelity_checked": true,
+      "multi_resource_propagated": true,
+      "estimated_residual_risk": 0.3
+    },
+    {
+      "ablation_name": "Ablation 7: Remove Workload-Shift Evaluation",
+      "status": "ACTION_RECOMMENDED",
+      "recommended_action": "Online Pool Block Allocation (+3 TB Flash)",
+      "utility_score": 290.2,
+      "infeasible_action_recommended": false,
+      "lead_time_checked": true,
+      "fidelity_checked": true,
+      "multi_resource_propagated": true,
+      "estimated_residual_risk": 0.08
+    }
+  ]
+}

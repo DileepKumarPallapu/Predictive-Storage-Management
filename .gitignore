@@ -38,6 +38,9 @@ yarn-error.log*
 .env
 .env.local
 
+# Confidential Invention Disclosures (Pre-filing IP Cell Review)
+docs/invention/private/
+
 # IDE
 .vscode/
 .idea/
