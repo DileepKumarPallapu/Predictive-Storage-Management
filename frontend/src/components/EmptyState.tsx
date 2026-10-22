@@ -28,7 +28,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       {actionText && onAction && (
         <button
           onClick={onAction}
-          className="mt-4 px-4 py-2 rounded-lg btn-ember-primary text-xs font-semibold"
+          className="mt-4 px-4 py-2 rounded-lg btn-primary text-xs font-semibold"
         >
           {actionText}
         </button>

@@ -79,11 +79,11 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* Full Search Bar on >= xl */}
         <button
           onClick={onOpenSearch}
-          className="hidden xl:flex items-center gap-2 w-44 2xl:w-56 px-2.5 py-1.5 rounded-lg bg-[var(--surface-elevated)] border border-[var(--border)] hover:border-[var(--color-ember-orange)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-all shadow-xs group shrink-0"
+          className="hidden xl:flex items-center gap-2 w-44 2xl:w-56 px-2.5 py-1.5 rounded-lg bg-[var(--surface-elevated)] border border-[var(--border)] hover:border-[var(--border-strong)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-all shadow-2xs group shrink-0"
           title="Search storage pools, telemetry, actions (Ctrl+K)"
           aria-label="Global Search"
         >
-          <Search size={13} className="text-[var(--text-muted)] group-hover:text-[var(--color-ember-orange)] transition-colors shrink-0" />
+          <Search size={13} className="text-[var(--text-muted)] group-hover:text-[var(--accent)] transition-colors shrink-0" />
           <span className="text-xs font-normal flex-1 text-left text-[var(--text-secondary)] truncate">Search pools, signals...</span>
           <kbd className="text-[9.5px] font-mono bg-[var(--surface)] px-1.5 py-0.5 rounded border border-[var(--border)] text-[var(--text-muted)] shrink-0">
             Ctrl K
@@ -93,17 +93,17 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* Compact Search Icon on < xl and >= md */}
         <button
           onClick={onOpenSearch}
-          className="xl:hidden hidden md:flex items-center p-1.5 rounded-lg bg-[var(--surface-elevated)] border border-[var(--border)] hover:border-[var(--color-ember-orange)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-all shrink-0"
+          className="xl:hidden hidden md:flex items-center p-1.5 rounded-lg bg-[var(--surface-elevated)] border border-[var(--border)] hover:border-[var(--border-strong)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-all shrink-0"
           title="Search (Ctrl+K)"
           aria-label="Search"
         >
           <Search size={15} />
         </button>
 
-        {/* Operating Data Mode Selector (Always clear & comfortably padded) */}
+        {/* Operating Data Mode Selector (Clean, comfortable, non-clipping) */}
         <div className="flex items-center bg-[var(--surface-elevated)] rounded-lg p-0.5 border border-[var(--border)] shrink-0 shadow-2xs">
           <div className="hidden sm:flex items-center gap-1 px-1.5 py-1 text-[11px] font-medium text-[var(--text-secondary)] border-r border-[var(--border)]">
-            <Database size={12} className="text-[var(--color-ember-orange)] shrink-0" />
+            <Database size={12} className="text-[var(--accent)] shrink-0" />
             <span className="text-[var(--text-muted)] font-mono text-[10px]">SRC</span>
           </div>
           <select
@@ -128,12 +128,12 @@ export const TopBar: React.FC<TopBarProps> = ({
             onClick={() => toggleMode()}
             className={`flex items-center gap-1 sm:gap-1.5 px-2 py-1 rounded-md text-[11px] font-medium transition-all ${
               isGuided
-                ? 'bg-[var(--surface)] text-[var(--color-burnt-orange)] dark:text-[#FB923C] font-bold shadow-xs border border-[var(--border)]'
+                ? 'bg-[var(--surface)] text-[var(--accent)] font-bold shadow-2xs border border-[var(--border)]'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
             title="Guided Mode: Narrative summaries for storage administrators"
           >
-            <Sparkles size={11} className={isGuided ? 'text-[var(--color-ember-orange)]' : 'text-[var(--text-muted)]'} />
+            <Sparkles size={11} className={isGuided ? 'text-[var(--accent)]' : 'text-[var(--text-muted)]'} />
             <span className="hidden sm:inline">Guided</span>
           </button>
           <button
@@ -141,7 +141,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             onClick={() => toggleMode()}
             className={`flex items-center gap-1 sm:gap-1.5 px-2 py-1 rounded-md text-[11px] font-medium transition-all ${
               !isGuided
-                ? 'bg-[var(--surface)] text-[var(--text-primary)] font-bold shadow-xs border border-[var(--border)]'
+                ? 'bg-[var(--surface)] text-[var(--text-primary)] font-bold shadow-2xs border border-[var(--border)]'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
             title="Expert Mode: Raw telemetry, loss curves, and quantile model parameters"
@@ -207,7 +207,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         >
           <Bell size={16} />
           {activeAlertsCount > 0 && (
-            <span className="absolute top-0.5 right-0.5 min-w-[15px] h-[15px] px-1 rounded-full bg-[var(--color-coral)] text-white text-[9px] font-bold flex items-center justify-center font-mono shadow-xs">
+            <span className="absolute top-0.5 right-0.5 min-w-[15px] h-[15px] px-1 rounded-full bg-[var(--critical)] text-white text-[9px] font-bold flex items-center justify-center font-mono shadow-xs">
               {activeAlertsCount}
             </span>
           )}
@@ -216,10 +216,10 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* User Account / RBAC Pill */}
         <button
           onClick={onOpenAuth}
-          className="flex items-center gap-1.5 px-1.5 sm:px-2 py-1 rounded-lg bg-[var(--surface-elevated)] border border-[var(--border)] hover:border-[var(--color-ember-orange)] text-[var(--text-primary)] transition-colors text-xs shrink-0"
+          className="flex items-center gap-1.5 px-1.5 sm:px-2 py-1 rounded-lg bg-[var(--surface-elevated)] border border-[var(--border)] hover:border-[var(--border-strong)] text-[var(--text-primary)] transition-colors text-xs shrink-0"
           title={`User: ${currentUser.username} (${currentUser.role})`}
         >
-          <div className="w-5 h-5 rounded-full bg-[var(--color-ember-orange)]/15 text-[var(--color-burnt-orange)] dark:text-[#FB923C] font-bold text-[10px] flex items-center justify-center border border-[var(--color-ember-orange)]/30 shrink-0">
+          <div className="w-5 h-5 rounded-full bg-[var(--accent-soft)] text-[var(--accent)] font-bold text-[10px] flex items-center justify-center border border-[var(--accent)]/30 shrink-0">
             {currentUser.username[0]?.toUpperCase() || 'A'}
           </div>
           <span className="font-medium hidden md:inline truncate max-w-[70px] lg:max-w-none">{currentUser.username}</span>
@@ -238,7 +238,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           {isLightTheme ? (
             <Moon size={16} className="text-[var(--text-secondary)]" />
           ) : (
-            <Sun size={16} className="text-[var(--color-golden-amber)]" />
+            <Sun size={16} className="text-[var(--warning)]" />
           )}
         </button>
       </div>

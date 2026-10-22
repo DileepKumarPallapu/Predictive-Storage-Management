@@ -153,7 +153,7 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
             <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
               {isGuided ? 'Compare Possible Actions & Action Planner' : 'Counterfactual Intervention Studio'}
             </h2>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[var(--status-success)]/15 text-[var(--status-success)] border border-[var(--status-success)]/40 shadow-sm">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[var(--status-success)]/15 text-[var(--status-success)] border border-[var(--status-success)]/40 shadow-sm shrink-0 whitespace-nowrap">
               SHADOW MODE: SAFE
             </span>
           </div>
@@ -169,7 +169,7 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
           <select
             value={selectedDeviceId}
             onChange={(e) => setSelectedDeviceId(e.target.value)}
-            className="bg-[var(--surface-secondary)] border border-[var(--border-normal)] focus:border-[var(--accent-primary)] rounded-lg px-3.5 py-1.5 text-xs text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
+            className="bg-[var(--surface-secondary)] border border-[var(--border-normal)] focus:border-[var(--accent)] rounded-lg px-3.5 py-1.5 text-xs text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
             aria-label="Storage Pool"
           >
             {devices.map((d) => (
@@ -207,12 +207,12 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
                   className={runwayData.estimated_runway_hours <= 48 ? 'text-[var(--status-critical)] mt-0.5' : 'text-[var(--status-warning)] mt-0.5'}
                 />
                 <div>
-                  <div className="text-xs font-bold flex items-center gap-2">
+                  <div className="text-xs font-bold flex flex-wrap items-center gap-2">
                     <span>{isGuided ? 'Projected Time to Critical Reserve:' : 'Projected Reserve Breach Horizon:'}</span>
-                    <span className="font-mono text-[var(--accent-primary)] font-semibold">
+                    <span className="font-mono text-[var(--accent)] font-semibold whitespace-nowrap">
                       ~{runwayData.estimated_runway_hours.toFixed(0)} hours
                     </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--surface-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)]">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--surface-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] shrink-0 whitespace-nowrap">
                       {runwayData.breach_status}
                     </span>
                   </div>
@@ -255,7 +255,7 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
             </div>
 
             {/* Feasible Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4.5">
               {planningData?.feasible_candidates?.map((candidate: any) => {
                 const isSelected = selectedCandidateId === candidate.id;
                 return (
@@ -265,60 +265,63 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
                       setSelectedCandidateId(candidate.id);
                       runComparativeSimulation(candidate.action_type);
                     }}
-                    className={`titan-card rounded-lg p-4.5 cursor-pointer transition-all ${
+                    className={`titan-card rounded-xl p-4 sm:p-5 cursor-pointer transition-all flex flex-col justify-between h-full min-w-0 ${
                       isSelected
-                        ? 'border-[var(--accent-primary)] shadow-[0_0_15px_rgba(97,221,248,0.18)] bg-[var(--surface-secondary)]'
-                        : 'hover:border-[var(--accent-primary)]/40'
+                        ? 'border-[var(--accent)] ring-1 ring-[var(--accent)]/30 bg-[var(--surface-secondary)]/70'
+                        : 'hover:border-[var(--accent)]/40 hover:bg-[var(--surface-secondary)]/30'
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[var(--accent-primary)]/15 text-[var(--accent-primary)] border border-[var(--accent-primary)]/40">
-                        RANK #{candidate.rank}
-                      </span>
-                      <span className="text-xs font-mono font-bold text-[var(--status-success)]">
-                        Score: {candidate.utility_score}
-                      </span>
-                    </div>
-
-                    <h4 className="text-xs font-bold text-[var(--text-primary)] mt-2.5 line-clamp-1">
-                      {candidate.title}
-                    </h4>
-                    <p className="text-[11px] text-[var(--text-secondary)] mt-1 line-clamp-2">
-                      {candidate.description}
-                    </p>
-
-                    <div className="mt-3 pt-3 border-t border-[var(--border-subtle)] grid grid-cols-2 gap-2 text-[10px] font-mono">
-                      <div>
-                        <span className="text-[var(--text-muted)]">Runway Gain:</span>
-                        <div className="text-[var(--status-warning)] font-bold">+{candidate.estimated_runway_gain_hours} hrs</div>
+                    <div>
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-[var(--accent-soft)] text-[var(--accent)] border border-[var(--accent)]/30 shrink-0">
+                          RANK #{candidate.rank}
+                        </span>
+                        <span className="text-xs font-mono font-bold text-[var(--status-success)] shrink-0">
+                          Score: {candidate.utility_score}
+                        </span>
                       </div>
-                      <div>
-                        <span className="text-[var(--text-muted)]">Duration:</span>
-                        <div className="text-[var(--text-primary)] font-bold">{candidate.estimated_duration_hours} hrs</div>
-                      </div>
-                      <div>
-                        <span className="text-[var(--text-muted)]">Contention:</span>
-                        <div className={candidate.io_overhead_pct > 15 ? 'text-[var(--status-critical)]' : 'text-[var(--status-success)]'}>
-                          {candidate.io_overhead_pct > 0 ? `+${candidate.io_overhead_pct}%` : `${candidate.io_overhead_pct}%`}
+
+                      <h4 className="text-xs sm:text-[13px] font-bold text-[var(--text-primary)] mt-2.5 leading-snug break-words">
+                        {candidate.title}
+                      </h4>
+                      <p className="text-xs text-[var(--text-secondary)] mt-1.5 leading-relaxed break-words">
+                        {candidate.description}
+                      </p>
+
+                      <div className="mt-3.5 pt-3 border-t border-[var(--border-subtle)] grid grid-cols-2 gap-x-3 gap-y-2.5 text-[11px] font-mono">
+                        <div className="min-w-0">
+                          <span className="text-[10px] text-[var(--text-muted)] block truncate">Runway Gain:</span>
+                          <div className="text-[var(--status-warning)] font-bold truncate">+{candidate.estimated_runway_gain_hours} hrs</div>
+                        </div>
+                        <div className="min-w-0">
+                          <span className="text-[10px] text-[var(--text-muted)] block truncate">Duration:</span>
+                          <div className="text-[var(--text-primary)] font-bold truncate">{candidate.estimated_duration_hours} hrs</div>
+                        </div>
+                        <div className="min-w-0">
+                          <span className="text-[10px] text-[var(--text-muted)] block truncate">Contention:</span>
+                          <div className={`font-bold truncate ${candidate.io_overhead_pct > 15 ? 'text-[var(--status-critical)]' : 'text-[var(--status-success)]'}`}>
+                            {candidate.io_overhead_pct > 0 ? `+${candidate.io_overhead_pct}%` : `${candidate.io_overhead_pct}%`}
+                          </div>
+                        </div>
+                        <div className="min-w-0">
+                          <span className="text-[10px] text-[var(--text-muted)] block truncate">Estimated Cost:</span>
+                          <div className="text-[var(--text-primary)] font-bold truncate">${candidate.estimated_cost_usd}</div>
                         </div>
                       </div>
-                      <div>
-                        <span className="text-[var(--text-muted)]">Cost Est:</span>
-                        <div className="text-[var(--text-primary)] font-bold">${candidate.estimated_cost_usd}</div>
-                      </div>
                     </div>
 
-                    <div className="mt-3.5 flex items-center justify-between pt-2.5 border-t border-[var(--border-subtle)]">
-                      <span className="text-[10px] font-mono text-[var(--status-success)] flex items-center gap-1">
-                        <CheckCircle2 size={12} />
-                        Safe to schedule
+                    <div className="mt-4 flex items-center justify-between pt-3 border-t border-[var(--border-subtle)] gap-2 flex-wrap">
+                      <span className="text-[11px] font-mono text-[var(--status-success)] flex items-center gap-1.5 shrink-0 font-medium">
+                        <CheckCircle2 size={13} className="shrink-0" />
+                        <span>Safe to schedule</span>
                       </span>
                       <button
+                        type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleApprove(candidate.id);
                         }}
-                        className="px-3 py-1 btn-ember-primary rounded-lg text-[10px] font-bold"
+                        className="btn-primary text-xs py-1.5 px-3.5 shrink-0"
                       >
                         Approve
                       </button>

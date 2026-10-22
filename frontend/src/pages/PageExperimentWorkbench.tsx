@@ -85,7 +85,7 @@ export const PageExperimentWorkbench: React.FC = () => {
             onClick={() => setActiveTab('ablations')}
             className={`px-3.5 py-1.5 rounded-lg font-medium transition-all ${
               activeTab === 'ablations'
-                ? 'btn-ember-primary font-bold shadow-sm'
+                ? 'btn-primary font-bold shadow-sm'
                 : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             }`}
           >
@@ -95,7 +95,7 @@ export const PageExperimentWorkbench: React.FC = () => {
             onClick={() => setActiveTab('backtests')}
             className={`px-3.5 py-1.5 rounded-lg font-medium transition-all ${
               activeTab === 'backtests'
-                ? 'btn-ember-primary font-bold shadow-sm'
+                ? 'btn-primary font-bold shadow-sm'
                 : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             }`}
           >
@@ -296,7 +296,7 @@ export const PageExperimentWorkbench: React.FC = () => {
                     <button
                       onClick={handleRunBacktest}
                       disabled={running}
-                      className="w-full btn-ember-primary py-2 px-4 rounded-lg font-bold text-xs flex items-center justify-center gap-2"
+                      className="w-full btn-primary py-2 px-4 rounded-lg font-bold text-xs flex items-center justify-center gap-2"
                     >
                       <Play size={14} />
                       {running ? 'Running Backtest...' : 'Execute Backtest'}
@@ -358,7 +358,7 @@ export const PageExperimentWorkbench: React.FC = () => {
                             <td className="px-5 py-3.5 text-right">
                               <button
                                 onClick={() => handleDownloadManifest(exp.manifest)}
-                                className="btn-ember-secondary px-3 py-1.5 rounded-lg text-[11px] inline-flex items-center gap-1.5 font-sans font-medium"
+                                className="btn-secondary px-3 py-1.5 rounded-lg text-[11px] inline-flex items-center gap-1.5 font-sans font-medium"
                               >
                                 <Download size={12} /> JSON
                               </button>

@@ -50,7 +50,7 @@ export class ErrorBoundary extends Component<Props, State> {
             )}
             <button
               onClick={this.handleReset}
-              className="mt-5 w-full btn-ember-primary flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold"
+              className="mt-5 w-full btn-primary flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold"
             >
               <RotateCcw size={14} />
               Reload Platform Interface

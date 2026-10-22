@@ -192,7 +192,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 btn-ember-primary flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold disabled:opacity-50"
+              className="w-full mt-2 btn-primary flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold disabled:opacity-50"
             >
               <Key size={14} />
               {loading ? 'Authenticating...' : 'Sign In with JWT'}

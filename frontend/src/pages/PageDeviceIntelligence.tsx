@@ -105,7 +105,7 @@ export const PageDeviceIntelligence: React.FC<Props> = ({ deviceId, onSelectDevi
 
           <button
             onClick={() => onLaunchTwin(deviceId)}
-            className="btn-ember-primary px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5"
+            className="btn-primary px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5"
           >
             <Layers size={14} />
             {isGuided ? 'Test Actions in Sandbox' : 'Simulate Interventions'}

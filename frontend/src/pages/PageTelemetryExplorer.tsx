@@ -82,7 +82,7 @@ export const PageTelemetryExplorer: React.FC = () => {
 
         <button
           onClick={handleExportCsv}
-          className="btn-ember-secondary flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold font-mono"
+          className="btn-secondary flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold font-mono"
         >
           <Download size={14} className="text-[var(--accent-primary)]" />
           Export Dataset (CSV)

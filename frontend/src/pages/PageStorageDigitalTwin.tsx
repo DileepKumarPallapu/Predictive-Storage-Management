@@ -263,7 +263,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
             <button
               onClick={runSimulation}
               disabled={loading}
-              className="w-full mt-4 py-2.5 px-4 rounded-xl btn-ember-primary font-bold text-xs flex items-center justify-center gap-2"
+              className="w-full mt-4 py-2.5 px-4 rounded-xl btn-primary font-bold text-xs flex items-center justify-center gap-2"
             >
               <Play size={14} />
               {loading ? 'Simulating Digital Twin Physics...' : 'Run Simulation'}
@@ -274,7 +274,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
         {/* Right: Simulation Outcomes & Safety Envelope */}
         <div className="lg:col-span-2 space-y-4">
           {simulation && (
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               <div className="titan-card rounded-xl p-3.5 text-xs">
                 <div className="text-[var(--text-secondary)] flex items-center gap-1.5 font-medium">
                   <Clock size={13} className="text-[var(--accent-primary)]" /> Estimated Duration

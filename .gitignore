@@ -25,6 +25,7 @@ wheels/
 # Databases
 *.db
 *.sqlite3
+backend/vault_backups/
 
 # Node / Frontend
 node_modules/

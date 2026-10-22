@@ -258,16 +258,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onClick={() => handleItemClick(item.id)}
                     className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all relative group text-left ${
                       isActive
-                        ? 'bg-[var(--accent-soft)] text-[var(--color-burnt-orange)] dark:text-[#FB923C] font-bold shadow-xs'
+                        ? 'bg-[var(--surface-secondary)] text-[var(--accent)] font-bold shadow-2xs'
                         : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]'
                     }`}
                     title={collapsed ? item.label : undefined}
                   >
-                    {/* Active Ember Accent Bar */}
+                    {/* Active Aurora Accent Bar */}
                     {isActive && (
                       <span
-                        className="absolute left-0 top-1 bottom-1 w-1 rounded-r shadow-xs bg-[var(--color-ember-orange)]"
-                        style={{ background: 'linear-gradient(180deg, #F97316 0%, #EA580C 100%)' }}
+                        className="absolute left-0 top-1 bottom-1 w-1 rounded-r shadow-xs"
+                        style={{ background: 'linear-gradient(180deg, #7778EF 0%, #5B5CE5 100%)' }}
                       />
                     )}
 
@@ -275,7 +275,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       size={15}
                       className={`shrink-0 transition-colors ${
                         isActive
-                          ? 'text-[var(--color-ember-orange)]'
+                          ? 'text-[var(--accent)]'
                           : 'text-[var(--text-muted)] group-hover:text-[var(--text-primary)]'
                       }`}
                     />

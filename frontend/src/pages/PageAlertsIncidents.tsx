@@ -189,7 +189,7 @@ export const PageAlertsIncidents: React.FC = () => {
                   {a.status === 'ACTIVE' && (
                     <button
                       onClick={() => handleAcknowledge(a.id)}
-                      className="btn-ember-secondary px-3 py-1.5 rounded-lg text-xs font-medium"
+                      className="btn-secondary px-3 py-1.5 rounded-lg text-xs font-medium"
                     >
                       Acknowledge
                     </button>
@@ -198,7 +198,7 @@ export const PageAlertsIncidents: React.FC = () => {
                   {a.status !== 'RESOLVED' && (
                     <button
                       onClick={() => handleResolve(a.id)}
-                      className="btn-ember-primary px-3.5 py-1.5 rounded-lg text-xs font-semibold"
+                      className="btn-primary px-3.5 py-1.5 rounded-lg text-xs font-semibold"
                     >
                       Resolve
                     </button>

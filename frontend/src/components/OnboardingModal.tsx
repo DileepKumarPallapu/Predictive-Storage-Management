@@ -316,7 +316,7 @@ export const OnboardingModal: React.FC<Props> = ({
               {step > 1 && (
                 <button
                   onClick={prevStep}
-                  className="btn-ember-secondary px-3.5 py-1.5 rounded-lg text-xs flex items-center gap-1"
+                  className="btn-secondary px-3.5 py-1.5 rounded-lg text-xs flex items-center gap-1"
                 >
                   <ArrowLeft size={13} /> Back
                 </button>
@@ -324,7 +324,7 @@ export const OnboardingModal: React.FC<Props> = ({
 
               <button
                 onClick={nextStep}
-                className="btn-ember-primary px-4 py-1.5 rounded-lg text-xs flex items-center gap-1 font-semibold"
+                className="btn-primary px-4 py-1.5 rounded-lg text-xs flex items-center gap-1 font-semibold"
               >
                 {step === totalSteps ? 'Get Started' : 'Next'} <ArrowRight size={13} />
               </button>

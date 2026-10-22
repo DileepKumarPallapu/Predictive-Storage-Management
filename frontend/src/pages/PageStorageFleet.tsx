@@ -218,7 +218,7 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
             <div className="mt-5 pt-3.5 border-t border-[var(--border-subtle)] flex items-center justify-between gap-2">
               <button
                 onClick={() => openEditModal(d)}
-                className="px-3 py-1.5 rounded-lg btn-ember-secondary text-xs flex items-center gap-1.5 font-medium"
+                className="px-3 py-1.5 rounded-lg btn-secondary text-xs flex items-center gap-1.5 font-medium"
               >
                 <Sliders size={13} />
                 Adjust Safety Limits
@@ -226,7 +226,7 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
 
               <button
                 onClick={() => onNavigateToIntelligence(d.id)}
-                className="px-3.5 py-1.5 rounded-lg btn-ember-primary text-xs flex items-center gap-1.5 font-semibold"
+                className="px-3.5 py-1.5 rounded-lg btn-primary text-xs flex items-center gap-1.5 font-semibold"
               >
                 {isGuided ? 'Inspect Device' : 'Deep Intelligence'} <ArrowUpRight size={13} />
               </button>
@@ -313,13 +313,13 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
             <div className="flex justify-end gap-2.5 pt-3.5 border-t border-[var(--border-subtle)]">
               <button
                 onClick={() => setEditingDevice(null)}
-                className="px-3.5 py-1.5 rounded-lg btn-ember-secondary text-xs font-medium"
+                className="px-3.5 py-1.5 rounded-lg btn-secondary text-xs font-medium"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveThresholds}
-                className="px-4 py-1.5 rounded-lg btn-ember-primary font-semibold text-xs"
+                className="px-4 py-1.5 rounded-lg btn-primary font-semibold text-xs"
               >
                 Save Constraints
               </button>
