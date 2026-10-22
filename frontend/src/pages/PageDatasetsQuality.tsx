@@ -26,7 +26,7 @@ export const PageDatasetsQuality: React.FC = () => {
       {/* Header */}
       <div>
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)] shadow-glow-vermilion">
+          <div className="w-8 h-8 rounded-lg bg-[var(--accent)] text-white flex items-center justify-center shadow-xs">
             <Database size={18} />
           </div>
           <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
@@ -41,7 +41,7 @@ export const PageDatasetsQuality: React.FC = () => {
       {/* Dataset Cards */}
       <div className="grid grid-cols-1 gap-4">
         {datasets.map((ds) => (
-          <div key={ds.id} className="glass-panel rounded-xl p-5 space-y-4 hover:border-[var(--accent-primary)]/40 transition-all">
+          <div key={ds.id} className="titan-card rounded-xl p-5 space-y-4 hover:border-[var(--accent-primary)]/40 transition-all">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <h3 className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2.5">
@@ -87,7 +87,7 @@ export const PageDatasetsQuality: React.FC = () => {
       </div>
 
       {/* Provenance Ethics Statement */}
-      <div className="glass-panel rounded-xl p-5 text-xs text-[var(--text-secondary)] space-y-2">
+      <div className="titan-card rounded-xl p-5 text-xs text-[var(--text-secondary)] space-y-2">
         <h4 className="font-semibold text-[var(--text-primary)] flex items-center gap-2">
           <Info size={15} className="text-[var(--accent-primary)]" />
           Academic Rigor & Data Transparency Statement

@@ -66,7 +66,7 @@ export const PageTelemetryExplorer: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)] shadow-glow-vermilion">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent)] text-white flex items-center justify-center shadow-xs">
               <LineChart size={18} />
             </div>
             <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
@@ -90,7 +90,7 @@ export const PageTelemetryExplorer: React.FC = () => {
       </div>
 
       {/* Control Bar */}
-      <div className="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
+      <div className="titan-card rounded-lg p-4 flex flex-wrap items-center justify-between gap-4">
         {/* Device select */}
         <div className="flex items-center gap-2">
           <HardDrive size={15} className="text-[var(--text-muted)]" />
@@ -124,8 +124,8 @@ export const PageTelemetryExplorer: React.FC = () => {
               onClick={() => setTimeRangeHours(t.hours)}
               className={`px-3 py-1 rounded-lg text-xs font-mono font-medium border transition-all ${
                 timeRangeHours === t.hours
-                  ? 'bg-[var(--accent-primary)]/15 border-[var(--accent-primary)] text-[var(--accent-primary)] font-bold shadow-glow-vermilion'
-                  : 'glass-panel text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
+                  ? 'bg-[var(--accent-primary)]/15 border-[var(--accent-primary)] text-[var(--accent-primary)] font-bold shadow-xs'
+                  : 'titan-card text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
               }`}
             >
               {t.label}
@@ -143,7 +143,7 @@ export const PageTelemetryExplorer: React.FC = () => {
             className={`px-3.5 py-1.5 rounded-xl text-xs font-medium border transition-all ${
               selectedMetric === m.id
                 ? 'bg-[var(--accent-primary)]/15 border-[var(--accent-primary)] text-[var(--accent-primary)] shadow-[0_0_10px_rgba(97,221,248,0.2)] font-semibold'
-                : 'glass-panel text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
+                : 'titan-card text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
             }`}
           >
             {isGuided ? m.guidedLabel : m.expertLabel}
@@ -164,7 +164,7 @@ export const PageTelemetryExplorer: React.FC = () => {
 
       {/* Missingness Notification if present */}
       {telemetry && telemetry.missing_intervals.length > 0 && (
-        <div className="bg-[var(--status-warning)]/10 border border-[var(--status-warning)]/30 rounded-2xl p-4 text-xs text-[var(--status-warning)] space-y-1">
+        <div className="bg-[var(--status-warning)]/10 border border-[var(--status-warning)]/30 rounded-lg p-4 text-xs text-[var(--status-warning)] space-y-1">
           <div className="font-bold flex items-center gap-2">
             <AlertTriangle size={15} /> Telemetry Gaps Detected (Zero Fabrication Policy):
           </div>

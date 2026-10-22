@@ -147,7 +147,7 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)] shadow-glow-vermilion">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent)] text-white flex items-center justify-center shadow-xs">
               <Sliders size={18} />
             </div>
             <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
@@ -194,12 +194,12 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
         <>
           {/* STEP 1 & 2: Risk Breach Diagnostic Banner */}
           {runwayData && (
-            <div className={`p-5 rounded-2xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-all ${
+            <div className={`p-5 rounded-lg border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-all ${
               runwayData.estimated_runway_hours <= 48
                 ? 'bg-[var(--status-critical)]/10 border-[var(--status-critical)]/35 text-[var(--text-primary)]'
                 : runwayData.estimated_runway_hours <= 96
                 ? 'bg-[var(--status-warning)]/10 border-[var(--status-warning)]/35 text-[var(--text-primary)]'
-                : 'glass-panel text-[var(--text-primary)]'
+                : 'titan-card text-[var(--text-primary)]'
             }`}>
               <div className="flex items-start gap-3.5">
                 <AlertTriangle
@@ -265,7 +265,7 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
                       setSelectedCandidateId(candidate.id);
                       runComparativeSimulation(candidate.action_type);
                     }}
-                    className={`glass-panel rounded-2xl p-4.5 cursor-pointer transition-all ${
+                    className={`titan-card rounded-lg p-4.5 cursor-pointer transition-all ${
                       isSelected
                         ? 'border-[var(--accent-primary)] shadow-[0_0_15px_rgba(97,221,248,0.18)] bg-[var(--surface-secondary)]'
                         : 'hover:border-[var(--accent-primary)]/40'
@@ -330,7 +330,7 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
 
             {/* Disqualified Candidates Section with 4-Point Explanation */}
             {planningData?.rejected_candidates?.length > 0 && (
-              <div className="mt-4 p-5 rounded-2xl glass-panel border border-[var(--status-critical)]/30 space-y-3">
+              <div className="mt-4 p-5 rounded-lg titan-card border border-[var(--status-critical)]/30 space-y-3">
                 <div className="text-xs font-bold text-[var(--status-critical)] flex items-center gap-2">
                   <XCircle size={16} />
                   <span>Disqualified Actions (Rejected by Hard Safety Limits)</span>
@@ -357,7 +357,7 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
 
           {/* STEP 5: Side-by-Side Simulation Trajectory Inspector */}
           {activeSimulation && (
-            <div className="glass-panel rounded-2xl p-5 space-y-4">
+            <div className="titan-card rounded-lg p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">

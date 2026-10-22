@@ -82,7 +82,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             <span className="font-extrabold tracking-tight text-sm font-display text-[var(--text-primary)] leading-none whitespace-nowrap">
               AEGIS<span className="text-[var(--accent)]">STOR</span>
             </span>
-            <span className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider leading-tight mt-0.5 whitespace-nowrap">
+            <span className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider leading-tight mt-0.5 whitespace-nowrap hidden sm:inline">
               RESILIENCE INTELLIGENCE
             </span>
           </div>
@@ -141,13 +141,13 @@ export const TopBar: React.FC<TopBarProps> = ({
       </div>
 
       {/* RIGHT: Mode Switcher, Status, Notifications, Account, Theme */}
-      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+      <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
         {/* Guided vs Expert Segmented Control */}
         <div className="flex items-center bg-[var(--surface-elevated)] rounded-lg p-0.5 border border-[var(--border)]">
           <button
             type="button"
             onClick={() => toggleMode()}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
+            className={`flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
               isGuided
                 ? 'bg-[var(--surface)] text-[var(--accent)] font-semibold shadow-sm border border-[var(--border)]'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
@@ -155,12 +155,12 @@ export const TopBar: React.FC<TopBarProps> = ({
             title="Guided Mode: Clear operational narratives for storage administrators"
           >
             <Sparkles size={11} className={isGuided ? 'text-[var(--accent)]' : 'text-[var(--text-muted)]'} />
-            <span>Guided</span>
+            <span className="hidden sm:inline">Guided</span>
           </button>
           <button
             type="button"
             onClick={() => toggleMode()}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
+            className={`flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
               !isGuided
                 ? 'bg-[var(--surface)] text-[var(--text-primary)] font-semibold shadow-sm border border-[var(--border)]'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
@@ -168,7 +168,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             title="Expert Mode: Machine learning loss functions, quantiles, and raw telemetry parameters"
           >
             <SlidersHorizontal size={11} />
-            <span>Expert</span>
+            <span className="hidden sm:inline">Expert</span>
           </button>
         </div>
 
@@ -211,7 +211,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         {onOpenTour && (
           <button
             onClick={onOpenTour}
-            className="p-1.5 rounded-lg hover:bg-[var(--surface-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+            className="hidden sm:flex p-1.5 rounded-lg hover:bg-[var(--surface-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
             title="Platform Orientation Tour"
             aria-label="Platform Tour"
           >
@@ -237,14 +237,14 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* User Account / RBAC Pill */}
         <button
           onClick={onOpenAuth}
-          className="flex items-center gap-2 pl-2 pr-2.5 py-1 rounded-lg bg-[var(--surface-elevated)] border border-[var(--border)] hover:border-[var(--border-visible)] text-[var(--text-primary)] transition-colors text-xs"
+          className="flex items-center gap-1.5 sm:gap-2 px-1.5 sm:pl-2 sm:pr-2.5 py-1 rounded-lg bg-[var(--surface-elevated)] border border-[var(--border)] hover:border-[var(--border-visible)] text-[var(--text-primary)] transition-colors text-xs"
           title="Session & Role-Based Access Control"
         >
           <div className="w-5 h-5 rounded-full bg-[var(--surface-subtle)] text-[var(--text-primary)] font-bold text-[10px] flex items-center justify-center border border-[var(--border)]">
             {currentUser.username[0]?.toUpperCase() || 'A'}
           </div>
           <span className="font-medium hidden sm:inline">{currentUser.username}</span>
-          <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-[var(--surface)] text-[var(--text-muted)] border border-[var(--border)]">
+          <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-[var(--surface)] text-[var(--text-muted)] border border-[var(--border)] hidden sm:inline">
             {currentUser.role}
           </span>
         </button>

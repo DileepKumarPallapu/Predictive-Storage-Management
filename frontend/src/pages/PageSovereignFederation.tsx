@@ -109,7 +109,7 @@ export const PageSovereignFederation: React.FC = () => {
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
       {/* Editorial Header Banner */}
-      <div className="border border-[var(--border-subtle)] rounded-2xl titan-card-elevated p-6 shadow-2xl relative overflow-hidden">
+      <div className="border border-[var(--border-subtle)] rounded-lg titan-card-elevated p-6 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--accent-primary)]/5 rounded-full blur-3xl pointer-events-none" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
@@ -189,22 +189,22 @@ export const PageSovereignFederation: React.FC = () => {
       {activeTab === 'sites' && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="p-5 rounded-2xl titan-card border border-[var(--border-subtle)]">
+            <div className="p-5 rounded-lg titan-card border border-[var(--border-subtle)]">
               <span className="text-xs uppercase tracking-wider text-[var(--text-secondary)]">Registered Sites</span>
               <div className="text-2xl font-bold text-[var(--text-primary)] mt-1">{sites.length} Active Nodes</div>
               <span className="text-xs text-[var(--text-muted)] mt-1 block">Heterogeneous storage topologies</span>
             </div>
-            <div className="p-5 rounded-2xl titan-card border border-[var(--border-subtle)]">
+            <div className="p-5 rounded-lg titan-card border border-[var(--border-subtle)]">
               <span className="text-xs uppercase tracking-wider text-[var(--text-secondary)]">Current Global Model</span>
               <div className="text-2xl font-bold text-emerald-400 mt-1">{overview?.latest_global_model_version || 'v3.0.0'}</div>
               <span className="text-xs text-[var(--text-muted)] mt-1 block">Parametric Ridge ($d=8$)</span>
             </div>
-            <div className="p-5 rounded-2xl titan-card border border-[var(--border-subtle)]">
+            <div className="p-5 rounded-lg titan-card border border-[var(--border-subtle)]">
               <span className="text-xs uppercase tracking-wider text-[var(--text-secondary)]">Total Rounds Completed</span>
               <div className="text-2xl font-bold text-[var(--accent-primary)] mt-1">{rounds.length} Rounds</div>
               <span className="text-xs text-[var(--text-muted)] mt-1 block">Zero raw bytes exchanged</span>
             </div>
-            <div className="p-5 rounded-2xl titan-card border border-[var(--border-subtle)]">
+            <div className="p-5 rounded-lg titan-card border border-[var(--border-subtle)]">
               <span className="text-xs uppercase tracking-wider text-[var(--text-secondary)]">Privacy Status</span>
               <div className="text-2xl font-bold text-emerald-400 mt-1">Enforced</div>
               <span className="text-xs text-[var(--text-muted)] mt-1 block">Weight vectors only</span>
@@ -214,7 +214,7 @@ export const PageSovereignFederation: React.FC = () => {
           {/* Sites Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {sites.map((site) => (
-              <div key={site.id} className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4 hover:border-[var(--accent-primary)]/40 transition">
+              <div key={site.id} className="rounded-lg titan-card border border-[var(--border-subtle)] p-6 space-y-4 hover:border-[var(--accent-primary)]/40 transition">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Server className="w-4 h-4 text-[var(--accent-primary)]" />
@@ -266,7 +266,7 @@ export const PageSovereignFederation: React.FC = () => {
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Round Dispatch Form */}
-            <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-5">
+            <div className="rounded-lg titan-card border border-[var(--border-subtle)] p-6 space-y-5">
               <div>
                 <h3 className="text-lg font-semibold text-[var(--text-primary)]">Dispatch Federated Round</h3>
                 <p className="text-xs text-[var(--text-secondary)]">Triggers local training on sites and aggregates weight updates at coordinator.</p>
@@ -358,7 +358,7 @@ export const PageSovereignFederation: React.FC = () => {
             {/* Round Outputs & Historical Ledger */}
             <div className="lg:col-span-2 space-y-6">
               {lastRoundResult && (
-                <div className="p-6 rounded-2xl titan-card border border-emerald-500/30 space-y-4">
+                <div className="p-6 rounded-lg titan-card border border-emerald-500/30 space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <CheckCircle2 className="w-5 h-5 text-emerald-400" />
@@ -394,7 +394,7 @@ export const PageSovereignFederation: React.FC = () => {
               )}
 
               {/* Historical Rounds List */}
-              <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4">
+              <div className="rounded-lg titan-card border border-[var(--border-subtle)] p-6 space-y-4">
                 <h4 className="text-sm font-bold text-[var(--text-primary)]">Historical Collaborative Rounds</h4>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
@@ -435,7 +435,7 @@ export const PageSovereignFederation: React.FC = () => {
       {/* ==================================================================== */}
       {activeTab === 'performance' && (
         <div className="space-y-6">
-          <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4">
+          <div className="rounded-lg titan-card border border-[var(--border-subtle)] p-6 space-y-4">
             <h3 className="text-lg font-bold text-[var(--text-primary)]">Site-Specific Collaborative Performance Breakdown</h3>
             <p className="text-xs text-[var(--text-secondary)]">
               Evaluates whether collaborative learning helps or degrades individual sites across diverse workloads.
@@ -489,7 +489,7 @@ export const PageSovereignFederation: React.FC = () => {
       {/* ==================================================================== */}
       {activeTab === 'privacy' && (
         <div className="space-y-6">
-          <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4">
+          <div className="rounded-lg titan-card border border-[var(--border-subtle)] p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-bold text-[var(--text-primary)]">Formal Sovereign Threat Model Matrix</h3>
@@ -536,7 +536,7 @@ export const PageSovereignFederation: React.FC = () => {
       {/* ==================================================================== */}
       {activeTab === 'tournament' && (
         <div className="space-y-6">
-          <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4">
+          <div className="rounded-lg titan-card border border-[var(--border-subtle)] p-6 space-y-4">
             <h3 className="text-lg font-bold text-[var(--text-primary)]">Collaborative Baseline Tournament</h3>
             <p className="text-xs text-[var(--text-secondary)]">
               Evaluates Local-Only, FedAvg, Personalized, and Reliability-Aware aggregation under identical temporal splits.
@@ -593,7 +593,7 @@ export const PageSovereignFederation: React.FC = () => {
       {/* ==================================================================== */}
       {activeTab === 'communication' && (
         <div className="space-y-6">
-          <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4">
+          <div className="rounded-lg titan-card border border-[var(--border-subtle)] p-6 space-y-4">
             <h3 className="text-lg font-bold text-[var(--text-primary)]">Communication & Efficiency Profiling</h3>
             <p className="text-xs text-[var(--text-secondary)]">Measures the network payload cost of collaborative training vs central telemetry streaming.</p>
 
@@ -623,7 +623,7 @@ export const PageSovereignFederation: React.FC = () => {
       {/* ==================================================================== */}
       {activeTab === 'stress' && (
         <div className="space-y-6">
-          <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4">
+          <div className="rounded-lg titan-card border border-[var(--border-subtle)] p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-bold text-[var(--text-primary)]">Adversarial & Faulty Update Integrity Shield</h3>

@@ -67,7 +67,7 @@ export const PageExperimentWorkbench: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)] shadow-glow-vermilion">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent)] text-white flex items-center justify-center shadow-xs">
               <FlaskConical size={18} />
             </div>
             <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
@@ -80,7 +80,7 @@ export const PageExperimentWorkbench: React.FC = () => {
         </div>
 
         {/* Tab Controls */}
-        <div className="flex items-center gap-2 glass-panel rounded-xl p-1.5 text-xs">
+        <div className="flex items-center gap-2 titan-card rounded-xl p-1.5 text-xs">
           <button
             onClick={() => setActiveTab('ablations')}
             className={`px-3.5 py-1.5 rounded-lg font-medium transition-all ${
@@ -112,7 +112,7 @@ export const PageExperimentWorkbench: React.FC = () => {
           {activeTab === 'ablations' && ablations && (
             <div className="space-y-6">
               {/* Study 1: Calibration */}
-              <div className="glass-panel rounded-xl overflow-hidden">
+              <div className="titan-card rounded-xl overflow-hidden">
                 <div className="px-5 py-4 border-b border-[var(--border-subtle)] bg-[var(--surface-secondary)]/40 flex items-center justify-between">
                   <div>
                     <h3 className="text-sm font-bold text-[var(--text-primary)]">
@@ -170,7 +170,7 @@ export const PageExperimentWorkbench: React.FC = () => {
               {/* Study 2 & 3: Lead Time & Overhead */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Lead Time Planning */}
-                <div className="glass-panel rounded-xl p-5 space-y-4">
+                <div className="titan-card rounded-xl p-5 space-y-4">
                   <h3 className="text-sm font-bold text-[var(--text-primary)]">
                     Ablation 2: Lead-Time-Aware Planning vs Reactive Alerts
                   </h3>
@@ -209,7 +209,7 @@ export const PageExperimentWorkbench: React.FC = () => {
                 </div>
 
                 {/* Intervention Overhead */}
-                <div className="glass-panel rounded-xl p-5 space-y-4">
+                <div className="titan-card rounded-xl p-5 space-y-4">
                   <h3 className="text-sm font-bold text-[var(--text-primary)]">
                     Ablation 3: Migration Overhead & Tail Latency SLAs
                   </h3>
@@ -253,7 +253,7 @@ export const PageExperimentWorkbench: React.FC = () => {
           {activeTab === 'backtests' && (
             <div className="space-y-6">
               {/* Experiment Runner Controls */}
-              <div className="glass-panel rounded-xl p-5">
+              <div className="titan-card rounded-xl p-5">
                 <h3 className="text-sm font-bold text-[var(--text-primary)] mb-3">Launch Chronological Backtest</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
                   <div>
@@ -314,7 +314,7 @@ export const PageExperimentWorkbench: React.FC = () => {
                   onAction={handleRunBacktest}
                 />
               ) : (
-                <div className="glass-panel rounded-xl overflow-hidden">
+                <div className="titan-card rounded-xl overflow-hidden">
                   <div className="px-5 py-4 border-b border-[var(--border-subtle)] flex items-center justify-between">
                     <h3 className="text-sm font-semibold text-[var(--text-primary)]">Empirical Model Comparison Results</h3>
                     <span className="text-xs text-[var(--text-secondary)] font-mono">{experiments.length} Executed Runs</span>

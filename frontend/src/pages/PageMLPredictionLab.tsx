@@ -71,7 +71,7 @@ export const PageMLPredictionLab: React.FC = () => {
       </div>
 
       {/* Control Grid */}
-      <div className="glass-panel rounded-2xl p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+      <div className="titan-card rounded-lg p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
         <div>
           <label className="block text-[var(--text-secondary)] mb-1.5 font-medium text-[11px] uppercase tracking-wider">
             Storage Pool:
@@ -134,8 +134,8 @@ export const PageMLPredictionLab: React.FC = () => {
                 onClick={() => setHorizonHours(h)}
                 className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-medium border transition-all ${
                   horizonHours === h
-                    ? 'bg-[var(--accent-primary)]/15 border-[var(--accent-primary)] text-[var(--accent-primary)] font-bold shadow-glow-vermilion'
-                    : 'glass-panel text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
+                    ? 'bg-[var(--accent-primary)]/15 border-[var(--accent-primary)] text-[var(--accent-primary)] font-bold shadow-xs'
+                    : 'titan-card text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
                 }`}
               >
                 +{h}h
@@ -148,7 +148,7 @@ export const PageMLPredictionLab: React.FC = () => {
       {/* Model Diagnostics Metadata */}
       {forecast && (
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-3.5 text-xs">
-          <div className="glass-panel rounded-xl p-3.5">
+          <div className="titan-card rounded-xl p-3.5">
             <div className="text-[var(--text-secondary)] font-medium flex items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <Brain size={13} className="text-[var(--accent-tertiary)]" /> Model Name
@@ -164,7 +164,7 @@ export const PageMLPredictionLab: React.FC = () => {
             </div>
           </div>
 
-          <div className="glass-panel rounded-xl p-3.5">
+          <div className="titan-card rounded-xl p-3.5">
             <div className="text-[var(--text-secondary)] font-medium flex items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <Zap size={13} className="text-[var(--accent-primary)]" />
@@ -180,7 +180,7 @@ export const PageMLPredictionLab: React.FC = () => {
             </div>
           </div>
 
-          <div className="glass-panel rounded-xl p-3.5">
+          <div className="titan-card rounded-xl p-3.5">
             <div className="text-[var(--text-secondary)] font-medium flex items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <ShieldCheck size={13} className="text-[var(--status-success)]" />
@@ -196,7 +196,7 @@ export const PageMLPredictionLab: React.FC = () => {
             </div>
           </div>
 
-          <div className="glass-panel rounded-xl p-3.5">
+          <div className="titan-card rounded-xl p-3.5">
             <div className="text-[var(--text-secondary)] font-medium flex items-center gap-1.5">
               <Clock size={13} className="text-[var(--status-warning)]" /> Training Cutoff
             </div>

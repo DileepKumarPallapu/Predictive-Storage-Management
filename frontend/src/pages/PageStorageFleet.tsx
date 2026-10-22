@@ -79,7 +79,7 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
       {/* Page Header */}
       <div>
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)] shadow-glow-vermilion">
+          <div className="w-8 h-8 rounded-lg bg-[var(--accent)] text-white flex items-center justify-center shadow-xs">
             <HardDrive size={18} />
           </div>
           <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
@@ -103,7 +103,7 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
       </div>
 
       {/* Safety Envelope Contextual Card */}
-      <div className="glass-panel rounded-2xl p-4 flex items-start gap-3 border-l-4 border-l-[var(--status-success)] text-xs">
+      <div className="titan-card rounded-lg p-4 flex items-start gap-3 border-l-4 border-l-[var(--status-success)] text-xs">
         <ShieldCheck size={18} className="text-[var(--status-success)] shrink-0 mt-0.5" />
         <div>
           <span className="font-semibold text-[var(--text-primary)]">
@@ -116,7 +116,7 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
       </div>
 
       {/* Filter / Search Bar */}
-      <div className="flex flex-col sm:flex-row gap-3 items-center justify-between glass-panel rounded-xl p-3.5">
+      <div className="flex flex-col sm:flex-row gap-3 items-center justify-between titan-card rounded-xl p-3.5">
         <div className="relative w-full sm:w-80">
           <Search className="absolute left-3.5 top-2.5 text-[var(--text-muted)]" size={15} />
           <input
@@ -148,7 +148,7 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
         {devices.map((d) => (
           <div
             key={d.id}
-            className="glass-panel rounded-2xl p-5 flex flex-col justify-between hover:border-[var(--accent-primary)]/40 transition-all group"
+            className="titan-card rounded-lg p-5 flex flex-col justify-between hover:border-[var(--accent-primary)]/40 transition-all group"
           >
             <div>
               <div className="flex items-start justify-between gap-2">
@@ -238,7 +238,7 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
       {/* Threshold Edit Modal */}
       {editingDevice && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 z-50">
-          <div className="glass-modal max-w-md w-full p-6 space-y-4 shadow-glass-modal rounded-2xl animate-in fade-in zoom-in-95 duration-150">
+          <div className="glass-modal max-w-md w-full p-6 space-y-4 shadow-glass-modal rounded-lg animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)]">

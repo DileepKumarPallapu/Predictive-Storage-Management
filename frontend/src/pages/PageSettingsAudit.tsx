@@ -108,7 +108,7 @@ export const PageSettingsAudit: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)] shadow-glow-vermilion">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent)] text-white flex items-center justify-center shadow-xs">
               <HardDrive size={18} />
             </div>
             <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
@@ -183,7 +183,7 @@ export const PageSettingsAudit: React.FC = () => {
           {/* Recovery Objectives SLA Overview Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
             {/* Target RTO */}
-            <div className="glass-panel rounded-xl p-4 border border-[var(--border-subtle)] space-y-1">
+            <div className="titan-card rounded-xl p-4 border border-[var(--border-subtle)] space-y-1">
               <span className="text-[10px] font-mono uppercase text-[var(--text-tertiary)] block">Recovery Time (RTO)</span>
               <div className="flex items-baseline gap-2">
                 <span className="text-xl font-bold font-mono text-[var(--text-primary)]">
@@ -200,7 +200,7 @@ export const PageSettingsAudit: React.FC = () => {
             </div>
 
             {/* Target RPO */}
-            <div className="glass-panel rounded-xl p-4 border border-[var(--border-subtle)] space-y-1">
+            <div className="titan-card rounded-xl p-4 border border-[var(--border-subtle)] space-y-1">
               <span className="text-[10px] font-mono uppercase text-[var(--text-tertiary)] block">Recovery Point (RPO)</span>
               <div className="flex items-baseline gap-2">
                 <span className="text-xl font-bold font-mono text-[var(--text-primary)]">
@@ -217,7 +217,7 @@ export const PageSettingsAudit: React.FC = () => {
             </div>
 
             {/* Retained Archives */}
-            <div className="glass-panel rounded-xl p-4 border border-[var(--border-subtle)] space-y-1">
+            <div className="titan-card rounded-xl p-4 border border-[var(--border-subtle)] space-y-1">
               <span className="text-[10px] font-mono uppercase text-[var(--text-tertiary)] block">Retained Archives</span>
               <div className="flex items-baseline gap-2">
                 <span className="text-xl font-bold font-mono text-[var(--text-primary)]">
@@ -231,7 +231,7 @@ export const PageSettingsAudit: React.FC = () => {
             </div>
 
             {/* Verification Engine */}
-            <div className="glass-panel rounded-xl p-4 border border-[var(--border-subtle)] space-y-1">
+            <div className="titan-card rounded-xl p-4 border border-[var(--border-subtle)] space-y-1">
               <span className="text-[10px] font-mono uppercase text-[var(--text-tertiary)] block">Sandbox Isolation</span>
               <div className="flex items-baseline gap-1">
                 <span className="text-base font-bold font-mono text-[var(--status-success)]">
@@ -245,7 +245,7 @@ export const PageSettingsAudit: React.FC = () => {
           </div>
 
           {/* Backup Creator Panel */}
-          <div className="glass-panel rounded-xl p-5 border border-[var(--border-subtle)] space-y-4">
+          <div className="titan-card rounded-xl p-5 border border-[var(--border-subtle)] space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
@@ -259,7 +259,7 @@ export const PageSettingsAudit: React.FC = () => {
               <button
                 onClick={handleCreateBackup}
                 disabled={creatingBackup}
-                className="px-4 py-2 rounded-xl bg-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/90 text-white text-xs font-semibold flex items-center gap-2 disabled:opacity-50 transition-all shadow-glow-vermilion"
+                className="px-4 py-2 rounded-xl bg-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/90 text-white text-xs font-semibold flex items-center gap-2 disabled:opacity-50 transition-all shadow-xs"
               >
                 {creatingBackup ? <RefreshCw size={14} className="animate-spin" /> : <HardDrive size={14} />}
                 {creatingBackup ? 'Creating Snapshot...' : 'Create Instant Backup'}
@@ -279,7 +279,7 @@ export const PageSettingsAudit: React.FC = () => {
 
           {/* Detailed Isolated Recovery Sandbox Test Results (if available) */}
           {testResult && (
-            <div className="glass-panel rounded-xl p-5 border border-[var(--status-success)]/40 bg-[var(--status-success)]/5 space-y-4">
+            <div className="titan-card rounded-xl p-5 border border-[var(--status-success)]/40 bg-[var(--status-success)]/5 space-y-4">
               <div className="flex items-center justify-between">
                 <h4 className="text-xs font-bold text-[var(--status-success)] flex items-center gap-2 uppercase tracking-wide">
                   <ShieldCheck size={16} />
@@ -347,7 +347,7 @@ export const PageSettingsAudit: React.FC = () => {
           )}
 
           {/* Backup Archives Table */}
-          <div className="glass-panel rounded-xl overflow-hidden border border-[var(--border-subtle)]">
+          <div className="titan-card rounded-xl overflow-hidden border border-[var(--border-subtle)]">
             <div className="px-5 py-4 border-b border-[var(--border-subtle)] flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-semibold text-[var(--text-primary)]">
@@ -462,7 +462,7 @@ export const PageSettingsAudit: React.FC = () => {
 
       {/* TAB 2: Safety Envelope Invariants */}
       {activeTab === 'safety' && settingsData && (
-        <div className="glass-panel rounded-xl p-5 space-y-4">
+        <div className="titan-card rounded-xl p-5 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
               <Shield className="text-[var(--status-success)]" size={17} />
@@ -494,7 +494,7 @@ export const PageSettingsAudit: React.FC = () => {
 
       {/* TAB 3: Audit Log Table */}
       {activeTab === 'audit' && (
-        <div className="glass-panel rounded-xl overflow-hidden">
+        <div className="titan-card rounded-xl overflow-hidden">
           <div className="px-5 py-4 border-b border-[var(--border-subtle)] flex items-center justify-between">
             <h3 className="text-sm font-semibold text-[var(--text-primary)]">Immutable System & Human Approval Logs</h3>
             <span className="text-xs text-[var(--text-secondary)] font-mono">{auditLogs.length} Events Recorded</span>

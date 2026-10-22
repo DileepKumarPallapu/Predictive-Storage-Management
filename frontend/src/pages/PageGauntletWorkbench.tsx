@@ -117,7 +117,7 @@ export const PageGauntletWorkbench: React.FC = () => {
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
       {/* Editorial Header Banner */}
-      <div className="border border-[var(--border-subtle)] rounded-2xl titan-card-elevated p-6 shadow-2xl relative overflow-hidden">
+      <div className="border border-[var(--border-subtle)] rounded-lg titan-card-elevated p-6 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--accent-primary)]/5 rounded-full blur-3xl pointer-events-none" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
@@ -207,24 +207,24 @@ export const PageGauntletWorkbench: React.FC = () => {
         <div className="space-y-6">
           {/* Top Quick Stats */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="p-5 rounded-2xl titan-card border border-[var(--border-subtle)] relative overflow-hidden">
+            <div className="p-5 rounded-lg titan-card border border-[var(--border-subtle)] relative overflow-hidden">
               <span className="text-xs uppercase tracking-wider text-[var(--text-secondary)]">Total Regression Pass</span>
               <div className="text-2xl font-bold text-emerald-400 mt-1">100% Pass</div>
               <span className="text-xs text-[var(--text-muted)] mt-1 block">110 / 110 automated tests passing</span>
             </div>
-            <div className="p-5 rounded-2xl titan-card border border-[var(--border-subtle)] relative overflow-hidden">
+            <div className="p-5 rounded-lg titan-card border border-[var(--border-subtle)] relative overflow-hidden">
               <span className="text-xs uppercase tracking-wider text-[var(--text-secondary)]">Catalog Suites Available</span>
               <div className="text-2xl font-bold text-[var(--text-primary)] mt-1">{catalog.length} Active Suites</div>
               <span className="text-xs text-[var(--text-muted)] mt-1 block">Capacity, Perf, Planning, Chaos</span>
             </div>
-            <div className="p-5 rounded-2xl titan-card border border-[var(--border-subtle)] relative overflow-hidden">
+            <div className="p-5 rounded-lg titan-card border border-[var(--border-subtle)] relative overflow-hidden">
               <span className="text-xs uppercase tracking-wider text-[var(--text-secondary)]">Claims Grounded</span>
               <div className="text-2xl font-bold text-[var(--accent-primary)] mt-1">
                 {overviewData?.claims_summary?.supported_within_conditions || 3} / {overviewData?.claims_summary?.total_claims || 4}
               </div>
               <span className="text-xs text-[var(--text-muted)] mt-1 block">1 Unverified (Marked with Caveat)</span>
             </div>
-            <div className="p-5 rounded-2xl titan-card border border-[var(--border-subtle)] relative overflow-hidden">
+            <div className="p-5 rounded-lg titan-card border border-[var(--border-subtle)] relative overflow-hidden">
               <span className="text-xs uppercase tracking-wider text-[var(--text-secondary)]">Recorded Failures</span>
               <div className="text-2xl font-bold text-amber-400 mt-1">{failures.length} Documented</div>
               <span className="text-xs text-[var(--text-muted)] mt-1 block">Transparently retained for audit</span>
@@ -232,7 +232,7 @@ export const PageGauntletWorkbench: React.FC = () => {
           </div>
 
           {/* Capabilities Verification Register */}
-          <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4">
+          <div className="rounded-lg titan-card border border-[var(--border-subtle)] p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold text-[var(--text-primary)]">Implemented Capabilities Register</h3>
@@ -289,7 +289,7 @@ export const PageGauntletWorkbench: React.FC = () => {
           </div>
 
           {/* Unresolved High Priority Defects & Limitations */}
-          <div className="rounded-2xl titan-card border border-amber-500/20 p-6 space-y-3 bg-gradient-to-r from-amber-950/10 to-transparent">
+          <div className="rounded-lg titan-card border border-amber-500/20 p-6 space-y-3 bg-gradient-to-r from-amber-950/10 to-transparent">
             <div className="flex items-center gap-2 text-amber-400 font-semibold text-sm">
               <AlertTriangle className="w-4 h-4" />
               Explicitly Disclosed Known Defects & Technical Boundaries
@@ -315,7 +315,7 @@ export const PageGauntletWorkbench: React.FC = () => {
             {catalog.map((suite) => (
               <div
                 key={suite.id}
-                className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4 hover:border-[var(--accent-primary)]/40 transition flex flex-col justify-between"
+                className="rounded-lg titan-card border border-[var(--border-subtle)] p-6 space-y-4 hover:border-[var(--accent-primary)]/40 transition flex flex-col justify-between"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -379,7 +379,7 @@ export const PageGauntletWorkbench: React.FC = () => {
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Run Configuration Controls */}
-            <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-5">
+            <div className="rounded-lg titan-card border border-[var(--border-subtle)] p-6 space-y-5">
               <div>
                 <h3 className="text-lg font-semibold text-[var(--text-primary)]">Benchmark Execution Configuration</h3>
                 <p className="text-xs text-[var(--text-secondary)]">Executes only upon explicit user submission. Strict temporal split applied.</p>
@@ -471,7 +471,7 @@ export const PageGauntletWorkbench: React.FC = () => {
             {/* Run Output & Manifest Inspector */}
             <div className="lg:col-span-2 space-y-6">
               {lastRunResult ? (
-                <div className="rounded-2xl titan-card border border-emerald-500/30 p-6 space-y-4">
+                <div className="rounded-lg titan-card border border-emerald-500/30 p-6 space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <CheckCircle2 className="w-5 h-5 text-emerald-400" />
@@ -516,7 +516,7 @@ export const PageGauntletWorkbench: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <div className="rounded-2xl titan-card border border-dashed border-[var(--border-subtle)] p-12 text-center space-y-3">
+                <div className="rounded-lg titan-card border border-dashed border-[var(--border-subtle)] p-12 text-center space-y-3">
                   <Play className="w-10 h-10 text-[var(--text-muted)] mx-auto" />
                   <h4 className="text-sm font-medium text-[var(--text-primary)]">No Benchmark In Progress</h4>
                   <p className="text-xs text-[var(--text-muted)] max-w-sm mx-auto">
@@ -526,7 +526,7 @@ export const PageGauntletWorkbench: React.FC = () => {
               )}
 
               {/* Historical Runs Table */}
-              <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4">
+              <div className="rounded-lg titan-card border border-[var(--border-subtle)] p-6 space-y-4">
                 <h4 className="text-sm font-bold text-[var(--text-primary)]">Recent Benchmark Run Manifests</h4>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
@@ -576,7 +576,7 @@ export const PageGauntletWorkbench: React.FC = () => {
       {/* ==================================================================== */}
       {activeTab === 'tournament' && (
         <div className="space-y-6">
-          <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4">
+          <div className="rounded-lg titan-card border border-[var(--border-subtle)] p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-bold text-[var(--text-primary)]">Storage Decision Quality Baseline Tournament</h3>
@@ -694,7 +694,7 @@ export const PageGauntletWorkbench: React.FC = () => {
       {/* ==================================================================== */}
       {activeTab === 'claims' && (
         <div className="space-y-6">
-          <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4">
+          <div className="rounded-lg titan-card border border-[var(--border-subtle)] p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-bold text-[var(--text-primary)]">Claim-to-Evidence Audit Ledger</h3>
@@ -776,7 +776,7 @@ export const PageGauntletWorkbench: React.FC = () => {
       {/* ==================================================================== */}
       {activeTab === 'failures' && (
         <div className="space-y-6">
-          <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4">
+          <div className="rounded-lg titan-card border border-[var(--border-subtle)] p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-bold text-[var(--text-primary)]">Failure & Anomaly Ledger</h3>
@@ -835,7 +835,7 @@ export const PageGauntletWorkbench: React.FC = () => {
       {/* ==================================================================== */}
       {activeTab === 'reproduce' && (
         <div className="space-y-6">
-          <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-5">
+          <div className="rounded-lg titan-card border border-[var(--border-subtle)] p-6 space-y-5">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-bold text-[var(--text-primary)]">One-Click Reproduction Verification</h3>

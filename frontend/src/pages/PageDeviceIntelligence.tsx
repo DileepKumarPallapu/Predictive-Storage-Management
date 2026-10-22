@@ -67,10 +67,10 @@ export const PageDeviceIntelligence: React.FC<Props> = ({ deviceId, onSelectDevi
   return (
     <div className="space-y-6">
       {/* Device Header and Selector */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel rounded-2xl p-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 titan-card rounded-lg p-5">
         <div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)] shadow-glow-vermilion">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent)] text-white flex items-center justify-center shadow-xs">
               <Cpu size={18} />
             </div>
             <span className="text-xs font-mono text-[var(--accent-primary)] uppercase font-semibold">
@@ -120,7 +120,7 @@ export const PageDeviceIntelligence: React.FC<Props> = ({ deviceId, onSelectDevi
           {/* Metrics & Risk Cards */}
           {risks && device && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="glass-panel rounded-2xl p-4 relative overflow-hidden group hover:border-[var(--status-warning)]/40 transition-all">
+              <div className="titan-card rounded-lg p-4 relative overflow-hidden group hover:border-[var(--status-warning)]/40 transition-all">
                 <div className="text-xs text-[var(--text-secondary)] font-medium flex items-center justify-between">
                   <span>{isGuided ? 'Runway Left' : 'Estimated Reserve Runway'}</span>
                   <ContextualHelp
@@ -137,7 +137,7 @@ export const PageDeviceIntelligence: React.FC<Props> = ({ deviceId, onSelectDevi
                 </div>
               </div>
 
-              <div className="glass-panel rounded-2xl p-4 relative overflow-hidden group hover:border-[var(--status-critical)]/40 transition-all">
+              <div className="titan-card rounded-lg p-4 relative overflow-hidden group hover:border-[var(--status-critical)]/40 transition-all">
                 <div className="text-xs text-[var(--text-secondary)] font-medium flex items-center justify-between">
                   <span>{isGuided ? 'Chance of Running Short (72h)' : 'Capacity Breach Probability (72h)'}</span>
                   <ContextualHelp
@@ -154,7 +154,7 @@ export const PageDeviceIntelligence: React.FC<Props> = ({ deviceId, onSelectDevi
                 </div>
               </div>
 
-              <div className="glass-panel rounded-2xl p-4 relative overflow-hidden group hover:border-[var(--accent-primary)]/40 transition-all">
+              <div className="titan-card rounded-lg p-4 relative overflow-hidden group hover:border-[var(--accent-primary)]/40 transition-all">
                 <div className="text-xs text-[var(--text-secondary)] font-medium flex items-center justify-between">
                   <span>{isGuided ? 'Response Delay (P95)' : 'P95 Tail Latency Risk'}</span>
                   <ContextualHelp
@@ -171,7 +171,7 @@ export const PageDeviceIntelligence: React.FC<Props> = ({ deviceId, onSelectDevi
                 </div>
               </div>
 
-              <div className="glass-panel rounded-2xl p-4 relative overflow-hidden group hover:border-[var(--status-success)]/40 transition-all">
+              <div className="titan-card rounded-lg p-4 relative overflow-hidden group hover:border-[var(--status-success)]/40 transition-all">
                 <div className="text-xs text-[var(--text-secondary)] font-medium flex items-center justify-between">
                   <span>{isGuided ? 'Pool Health Status' : 'Risk Classification'}</span>
                   <ContextualHelp
@@ -213,8 +213,8 @@ export const PageDeviceIntelligence: React.FC<Props> = ({ deviceId, onSelectDevi
                     onClick={() => setTargetMetric(m.id)}
                     className={`px-3 py-1 rounded-lg text-xs font-medium border transition-all ${
                       targetMetric === m.id
-                        ? 'bg-[var(--accent-primary)]/15 border-[var(--accent-primary)] text-[var(--accent-primary)] font-bold shadow-glow-vermilion'
-                        : 'glass-panel text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
+                        ? 'bg-[var(--accent-primary)]/15 border-[var(--accent-primary)] text-[var(--accent-primary)] font-bold shadow-xs'
+                        : 'titan-card text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
                     }`}
                   >
                     {m.label}
@@ -231,7 +231,7 @@ export const PageDeviceIntelligence: React.FC<Props> = ({ deviceId, onSelectDevi
                     className={`px-2.5 py-1 rounded-lg text-xs font-mono border transition-all ${
                       horizonHours === h
                         ? 'bg-[var(--accent-tertiary)]/20 border-[var(--accent-tertiary)] text-[var(--accent-tertiary)] font-semibold shadow-sm'
-                        : 'glass-panel text-[var(--text-secondary)] border-[var(--border-subtle)]'
+                        : 'titan-card text-[var(--text-secondary)] border-[var(--border-subtle)]'
                     }`}
                   >
                     +{h}h
@@ -258,7 +258,7 @@ export const PageDeviceIntelligence: React.FC<Props> = ({ deviceId, onSelectDevi
 
           {/* Risk Factors Breakdown */}
           {risks && (
-            <div className="glass-panel rounded-2xl p-5">
+            <div className="titan-card rounded-lg p-5">
               <h3 className="text-sm font-bold text-[var(--text-primary)] mb-3">
                 {isGuided ? 'Key Factors Affecting This Pool' : 'Primary Risk Contributors'}
               </h3>

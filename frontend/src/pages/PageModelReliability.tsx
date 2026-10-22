@@ -154,7 +154,7 @@ export const PageModelReliability: React.FC = () => {
       </div>
 
       {actionMessage && (
-        <div className="glass-panel p-3.5 rounded-xl text-xs font-mono text-[var(--status-success)] border border-[var(--status-success)]/40 flex items-center gap-2">
+        <div className="titan-card p-3.5 rounded-xl text-xs font-mono text-[var(--status-success)] border border-[var(--status-success)]/40 flex items-center gap-2">
           <CheckCircle2 size={16} />
           <span>{actionMessage}</span>
         </div>
@@ -162,7 +162,7 @@ export const PageModelReliability: React.FC = () => {
 
       {/* Sentinel Actionable Trust Status Card */}
       {sentinel && (
-        <div className="glass-panel rounded-2xl p-5 border border-[var(--border-subtle)] relative overflow-hidden">
+        <div className="titan-card rounded-lg p-5 border border-[var(--border-subtle)] relative overflow-hidden">
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
             <div className="space-y-2">
               <div className="flex items-center gap-3">
@@ -216,7 +216,7 @@ export const PageModelReliability: React.FC = () => {
       {sentinel && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Card 1: Workload Data Drift */}
-          <div className="glass-panel rounded-2xl p-4.5 space-y-3">
+          <div className="titan-card rounded-lg p-4.5 space-y-3">
             <div className="flex items-center justify-between text-xs font-mono">
               <span className="text-[var(--text-secondary)] font-medium">1. Workload Data Drift</span>
               <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${
@@ -241,7 +241,7 @@ export const PageModelReliability: React.FC = () => {
           </div>
 
           {/* Card 2: Prediction Drift */}
-          <div className="glass-panel rounded-2xl p-4.5 space-y-3">
+          <div className="titan-card rounded-lg p-4.5 space-y-3">
             <div className="flex items-center justify-between text-xs font-mono">
               <span className="text-[var(--text-secondary)] font-medium">2. Prediction Drift</span>
               <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${
@@ -266,7 +266,7 @@ export const PageModelReliability: React.FC = () => {
           </div>
 
           {/* Card 3: Evaluated Performance Deterioration */}
-          <div className="glass-panel rounded-2xl p-4.5 space-y-3">
+          <div className="titan-card rounded-lg p-4.5 space-y-3">
             <div className="flex items-center justify-between text-xs font-mono">
               <span className="text-[var(--text-secondary)] font-medium">3. Performance Deterioration</span>
               <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${
@@ -294,7 +294,7 @@ export const PageModelReliability: React.FC = () => {
 
       {/* Candidate Holdout Retrain Decision Result */}
       {candidateResult && (
-        <div className="glass-panel rounded-2xl p-5 border border-[var(--accent-primary)]/40 space-y-3">
+        <div className="titan-card rounded-lg p-5 border border-[var(--accent-primary)]/40 space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Layers size={18} className="text-[var(--accent-primary)]" />
@@ -332,7 +332,7 @@ export const PageModelReliability: React.FC = () => {
 
       {/* Monitored Workload Input Metrics Drift Table */}
       {sentinel && (
-        <div className="glass-panel rounded-2xl p-5 space-y-4">
+        <div className="titan-card rounded-lg p-5 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Activity size={18} className="text-[var(--accent-primary)]" />
@@ -390,7 +390,7 @@ export const PageModelReliability: React.FC = () => {
 
       {/* Forecast vs Actual Realization Table */}
       {sentinel && sentinel.performance_reliability.forecast_vs_actual_samples.length > 0 && (
-        <div className="glass-panel rounded-2xl p-5 space-y-4">
+        <div className="titan-card rounded-lg p-5 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <TrendingDown size={18} className="text-[var(--status-success)]" />
@@ -440,7 +440,7 @@ export const PageModelReliability: React.FC = () => {
 
       {/* Historical Drift Timeline */}
       {history.length > 0 && (
-        <div className="glass-panel rounded-2xl p-5 space-y-4">
+        <div className="titan-card rounded-lg p-5 space-y-4">
           <div className="flex items-center gap-2">
             <History size={18} className="text-[var(--text-muted)]" />
             <h3 className="text-sm font-bold text-[var(--text-primary)]">

@@ -64,7 +64,7 @@ export const PageAlertsIncidents: React.FC = () => {
       </div>
 
       {/* Filter Bar */}
-      <div className="glass-panel rounded-2xl p-3.5 flex flex-wrap gap-4 items-center">
+      <div className="titan-card rounded-lg p-3.5 flex flex-wrap gap-4 items-center">
         <div className="flex items-center gap-2 text-xs">
           <Filter size={14} className="text-[var(--text-muted)]" />
           <span className="text-[var(--text-secondary)] font-medium">Category:</span>
@@ -109,7 +109,7 @@ export const PageAlertsIncidents: React.FC = () => {
           {alerts.map((a) => (
             <div
               key={a.id}
-              className={`glass-panel rounded-2xl p-5 transition-all ${
+              className={`titan-card rounded-lg p-5 transition-all ${
                 a.status === 'ACTIVE'
                   ? a.severity === 'CRITICAL'
                     ? 'border-[var(--status-critical)]/50 shadow-[0_0_12px_rgba(255,120,141,0.15)]'

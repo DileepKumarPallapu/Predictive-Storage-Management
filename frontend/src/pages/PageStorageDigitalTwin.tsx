@@ -111,7 +111,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)] shadow-glow-vermilion">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent)] text-white flex items-center justify-center shadow-xs">
               <Layers size={18} />
             </div>
             <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
@@ -134,7 +134,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
       {/* Control Sandbox Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left: Configuration Panel */}
-        <div className="glass-panel rounded-2xl p-5 space-y-4">
+        <div className="titan-card rounded-lg p-5 space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)]">
             <h3 className="text-sm font-bold text-[var(--text-primary)]">
               {isGuided ? 'Choose Action to Simulate' : 'Intervention Parameters'}
@@ -275,7 +275,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
         <div className="lg:col-span-2 space-y-4">
           {simulation && (
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-              <div className="glass-panel rounded-xl p-3.5 text-xs">
+              <div className="titan-card rounded-xl p-3.5 text-xs">
                 <div className="text-[var(--text-secondary)] flex items-center gap-1.5 font-medium">
                   <Clock size={13} className="text-[var(--accent-primary)]" /> Estimated Duration
                 </div>
@@ -286,7 +286,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
                 </div>
               </div>
 
-              <div className="glass-panel rounded-xl p-3.5 text-xs">
+              <div className="titan-card rounded-xl p-3.5 text-xs">
                 <div className="text-[var(--text-secondary)] flex items-center gap-1.5 font-medium">
                   <DollarSign size={13} className="text-[var(--status-success)]" /> Estimated Cost
                 </div>
@@ -295,7 +295,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
                 </div>
               </div>
 
-              <div className="glass-panel rounded-xl p-3.5 text-xs">
+              <div className="titan-card rounded-xl p-3.5 text-xs">
                 <div className="text-[var(--text-secondary)] flex items-center gap-1.5 font-medium">
                   <Zap size={13} className="text-[var(--status-warning)]" /> Contention Penalty
                 </div>
@@ -304,7 +304,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
                 </div>
               </div>
 
-              <div className="glass-panel rounded-xl p-3.5 text-xs">
+              <div className="titan-card rounded-xl p-3.5 text-xs">
                 <div className="text-[var(--text-secondary)] flex items-center gap-1.5 font-medium">
                   <ShieldAlert size={13} className="text-[var(--text-muted)]" /> Safety Envelope
                 </div>
@@ -325,7 +325,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
 
           {/* Hard Safety Envelope Violations Alert */}
           {simulation && !simulation.safety_envelope_passed && (
-            <div className="bg-[var(--status-critical)]/10 border border-[var(--status-critical)]/30 rounded-2xl p-4 text-xs text-[var(--status-critical)] space-y-1.5">
+            <div className="bg-[var(--status-critical)]/10 border border-[var(--status-critical)]/30 rounded-lg p-4 text-xs text-[var(--status-critical)] space-y-1.5">
               <div className="font-bold flex items-center gap-2">
                 <ShieldAlert size={16} /> Hard Safety Constraint Violated:
               </div>
@@ -354,7 +354,7 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
 
           {/* Documented Assumptions & Limitations */}
           {simulation && (
-            <div className="glass-panel rounded-2xl p-4 text-xs">
+            <div className="titan-card rounded-lg p-4 text-xs">
               <h4 className="font-semibold text-[var(--text-primary)] mb-2 flex items-center gap-1.5">
                 <CheckCircle2 size={14} className="text-[var(--accent-primary)]" /> Simulation Physics & Stated Assumptions:
               </h4>
