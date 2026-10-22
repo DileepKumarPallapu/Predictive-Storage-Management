@@ -95,7 +95,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       </div>
 
       {/* CENTER: Search Bar + Intelligently Grouped Data Source Environment */}
-      <div className="hidden lg:flex items-center gap-2 shrink min-w-0 justify-center">
+      <div className="hidden sm:flex items-center gap-2 shrink min-w-0 justify-center">
         {/* Universal Command Search (Desktop full bar) */}
         <button
           onClick={onOpenSearch}

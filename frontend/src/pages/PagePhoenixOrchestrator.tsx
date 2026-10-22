@@ -202,12 +202,11 @@ export const PagePhoenixOrchestrator: React.FC = () => {
     }
   };
 
-  const handleVerifyRecovery = async (outcomeOverride?: string) => {
+  const handleVerifyRecovery = async () => {
     if (!selectedIncident) return;
     setActionLoading(true);
     try {
       const res = await api.verifyPhoenixRecovery(selectedIncident.id, {
-        force_mock_outcome: outcomeOverride,
         observation_window_hours: 24.0,
       });
       setMessage({
@@ -1044,29 +1043,16 @@ export const PagePhoenixOrchestrator: React.FC = () => {
                 <span className="font-mono text-[var(--text-primary)] font-bold">{selectedIncident?.title || 'None Selected'}</span>
               </div>
 
-              <div className="flex flex-wrap gap-3 pt-2">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2">
+                <p className="text-xs text-[var(--text-secondary)]">
+                  Evaluates target volume post-execution telemetry against SLA limits and residual risk boundaries without mock overrides.
+                </p>
                 <button
                   onClick={() => handleVerifyRecovery()}
                   disabled={actionLoading || !selectedIncident}
-                  className="px-4 py-2 rounded-lg bg-[var(--accent-primary)]/20 hover:bg-[var(--accent-primary)]/30 border border-[var(--accent-primary)]/40 text-[var(--accent-primary)] text-xs font-bold transition-all disabled:opacity-50"
+                  className="px-4 py-2 rounded-lg bg-[var(--accent)] text-white text-xs font-bold transition-all disabled:opacity-50 shrink-0 shadow-xs hover:bg-[var(--accent-hover)]"
                 >
                   Verify Post-Action Telemetry Window
-                </button>
-
-                <button
-                  onClick={() => handleVerifyRecovery('RECOVERY_SATISFIED')}
-                  disabled={actionLoading || !selectedIncident}
-                  className="px-4 py-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-bold transition-all disabled:opacity-50"
-                >
-                  Simulate Verification Success (RESOLVED)
-                </button>
-
-                <button
-                  onClick={() => handleVerifyRecovery('UNSUCCESSFUL')}
-                  disabled={actionLoading || !selectedIncident}
-                  className="px-4 py-2 rounded-lg bg-[var(--status-critical)]/20 hover:bg-[var(--status-critical)]/30 border border-[var(--status-critical)]/40 text-[var(--status-critical)] text-xs font-bold transition-all disabled:opacity-50"
-                >
-                  Simulate Verification Failure (FAILED)
                 </button>
               </div>
             </div>
