@@ -1,4 +1,5 @@
 import React from 'react';
+import { AegisstorBrand } from './AegisstorBrand';
 import {
   Activity,
   HardDrive,
@@ -219,10 +220,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const sidebarContent = (
     <div className="flex flex-col h-full justify-between">
-      {/* Mobile Drawer Header */}
-      {mobileOpen && (
-        <div className="p-3 border-b border-[var(--border)] flex items-center justify-between">
-          <span className="font-bold text-sm text-[var(--text-primary)]">Navigation Menu</span>
+      {/* Permanent Far Top-Left Brand Position (64px height to match global top bar) */}
+      <div className={`h-16 flex items-center border-b border-[var(--border)] shrink-0 px-4 ${collapsed ? 'justify-center px-2' : 'justify-between'}`}>
+        <AegisstorBrand collapsed={collapsed} />
+        {mobileOpen && (
           <button
             onClick={onCloseMobile}
             className="p-1 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
@@ -230,8 +231,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
           >
             <X size={18} />
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Navigation Scrollable Area */}
       <div className="flex-1 overflow-y-auto py-3 px-2 space-y-4 pb-12">

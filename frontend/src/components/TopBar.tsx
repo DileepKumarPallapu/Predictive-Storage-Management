@@ -51,7 +51,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   return (
     <header className="h-16 bg-[var(--surface)] border-b border-[var(--border)] px-4 sm:px-6 flex items-center justify-between text-xs select-none sticky top-0 z-30 transition-colors gap-2">
-      {/* LEFT: Mobile toggle, Brand Mark & Context */}
+      {/* LEFT: Mobile toggle & Workspace Breadcrumb Context */}
       <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
         {onToggleMobileMenu && (
           <button
@@ -65,35 +65,13 @@ export const TopBar: React.FC<TopBarProps> = ({
           </button>
         )}
 
-        {/* Aurora Spectrum Brand Identity */}
-        <div className="flex items-center gap-3 shrink-0">
-          <div
-            className="w-8 h-8 rounded-lg text-white flex items-center justify-center shrink-0 transition-transform hover:scale-105"
-            style={{ background: 'var(--gradient-aurora)', boxShadow: '0 2px 10px -2px rgba(87, 86, 232, 0.45)' }}
-          >
-            {/* Storage Resilience Geometric Vault Prism */}
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-white">
-              <rect x="3" y="4" width="18" height="6" rx="1.5" />
-              <rect x="3" y="14" width="18" height="6" rx="1.5" />
-              <circle cx="7" cy="7" r="1" fill="currentColor" stroke="none" />
-              <circle cx="7" cy="17" r="1" fill="currentColor" stroke="none" />
-              <path d="M14 7h3" stroke="currentColor" strokeWidth="1.8" />
-              <path d="M14 17h3" stroke="currentColor" strokeWidth="1.8" />
-            </svg>
-          </div>
-          <div className="flex flex-col shrink-0">
-            <span className="font-extrabold tracking-tight text-sm font-display text-[var(--text-primary)] leading-none whitespace-nowrap">
-              AEGIS<span className="text-gradient-aurora">STOR</span>
-            </span>
-            <span className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider leading-tight mt-0.5 whitespace-nowrap hidden sm:inline">
-              RESILIENCE INTELLIGENCE
-            </span>
-          </div>
-        </div>
-
-        {/* Context Separator & Page Label */}
-        <div className="hidden 2xl:flex items-center gap-2 text-[var(--text-muted)] text-[12px] pl-3 border-l border-[var(--border)] shrink-0">
-          <span className="text-[var(--text-secondary)] font-medium whitespace-nowrap">{currentPageLabel}</span>
+        {/* Operational Workspace Context (No duplicate logo) */}
+        <div className="flex items-center gap-2 text-xs font-medium">
+          <span className="text-[var(--text-muted)] font-mono text-[11px] hidden md:inline">Storage Operations</span>
+          <ChevronRight size={13} className="text-[var(--text-muted)] hidden md:inline" />
+          <span className="text-[var(--text-primary)] font-semibold text-xs whitespace-nowrap">
+            {currentPageLabel}
+          </span>
         </div>
       </div>
 

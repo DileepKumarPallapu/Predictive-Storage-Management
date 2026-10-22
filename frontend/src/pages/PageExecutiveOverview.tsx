@@ -106,7 +106,7 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-[var(--border)]">
         <div>
           <div className="flex flex-wrap items-center gap-2.5">
-            <h1 className="text-xl sm:text-2xl font-bold text-[var(--text-primary)] tracking-tight">
+            <h1 className="font-editorial text-2xl sm:text-3xl font-bold text-[var(--text-primary)] tracking-tight">
               {isGuided ? 'Storage Health & Capacity Overview' : 'Storage Resilience & Capacity Intelligence'}
             </h1>
             <span
@@ -221,12 +221,12 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
       {/* SECTION C: 4 Primary Metrics & 2 Secondary Health Indicators */}
       {overview && (
         <div className="space-y-3">
-          {/* 4 Primary Key Metrics */}
+          {/* 4 Primary Key Metrics — Twain-Inspired Pastel Surfaces */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Primary 1: Storage Utilization */}
-            <div className="titan-card p-4 flex flex-col justify-between">
+            {/* Primary 1: Storage Utilization (Mint Surface) */}
+            <div className="card-pastel-mint p-4.5 flex flex-col justify-between">
               <div>
-                <div className="text-xs text-[var(--text-muted)] font-medium flex items-center justify-between">
+                <div className="text-xs font-semibold flex items-center justify-between opacity-85">
                   <span>{isGuided ? 'Storage Utilization' : 'Fleet Utilization'}</span>
                   <ContextualHelp
                     title="Storage Utilization"
@@ -234,27 +234,27 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
                     technicalDetails="Aggregated bytes_used / bytes_total across NVMe, SAS, and Cold Archive."
                   />
                 </div>
-                <div className="text-2xl font-bold font-mono text-[var(--text-primary)] mt-1.5 tabular-nums">
+                <div className="text-2xl font-bold font-mono mt-2 tabular-nums">
                   {overview.capacity_utilization_pct.toFixed(1)}%
                 </div>
-                <div className="w-full bg-[var(--surface-subtle)] h-1.5 rounded-full overflow-hidden mt-2 border border-[var(--border)]">
+                <div className="w-full bg-black/10 dark:bg-white/10 h-1.5 rounded-full overflow-hidden mt-2.5">
                   <div
                     className={`h-full rounded-full transition-all ${
-                      overview.capacity_utilization_pct > 85 ? 'bg-[var(--critical)]' : 'bg-[var(--accent)]'
+                      overview.capacity_utilization_pct > 85 ? 'bg-[var(--status-critical)]' : 'bg-current'
                     }`}
                     style={{ width: `${Math.min(100, overview.capacity_utilization_pct)}%` }}
                   />
                 </div>
               </div>
-              <div className="text-[11px] text-[var(--text-muted)] font-mono mt-3">
+              <div className="text-[11px] font-mono mt-3 opacity-80">
                 {formatTB(overview.total_used_bytes)} used / {formatTB(overview.total_capacity_bytes)} total
               </div>
             </div>
 
-            {/* Primary 2: Available Capacity */}
-            <div className="titan-card p-4 flex flex-col justify-between">
+            {/* Primary 2: Available Capacity (Lavender Surface) */}
+            <div className="card-pastel-lavender p-4.5 flex flex-col justify-between">
               <div>
-                <div className="text-xs text-[var(--text-muted)] font-medium flex items-center justify-between">
+                <div className="text-xs font-semibold flex items-center justify-between opacity-85">
                   <span>{isGuided ? 'Available Capacity' : 'Available Headroom'}</span>
                   <ContextualHelp
                     title="Available Headroom"
@@ -262,23 +262,23 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
                     technicalDetails="Unallocated block storage bytes reported by storage controller."
                   />
                 </div>
-                <div className="text-2xl font-bold font-mono text-[var(--success)] mt-1.5 tabular-nums">
+                <div className="text-2xl font-bold font-mono mt-2 tabular-nums">
                   {formatTB(overview.total_free_bytes)}
                 </div>
-                <div className="text-[11px] text-[var(--text-secondary)] mt-2">
+                <div className="text-[11px] mt-2 opacity-80">
                   Unallocated headroom
                 </div>
               </div>
-              <div className="text-[11px] text-[var(--success)] font-medium flex items-center gap-1.5 mt-3">
+              <div className="text-[11px] font-semibold flex items-center gap-1.5 mt-3 opacity-90">
                 <CheckCircle2 size={13} />
                 <span>Ready for writes</span>
               </div>
             </div>
 
-            {/* Primary 3: Estimated Reserve Runway */}
-            <div className="titan-card p-4 flex flex-col justify-between">
+            {/* Primary 3: Estimated Reserve Runway (Powder Blue Surface) */}
+            <div className="card-pastel-blue p-4.5 flex flex-col justify-between">
               <div>
-                <div className="text-xs text-[var(--text-muted)] font-medium flex items-center justify-between">
+                <div className="text-xs font-semibold flex items-center justify-between opacity-85">
                   <span>{isGuided ? 'Estimated Runway' : 'Shortest Reserve Runway'}</span>
                   <ContextualHelp
                     title="Reserve Runway"
@@ -286,23 +286,23 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
                     technicalDetails="Derived from LightGBM median forecast crossing the 90% hard threshold."
                   />
                 </div>
-                <div className="text-2xl font-bold font-mono text-[var(--warning)] mt-1.5 tabular-nums">
+                <div className="text-2xl font-bold font-mono mt-2 tabular-nums">
                   ~{overview.estimated_reserve_runway_hours.toFixed(0)}h
                 </div>
-                <div className="text-[11px] text-[var(--text-secondary)] mt-2 truncate">
-                  Leading on <span className="font-mono text-[var(--text-primary)] font-semibold">{overview.highest_current_risk.device_id}</span>
+                <div className="text-[11px] mt-2 truncate opacity-80">
+                  Leading on <span className="font-mono font-bold">{overview.highest_current_risk.device_id}</span>
                 </div>
               </div>
-              <div className="text-[11px] text-[var(--text-muted)] font-medium flex items-center gap-1.5 mt-3">
-                <Clock size={13} className="text-[var(--warning)]" />
+              <div className="text-[11px] font-semibold flex items-center gap-1.5 mt-3 opacity-90">
+                <Clock size={13} />
                 <span>Proactive lead time</span>
               </div>
             </div>
 
-            {/* Primary 4: Storage Risk State */}
-            <div className="titan-card p-4 flex flex-col justify-between">
+            {/* Primary 4: Storage Risk State (Peach/Coral Surface) */}
+            <div className="card-pastel-peach p-4.5 flex flex-col justify-between">
               <div>
-                <div className="text-xs text-[var(--text-muted)] font-medium flex items-center justify-between">
+                <div className="text-xs font-semibold flex items-center justify-between opacity-85">
                   <span>{isGuided ? 'Risk State' : 'Fleet Risk State'}</span>
                   <ContextualHelp
                     title="Risk State Classification"
@@ -310,17 +310,17 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
                     technicalDetails="Calculates joint risk: P(Capacity > 90%) + P(P95 Latency > SLA)."
                   />
                 </div>
-                <div className="text-2xl font-bold font-mono mt-1.5">
-                  <span className={isCritical ? 'text-[var(--critical)]' : 'text-[var(--success)]'}>
+                <div className="text-2xl font-bold font-mono mt-2">
+                  <span className={isCritical ? 'text-[var(--status-critical)]' : 'text-current'}>
                     {overview.highest_current_risk.level}
                   </span>
                 </div>
-                <div className="text-[11px] text-[var(--text-secondary)] mt-2">
+                <div className="text-[11px] mt-2 opacity-80">
                   {overview.monitored_device_count} monitored storage pools
                 </div>
               </div>
-              <div className="text-[11px] text-[var(--text-muted)] font-medium flex items-center gap-1.5 mt-3">
-                <ShieldCheck size={13} className="text-[var(--text-muted)]" />
+              <div className="text-[11px] font-semibold flex items-center gap-1.5 mt-3 opacity-90">
+                <ShieldCheck size={13} />
                 <span>SLA limits active</span>
               </div>
             </div>
