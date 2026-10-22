@@ -2,88 +2,61 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root,
+.light-theme {
   color-scheme: light;
 
   /* ========================================================
-     AEGISSTOR TWAIN-INSPIRED AURORA PASTEL DESIGN SYSTEM
-     LIGHT THEME (WCAG 2.2 AA / AAA Certified)
+     AEGISSTOR ORIGINAL LIGHT THEME DESIGN SYSTEM
+     (WCAG 2.2 AA / AAA Certified)
      ======================================================== */
-  --app-background: #FBFAF8;      /* Twain warm off-white canvas */
-  --surface-primary: #FFFFFF;     /* Crisp white primary card surface */
-  --surface-secondary: #F1F0EE;   /* Warm neutral supporting surface */
-  --surface-tertiary: #E9E8E4;    /* Subtle inset panels & table headers */
-  --surface-elevated: #F1F0EE;
-  --surface-subtle: #E9E8E4;
+  --app-background: #F5F5F2;      /* Warm light gray canvas */
+  --surface-primary: #FFFFFF;     /* Pure white primary panels */
+  --surface-secondary: #F8F8F6;   /* Subtle off-white supporting panels */
+  --surface-tertiary: #F0F1EE;    /* Inset headers and contrast panels */
+  --surface-elevated: #FFFFFF;
+  --surface-subtle: #F8F8F6;
   --surface: #FFFFFF;
+  --bg-primary: #F5F5F2;
+  --bg-secondary: #F8F8F6;
+  --bg-tertiary: #F0F1EE;
+  --background: #F5F5F2;
 
-  --text-primary: #1D2935;        /* Deep ink charcoal for high contrast (>13:1) */
-  --text-secondary: #4F6071;      /* Refined editorial secondary text */
-  --text-muted: #718092;          /* Muted metadata, timestamps & units */
-  --text-disabled: #A1ABB8;
+  --text-primary: #242724;        /* Dark graphite (>13:1 contrast) */
+  --text-secondary: #555C56;      /* Readable muted gray */
+  --text-muted: #727971;          /* Metadata, timestamps & units */
+  --text-disabled: #A3A8A2;
 
-  --border-subtle: #E4E5E8;       /* Hairline subtle divider */
-  --border-strong: #CFD2D7;       /* Interactive and active borders */
-  --border-normal: #E4E5E8;
-  --border-visible: #CFD2D7;
-  --border: #E4E5E8;
+  --border-subtle: #DFE2DD;       /* Light, unobtrusive border */
+  --border-normal: #DFE2DD;
+  --border-strong: #C5C9C2;       /* Active / interactive borders */
+  --border-visible: #C5C9C2;
+  --border: #DFE2DD;
+  --border-highlight: #B82432;
 
-  /* Restored Twain Aurora Pastel Surface System (Light Mode) */
-  --pastel-mint-surface: #DDF5E5;
-  --pastel-mint-text: #254A36;
-  --pastel-mint-border: #B7E8C8;
-
-  --pastel-lavender-surface: #EAE9FC;
-  --pastel-lavender-text: #263D60;
-  --pastel-lavender-border: #D6D5F6;
-
-  --pastel-blue-surface: #E4F0FC;
-  --pastel-blue-text: #234969;
-  --pastel-blue-border: #C5DDF7;
-
-  --pastel-peach-surface: #FBE8DF;
-  --pastel-peach-text: #6E362B;
-  --pastel-peach-border: #F5CEBE;
-
-  --pastel-yellow-surface: #FBF0CF;
-  --pastel-yellow-text: #655020;
-  --pastel-yellow-border: #F4E0A0;
-
-  --pastel-periwinkle-surface: #E6E7FF;
-  --pastel-periwinkle-text: #383A78;
-  --pastel-periwinkle-border: #D0D2FE;
-
-  /* Brand Accents */
-  --brand-indigo: #7778EF;
-  --brand-periwinkle: #5B5CE5;
-  --brand-lavender: #9B99E9;
-  --brand-coral: #E76550;
-  --brand-pink: #F0718F;
-  --brand-mint: #2BAF82;
-  --brand-teal: #159F9A;
-  --brand-blue: #3B82F6;
+  /* Brand Accents — Restrained Crimson */
+  --brand-primary: #B82432;
+  --brand-hover: #981E2A;
+  --brand-soft: #F9E9EB;
 
   /* Semantic Action & Focus */
-  --accent: #5B5CE5;
-  --accent-hover: #4849D6;
-  --accent-pressed: #3A3BBF;
-  --accent-soft: rgba(91, 92, 229, 0.08);
-  --focus-ring: #5B5CE5;
+  --accent: #B82432;
+  --accent-hover: #981E2A;
+  --accent-pressed: #7C1621;
+  --accent-soft: #F9E9EB;
+  --accent-primary: #B82432;
+  --accent-primary-hover: #981E2A;
+  --accent-primary-pressed: #7C1621;
+  --accent-secondary: #555C56;
+  --accent-tertiary: #727971;
+  --focus-ring: #B82432;
 
-  /* Semantic Gradients */
-  --gradient-brand: linear-gradient(135deg, #7778EF 0%, #9B99E9 40%, #F0718F 80%, #E76550 100%);
-  --gradient-lavender-pink: linear-gradient(135deg, #EAE9FC 0%, #FBE8DF 100%);
-  --gradient-mint-blue: linear-gradient(135deg, #DDF5E5 0%, #E4F0FC 100%);
-  --gradient-peach-coral: linear-gradient(135deg, #FBE8DF 0%, #E76550 100%);
-  --gradient-cta: linear-gradient(135deg, #7778EF 0%, #5B5CE5 100%);
-  --gradient-aurora: linear-gradient(135deg, #7778EF 0%, #9B99E9 50%, #E76550 100%);
-
-  /* Semantic Status Tokens (Distinct from decorative pastel surfaces) */
-  --status-success: #15803D;
-  --status-warning: #B45309;
-  --status-critical: #DC2626;
-  --status-info: #2563EB;
-  --status-unknown: #718092;
+  /* Semantic Status Tokens */
+  --status-success: #22784D;
+  --status-warning: #94651A;
+  --status-critical: #C33F36;
+  --status-info: #205CA3;
+  --status-unknown: #727971;
 
   --success: var(--status-success);
   --warning: var(--status-warning);
@@ -92,24 +65,32 @@
   --info: var(--status-info);
 
   /* Button Tokens */
-  --btn-primary-bg: #5B5CE5;
+  --btn-primary-bg: #B82432;
   --btn-primary-text: #FFFFFF;
-  --btn-primary-hover: #4849D6;
-  --btn-primary-pressed: #3A3BBF;
+  --btn-primary-hover: #981E2A;
+  --btn-primary-pressed: #7C1621;
 
   --btn-secondary-bg: var(--surface-primary);
   --btn-secondary-text: var(--text-primary);
   --btn-secondary-border: var(--border-subtle);
   --btn-secondary-hover: var(--surface-secondary);
 
-  --surface-hover: rgba(91, 92, 229, 0.04);
-  --surface-active: rgba(91, 92, 229, 0.08);
+  --surface-hover: rgba(36, 39, 36, 0.04);
+  --surface-active: rgba(36, 39, 36, 0.08);
+
+  /* Semantic Gradients */
+  --gradient-brand: linear-gradient(135deg, #B82432 0%, #C33F36 100%);
+  --gradient-cta: linear-gradient(135deg, #B82432 0%, #981E2A 100%);
+  --gradient-lavender-pink: linear-gradient(135deg, #F8F8F6 0%, #F5F5F2 100%);
+  --gradient-mint-blue: linear-gradient(135deg, #F8F8F6 0%, #F5F5F2 100%);
+  --gradient-peach-coral: linear-gradient(135deg, #F8F8F6 0%, #F9E9EB 100%);
+  --gradient-aurora: linear-gradient(135deg, #B82432 0%, #C33F36 100%);
 
   /* Chart Analytical Palette */
-  --chart-observation: #4F6071;
-  --chart-forecast: #5B5CE5;
-  --chart-alternative: #2BAF82;
-  --chart-secondary: #9B99E9;
+  --chart-observation: #555C56;
+  --chart-forecast: #B82432;
+  --chart-alternative: #22784D;
+  --chart-secondary: #94651A;
   --chart-success: var(--status-success);
   --chart-warning: var(--status-warning);
   --chart-critical: var(--status-critical);
@@ -118,101 +99,88 @@
   --chart-tertiary: var(--chart-secondary);
   --chart-neutral: var(--chart-observation);
 
-  --grid-line: rgba(29, 41, 53, 0.05);
+  --grid-line: rgba(36, 39, 36, 0.08);
 
   /* Motion Tokens */
   --motion-instant: 120ms;
   --motion-snappy: 180ms;
   --motion-smooth: 240ms;
   --motion-ease: cubic-bezier(0.16, 1, 0.3, 1);
-}
 
-.light-theme {
-  color-scheme: light;
+  /* Fallback aliases for any legacy card classes */
+  --pastel-mint-surface: #FFFFFF;
+  --pastel-mint-text: var(--text-primary);
+  --pastel-mint-border: var(--border-subtle);
+  --pastel-lavender-surface: #FFFFFF;
+  --pastel-lavender-text: var(--text-primary);
+  --pastel-lavender-border: var(--border-subtle);
+  --pastel-blue-surface: #FFFFFF;
+  --pastel-blue-text: var(--text-primary);
+  --pastel-blue-border: var(--border-subtle);
+  --pastel-peach-surface: #FFFFFF;
+  --pastel-peach-text: var(--text-primary);
+  --pastel-peach-border: var(--border-subtle);
+  --pastel-yellow-surface: #FFFFFF;
+  --pastel-yellow-text: var(--text-primary);
+  --pastel-yellow-border: var(--border-subtle);
+  --pastel-periwinkle-surface: #FFFFFF;
+  --pastel-periwinkle-text: var(--text-primary);
+  --pastel-periwinkle-border: var(--border-subtle);
 }
 
 .dark {
   color-scheme: dark;
 
   /* ========================================================
-     AEGISSTOR TWAIN-INSPIRED AURORA PASTEL DESIGN SYSTEM
-     DARK THEME (Deep Ink & Slate Surfaces)
+     AEGISSTOR OPTIONAL DARK THEME (Deep Charcoal & Slate)
      ======================================================== */
-  --app-background: #0D111A;      /* Deep ink canvas */
-  --surface-primary: #141A26;     /* Elevated slate card */
-  --surface-secondary: #1D2536;   /* Secondary card surface */
-  --surface-tertiary: #263248;    /* Inset table headers & panels */
-  --surface-elevated: #1D2536;
-  --surface-subtle: #263248;
-  --surface: #141A26;
+  --app-background: #141615;      /* Deep charcoal canvas */
+  --surface-primary: #1C1F1D;     /* Dark slate card surface */
+  --surface-secondary: #232724;   /* Secondary card surface */
+  --surface-tertiary: #2B302C;    /* Inset table headers & panels */
+  --surface-elevated: #232724;
+  --surface-subtle: #1C1F1D;
+  --surface: #1C1F1D;
+  --bg-primary: #141615;
+  --bg-secondary: #1C1F1D;
+  --bg-tertiary: #232724;
+  --background: #141615;
 
-  --text-primary: #F4F6FB;        /* High-contrast luminous text (>14:1) */
-  --text-secondary: #BAC5D6;      /* Soft cool secondary text */
-  --text-muted: #7E8C9F;          /* Readable muted metadata */
-  --text-disabled: #4B5565;
+  --text-primary: #ECEEEB;        /* High-contrast luminous text (>14:1) */
+  --text-secondary: #B5BAB3;      /* Soft secondary text */
+  --text-muted: #828880;          /* Readable muted metadata */
+  --text-disabled: #545A52;
 
-  --border-subtle: #263248;       /* Subtle dark border */
-  --border-strong: #3D4D6B;       /* Active border */
-  --border-normal: #263248;
-  --border-visible: #3D4D6B;
-  --border: #263248;
-
-  /* Coordinated Dark Pastel Card Tokens (Luminous tints with high contrast) */
-  --pastel-mint-surface: #13271D;
-  --pastel-mint-text: #86EFAC;
-  --pastel-mint-border: #204834;
-
-  --pastel-lavender-surface: #1A1C33;
-  --pastel-lavender-text: #C7D2FE;
-  --pastel-lavender-border: #2E3259;
-
-  --pastel-blue-surface: #13253B;
-  --pastel-blue-text: #93C5FD;
-  --pastel-blue-border: #1F4063;
-
-  --pastel-peach-surface: #331D19;
-  --pastel-peach-text: #FCA5A5;
-  --pastel-peach-border: #562820;
-
-  --pastel-yellow-surface: #302810;
-  --pastel-yellow-text: #FDE047;
-  --pastel-yellow-border: #544416;
-
-  --pastel-periwinkle-surface: #181E3B;
-  --pastel-periwinkle-text: #A5B4FC;
-  --pastel-periwinkle-border: #2D3768;
+  --border-subtle: #2E332F;       /* Subtle dark border */
+  --border-strong: #404741;       /* Active border */
+  --border-normal: #2E332F;
+  --border-visible: #404741;
+  --border: #2E332F;
+  --border-highlight: #E04655;
 
   /* Brand Accents */
-  --brand-indigo: #818CF8;
-  --brand-periwinkle: #A5B4FC;
-  --brand-lavender: #C4B5FD;
-  --brand-coral: #F87171;
-  --brand-pink: #F472B6;
-  --brand-mint: #34D399;
-  --brand-teal: #2DD4BF;
-  --brand-blue: #60A5FA;
+  --brand-primary: #E04655;
+  --brand-hover: #F2616F;
+  --brand-soft: rgba(224, 70, 85, 0.15);
 
   /* Semantic Action & Focus */
-  --accent: #818CF8;
-  --accent-hover: #9CA3AF;
-  --accent-pressed: #6366F1;
-  --accent-soft: rgba(129, 140, 248, 0.12);
-  --focus-ring: #818CF8;
-
-  /* Semantic Gradients */
-  --gradient-brand: linear-gradient(135deg, #818CF8 0%, #C4B5FD 45%, #F472B6 80%, #F87171 100%);
-  --gradient-lavender-pink: linear-gradient(135deg, #1A1C33 0%, #2E1815 100%);
-  --gradient-mint-blue: linear-gradient(135deg, #13271D 0%, #132236 100%);
-  --gradient-peach-coral: linear-gradient(135deg, #2E1815 0%, #F87171 100%);
-  --gradient-cta: linear-gradient(135deg, #818CF8 0%, #6366F1 100%);
-  --gradient-aurora: linear-gradient(135deg, #818CF8 0%, #C4B5FD 50%, #F87171 100%);
+  --accent: #E04655;
+  --accent-hover: #F2616F;
+  --accent-pressed: #B82432;
+  --accent-soft: rgba(224, 70, 85, 0.15);
+  --accent-primary: #E04655;
+  --accent-primary-hover: #F2616F;
+  --accent-primary-pressed: #B82432;
+  --accent-secondary: #B5BAB3;
+  --accent-tertiary: #828880;
+  --focus-ring: #E04655;
 
   /* Status Tokens */
-  --status-success: #22C55E;
-  --status-warning: #F59E0B;
-  --status-critical: #EF4444;
-  --status-info: #38BDF8;
-  --status-unknown: #8391A7;
+  --status-success: #38A169;
+  --status-warning: #D69E2E;
+  --status-critical: #E53E3E;
+  --status-info: #4299E1;
+  --status-unknown: #828880;
 
   --success: var(--status-success);
   --warning: var(--status-warning);
@@ -221,24 +189,32 @@
   --info: var(--status-info);
 
   /* Button Tokens */
-  --btn-primary-bg: #818CF8;
-  --btn-primary-text: #0D111A;
-  --btn-primary-hover: #9CA3AF;
-  --btn-primary-pressed: #6366F1;
+  --btn-primary-bg: #E04655;
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-hover: #F2616F;
+  --btn-primary-pressed: #B82432;
 
   --btn-secondary-bg: var(--surface-secondary);
   --btn-secondary-text: var(--text-primary);
   --btn-secondary-border: var(--border-subtle);
   --btn-secondary-hover: var(--surface-tertiary);
 
-  --surface-hover: rgba(129, 140, 248, 0.06);
-  --surface-active: rgba(129, 140, 248, 0.12);
+  --surface-hover: rgba(236, 238, 235, 0.05);
+  --surface-active: rgba(236, 238, 235, 0.09);
+
+  /* Semantic Gradients */
+  --gradient-brand: linear-gradient(135deg, #E04655 0%, #F2616F 100%);
+  --gradient-cta: linear-gradient(135deg, #E04655 0%, #B82432 100%);
+  --gradient-lavender-pink: linear-gradient(135deg, #232724 0%, #1C1F1D 100%);
+  --gradient-mint-blue: linear-gradient(135deg, #232724 0%, #1C1F1D 100%);
+  --gradient-peach-coral: linear-gradient(135deg, #232724 0%, #1C1F1D 100%);
+  --gradient-aurora: linear-gradient(135deg, #E04655 0%, #F2616F 100%);
 
   /* Chart Palette */
-  --chart-observation: #BAC5D6;
-  --chart-forecast: #818CF8;
-  --chart-alternative: #34D399;
-  --chart-secondary: #C4B5FD;
+  --chart-observation: #828880;
+  --chart-forecast: #E04655;
+  --chart-alternative: #38A169;
+  --chart-secondary: #D69E2E;
   --chart-success: var(--status-success);
   --chart-warning: var(--status-warning);
   --chart-critical: var(--status-critical);
@@ -247,7 +223,26 @@
   --chart-tertiary: var(--chart-secondary);
   --chart-neutral: var(--chart-observation);
 
-  --grid-line: rgba(244, 246, 251, 0.05);
+  --grid-line: rgba(236, 238, 235, 0.06);
+
+  --pastel-mint-surface: #1C1F1D;
+  --pastel-mint-text: var(--text-primary);
+  --pastel-mint-border: var(--border-subtle);
+  --pastel-lavender-surface: #1C1F1D;
+  --pastel-lavender-text: var(--text-primary);
+  --pastel-lavender-border: var(--border-subtle);
+  --pastel-blue-surface: #1C1F1D;
+  --pastel-blue-text: var(--text-primary);
+  --pastel-blue-border: var(--border-subtle);
+  --pastel-peach-surface: #1C1F1D;
+  --pastel-peach-text: var(--text-primary);
+  --pastel-peach-border: var(--border-subtle);
+  --pastel-yellow-surface: #1C1F1D;
+  --pastel-yellow-text: var(--text-primary);
+  --pastel-yellow-border: var(--border-subtle);
+  --pastel-periwinkle-surface: #1C1F1D;
+  --pastel-periwinkle-text: var(--text-primary);
+  --pastel-periwinkle-border: var(--border-subtle);
 }
 
 body {
@@ -255,7 +250,7 @@ body {
   padding: 0;
   background-color: var(--app-background);
   color: var(--text-primary);
-  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
@@ -274,10 +269,60 @@ html, body {
 }
 
 /* ========================================================
-   AURORA PASTEL COMPONENT SUITE
+   REBUILD THE KPI CARDS PROPERLY (Section 4)
    ======================================================== */
+.kpi-card {
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  padding: 20px;
+  background-color: var(--surface-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgba(36, 39, 36, 0.04), 0 1px 2px -1px rgba(36, 39, 36, 0.03);
+  transition: border-color var(--motion-snappy) var(--motion-ease),
+              box-shadow var(--motion-snappy) var(--motion-ease),
+              transform var(--motion-snappy) var(--motion-ease);
+}
 
-/* Surface Panels */
+.kpi-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 3px 8px -1px rgba(36, 39, 36, 0.06);
+}
+
+.kpi-card__content {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.kpi-card__value {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-size: 1.625rem;
+  line-height: 2rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi-card__footer {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding-top: 12px;
+  margin-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* ========================================================
+   SURFACE PANELS & CARDS
+   ======================================================== */
 .aurora-card,
 .titan-card,
 .glass-panel,
@@ -286,7 +331,7 @@ html, body {
   color: var(--text-primary);
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
-  box-shadow: 0 1px 3px 0 rgba(29, 41, 53, 0.04), 0 1px 2px -1px rgba(29, 41, 53, 0.03);
+  box-shadow: 0 1px 3px 0 rgba(36, 39, 36, 0.04), 0 1px 2px -1px rgba(36, 39, 36, 0.03);
   transition: border-color var(--motion-snappy) var(--motion-ease),
               box-shadow var(--motion-snappy) var(--motion-ease),
               transform var(--motion-snappy) var(--motion-ease);
@@ -299,89 +344,29 @@ html, body {
   border-color: var(--border-strong);
 }
 
-/* Dedicated Pastel Cards for Key Metric Displays */
-.card-pastel-mint {
-  background-color: var(--pastel-mint-surface);
-  color: var(--pastel-mint-text);
-  border: 1px solid var(--pastel-mint-border);
-  border-radius: 14px;
-  box-shadow: 0 2px 6px -1px rgba(37, 74, 54, 0.06);
-  transition: transform var(--motion-snappy) var(--motion-ease), box-shadow var(--motion-snappy) var(--motion-ease);
-}
-
-.card-pastel-mint:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px -2px rgba(37, 74, 54, 0.12);
-}
-
-.card-pastel-lavender {
-  background-color: var(--pastel-lavender-surface);
-  color: var(--pastel-lavender-text);
-  border: 1px solid var(--pastel-lavender-border);
-  border-radius: 14px;
-  box-shadow: 0 2px 6px -1px rgba(38, 61, 96, 0.06);
-  transition: transform var(--motion-snappy) var(--motion-ease), box-shadow var(--motion-snappy) var(--motion-ease);
-}
-
-.card-pastel-lavender:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px -2px rgba(38, 61, 96, 0.12);
-}
-
-.card-pastel-blue {
-  background-color: var(--pastel-blue-surface);
-  color: var(--pastel-blue-text);
-  border: 1px solid var(--pastel-blue-border);
-  border-radius: 14px;
-  box-shadow: 0 2px 6px -1px rgba(35, 73, 105, 0.06);
-  transition: transform var(--motion-snappy) var(--motion-ease), box-shadow var(--motion-snappy) var(--motion-ease);
-}
-
-.card-pastel-blue:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px -2px rgba(35, 73, 105, 0.12);
-}
-
-.card-pastel-peach {
-  background-color: var(--pastel-peach-surface);
-  color: var(--pastel-peach-text);
-  border: 1px solid var(--pastel-peach-border);
-  border-radius: 14px;
-  box-shadow: 0 2px 6px -1px rgba(110, 54, 43, 0.06);
-  transition: transform var(--motion-snappy) var(--motion-ease), box-shadow var(--motion-snappy) var(--motion-ease);
-}
-
-.card-pastel-peach:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px -2px rgba(110, 54, 43, 0.12);
-}
-
-.card-pastel-yellow {
-  background-color: var(--pastel-yellow-surface);
-  color: var(--pastel-yellow-text);
-  border: 1px solid var(--pastel-yellow-border);
-  border-radius: 14px;
-  box-shadow: 0 2px 6px -1px rgba(101, 80, 32, 0.06);
-  transition: transform var(--motion-snappy) var(--motion-ease), box-shadow var(--motion-snappy) var(--motion-ease);
-}
-
-.card-pastel-yellow:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px -2px rgba(101, 80, 32, 0.12);
-}
-
+/* Pastel Cards Compatibility Mapping (Clean surfaces) */
+.card-pastel-mint,
+.card-pastel-lavender,
+.card-pastel-blue,
+.card-pastel-peach,
+.card-pastel-yellow,
 .card-pastel-periwinkle {
-  background-color: var(--pastel-periwinkle-surface);
-  color: var(--pastel-periwinkle-text);
-  border: 1px solid var(--pastel-periwinkle-border);
-  border-radius: 14px;
-  box-shadow: 0 2px 6px -1px rgba(56, 58, 120, 0.06);
-  transition: transform var(--motion-snappy) var(--motion-ease), box-shadow var(--motion-snappy) var(--motion-ease);
+  background-color: var(--surface-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgba(36, 39, 36, 0.04);
+  transition: border-color var(--motion-snappy) var(--motion-ease), box-shadow var(--motion-snappy) var(--motion-ease);
 }
 
+.card-pastel-mint:hover,
+.card-pastel-lavender:hover,
+.card-pastel-blue:hover,
+.card-pastel-peach:hover,
+.card-pastel-yellow:hover,
 .card-pastel-periwinkle:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px -2px rgba(56, 58, 120, 0.12);
+  border-color: var(--border-strong);
+  box-shadow: 0 3px 8px -1px rgba(36, 39, 36, 0.06);
 }
 
 /* Elevated and Modal Surfaces */
@@ -393,7 +378,7 @@ html, body {
   color: var(--text-primary);
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
-  box-shadow: 0 4px 14px -2px rgba(29, 41, 53, 0.06);
+  box-shadow: 0 2px 6px -1px rgba(36, 39, 36, 0.05);
 }
 
 .aurora-modal,
@@ -405,10 +390,10 @@ html, body {
   color: var(--text-primary);
   border: 1px solid var(--border-strong);
   border-radius: 14px;
-  box-shadow: 0 20px 48px -4px rgba(29, 41, 53, 0.22);
+  box-shadow: 0 20px 48px -4px rgba(36, 39, 36, 0.16);
 }
 
-/* Twain Refined Buttons */
+/* Restrained Crimson Action Buttons */
 .btn-primary,
 .btn-aurora-primary,
 .btn-ember-primary {
@@ -423,7 +408,7 @@ html, body {
   border-radius: 8px;
   padding: 0.45rem 1rem;
   border: 1px solid transparent;
-  box-shadow: 0 2px 6px -1px rgba(91, 92, 229, 0.3);
+  box-shadow: 0 2px 6px -1px rgba(184, 36, 50, 0.25);
   transition: all var(--motion-snappy) var(--motion-ease);
   user-select: none;
   cursor: pointer;
@@ -432,9 +417,9 @@ html, body {
 .btn-primary:hover:not(:disabled),
 .btn-aurora-primary:hover:not(:disabled),
 .btn-ember-primary:hover:not(:disabled) {
-  box-shadow: 0 4px 14px -1px rgba(91, 92, 229, 0.4);
+  box-shadow: 0 4px 12px -1px rgba(184, 36, 50, 0.35);
   transform: translateY(-1px);
-  filter: brightness(1.04);
+  filter: brightness(1.05);
 }
 
 .btn-primary:active:not(:disabled),
@@ -457,7 +442,7 @@ html, body {
   font-weight: 500;
   border-radius: 8px;
   padding: 0.45rem 0.95rem;
-  box-shadow: 0 1px 2px 0 rgba(29, 41, 53, 0.03);
+  box-shadow: 0 1px 2px 0 rgba(36, 39, 36, 0.03);
   transition: all var(--motion-snappy) var(--motion-ease);
   cursor: pointer;
 }
@@ -489,12 +474,12 @@ input:focus, select:focus, textarea:focus {
 
 select option {
   background-color: #FFFFFF;
-  color: #1D2935;
+  color: #242724;
 }
 
 .dark select option {
-  background-color: #141A26;
-  color: #F4F6FB;
+  background-color: #1C1F1D;
+  color: #ECEEEB;
 }
 
 button:disabled,
@@ -511,13 +496,6 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text-primary);
   letter-spacing: -0.025em;
   font-weight: 700;
-}
-
-/* Editorial Serif Heading for Page Introductions */
-.font-editorial {
-  font-family: 'Newsreader', 'Fraunces', Georgia, serif;
-  letter-spacing: -0.02em;
-  font-weight: 600;
 }
 
 /* Tabular Numerics for Telemetry */
@@ -549,27 +527,6 @@ h1, h2, h3, h4, h5, h6 {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
-}
-
-/* Keyframe Animations */
-@keyframes twain-ambient-pulse {
-  0%, 100% { opacity: 0.85; transform: scale(1); }
-  50% { opacity: 0.65; transform: scale(1.02); }
-}
-
-@keyframes twain-shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-.animate-ambient-pulse {
-  animation: twain-ambient-pulse 6s ease-in-out infinite;
-}
-
-.skeleton-shimmer {
-  background: linear-gradient(90deg, var(--surface-secondary) 25%, var(--surface-tertiary) 50%, var(--surface-secondary) 75%);
-  background-size: 200% 100%;
-  animation: twain-shimmer 1.8s infinite;
 }
 
 /* Reduced Motion Support */

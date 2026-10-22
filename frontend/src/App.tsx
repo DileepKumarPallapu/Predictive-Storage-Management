@@ -58,6 +58,12 @@ const AppContent: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [isLightTheme, setIsLightTheme] = useState<boolean>(() => {
+    const v2Key = 'aegisstor_light_default_v2';
+    if (!localStorage.getItem(v2Key)) {
+      localStorage.setItem(v2Key, 'true');
+      localStorage.setItem('aegisstor_theme', 'light');
+      return true;
+    }
     return localStorage.getItem('aegisstor_theme') !== 'dark';
   });
   const { operatingMode, setOperatingMode, liveDiagnostics } = useOperatingMode();

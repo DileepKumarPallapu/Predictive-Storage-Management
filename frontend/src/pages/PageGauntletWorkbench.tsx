@@ -502,7 +502,7 @@ export const PageGauntletWorkbench: React.FC = () => {
                   {/* Output Metrics View */}
                   <div className="p-4 rounded-xl bg-[var(--surface-secondary)]/90 border border-[var(--border-subtle)] space-y-2">
                     <span className="text-xs font-semibold text-[var(--accent-primary)] block">Extracted Metrics:</span>
-                    <pre className="text-[11px] font-mono text-[var(--text-primary)] overflow-x-auto p-2 bg-black/40 rounded-lg">
+                    <pre className="text-[11px] font-mono text-[var(--text-primary)] overflow-x-auto p-2 bg-[var(--surface-primary)] border border-[var(--border-subtle)] rounded-lg">
                       {JSON.stringify(lastRunResult.results.metrics || lastRunResult.results, null, 2)}
                     </pre>
                   </div>
@@ -759,7 +759,7 @@ export const PageGauntletWorkbench: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="text-[11px] text-[var(--text-secondary)] bg-black/30 p-2.5 rounded-lg border border-[var(--border-subtle)]">
+                    <div className="text-[11px] text-[var(--text-secondary)] bg-[var(--surface-primary)] p-2.5 rounded-lg border border-[var(--border-subtle)]">
                       <strong className="text-[var(--text-primary)]">Explicit Caveat / Limitation: </strong>
                       {claim.known_limitations}
                     </div>
@@ -809,7 +809,7 @@ export const PageGauntletWorkbench: React.FC = () => {
 
                   <h4 className="text-sm font-semibold text-[var(--text-primary)]">{f.error_summary}</h4>
 
-                  <div className="p-3 rounded-lg bg-black/40 font-mono text-xs text-rose-300/90 border border-rose-500/20">
+                  <div className="p-3 rounded-lg bg-[var(--surface-secondary)] font-mono text-xs text-[var(--status-critical)] border border-[var(--status-critical)]/30">
                     {f.detailed_logs}
                   </div>
 

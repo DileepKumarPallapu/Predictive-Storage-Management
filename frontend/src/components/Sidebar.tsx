@@ -263,11 +263,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     }`}
                     title={collapsed ? item.label : undefined}
                   >
-                    {/* Active Aurora Accent Bar */}
+                    {/* Active Brand Accent Bar */}
                     {isActive && (
                       <span
-                        className="absolute left-0 top-1 bottom-1 w-1 rounded-r shadow-xs"
-                        style={{ background: 'linear-gradient(180deg, #7778EF 0%, #5B5CE5 100%)' }}
+                        className="absolute left-0 top-1 bottom-1 w-1 rounded-r shadow-xs bg-[var(--brand-primary)]"
                       />
                     )}
 

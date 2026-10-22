@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api, DeviceSummary, ForecastResponse, TelemetryResponse, RiskResponse } from '../api/client';
 import { ScientificForecastChart } from '../components/ScientificForecastChart';
 import { ContextualHelp } from '../components/ContextualHelp';
+import { KpiCard } from '../components/KpiCard';
 import { usePresentationMode } from '../context/PresentationModeContext';
 import { Cpu, Clock, AlertTriangle, Layers, TrendingUp, ShieldCheck, Activity } from 'lucide-react';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
@@ -120,80 +121,82 @@ export const PageDeviceIntelligence: React.FC<Props> = ({ deviceId, onSelectDevi
           {/* Metrics & Risk Cards */}
           {risks && device && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="titan-card rounded-lg p-4 relative overflow-hidden group hover:border-[var(--status-warning)]/40 transition-all">
-                <div className="text-xs text-[var(--text-secondary)] font-medium flex items-center justify-between">
-                  <span>{isGuided ? 'Runway Left' : 'Estimated Reserve Runway'}</span>
-                  <ContextualHelp
-                    title="Reserve Runway"
-                    simpleExplanation="Estimated hours until this pool crosses its critical 90% utilization threshold."
-                    technicalDetails="Linear and non-linear spline extrapolation from quantile forecast q50."
-                  />
-                </div>
-                <div className="text-2xl font-bold font-mono text-[var(--status-warning)] mt-1.5">
-                  ~{risks.runway_hours_estimate.toFixed(0)} hrs
-                </div>
-                <div className="text-[11px] text-[var(--text-muted)] font-mono mt-2">
-                  {isGuided ? 'Expected bounds:' : 'Confidence Band:'} [{risks.runway_hours_lower_bound}h — {risks.runway_hours_upper_bound}h]
-                </div>
-              </div>
+              <KpiCard
+                label={isGuided ? 'Runway Left' : 'Estimated Reserve Runway'}
+                value={`~${risks.runway_hours_estimate.toFixed(0)} hrs`}
+                help={{
+                  title: 'Reserve Runway',
+                  simpleExplanation: 'Estimated hours until this pool crosses its critical 90% utilization threshold.',
+                  technicalDetails: 'Linear and non-linear spline extrapolation from quantile forecast q50.',
+                }}
+                footer={
+                  <span className="text-[11px] text-[var(--text-muted)] font-mono">
+                    {isGuided ? 'Expected bounds:' : 'Confidence Band:'} [{risks.runway_hours_lower_bound}h — {risks.runway_hours_upper_bound}h]
+                  </span>
+                }
+              />
 
-              <div className="titan-card rounded-lg p-4 relative overflow-hidden group hover:border-[var(--status-critical)]/40 transition-all">
-                <div className="text-xs text-[var(--text-secondary)] font-medium flex items-center justify-between">
-                  <span>{isGuided ? 'Chance of Running Short (72h)' : 'Capacity Breach Probability (72h)'}</span>
-                  <ContextualHelp
-                    title="Breach Probability"
-                    simpleExplanation="Likelihood that organic storage demand will exceed the provisioned safety margin within 3 days."
-                    technicalDetails="P(Used_Bytes(t+72h) >= Critical_Limit) under empirical residual distribution."
-                  />
-                </div>
-                <div className="text-2xl font-bold font-mono text-[var(--status-critical)] mt-1.5">
-                  {(risks.capacity_breach_prob_72h * 100).toFixed(1)}%
-                </div>
-                <div className="text-[11px] text-[var(--text-muted)] font-mono mt-2">
-                  24h risk: {(risks.capacity_breach_prob_24h * 100).toFixed(1)}%
-                </div>
-              </div>
+              <KpiCard
+                label={isGuided ? 'Chance of Running Short (72h)' : 'Capacity Breach Probability (72h)'}
+                value={
+                  <span className="text-[var(--status-critical)]">
+                    {(risks.capacity_breach_prob_72h * 100).toFixed(1)}%
+                  </span>
+                }
+                help={{
+                  title: 'Breach Probability',
+                  simpleExplanation: 'Likelihood that organic storage demand will exceed the provisioned safety margin within 3 days.',
+                  technicalDetails: 'P(Used_Bytes(t+72h) >= Critical_Limit) under empirical residual distribution.',
+                }}
+                footer={
+                  <span className="text-[11px] text-[var(--text-muted)] font-mono">
+                    24h risk: {(risks.capacity_breach_prob_24h * 100).toFixed(1)}%
+                  </span>
+                }
+              />
 
-              <div className="titan-card rounded-lg p-4 relative overflow-hidden group hover:border-[var(--accent-primary)]/40 transition-all">
-                <div className="text-xs text-[var(--text-secondary)] font-medium flex items-center justify-between">
-                  <span>{isGuided ? 'Response Delay (P95)' : 'P95 Tail Latency Risk'}</span>
-                  <ContextualHelp
-                    title="P95 Tail Latency"
-                    simpleExplanation="95% of storage read/write requests complete faster than this response time."
-                    technicalDetails="95th percentile latency from disk controller queue telemetry."
-                  />
-                </div>
-                <div className="text-2xl font-bold font-mono text-[var(--accent-primary)] mt-1.5">
-                  {device.current_latency_p95_ms.toFixed(1)} ms
-                </div>
-                <div className="text-[11px] text-[var(--text-muted)] font-mono mt-2">
-                  SLA Maximum: {device.max_acceptable_latency_ms} ms
-                </div>
-              </div>
+              <KpiCard
+                label={isGuided ? 'Response Delay (P95)' : 'P95 Tail Latency Risk'}
+                value={
+                  <span className="text-[var(--brand-primary)]">
+                    {device.current_latency_p95_ms.toFixed(1)} ms
+                  </span>
+                }
+                help={{
+                  title: 'P95 Tail Latency',
+                  simpleExplanation: '95% of storage read/write requests complete faster than this response time.',
+                  technicalDetails: '95th percentile latency from disk controller queue telemetry.',
+                }}
+                footer={
+                  <span className="text-[11px] text-[var(--text-muted)] font-mono">
+                    SLA Maximum: {device.max_acceptable_latency_ms} ms
+                  </span>
+                }
+              />
 
-              <div className="titan-card rounded-lg p-4 relative overflow-hidden group hover:border-[var(--status-success)]/40 transition-all">
-                <div className="text-xs text-[var(--text-secondary)] font-medium flex items-center justify-between">
-                  <span>{isGuided ? 'Pool Health Status' : 'Risk Classification'}</span>
-                  <ContextualHelp
-                    title="Status Classification"
-                    simpleExplanation="Current operational classification based on capacity and latency safety rules."
-                  />
-                </div>
-                <div className="mt-2">
-                  <span className={`px-2.5 py-1 rounded-full text-xs font-bold font-mono ${
+              <KpiCard
+                label={isGuided ? 'Pool Health Status' : 'Risk Classification'}
+                value={
+                  <span className={
                     risks.risk_level === 'CRITICAL'
-                      ? 'bg-[var(--status-critical)]/15 text-[var(--status-critical)] border border-[var(--status-critical)]/40 shadow-sm'
+                      ? 'text-[var(--status-critical)]'
                       : risks.risk_level === 'ELEVATED'
-                      ? 'bg-[var(--status-warning)]/15 text-[var(--status-warning)] border border-[var(--status-warning)]/40 shadow-sm'
-                      : 'bg-[var(--status-success)]/15 text-[var(--status-success)] border border-[var(--status-success)]/40 shadow-sm'
-                  }`}>
+                      ? 'text-[var(--status-warning)]'
+                      : 'text-[var(--status-success)]'
+                  }>
                     {risks.risk_level}
                   </span>
-                </div>
-                <div className="text-[11px] text-[var(--text-muted)] font-mono mt-2">
-                  Safety rules active
-                </div>
-              </div>
+                }
+                help={{
+                  title: 'Status Classification',
+                  simpleExplanation: 'Current operational classification based on capacity and latency safety rules.',
+                }}
+                footer={
+                  <span className="text-[11px] text-[var(--text-muted)] font-mono">
+                    Safety rules active
+                  </span>
+                }
+              />
             </div>
           )}
 

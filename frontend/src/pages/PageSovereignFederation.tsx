@@ -386,7 +386,7 @@ export const PageSovereignFederation: React.FC = () => {
 
                   <div className="p-3.5 rounded-xl bg-[var(--surface-secondary)]/80 border border-[var(--border-subtle)] space-y-1 text-xs">
                     <span className="text-[var(--accent-primary)] font-semibold block">Aggregated Parameter Vector (W_global):</span>
-                    <pre className="text-[11px] font-mono text-[var(--text-primary)] bg-black/40 p-2 rounded-lg overflow-x-auto">
+                    <pre className="text-[11px] font-mono text-[var(--text-primary)] bg-[var(--surface-primary)] border border-[var(--border-subtle)] p-2 rounded-lg overflow-x-auto">
                       {JSON.stringify(lastRoundResult.aggregated_weights, null, 2)}
                     </pre>
                   </div>
@@ -452,11 +452,11 @@ export const PageSovereignFederation: React.FC = () => {
                   </div>
 
                   <div className="space-y-2 text-xs">
-                    <div className="flex justify-between items-center p-2 rounded bg-black/30">
+                    <div className="flex justify-between items-center p-2 rounded bg-[var(--surface-primary)] border border-[var(--border-subtle)]">
                       <span className="text-[var(--text-secondary)]">Local-Only Model:</span>
                       <span className="font-mono text-[var(--text-primary)]">{sr.local_only.mae_gb} GB MAE</span>
                     </div>
-                    <div className="flex justify-between items-center p-2 rounded bg-black/30">
+                    <div className="flex justify-between items-center p-2 rounded bg-[var(--surface-primary)] border border-[var(--border-subtle)]">
                       <span className="text-[var(--text-secondary)]">Conventional FedAvg:</span>
                       <span className="font-mono text-[var(--text-primary)]">{sr.fed_avg.mae_gb} GB MAE</span>
                     </div>
@@ -470,7 +470,7 @@ export const PageSovereignFederation: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="text-[11px] text-[var(--text-secondary)] bg-black/40 p-2.5 rounded-lg border border-[var(--border-subtle)]">
+                  <div className="text-[11px] text-[var(--text-secondary)] bg-[var(--surface-primary)] p-2.5 rounded-lg border border-[var(--border-subtle)]">
                     <strong>Workload Finding: </strong>
                     {sr.workload_type === 'EDGE_LOW_VOLUME' && 'Data-sparse site experiences dramatic accuracy gain from collaborative global model.'}
                     {sr.workload_type === 'OLTP_WRITE_HEAVY' && 'Domain divergence from read-heavy peers is successfully overcome via Personalized Adaptation.'}

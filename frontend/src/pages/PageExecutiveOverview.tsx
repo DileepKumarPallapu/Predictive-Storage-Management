@@ -8,6 +8,7 @@ import {
 } from '../api/client';
 import { ScientificForecastChart } from '../components/ScientificForecastChart';
 import { ContextualHelp } from '../components/ContextualHelp';
+import { KpiCard } from '../components/KpiCard';
 import { usePresentationMode } from '../context/PresentationModeContext';
 import { useOperatingMode } from '../context/OperatingModeContext';
 import {
@@ -221,109 +222,89 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
       {/* SECTION C: 4 Primary Metrics & 2 Secondary Health Indicators */}
       {overview && (
         <div className="space-y-3">
-          {/* 4 Primary Key Metrics — Twain-Inspired Pastel Surfaces */}
+          {/* 4 Primary Key Metrics — Rebuilt Shared KPI Component */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Primary 1: Storage Utilization (Mint Surface) */}
-            <div className="card-pastel-mint p-4.5 flex flex-col justify-between">
-              <div>
-                <div className="text-xs font-semibold flex items-center justify-between opacity-85">
-                  <span>{isGuided ? 'Storage Utilization' : 'Fleet Utilization'}</span>
-                  <ContextualHelp
-                    title="Storage Utilization"
-                    simpleExplanation="Total storage capacity in active use across all monitored tiers."
-                    technicalDetails="Aggregated bytes_used / bytes_total across NVMe, SAS, and Cold Archive."
-                  />
-                </div>
-                <div className="text-2xl font-bold font-mono mt-2 tabular-nums">
-                  {overview.capacity_utilization_pct.toFixed(1)}%
-                </div>
-                <div className="w-full bg-black/10 dark:bg-white/10 h-1.5 rounded-full overflow-hidden mt-2.5">
-                  <div
-                    className={`h-full rounded-full transition-all ${
-                      overview.capacity_utilization_pct > 85 ? 'bg-[var(--status-critical)]' : 'bg-current'
-                    }`}
-                    style={{ width: `${Math.min(100, overview.capacity_utilization_pct)}%` }}
-                  />
-                </div>
-              </div>
-              <div className="text-[11px] font-mono mt-3 opacity-80">
-                {formatTB(overview.total_used_bytes)} used / {formatTB(overview.total_capacity_bytes)} total
-              </div>
-            </div>
+            {/* Primary 1: Storage Utilization */}
+            <KpiCard
+              label={isGuided ? 'Storage Utilization' : 'Fleet Utilization'}
+              value={`${overview.capacity_utilization_pct.toFixed(1)}%`}
+              help={{
+                title: 'Storage Utilization',
+                simpleExplanation: 'Total storage capacity in active use across all monitored tiers.',
+                technicalDetails: 'Aggregated bytes_used / bytes_total across NVMe, SAS, and Cold Archive.',
+              }}
+              progress={{
+                value: overview.capacity_utilization_pct,
+                status: overview.capacity_utilization_pct > 85 ? 'critical' : 'normal',
+              }}
+              footer={
+                <span className="text-[11px] font-mono text-[var(--text-secondary)]">
+                  {formatTB(overview.total_used_bytes)} used / {formatTB(overview.total_capacity_bytes)} total
+                </span>
+              }
+            />
 
-            {/* Primary 2: Available Capacity (Lavender Surface) */}
-            <div className="card-pastel-lavender p-4.5 flex flex-col justify-between">
-              <div>
-                <div className="text-xs font-semibold flex items-center justify-between opacity-85">
-                  <span>{isGuided ? 'Available Capacity' : 'Available Headroom'}</span>
-                  <ContextualHelp
-                    title="Available Headroom"
-                    simpleExplanation="Total unallocated space available for writes before reaching any configured limits."
-                    technicalDetails="Unallocated block storage bytes reported by storage controller."
-                  />
+            {/* Primary 2: Available Capacity */}
+            <KpiCard
+              label={isGuided ? 'Available Capacity' : 'Available Headroom'}
+              value={formatTB(overview.total_free_bytes)}
+              help={{
+                title: 'Available Headroom',
+                simpleExplanation: 'Total unallocated space available for writes before reaching any configured limits.',
+                technicalDetails: 'Unallocated block storage bytes reported by storage controller.',
+              }}
+              description="Unallocated reserve headroom"
+              footer={
+                <div className="flex items-center gap-1.5 text-[var(--status-success)] font-medium text-[11px]">
+                  <CheckCircle2 size={13} />
+                  <span>Ready for writes</span>
                 </div>
-                <div className="text-2xl font-bold font-mono mt-2 tabular-nums">
-                  {formatTB(overview.total_free_bytes)}
-                </div>
-                <div className="text-[11px] mt-2 opacity-80">
-                  Unallocated headroom
-                </div>
-              </div>
-              <div className="text-[11px] font-semibold flex items-center gap-1.5 mt-3 opacity-90">
-                <CheckCircle2 size={13} />
-                <span>Ready for writes</span>
-              </div>
-            </div>
+              }
+            />
 
-            {/* Primary 3: Estimated Reserve Runway (Powder Blue Surface) */}
-            <div className="card-pastel-blue p-4.5 flex flex-col justify-between">
-              <div>
-                <div className="text-xs font-semibold flex items-center justify-between opacity-85">
-                  <span>{isGuided ? 'Estimated Runway' : 'Shortest Reserve Runway'}</span>
-                  <ContextualHelp
-                    title="Reserve Runway"
-                    simpleExplanation="Estimated operational hours until the fastest-filling pool hits its critical safety limit."
-                    technicalDetails="Derived from LightGBM median forecast crossing the 90% hard threshold."
-                  />
+            {/* Primary 3: Estimated Reserve Runway */}
+            <KpiCard
+              label={isGuided ? 'Estimated Runway' : 'Shortest Reserve Runway'}
+              value={`~${overview.estimated_reserve_runway_hours.toFixed(0)}h`}
+              help={{
+                title: 'Reserve Runway',
+                simpleExplanation: 'Estimated operational hours until the fastest-filling pool hits its critical safety limit.',
+                technicalDetails: 'Derived from LightGBM median forecast crossing the 90% hard threshold.',
+              }}
+              description={
+                <span>
+                  Leading on <strong className="font-mono text-[var(--text-primary)]">{overview.highest_current_risk.device_id}</strong>
+                </span>
+              }
+              footer={
+                <div className="flex items-center gap-1.5 text-[var(--text-secondary)] font-medium text-[11px]">
+                  <Clock size={13} />
+                  <span>Proactive lead time</span>
                 </div>
-                <div className="text-2xl font-bold font-mono mt-2 tabular-nums">
-                  ~{overview.estimated_reserve_runway_hours.toFixed(0)}h
-                </div>
-                <div className="text-[11px] mt-2 truncate opacity-80">
-                  Leading on <span className="font-mono font-bold">{overview.highest_current_risk.device_id}</span>
-                </div>
-              </div>
-              <div className="text-[11px] font-semibold flex items-center gap-1.5 mt-3 opacity-90">
-                <Clock size={13} />
-                <span>Proactive lead time</span>
-              </div>
-            </div>
+              }
+            />
 
-            {/* Primary 4: Storage Risk State (Peach/Coral Surface) */}
-            <div className="card-pastel-peach p-4.5 flex flex-col justify-between">
-              <div>
-                <div className="text-xs font-semibold flex items-center justify-between opacity-85">
-                  <span>{isGuided ? 'Risk State' : 'Fleet Risk State'}</span>
-                  <ContextualHelp
-                    title="Risk State Classification"
-                    simpleExplanation="Overall assessment of storage health based on capacity exhaustion and tail latency."
-                    technicalDetails="Calculates joint risk: P(Capacity > 90%) + P(P95 Latency > SLA)."
-                  />
+            {/* Primary 4: Storage Risk State */}
+            <KpiCard
+              label={isGuided ? 'Risk State' : 'Fleet Risk State'}
+              value={
+                <span className={isCritical ? 'text-[var(--status-critical)]' : isElevated ? 'text-[var(--status-warning)]' : 'text-[var(--status-success)]'}>
+                  {overview.highest_current_risk.level}
+                </span>
+              }
+              help={{
+                title: 'Risk State Classification',
+                simpleExplanation: 'Overall assessment of storage health based on capacity exhaustion and tail latency.',
+                technicalDetails: 'Calculates joint risk: P(Capacity > 90%) + P(P95 Latency > SLA).',
+              }}
+              description={`${overview.monitored_device_count} monitored storage pools`}
+              footer={
+                <div className="flex items-center gap-1.5 text-[var(--text-secondary)] font-medium text-[11px]">
+                  <ShieldCheck size={13} />
+                  <span>SLA limits active</span>
                 </div>
-                <div className="text-2xl font-bold font-mono mt-2">
-                  <span className={isCritical ? 'text-[var(--status-critical)]' : 'text-current'}>
-                    {overview.highest_current_risk.level}
-                  </span>
-                </div>
-                <div className="text-[11px] mt-2 opacity-80">
-                  {overview.monitored_device_count} monitored storage pools
-                </div>
-              </div>
-              <div className="text-[11px] font-semibold flex items-center gap-1.5 mt-3 opacity-90">
-                <ShieldCheck size={13} />
-                <span>SLA limits active</span>
-              </div>
-            </div>
+              }
+            />
           </div>
 
           {/* Secondary Health Indicators (Supporting Region) */}
