@@ -65,9 +65,12 @@ export const TopBar: React.FC<TopBarProps> = ({
           </button>
         )}
 
-        {/* Hitit-Inspired Authoritative Storage Resilience Brand Identity */}
+        {/* Aurora Spectrum Brand Identity */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-[var(--accent)] text-white flex items-center justify-center shadow-xs shrink-0 transition-transform hover:scale-[1.02]">
+          <div
+            className="w-8 h-8 rounded-lg text-white flex items-center justify-center shrink-0 transition-transform hover:scale-105"
+            style={{ background: 'var(--gradient-aurora)', boxShadow: '0 2px 10px -2px rgba(87, 86, 232, 0.45)' }}
+          >
             {/* Storage Resilience Geometric Vault Prism */}
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-white">
               <rect x="3" y="4" width="18" height="6" rx="1.5" />
@@ -80,7 +83,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           </div>
           <div className="flex flex-col shrink-0">
             <span className="font-extrabold tracking-tight text-sm font-display text-[var(--text-primary)] leading-none whitespace-nowrap">
-              AEGIS<span className="text-[var(--accent)]">STOR</span>
+              AEGIS<span className="text-gradient-aurora">STOR</span>
             </span>
             <span className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider leading-tight mt-0.5 whitespace-nowrap hidden sm:inline">
               RESILIENCE INTELLIGENCE

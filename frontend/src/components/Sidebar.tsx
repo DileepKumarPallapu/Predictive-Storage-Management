@@ -262,9 +262,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     }`}
                     title={collapsed ? item.label : undefined}
                   >
-                    {/* Active Accent Bar */}
+                    {/* Active Aurora Accent Bar */}
                     {isActive && (
-                      <span className="absolute left-0 top-1 bottom-1 w-1 bg-[var(--accent)] rounded-r" />
+                      <span
+                        className="absolute left-0 top-1 bottom-1 w-1 rounded-r shadow-xs"
+                        style={{ background: 'var(--gradient-aurora)' }}
+                      />
                     )}
 
                     <IconComponent

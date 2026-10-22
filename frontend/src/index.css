@@ -6,92 +6,108 @@
   color-scheme: light;
 
   /* ========================================================
-     AEGISSTOR ENTERPRISE DESIGN SYSTEM — HITIT-INSPIRED LIGHT TOKENS
-     Warm Porcelain Operations Workspace (WCAG 2.2 AA Certified)
+     AEGISSTOR AURORA SPECTRUM DESIGN SYSTEM
+     LIGHT THEME: AURORA DAYLIGHT (WCAG 2.2 AA Certified)
      ======================================================== */
-  --background: #F5F5F2;          /* Hitit warm porcelain main canvas */
-  --surface: #FFFFFF;             /* Crisp pure white primary surfaces */
-  --surface-elevated: #F8F8F6;    /* Subtle warm neutral elevated panels */
-  --surface-subtle: #EEEEEC;      /* Inset metrics, table hover */
-  --text-primary: #1C1E1C;        /* Hitit deep graphite headings and data */
-  --text-secondary: #555C56;      /* Secondary descriptions and labels */
-  --text-muted: #727971;          /* Muted metadata and timestamps */
-  --border: #DFE2DD;              /* Hitit hairline structural dividers */
-  --border-subtle: #E8ECE6;
-  --border-normal: #DFE2DD;
-  --border-visible: #CED2CC;
-  --border-highlight: #B82432;
+  --app-background: #F5F7FB;
+  --surface-primary: #FFFFFF;
+  --surface-secondary: #F0F3F9;
+  --surface-tertiary: #E8EDF5;
 
-  /* Primary Brand Accent: Hitit Confident Crimson */
-  --accent: #B82432;
-  --accent-hover: #981E2A;
-  --accent-pressed: #7D1721;
-  --accent-soft: #F9E9EB;
-  --focus-ring: #B82432;
+  --text-primary: #182134;
+  --text-secondary: #465168;
+  --text-muted: #68758B;
+  --text-disabled: #9AA6BC;
 
-  /* Deep ink & enterprise blue */
-  --deep-ink: #131416;
-  --deep-ink-surface: #1E2024;
-  --brand-blue: #006AB6;
+  --border-subtle: #DFE5EF;
+  --border-strong: #C7D0DF;
+  --border-normal: #DFE5EF;
+  --border-visible: #C7D0DF;
 
-  /* Semantic Status Tokens */
-  --success: #22784D;
-  --warning: #94651A;
-  --critical: #C33F36;
-  --danger: #C33F36;
-  --info: #006AB6;
+  /* Brand Multicolor Palette */
+  --brand-coral: #F05B62;
+  --brand-orange: #F28B45;
+  --brand-indigo: #5756E8;
+  --brand-violet: #925CE8;
+  --brand-teal: #159F9A;
+  --brand-blue: #3984E8;
+  --brand-gold: #D9A52B;
+  --brand-mint: #2BAF82;
 
-  /* Structural Aliases for Consistency */
-  --bg-primary: var(--background);
-  --bg-secondary: #EBEBE6;
-  --bg-tertiary: #E2E2DC;
+  /* Semantic Action & Focus */
+  --accent: #5756E8;
+  --accent-hover: #4847D4;
+  --accent-pressed: #3A39BF;
+  --accent-soft: rgba(87, 86, 232, 0.08);
+  --focus-ring: #5756E8;
 
-  --surface-primary: var(--surface);
-  --surface-secondary: var(--surface-elevated);
-  --surface-glass: var(--surface);
+  /* Semantic Gradients */
+  --gradient-aurora: linear-gradient(135deg, #5756E8 0%, #925CE8 50%, #F05B62 100%);
+  --gradient-coral-orange: linear-gradient(135deg, #F05B62 0%, #F28B45 100%);
+  --gradient-indigo-violet: linear-gradient(135deg, #5756E8 0%, #925CE8 100%);
+  --gradient-teal-blue: linear-gradient(135deg, #159F9A 0%, #3984E8 100%);
+  --gradient-gold-amber: linear-gradient(135deg, #D9A52B 0%, #F28B45 100%);
+  --gradient-mint-teal: linear-gradient(135deg, #2BAF82 0%, #159F9A 100%);
 
-  --text-disabled: #98A19D;
+  /* Semantic Status Tokens (Separated from decorative colors) */
+  --status-success: #15803D;
+  --status-warning: #B45309;
+  --status-critical: #DC2626;
+  --status-info: #2563EB;
+  --status-unknown: #68758B;
 
-  --accent-primary: var(--accent);
+  --success: var(--status-success);
+  --warning: var(--status-warning);
+  --critical: var(--status-critical);
+  --danger: var(--status-critical);
+  --info: var(--status-info);
+
+  /* Core Aliases for Backwards Compatibility */
+  --background: var(--app-background);
+  --surface: var(--surface-primary);
+  --surface-elevated: var(--surface-secondary);
+  --surface-subtle: var(--surface-tertiary);
+  --border: var(--border-subtle);
+
+  --accent-primary: var(--brand-indigo);
   --accent-primary-hover: var(--accent-hover);
-  --accent-primary-pressed: var(--accent-pressed);
-  --accent-secondary: #8C6A5A;
-  --accent-tertiary: #607270;
-
-  --status-success: var(--success);
-  --status-warning: var(--warning);
-  --status-critical: var(--critical);
-  --status-info: var(--info);
-  --status-unknown: var(--text-muted);
+  --accent-secondary: var(--brand-teal);
+  --accent-tertiary: var(--brand-coral);
 
   /* Button Tokens */
-  --btn-primary-bg: var(--accent);
+  --btn-primary-bg: var(--brand-indigo);
   --btn-primary-text: #FFFFFF;
   --btn-primary-hover: var(--accent-hover);
   --btn-primary-pressed: var(--accent-pressed);
 
-  --btn-secondary-bg: var(--surface);
+  --btn-secondary-bg: var(--surface-primary);
   --btn-secondary-text: var(--text-primary);
-  --btn-secondary-border: var(--border);
-  --btn-secondary-hover: var(--surface-elevated);
+  --btn-secondary-border: var(--border-subtle);
+  --btn-secondary-hover: var(--surface-secondary);
 
-  --surface-hover: rgba(0, 0, 0, 0.03);
-  --surface-active: rgba(217, 79, 43, 0.08);
+  --surface-hover: rgba(87, 86, 232, 0.04);
+  --surface-active: rgba(87, 86, 232, 0.08);
 
   /* Chart Analytical Palette */
-  --chart-observation: #535B55;
-  --chart-forecast: #B82432;
-  --chart-alternative: #8C6A5A;
-  --chart-secondary: #707971;
-  --chart-success: var(--success);
-  --chart-warning: var(--warning);
-  --chart-critical: var(--critical);
+  --chart-observation: #68758B;
+  --chart-forecast: #5756E8;
+  --chart-alternative: #159F9A;
+  --chart-secondary: #925CE8;
+  --chart-success: var(--status-success);
+  --chart-warning: var(--status-warning);
+  --chart-critical: var(--status-critical);
 
   --chart-primary: var(--chart-forecast);
   --chart-tertiary: var(--chart-secondary);
   --chart-neutral: var(--chart-observation);
 
-  --grid-line: rgba(0, 0, 0, 0.05);
+  --grid-line: rgba(24, 33, 52, 0.06);
+
+  /* Motion Tokens */
+  --motion-instant: 120ms;
+  --motion-snappy: 180ms;
+  --motion-smooth: 240ms;
+  --motion-ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .light-theme {
@@ -102,207 +118,278 @@
   color-scheme: dark;
 
   /* ========================================================
-     AEGISSTOR INDEPENDENT DARK THEME
-     Quiet Obsidian & Muted Hitit Crimson (WCAG 2.2 AA Certified)
+     AEGISSTOR AURORA SPECTRUM DESIGN SYSTEM
+     DARK THEME: AURORA NIGHT (WCAG 2.2 AA Certified)
      ======================================================== */
-  --background: #121412;          /* Hitit obsidian graphite background */
-  --surface: #181B18;             /* Primary card surface */
-  --surface-elevated: #202420;    /* Elevated panels */
-  --surface-subtle: #272C27;      /* Inset metrics, table hover */
-  --text-primary: #F0F2EF;        /* Crisp white-slate text */
-  --text-secondary: #B0B8AF;      /* Secondary copy */
-  --text-muted: #7A8479;          /* Muted metadata */
-  --border: #323833;              /* Hairline structural dividers */
-  --border-subtle: #252A26;
-  --border-normal: #323833;
-  --border-visible: #424A43;
-  --border-highlight: #D13847;
+  --app-background: #10131D;
+  --surface-primary: #171C2A;
+  --surface-secondary: #20273A;
+  --surface-tertiary: #2A3248;
 
-  /* Primary Action */
-  --accent: #D13847;
-  --accent-hover: #E64C5B;
-  --accent-pressed: #B52B39;
-  --accent-soft: rgba(209, 56, 71, 0.15);
-  --focus-ring: #D13847;
+  --text-primary: #F4F6FF;
+  --text-secondary: #C5CDE0;
+  --text-muted: #9DA8C0;
+  --text-disabled: #5E6982;
 
-  --deep-ink: #0A0C0A;
-  --deep-ink-surface: #131613;
-  --brand-blue: #3A92D2;
+  --border-subtle: #303A51;
+  --border-strong: #44516C;
+  --border-normal: #303A51;
+  --border-visible: #44516C;
+
+  /* Brand Multicolor Palette (Luminous Dark Parity) */
+  --brand-coral: #FF727B;
+  --brand-orange: #FFA05C;
+  --brand-indigo: #8582FF;
+  --brand-violet: #B28AFF;
+  --brand-teal: #48D3C3;
+  --brand-blue: #72AEFF;
+  --brand-gold: #F5C96D;
+  --brand-mint: #65D9A7;
+
+  /* Semantic Action & Focus */
+  --accent: #8582FF;
+  --accent-hover: #9E9CFF;
+  --accent-pressed: #6F6CFA;
+  --accent-soft: rgba(133, 130, 255, 0.12);
+  --focus-ring: #8582FF;
+
+  /* Semantic Gradients */
+  --gradient-aurora: linear-gradient(135deg, #8582FF 0%, #B28AFF 50%, #FF727B 100%);
+  --gradient-coral-orange: linear-gradient(135deg, #FF727B 0%, #FFA05C 100%);
+  --gradient-indigo-violet: linear-gradient(135deg, #8582FF 0%, #B28AFF 100%);
+  --gradient-teal-blue: linear-gradient(135deg, #48D3C3 0%, #72AEFF 100%);
+  --gradient-gold-amber: linear-gradient(135deg, #F5C96D 0%, #FFA05C 100%);
+  --gradient-mint-teal: linear-gradient(135deg, #65D9A7 0%, #48D3C3 100%);
 
   /* Semantic Status Tokens */
-  --success: #2EB369;
-  --warning: #CCA038;
-  --critical: #E24C43;
-  --danger: #E24C43;
-  --info: #3A92D2;
+  --status-success: #22C55E;
+  --status-warning: #F59E0B;
+  --status-critical: #EF4444;
+  --status-info: #38BDF8;
+  --status-unknown: #9DA8C0;
 
-  --bg-primary: var(--background);
-  --bg-secondary: #181B18;
-  --bg-tertiary: #1E221E;
+  --success: var(--status-success);
+  --warning: var(--status-warning);
+  --critical: var(--status-critical);
+  --danger: var(--status-critical);
+  --info: var(--status-info);
 
-  --surface-primary: var(--surface);
-  --surface-secondary: var(--surface-elevated);
-  --surface-glass: var(--surface);
+  /* Core Aliases for Backwards Compatibility */
+  --background: var(--app-background);
+  --surface: var(--surface-primary);
+  --surface-elevated: var(--surface-secondary);
+  --surface-subtle: var(--surface-tertiary);
+  --border: var(--border-subtle);
 
-  --text-disabled: #5A635B;
-
-  --accent-primary: var(--accent);
+  --accent-primary: var(--brand-indigo);
   --accent-primary-hover: var(--accent-hover);
-  --accent-primary-pressed: var(--accent-pressed);
-  --accent-secondary: #BFA598;
-  --accent-tertiary: #8C9993;
+  --accent-secondary: var(--brand-teal);
+  --accent-tertiary: var(--brand-coral);
 
-  --status-success: var(--success);
-  --status-warning: var(--warning);
-  --status-critical: var(--critical);
-  --status-info: var(--info);
-  --status-unknown: var(--text-muted);
-
-  --btn-primary-bg: var(--accent);
-  --btn-primary-text: #FFFFFF;
+  /* Button Tokens */
+  --btn-primary-bg: var(--brand-indigo);
+  --btn-primary-text: #10131D;
   --btn-primary-hover: var(--accent-hover);
   --btn-primary-pressed: var(--accent-pressed);
 
-  --btn-secondary-bg: var(--surface-elevated);
+  --btn-secondary-bg: var(--surface-secondary);
   --btn-secondary-text: var(--text-primary);
-  --btn-secondary-border: var(--border);
-  --btn-secondary-hover: var(--surface-subtle);
+  --btn-secondary-border: var(--border-subtle);
+  --btn-secondary-hover: var(--surface-tertiary);
 
-  --surface-hover: rgba(255, 255, 255, 0.04);
-  --surface-active: rgba(209, 56, 71, 0.12);
+  --surface-hover: rgba(133, 130, 255, 0.06);
+  --surface-active: rgba(133, 130, 255, 0.12);
 
-  --chart-observation: var(--text-secondary);
-  --chart-forecast: var(--accent);
-  --chart-alternative: #BFA598;
-  --chart-secondary: var(--text-muted);
-  --chart-success: var(--success);
-  --chart-warning: var(--warning);
-  --chart-critical: var(--critical);
+  /* Chart Analytical Palette */
+  --chart-observation: #9DA8C0;
+  --chart-forecast: #8582FF;
+  --chart-alternative: #48D3C3;
+  --chart-secondary: #B28AFF;
+  --chart-success: var(--status-success);
+  --chart-warning: var(--status-warning);
+  --chart-critical: var(--status-critical);
 
   --chart-primary: var(--chart-forecast);
   --chart-tertiary: var(--chart-secondary);
   --chart-neutral: var(--chart-observation);
 
-  --grid-line: rgba(255, 255, 255, 0.05);
+  --grid-line: rgba(244, 246, 255, 0.06);
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--background);
+  background-color: var(--app-background);
   color: var(--text-primary);
-  font-family: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
-  transition: background-color 150ms ease, color 150ms ease;
+  transition: background-color var(--motion-snappy) var(--motion-ease), color var(--motion-snappy) var(--motion-ease);
 }
 
 /* ========================================================
-   REFINED ENTERPRISE COMPONENT SYSTEM
+   AURORA SPECTRUM COMPONENT SUITE
    ======================================================== */
 
 /* Surface Panels */
+.aurora-card,
 .titan-card,
 .glass-panel,
 .glass-level-1 {
-  background-color: var(--surface);
+  background-color: var(--surface-primary);
   color: var(--text-primary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: 0 1px 3px 0 rgba(32, 36, 33, 0.04);
-  transition: border-color 140ms ease, box-shadow 140ms ease;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  box-shadow: 0 1px 3px 0 rgba(24, 33, 52, 0.04), 0 1px 2px -1px rgba(24, 33, 52, 0.03);
+  transition: border-color var(--motion-snappy) var(--motion-ease),
+              box-shadow var(--motion-snappy) var(--motion-ease),
+              transform var(--motion-snappy) var(--motion-ease);
 }
 
+.aurora-card:hover,
 .titan-card:hover,
 .glass-panel:hover,
 .glass-level-1:hover {
-  border-color: var(--border-visible);
+  border-color: var(--border-strong);
 }
 
+.aurora-card-interactive {
+  transition: border-color var(--motion-snappy) var(--motion-ease),
+              box-shadow var(--motion-snappy) var(--motion-ease),
+              transform var(--motion-snappy) var(--motion-ease);
+}
+
+.aurora-card-interactive:hover {
+  border-color: var(--brand-indigo);
+  box-shadow: 0 6px 20px -4px rgba(87, 86, 232, 0.12);
+  transform: translateY(-1px);
+}
+
+.dark .aurora-card-interactive:hover {
+  border-color: var(--brand-indigo);
+  box-shadow: 0 6px 24px -4px rgba(133, 130, 255, 0.2);
+}
+
+.aurora-card-elevated,
 .titan-card-elevated,
 .glass-panel-elevated,
 .glass-level-2 {
-  background-color: var(--surface-elevated);
+  background-color: var(--surface-secondary);
   color: var(--text-primary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: 0 4px 12px -2px rgba(32, 36, 33, 0.06);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  box-shadow: 0 4px 14px -2px rgba(24, 33, 52, 0.07);
 }
 
+.aurora-modal,
 .titan-modal,
 .glass-modal,
 .glass-level-3,
 .glass-focus {
-  background-color: var(--surface);
+  background-color: var(--surface-primary);
   color: var(--text-primary);
-  border: 1px solid var(--border-visible);
-  border-radius: 10px;
-  box-shadow: 0 16px 40px -4px rgba(32, 36, 33, 0.16);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  box-shadow: 0 20px 48px -4px rgba(24, 33, 52, 0.24);
 }
 
-/* Primary Enterprise Action Button */
+/* Gradient Action Buttons */
 .btn-primary,
-.btn-ember-primary,
-.btn-aurora-primary {
+.btn-aurora-primary,
+.btn-ember-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: var(--btn-primary-bg);
-  color: var(--btn-primary-text);
+  background: var(--gradient-indigo-violet);
+  color: #FFFFFF;
   font-size: 0.75rem;
   font-weight: 600;
-  border-radius: 6px;
-  padding: 0.375rem 0.875rem;
+  border-radius: 8px;
+  padding: 0.45rem 1rem;
   border: 1px solid transparent;
-  transition: background-color 140ms ease, border-color 140ms ease, transform 100ms ease;
+  box-shadow: 0 2px 8px -1px rgba(87, 86, 232, 0.35);
+  transition: all var(--motion-snappy) var(--motion-ease);
   user-select: none;
+  cursor: pointer;
 }
 
 .btn-primary:hover:not(:disabled),
-.btn-ember-primary:hover:not(:disabled),
-.btn-aurora-primary:hover:not(:disabled) {
-  background-color: var(--accent-hover);
+.btn-aurora-primary:hover:not(:disabled),
+.btn-ember-primary:hover:not(:disabled) {
+  box-shadow: 0 4px 14px -1px rgba(87, 86, 232, 0.45);
+  transform: translateY(-1px);
+  filter: brightness(1.05);
 }
 
 .btn-primary:active:not(:disabled),
-.btn-ember-primary:active:not(:disabled),
-.btn-aurora-primary:active:not(:disabled) {
-  background-color: var(--accent-pressed);
+.btn-aurora-primary:active:not(:disabled),
+.btn-ember-primary:active:not(:disabled) {
   transform: translateY(1px);
+  box-shadow: 0 1px 4px 0 rgba(87, 86, 232, 0.3);
+  filter: brightness(0.95);
+}
+
+/* Coral Action Button for High-Priority / Twin Execution */
+.btn-aurora-coral {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--gradient-coral-orange);
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.45rem 1rem;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 8px -1px rgba(240, 91, 98, 0.35);
+  transition: all var(--motion-snappy) var(--motion-ease);
+  user-select: none;
+  cursor: pointer;
+}
+
+.btn-aurora-coral:hover:not(:disabled) {
+  box-shadow: 0 4px 14px -1px rgba(240, 91, 98, 0.45);
+  transform: translateY(-1px);
+  filter: brightness(1.05);
 }
 
 /* Secondary Enterprise Action Button */
 .btn-secondary,
-.btn-ember-secondary,
-.btn-aurora-secondary {
+.btn-aurora-secondary,
+.btn-ember-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: var(--btn-secondary-bg);
-  color: var(--btn-secondary-text);
+  background-color: var(--surface-primary);
+  color: var(--text-primary);
   font-size: 0.75rem;
   font-weight: 500;
-  border-radius: 6px;
-  padding: 0.375rem 0.875rem;
-  border: 1px solid var(--border);
-  transition: background-color 140ms ease, border-color 140ms ease;
+  border-radius: 8px;
+  padding: 0.45rem 0.95rem;
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 1px 2px 0 rgba(24, 33, 52, 0.03);
+  transition: all var(--motion-snappy) var(--motion-ease);
   user-select: none;
+  cursor: pointer;
 }
 
 .btn-secondary:hover:not(:disabled),
-.btn-ember-secondary:hover:not(:disabled),
-.btn-aurora-secondary:hover:not(:disabled) {
-  background-color: var(--surface-elevated);
-  border-color: var(--border-visible);
+.btn-aurora-secondary:hover:not(:disabled),
+.btn-ember-secondary:hover:not(:disabled) {
+  background-color: var(--surface-secondary);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
 }
 
 .btn-secondary:active:not(:disabled),
-.btn-ember-secondary:active:not(:disabled),
-.btn-aurora-secondary:active:not(:disabled) {
-  background-color: var(--surface-subtle);
+.btn-aurora-secondary:active:not(:disabled),
+.btn-ember-secondary:active:not(:disabled) {
+  background-color: var(--surface-tertiary);
+  transform: translateY(1px);
 }
 
 /* Quiet / Ghost Button */
@@ -315,10 +402,11 @@ body {
   color: var(--text-secondary);
   font-size: 0.75rem;
   font-weight: 500;
-  border-radius: 6px;
-  padding: 0.375rem 0.625rem;
+  border-radius: 8px;
+  padding: 0.4rem 0.65rem;
   border: 1px solid transparent;
-  transition: background-color 140ms ease, color 140ms ease;
+  transition: all var(--motion-instant) var(--motion-ease);
+  cursor: pointer;
 }
 
 .btn-ghost:hover:not(:disabled) {
@@ -329,12 +417,12 @@ body {
 /* Form Inputs, Selects, and Textareas */
 input, select, textarea {
   color-scheme: light;
-  background-color: var(--surface);
+  background-color: var(--surface-primary);
   color: var(--text-primary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
   font-size: 0.75rem;
-  transition: border-color 140ms ease, box-shadow 140ms ease;
+  transition: border-color var(--motion-snappy) var(--motion-ease), box-shadow var(--motion-snappy) var(--motion-ease);
 }
 
 .dark input,
@@ -345,24 +433,24 @@ input, select, textarea {
 
 input:focus, select:focus, textarea:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent);
+  border-color: var(--brand-indigo);
+  box-shadow: 0 0 0 2px var(--accent-soft);
 }
 
 select option {
   background-color: #FFFFFF;
-  color: #222522;
+  color: #182134;
 }
 
 .dark select option {
-  background-color: #1C201D;
-  color: #F2F4F1;
+  background-color: #171C2A;
+  color: #F4F6FF;
 }
 
 input::placeholder,
 textarea::placeholder {
   color: var(--text-muted) !important;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 button:disabled,
@@ -377,7 +465,33 @@ textarea:disabled {
 /* Typography Invariants */
 h1, h2, h3, h4, h5, h6 {
   color: var(--text-primary);
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+/* Text Gradient Utility */
+.text-gradient-aurora {
+  background: var(--gradient-aurora);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-indigo {
+  background: var(--gradient-indigo-violet);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-coral {
+  background: var(--gradient-coral-orange);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-teal {
+  background: var(--gradient-teal-blue);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* Tabular Numerics for Telemetry */
@@ -389,7 +503,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Accessible Focus Rings */
 *:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--focus-ring);
+  box-shadow: 0 0 0 2px var(--app-background), 0 0 0 4px var(--focus-ring);
 }
 
 /* Custom Scrollbar */
@@ -403,12 +517,46 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 3px;
+  background: var(--border-subtle);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
+}
+
+/* Subtle Aurora Ambient Glow */
+.aurora-glow-indigo {
+  box-shadow: 0 0 35px -5px rgba(87, 86, 232, 0.15);
+}
+
+.aurora-glow-coral {
+  box-shadow: 0 0 35px -5px rgba(240, 91, 98, 0.15);
+}
+
+.aurora-glow-teal {
+  box-shadow: 0 0 35px -5px rgba(21, 159, 154, 0.15);
+}
+
+/* Keyframe Animations */
+@keyframes aurora-pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.82; transform: scale(0.98); }
+}
+
+@keyframes aurora-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-aurora-pulse {
+  animation: aurora-pulse-subtle 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, var(--surface-secondary) 25%, var(--surface-tertiary) 50%, var(--surface-secondary) 75%);
+  background-size: 200% 100%;
+  animation: aurora-shimmer 1.8s infinite;
 }
 
 /* Reduced Motion Support */
