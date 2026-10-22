@@ -5,7 +5,9 @@ import { CommandPalette } from './components/CommandPalette';
 import { AuthModal } from './components/AuthModal';
 import { OnboardingModal } from './components/OnboardingModal';
 import { FlowstatePageSkeleton } from './components/FlowstatePageSkeleton';
+import { ReplayControlBar } from './components/ReplayControlBar';
 import { PresentationModeProvider } from './context/PresentationModeContext';
+import { OperatingModeProvider, useOperatingMode } from './context/OperatingModeContext';
 import { api } from './api/client';
 
 // Route-Based Code Splitting via React.lazy
@@ -29,11 +31,36 @@ const PageOracleIntelligence = lazy(() => import('./pages/PageOracleIntelligence
 const PageGauntletWorkbench = lazy(() => import('./pages/PageGauntletWorkbench').then(m => ({ default: m.PageGauntletWorkbench })));
 const PageSovereignFederation = lazy(() => import('./pages/PageSovereignFederation').then(m => ({ default: m.PageSovereignFederation })));
 
+const PAGE_TITLES: Record<PageId, string> = {
+  overview: 'Executive Overview',
+  fleet: 'Storage Fleet',
+  intelligence: 'Device Details',
+  telemetry: 'Telemetry Signals',
+  alerts: 'Alerts & Safeguards',
+  'ml-lab': 'Capacity Forecast',
+  reliability: 'Forecast Reliability',
+  twin: 'Digital Twin Sandbox',
+  interventions: 'Compare Actions',
+  phoenix: 'Incident Command',
+  omega: 'Fleet Topology',
+  jurassic: 'Stress Testing Lab',
+  atlas: 'Reality Calibration',
+  oracle: 'Bottleneck AI',
+  gauntlet: 'Scientific Benchmarks',
+  sovereign: 'Federated Privacy',
+  experiments: 'Ablation Studies',
+  datasets: 'Datasets & Quality',
+  settings: 'Settings & Backups',
+};
+
 const AppContent: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<PageId>('overview');
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
-  const [isLightTheme, setIsLightTheme] = useState<boolean>(false);
-  const [operatingMode, setOperatingMode] = useState<string>('demo');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [isLightTheme, setIsLightTheme] = useState<boolean>(() => {
+    return localStorage.getItem('aegisstor_theme') !== 'dark';
+  });
+  const { operatingMode, setOperatingMode, liveDiagnostics } = useOperatingMode();
   const [activeAlertsCount, setActiveAlertsCount] = useState<number>(3);
   const [selectedDeviceId, setSelectedDeviceId] = useState<string>('vol-nvme-tier1-db');
 
@@ -66,21 +93,23 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     if (isLightTheme) {
       document.documentElement.classList.add('light-theme');
+      document.documentElement.classList.remove('dark');
+      document.documentElement.style.colorScheme = 'light';
+      localStorage.setItem('aegisstor_theme', 'light');
     } else {
       document.documentElement.classList.remove('light-theme');
+      document.documentElement.classList.add('dark');
+      document.documentElement.style.colorScheme = 'dark';
+      localStorage.setItem('aegisstor_theme', 'dark');
     }
   }, [isLightTheme]);
 
   const checkHealth = async () => {
     try {
-      const [h, alerts] = await Promise.all([
-        api.getHealth(),
-        api.getAlerts(undefined, undefined, 'ACTIVE'),
-      ]);
-      setOperatingMode(h.mode);
+      const alerts = await api.getAlerts(undefined, undefined, 'ACTIVE');
       setActiveAlertsCount(alerts.length);
     } catch (e) {
-      console.warn("Backend not yet reached, operating in standard demo state:", e);
+      console.warn("Backend alerts check fallback:", e);
     }
   };
 
@@ -94,13 +123,7 @@ const AppContent: React.FC = () => {
   };
 
   const handleModeChange = async (newMode: string) => {
-    try {
-      await api.setOperatingMode(newMode);
-      setOperatingMode(newMode);
-    } catch (e) {
-      console.error(e);
-      setOperatingMode(newMode);
-    }
+    await setOperatingMode(newMode as any);
   };
 
   const handleToggleTheme = () => {
@@ -132,6 +155,8 @@ const AppContent: React.FC = () => {
         onToggleCollapsed={() => setSidebarCollapsed(!sidebarCollapsed)}
         activeAlertsCount={activeAlertsCount}
         onOpenOnboarding={() => setIsOnboardingOpen(true)}
+        mobileOpen={mobileMenuOpen}
+        onCloseMobile={() => setMobileMenuOpen(false)}
       />
 
       {/* Main Content Area */}
@@ -148,7 +173,31 @@ const AppContent: React.FC = () => {
           onOpenAuth={() => setIsAuthOpen(true)}
           onOpenTour={() => setIsOnboardingOpen(true)}
           currentUser={currentUser}
+          currentPageLabel={PAGE_TITLES[currentPage] || 'Executive Overview'}
+          onToggleMobileMenu={() => setMobileMenuOpen((prev) => !prev)}
         />
+
+        {/* Trace Replay Control Bar */}
+        <ReplayControlBar />
+
+        {/* Live Passive Host Status / Diagnostic Banner */}
+        {operatingMode === 'live' && (
+          <div className="bg-[var(--surface-secondary)] border-b border-[var(--border-subtle)] px-4 sm:px-6 py-2 flex items-center justify-between text-xs animate-in fade-in">
+            <div className="flex items-center gap-2 text-[var(--text-secondary)]">
+              <span className="w-2 h-2 rounded-full bg-[var(--status-success)] animate-pulse" />
+              <span className="font-bold text-[var(--text-primary)]">Live Passive Mode Active:</span>
+              <span>Reading host drive (C:\) with strict zero-mutation guarantees.</span>
+              {liveDiagnostics && !liveDiagnostics.prometheus_operational && (
+                <span className="text-[var(--status-warning)] hidden md:inline ml-2 font-mono text-[11px]">
+                  (Prometheus Node Exporter unreachable on :9100; native host OS collector active)
+                </span>
+              )}
+            </div>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--status-success)]/15 text-[var(--status-success)] border border-[var(--status-success)]/30">
+              NON-DESTRUCTIVE
+            </span>
+          </div>
+        )}
 
         {/* Page Container */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">
@@ -225,7 +274,9 @@ const AppContent: React.FC = () => {
 export const App: React.FC = () => {
   return (
     <PresentationModeProvider>
-      <AppContent />
+      <OperatingModeProvider>
+        <AppContent />
+      </OperatingModeProvider>
     </PresentationModeProvider>
   );
 };

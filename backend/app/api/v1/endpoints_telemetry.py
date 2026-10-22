@@ -1,14 +1,27 @@
 import io
 import csv
 from datetime import datetime, timedelta, timezone
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
+from pydantic import BaseModel, Field
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.entities import Device, Telemetry
 from app.schemas.payloads import TelemetryResponse, TelemetryIngestBatch
+from app.config import settings
+from app.services.replay_service import replay_engine
+from app.collector.host_collector import HostStorageCollector, PROVENANCE_LIVE
 
 router = APIRouter()
+
+class PrometheusScrapeRequest(BaseModel):
+    endpoint_url: str = Field(default="http://127.0.0.1:9100/metrics", description="Prometheus Node Exporter scrape target")
+    timeout_seconds: float = Field(default=3.0, ge=0.5, le=30.0, description="Read-only request timeout in seconds")
+
+class TelemetryValidationRequest(BaseModel):
+    sample: Dict[str, Any] = Field(..., description="Telemetry sample to validate")
+    max_age_hours: float = Field(default=24.0, ge=0.1, description="Max acceptable age in hours before flagging as stale")
+
 
 METRIC_UNITS = {
     "used_bytes": "Bytes",
@@ -28,6 +41,22 @@ def get_device_telemetry(
     hours: int = Query(720, description="Hours of historical telemetry to fetch"),
     db: Session = Depends(get_db)
 ):
+    mode = settings.OPERATING_MODE.lower()
+
+    if mode == "replay":
+        history = replay_engine.get_telemetry_history(device_id, metric, hours)
+        if not history.get("timestamps"):
+            # Check if volume exists in replay
+            cur_devices = replay_engine.get_current_devices()
+            v_match = [d for d in cur_devices if d["id"] == device_id]
+            if not v_match:
+                raise HTTPException(status_code=404, detail=f"Volume '{device_id}' not found in active trace")
+        return TelemetryResponse(**history)
+
+    if device_id.startswith("host-vol"):
+        from app.collector.host_collector import HostStorageCollector
+        HostStorageCollector.sync_live_partitions_to_db(db)
+
     device = db.query(Device).filter(Device.id == device_id).first()
     if not device:
         raise HTTPException(status_code=404, detail="Device not found")
@@ -139,3 +168,60 @@ def export_telemetry_csv(device_id: str, db: Session = Depends(get_db)):
         media_type="text/csv",
         headers={"Content-Disposition": f"attachment; filename=telemetry_{device_id}.csv"}
     )
+
+@router.get("/telemetry/sources")
+def get_telemetry_sources():
+    """
+    Returns registered telemetry sources, configured boundaries, read-only guarantees,
+    and supported metrics. Enforces strict zero-mutation policy.
+    """
+    sources = HostStorageCollector.get_configured_sources()
+    return {
+        "status": "ok",
+        "permission_mode": "READ_ONLY",
+        "physical_mutation_disabled": True,
+        "sources": sources
+    }
+
+@router.get("/telemetry/live-host")
+def get_live_host_telemetry():
+    """
+    Collects real filesystem capacity and usage from host storage partitions.
+    Guarantees non-destructive read-only sampling with provenance='LIVE'.
+    """
+    partitions = HostStorageCollector.get_available_partitions()
+    return {
+        "status": "ok",
+        "collected_at": datetime.now(timezone.utc).isoformat(),
+        "provenance": PROVENANCE_LIVE,
+        "is_synthetic": False,
+        "read_only": True,
+        "partitions_count": len(partitions),
+        "partitions": partitions
+    }
+
+@router.post("/telemetry/prometheus/scrape")
+def scrape_prometheus_metrics(payload: PrometheusScrapeRequest = PrometheusScrapeRequest()):
+    """
+    Scrapes Prometheus Node Exporter metrics in read-only mode.
+    Parses node_filesystem and node_disk counters with failure diagnostics and validation.
+    """
+    result = HostStorageCollector.scrape_prometheus_node_exporter(
+        endpoint_url=payload.endpoint_url,
+        timeout_seconds=payload.timeout_seconds
+    )
+    return result
+
+@router.post("/telemetry/validate")
+def validate_telemetry_sample(payload: TelemetryValidationRequest):
+    """
+    Validates a telemetry sample against physical invariants (positive capacity,
+    utilization bounds 0-100%, non-negative IOPS), timestamp validity,
+    staleness threshold, and provenance rules (synthetic data cannot claim LIVE provenance).
+    """
+    validation = HostStorageCollector.validate_metric_sample(
+        sample=payload.sample,
+        max_age_hours=payload.max_age_hours
+    )
+    return validation
+

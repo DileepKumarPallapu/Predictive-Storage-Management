@@ -9,7 +9,9 @@ from app.models.entities import (
     GauntletSuite, GauntletRun, GauntletClaim, GauntletFailure, GauntletReproduction, User
 )
 from app.services.gauntlet_service import GauntletService
+from app.services.research_benchmark_engine import ResearchBenchmarkEngine
 from app.auth.security import get_current_user, require_role
+
 
 router = APIRouter(prefix="/gauntlet", tags=["GAUNTLET Validation & Examiner Workbench"])
 
@@ -404,3 +406,65 @@ def export_csv_report(db: Session = Depends(get_db)):
         media_type="text/csv",
         headers={"Content-Disposition": "attachment; filename=aegisstor-gauntlet-benchmark-runs.csv"}
     )
+
+
+# ------------------------------------------------------------------------------
+# Reproducible Research Validation (Prompt Upgrades)
+# ------------------------------------------------------------------------------
+@router.get("/benchmarks/reproducible-research")
+def get_reproducible_research_benchmarks(
+    device_id: str = Query("vol-nvme-tier1-db", description="Device ID to evaluate"),
+    horizon_hours: int = Query(72, ge=1, le=168, description="Forecast horizon in hours"),
+    random_seed: int = Query(42, description="Random seed S=42 for reproducibility"),
+    db: Session = Depends(get_db)
+):
+
+    """
+    Executes a zero-leakage chronological validation (70% train, 15% validation, 15% test).
+    Evaluates Persistence, Seasonal Naive, AR Linear, LightGBM, and EGSIP with conformal bounds.
+    Reports MAE, RMSE, WAPE, and Pinball loss with dataset provenance.
+    """
+    try:
+        results = ResearchBenchmarkEngine.run_chronological_validation(
+            db=db,
+            device_id=device_id,
+            horizon_hours=horizon_hours,
+            random_seed=random_seed
+        )
+        return results
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/benchmarks/export")
+def export_reproducible_benchmarks(
+    device_id: str = Query("vol-nvme-tier1-db", description="Device ID to evaluate"),
+    horizon_hours: int = Query(72, ge=1, le=168, description="Forecast horizon in hours"),
+    random_seed: int = Query(42, description="Random seed S=42 for reproducibility"),
+    format: str = Query("json", description="Export format: json or csv"),
+    db: Session = Depends(get_db)
+):
+
+    """
+    Machine-readable export of reproducible research benchmarks in JSON or CSV format.
+    """
+    try:
+        results = ResearchBenchmarkEngine.run_chronological_validation(
+            db=db,
+            device_id=device_id,
+            horizon_hours=horizon_hours,
+            random_seed=random_seed
+        )
+
+        if format.lower() == "csv":
+            csv_data = ResearchBenchmarkEngine.export_benchmarks_csv(results)
+            return Response(
+                content=csv_data,
+                media_type="text/csv",
+                headers={"Content-Disposition": f"attachment; filename=benchmark_results_{device_id}_seed{random_seed}.csv"}
+            )
+        else:
+            return results
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+

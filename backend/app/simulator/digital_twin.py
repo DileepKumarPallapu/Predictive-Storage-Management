@@ -72,6 +72,11 @@ class DigitalTwinSimulator:
         estimated_cost_usd = 0.0
         data_movement_gb = 0.0
         start_time = timestamps[0] if timestamps else datetime.now(timezone.utc)
+        if isinstance(start_time, str):
+            try:
+                start_time = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
+            except Exception:
+                start_time = datetime.now(timezone.utc)
         completion_time = start_time
 
         # -------------------------------------------------------------
@@ -265,8 +270,8 @@ class DigitalTwinSimulator:
             "simulation_seed": seed,
             "duration_hours": round(duration_hours, 2),
             "duration_minutes": round(duration_hours * 60.0, 1),
-            "action_start_timestamp": start_time,
-            "action_completion_timestamp": completion_time,
+            "action_start_timestamp": start_time.isoformat() if hasattr(start_time, "isoformat") else str(start_time),
+            "action_completion_timestamp": completion_time.isoformat() if hasattr(completion_time, "isoformat") else str(completion_time),
             "estimated_cost_usd": estimated_cost_usd,
             "data_movement_gb": data_movement_gb,
             "overhead_io_penalty_pct": overhead_penalty_pct,

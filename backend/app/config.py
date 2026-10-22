@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24
     SHADOW_MODE_ENABLED: bool = True  # Hard safety: mutations to real storage hardware disabled
+    PHYSICAL_MUTATION_DISABLED: bool = True  # Hard safety: physical storage disk mutations strictly disabled
     
     # Telemetry parameters
     TELEMETRY_SAMPLING_MINUTES: int = 60
@@ -26,5 +27,12 @@ class Settings(BaseSettings):
     
     # Uncertainty nominal coverage (e.g. 80% interval: [q10, q90])
     NOMINAL_COVERAGE: float = 0.80
+
+    # Disaster Recovery & Vault Backup
+    BACKUP_STORAGE_DIR: str = os.getenv("BACKUP_STORAGE_DIR", "vault_backups")
+    DEFAULT_RPO_HOURS: float = 1.0  # Recovery Point Objective: Max 1 hour data loss
+    DEFAULT_RTO_SECONDS: float = 60.0  # Recovery Time Objective: Target under 60 seconds
+    MAX_BACKUPS_RETAINED: int = 10
+
 
 settings = Settings()

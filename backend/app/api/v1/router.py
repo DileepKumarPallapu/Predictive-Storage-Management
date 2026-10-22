@@ -22,7 +22,9 @@ from app.api.v1 import (
     endpoints_oracle,
     endpoints_evidence_gated,
     endpoints_gauntlet,
-    endpoints_sovereign
+    endpoints_sovereign,
+    endpoints_vault,
+    endpoints_replay
 )
 
 api_router = APIRouter()
@@ -50,5 +52,7 @@ api_router.include_router(endpoints_oracle.router, tags=["AEGISSTOR Oracle Workl
 api_router.include_router(endpoints_evidence_gated.router, tags=["Research Contribution & Benchmarks (Prompt 17.0)"])
 api_router.include_router(endpoints_gauntlet.router, tags=["AEGISSTOR Gauntlet Validation & Examiner Workbench"])
 api_router.include_router(endpoints_sovereign.router, tags=["AEGISSTOR Sovereign Federated Storage Intelligence"])
+api_router.include_router(endpoints_vault.router, tags=["AEGISSTOR VAULT — Backup & Disaster Recovery"])
+api_router.include_router(endpoints_replay.router, tags=["AEGISSTOR Trace Replay Engine"])
 
 

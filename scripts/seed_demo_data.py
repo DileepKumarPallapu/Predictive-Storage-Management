@@ -9,7 +9,7 @@ from app.main import initialize_database_and_seed_demo
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("AEGISSTOR — Standalone Database Seeder")
+    print("AEGISSTOR - Standalone Database Seeder")
     print("=" * 60)
     initialize_database_and_seed_demo()
     print("Seed process completed successfully.")

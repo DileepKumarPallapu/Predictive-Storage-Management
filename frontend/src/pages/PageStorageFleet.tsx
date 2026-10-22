@@ -14,6 +14,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { usePresentationMode } from '../context/PresentationModeContext';
+import { useOperatingMode } from '../context/OperatingModeContext';
 import { ContextualHelp } from '../components/ContextualHelp';
 
 interface Props {
@@ -30,10 +31,11 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
   const [maxLat, setMaxLat] = useState<number>(20);
   const [saveMsg, setSaveMsg] = useState('');
   const { isGuided } = usePresentationMode();
+  const { operatingMode, provenanceLabel, refreshKey } = useOperatingMode();
 
   useEffect(() => {
     loadFleet();
-  }, [tierFilter, searchTerm]);
+  }, [tierFilter, searchTerm, refreshKey]);
 
   const loadFleet = async () => {
     try {
@@ -83,6 +85,15 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
           <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
             {isGuided ? 'Storage Fleet & Safety Limits' : 'Storage Fleet Inventory & Service Constraints'}
           </h2>
+          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold border shadow-sm transition-colors ${
+            operatingMode === 'live'
+              ? 'bg-[var(--status-success)]/15 text-[var(--status-success)] border-[var(--status-success)]/35'
+              : operatingMode === 'replay'
+              ? 'bg-[var(--accent-secondary)]/15 text-[var(--accent-secondary)] border-[var(--accent-secondary)]/35'
+              : 'bg-[var(--accent-primary)]/15 text-[var(--accent-primary)] border-[var(--accent-primary)]/35'
+          }`}>
+            {provenanceLabel}
+          </span>
         </div>
         <p className="text-xs text-[var(--text-secondary)] mt-1.5 leading-relaxed">
           {isGuided

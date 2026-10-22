@@ -12,6 +12,45 @@ from app.models.entities import User
 
 security_scheme = HTTPBearer(auto_error=False)
 
+ROLE_ADMIN = "ADMIN"
+ROLE_OPERATOR = "OPERATOR"
+ROLE_AUDITOR = "AUDITOR"
+
+ALL_ROLES = [ROLE_ADMIN, ROLE_OPERATOR, ROLE_AUDITOR]
+
+ROLE_PERMISSIONS: Dict[str, list[str]] = {
+    ROLE_ADMIN: [
+        "users:manage", "thresholds:configure", "interventions:approve",
+        "interventions:reject", "models:retrain", "telemetry:read",
+        "telemetry:ingest", "simulations:execute", "audits:verify",
+        "tenants:manage"
+    ],
+    ROLE_OPERATOR: [
+        "telemetry:read", "telemetry:ingest", "simulations:execute",
+        "interventions:preview", "forecasts:generate", "audits:read"
+    ],
+    ROLE_AUDITOR: [
+        "telemetry:read", "forecasts:read", "audits:read", "audits:verify",
+        "benchmarks:export"
+    ]
+}
+
+def enforce_tenant_access(current_user: User, resource_organization_id: Optional[str]):
+    """
+    Guarantees strict multi-tenant boundary isolation against Insecure Direct Object Reference (IDOR).
+    Cross-organization access without global ADMIN privileges is forbidden.
+    """
+    if not resource_organization_id:
+        return
+
+    user_org = getattr(current_user, "organization_id", "org-primary-enterprise") or "org-primary-enterprise"
+    if current_user.role != ROLE_ADMIN and user_org != resource_organization_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Tenant boundary violation: access to external organization '{resource_organization_id}' denied"
+        )
+
+
 def hash_password(password: str) -> str:
     """Hashes a plaintext password using bcrypt with salt."""
     salt = bcrypt.gensalt(rounds=12)
@@ -63,7 +102,9 @@ def get_current_user(
                 email="admin@aegisstor.internal",
                 hashed_password=hash_password("admin123"),
                 role="ADMIN",
+                organization_id="org-primary-enterprise",
                 is_active=True
+
             )
             db.add(user)
             db.commit()

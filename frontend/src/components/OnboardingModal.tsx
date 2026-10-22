@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   X,
   ArrowRight,
@@ -28,6 +28,12 @@ export const OnboardingModal: React.FC<Props> = ({
 }) => {
   const [step, setStep] = useState(1);
   const totalSteps = 6;
+
+  useEffect(() => {
+    if (isOpen) {
+      setStep(1);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -120,11 +126,11 @@ export const OnboardingModal: React.FC<Props> = ({
                 Choose how you would like to explore AEGISSTOR today. You can toggle this anytime in the top bar.
               </p>
 
-              <div className="grid grid-cols-2 gap-3 pt-1">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
                 <button
                   type="button"
                   onClick={() => onSelectMode('demo')}
-                  className={`p-4 rounded-xl border text-left transition-all ${
+                  className={`p-3 rounded-xl border text-left transition-all ${
                     currentMode === 'demo'
                       ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/15 shadow-[0_0_12px_rgba(255,103,71,0.2)]'
                       : 'glass-panel hover:border-[var(--border-normal)]'
@@ -132,28 +138,46 @@ export const OnboardingModal: React.FC<Props> = ({
                 >
                   <div className="font-bold text-xs text-[var(--text-primary)] flex items-center justify-between">
                     <span>Demo Mode</span>
-                    {currentMode === 'demo' && <CheckCircle2 size={14} className="text-[var(--accent-primary)]" />}
+                    {currentMode === 'demo' && <CheckCircle2 size={13} className="text-[var(--accent-primary)]" />}
                   </div>
-                  <p className="text-[11px] text-[var(--text-secondary)] mt-1.5">
-                    Preloaded with realistic enterprise NVMe, SAS, and Cold tier storage pools with synthetic telemetry.
+                  <p className="text-[10px] text-[var(--text-secondary)] mt-1 leading-snug">
+                    Synthetic multi-tier enterprise pools with diurnal patterns.
                   </p>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => onSelectMode('read_only')}
-                  className={`p-4 rounded-xl border text-left transition-all ${
-                    currentMode === 'read_only'
-                      ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/15 shadow-[0_0_12px_rgba(255,103,71,0.2)]'
+                  onClick={() => onSelectMode('replay')}
+                  className={`p-3 rounded-xl border text-left transition-all ${
+                    currentMode === 'replay'
+                      ? 'border-[var(--accent-secondary)] bg-[var(--accent-secondary)]/15 shadow-[0_0_12px_rgba(235,160,82,0.2)]'
                       : 'glass-panel hover:border-[var(--border-normal)]'
                   }`}
                 >
                   <div className="font-bold text-xs text-[var(--text-primary)] flex items-center justify-between">
-                    <span>Read-Only Live</span>
-                    {currentMode === 'read_only' && <CheckCircle2 size={14} className="text-[var(--accent-primary)]" />}
+                    <span>Replay Mode</span>
+                    {currentMode === 'replay' && <CheckCircle2 size={13} className="text-[var(--accent-secondary)]" />}
                   </div>
-                  <p className="text-[11px] text-[var(--text-secondary)] mt-1.5">
-                    Connects to verified local host telemetry collector in passive monitoring mode.
+                  <p className="text-[10px] text-[var(--text-secondary)] mt-1 leading-snug">
+                    Chronological benchmark traces from production storage traces.
+                  </p>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => onSelectMode('live')}
+                  className={`p-3 rounded-xl border text-left transition-all ${
+                    currentMode === 'live'
+                      ? 'border-[var(--status-success)] bg-[var(--status-success)]/15 shadow-[0_0_12px_rgba(40,199,111,0.2)]'
+                      : 'glass-panel hover:border-[var(--border-normal)]'
+                  }`}
+                >
+                  <div className="font-bold text-xs text-[var(--text-primary)] flex items-center justify-between">
+                    <span>Live Host</span>
+                    {currentMode === 'live' && <CheckCircle2 size={13} className="text-[var(--status-success)]" />}
+                  </div>
+                  <p className="text-[10px] text-[var(--text-secondary)] mt-1 leading-snug">
+                    Read-only host storage telemetry (C:\ drive) with live safety boundaries.
                   </p>
                 </button>
               </div>
@@ -273,12 +297,20 @@ export const OnboardingModal: React.FC<Props> = ({
 
           {/* Footer Controls */}
           <div className="pt-4 border-t border-[var(--border-subtle)] flex items-center justify-between">
-            <button
-              onClick={onClose}
-              className="text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors px-2 py-1 font-medium"
-            >
-              Skip Tour
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={onClose}
+                className="text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors px-2 py-1 font-medium"
+              >
+                Skip Tour
+              </button>
+              <button
+                onClick={onClose}
+                className="text-xs text-[var(--text-muted)] hover:text-[var(--status-critical)] transition-colors px-2 py-1 font-medium"
+              >
+                Exit Tour
+              </button>
+            </div>
 
             <div className="flex items-center gap-2">
               {step > 1 && (

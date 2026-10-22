@@ -1,0 +1,420 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+
+  /* ========================================================
+     AEGISSTOR ENTERPRISE DESIGN SYSTEM — LIGHT-FIRST TOKENS
+     Warm Porcelain Operations Workspace (WCAG 2.2 AA Certified)
+     ======================================================== */
+  --background: #F5F5F2;          /* Warm porcelain main canvas */
+  --surface: #FFFFFF;             /* White primary surfaces */
+  --surface-elevated: #FAFAF7;    /* Subtle warm neutral elevated panels */
+  --surface-subtle: #F0F0EB;      /* Inset metrics, table hover */
+  --text-primary: #222522;        /* Rich graphite headings and data */
+  --text-secondary: #535B55;      /* Secondary descriptions and labels */
+  --text-muted: #707971;          /* Muted metadata and timestamps */
+  --border: #DDE1DA;              /* Hairline structural dividers */
+  --border-subtle: #E8ECE6;
+  --border-normal: #DDE1DA;
+  --border-visible: #CBD1CA;
+  --border-highlight: #D94F2B;
+
+  /* Primary Brand Accent: Sophisticated Terracotta */
+  --accent: #D94F2B;
+  --accent-hover: #BF411F;
+  --accent-pressed: #A43517;
+  --focus-ring: #D94F2B;
+
+  /* Deep ink for high-contrast dark accents */
+  --deep-ink: #202421;
+  --deep-ink-surface: #272C28;
+
+  /* Semantic Status Tokens */
+  --success: #22784D;
+  --warning: #94651A;
+  --critical: #C33F36;
+  --danger: #C33F36;
+  --info: #3D6B82;
+
+  /* Structural Aliases for Consistency */
+  --bg-primary: var(--background);
+  --bg-secondary: #EBEBE6;
+  --bg-tertiary: #E2E2DC;
+
+  --surface-primary: var(--surface);
+  --surface-secondary: var(--surface-elevated);
+  --surface-glass: var(--surface);
+
+  --text-disabled: #98A19D;
+
+  --accent-primary: var(--accent);
+  --accent-primary-hover: var(--accent-hover);
+  --accent-primary-pressed: var(--accent-pressed);
+  --accent-secondary: #8C6A5A;
+  --accent-tertiary: #607270;
+
+  --status-success: var(--success);
+  --status-warning: var(--warning);
+  --status-critical: var(--critical);
+  --status-info: var(--info);
+  --status-unknown: var(--text-muted);
+
+  /* Button Tokens */
+  --btn-primary-bg: var(--accent);
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-hover: var(--accent-hover);
+  --btn-primary-pressed: var(--accent-pressed);
+
+  --btn-secondary-bg: var(--surface);
+  --btn-secondary-text: var(--text-primary);
+  --btn-secondary-border: var(--border);
+  --btn-secondary-hover: var(--surface-elevated);
+
+  --surface-hover: rgba(0, 0, 0, 0.03);
+  --surface-active: rgba(217, 79, 43, 0.08);
+
+  /* Chart Analytical Palette */
+  --chart-observation: #535B55;
+  --chart-forecast: #D94F2B;
+  --chart-alternative: #8C6A5A;
+  --chart-secondary: #707971;
+  --chart-success: var(--success);
+  --chart-warning: var(--warning);
+  --chart-critical: var(--critical);
+
+  --chart-primary: var(--chart-forecast);
+  --chart-tertiary: var(--chart-secondary);
+  --chart-neutral: var(--chart-observation);
+
+  --grid-line: rgba(0, 0, 0, 0.05);
+}
+
+.light-theme {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+
+  /* ========================================================
+     AEGISSTOR INDEPENDENT DARK THEME
+     Quiet Obsidian & Muted Terracotta (WCAG 2.2 AA Certified)
+     ======================================================== */
+  --background: #151715;          /* Deep graphite background */
+  --surface: #1C201D;             /* Primary card surface */
+  --surface-elevated: #242925;    /* Elevated panels */
+  --surface-subtle: #2C322D;      /* Inset metrics, table hover */
+  --text-primary: #F2F4F1;        /* Crisp white-slate text */
+  --text-secondary: #B4BCB3;      /* Secondary copy */
+  --text-muted: #7E877D;          /* Muted metadata */
+  --border: #353D37;              /* Hairline structural dividers */
+  --border-subtle: #29302B;
+  --border-normal: #353D37;
+  --border-visible: #465149;
+  --border-highlight: #E05F38;
+
+  /* Primary Action */
+  --accent: #E05F38;
+  --accent-hover: #F07049;
+  --accent-pressed: #C74E2A;
+  --focus-ring: #E05F38;
+
+  --deep-ink: #101210;
+  --deep-ink-surface: #181C19;
+
+  /* Semantic Status Tokens */
+  --success: #2EB369;
+  --warning: #CCA038;
+  --critical: #E24C43;
+  --danger: #E24C43;
+  --info: #6B9DB8;
+
+  --bg-primary: var(--background);
+  --bg-secondary: #181B18;
+  --bg-tertiary: #1E221E;
+
+  --surface-primary: var(--surface);
+  --surface-secondary: var(--surface-elevated);
+  --surface-glass: var(--surface);
+
+  --text-disabled: #5A635B;
+
+  --accent-primary: var(--accent);
+  --accent-primary-hover: var(--accent-hover);
+  --accent-primary-pressed: var(--accent-pressed);
+  --accent-secondary: #BFA598;
+  --accent-tertiary: #8C9993;
+
+  --status-success: var(--success);
+  --status-warning: var(--warning);
+  --status-critical: var(--critical);
+  --status-info: var(--info);
+  --status-unknown: var(--text-muted);
+
+  --btn-primary-bg: var(--accent);
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-hover: var(--accent-hover);
+  --btn-primary-pressed: var(--accent-pressed);
+
+  --btn-secondary-bg: var(--surface-elevated);
+  --btn-secondary-text: var(--text-primary);
+  --btn-secondary-border: var(--border);
+  --btn-secondary-hover: var(--surface-subtle);
+
+  --surface-hover: rgba(255, 255, 255, 0.04);
+  --surface-active: rgba(224, 95, 56, 0.12);
+
+  --chart-observation: var(--text-secondary);
+  --chart-forecast: var(--accent);
+  --chart-alternative: #BFA598;
+  --chart-secondary: var(--text-muted);
+  --chart-success: var(--success);
+  --chart-warning: var(--warning);
+  --chart-critical: var(--critical);
+
+  --chart-primary: var(--chart-forecast);
+  --chart-tertiary: var(--chart-secondary);
+  --chart-neutral: var(--chart-observation);
+
+  --grid-line: rgba(255, 255, 255, 0.05);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+/* ========================================================
+   REFINED ENTERPRISE COMPONENT SYSTEM
+   ======================================================== */
+
+/* Surface Panels */
+.titan-card,
+.glass-panel,
+.glass-level-1 {
+  background-color: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 rgba(32, 36, 33, 0.04);
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.titan-card:hover,
+.glass-panel:hover,
+.glass-level-1:hover {
+  border-color: var(--border-visible);
+}
+
+.titan-card-elevated,
+.glass-panel-elevated,
+.glass-level-2 {
+  background-color: var(--surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px -2px rgba(32, 36, 33, 0.06);
+}
+
+.titan-modal,
+.glass-modal,
+.glass-level-3,
+.glass-focus {
+  background-color: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-visible);
+  border-radius: 10px;
+  box-shadow: 0 16px 40px -4px rgba(32, 36, 33, 0.16);
+}
+
+/* Primary Enterprise Action Button */
+.btn-primary,
+.btn-ember-primary,
+.btn-aurora-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 0.375rem 0.875rem;
+  border: 1px solid transparent;
+  transition: background-color 140ms ease, border-color 140ms ease, transform 100ms ease;
+  user-select: none;
+}
+
+.btn-primary:hover:not(:disabled),
+.btn-ember-primary:hover:not(:disabled),
+.btn-aurora-primary:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+}
+
+.btn-primary:active:not(:disabled),
+.btn-ember-primary:active:not(:disabled),
+.btn-aurora-primary:active:not(:disabled) {
+  background-color: var(--accent-pressed);
+  transform: translateY(1px);
+}
+
+/* Secondary Enterprise Action Button */
+.btn-secondary,
+.btn-ember-secondary,
+.btn-aurora-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 0.375rem 0.875rem;
+  border: 1px solid var(--border);
+  transition: background-color 140ms ease, border-color 140ms ease;
+  user-select: none;
+}
+
+.btn-secondary:hover:not(:disabled),
+.btn-ember-secondary:hover:not(:disabled),
+.btn-aurora-secondary:hover:not(:disabled) {
+  background-color: var(--surface-elevated);
+  border-color: var(--border-visible);
+}
+
+.btn-secondary:active:not(:disabled),
+.btn-ember-secondary:active:not(:disabled),
+.btn-aurora-secondary:active:not(:disabled) {
+  background-color: var(--surface-subtle);
+}
+
+/* Quiet / Ghost Button */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: transparent;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 0.375rem 0.625rem;
+  border: 1px solid transparent;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background-color: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+/* Form Inputs, Selects, and Textareas */
+input, select, textarea {
+  color-scheme: light;
+  background-color: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.dark input,
+.dark select,
+.dark textarea {
+  color-scheme: dark;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+select option {
+  background-color: #FFFFFF;
+  color: #222522;
+}
+
+.dark select option {
+  background-color: #1C201D;
+  color: #F2F4F1;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 0.8;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  color: var(--text-disabled) !important;
+}
+
+/* Typography Invariants */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+}
+
+/* Tabular Numerics for Telemetry */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Accessible Focus Rings */
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--focus-ring);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -3,292 +3,396 @@
 @tailwind utilities;
 
 :root {
+  color-scheme: light;
+
   /* ========================================================
-     DARK THEME — EMBER NOIR (Prompt 13 Design Tokens)
+     AEGISSTOR ENTERPRISE DESIGN SYSTEM — HITIT-INSPIRED LIGHT TOKENS
+     Warm Porcelain Operations Workspace (WCAG 2.2 AA Certified)
      ======================================================== */
-  --bg-primary: #171615;
-  --bg-secondary: #1C1A18;
-  --bg-tertiary: #211E1C;
+  --background: #F5F5F2;          /* Hitit warm porcelain main canvas */
+  --surface: #FFFFFF;             /* Crisp pure white primary surfaces */
+  --surface-elevated: #F8F8F6;    /* Subtle warm neutral elevated panels */
+  --surface-subtle: #EEEEEC;      /* Inset metrics, table hover */
+  --text-primary: #1C1E1C;        /* Hitit deep graphite headings and data */
+  --text-secondary: #555C56;      /* Secondary descriptions and labels */
+  --text-muted: #727971;          /* Muted metadata and timestamps */
+  --border: #DFE2DD;              /* Hitit hairline structural dividers */
+  --border-subtle: #E8ECE6;
+  --border-normal: #DFE2DD;
+  --border-visible: #CED2CC;
+  --border-highlight: #B82432;
 
-  --surface-primary: rgba(37, 33, 31, 0.82);
-  --surface-secondary: rgba(45, 39, 36, 0.88);
-  --surface-elevated: rgba(53, 45, 41, 0.96);
-  --surface-glass: rgba(37, 33, 31, 0.82);
+  /* Primary Brand Accent: Hitit Confident Crimson */
+  --accent: #B82432;
+  --accent-hover: #981E2A;
+  --accent-pressed: #7D1721;
+  --accent-soft: #F9E9EB;
+  --focus-ring: #B82432;
 
-  --text-primary: #F5F0E8;
-  --text-secondary: #D0C5BB;
-  --text-muted: #AAA198;
-  --text-disabled: #80776F;
+  /* Deep ink & enterprise blue */
+  --deep-ink: #131416;
+  --deep-ink-surface: #1E2024;
+  --brand-blue: #006AB6;
 
-  --border-subtle: rgba(235, 220, 205, 0.10);
-  --border-normal: rgba(235, 220, 205, 0.17);
-  --border-visible: rgba(235, 220, 205, 0.17);
-  --border-highlight: rgba(255, 103, 71, 0.48);
+  /* Semantic Status Tokens */
+  --success: #22784D;
+  --warning: #94651A;
+  --critical: #C33F36;
+  --danger: #C33F36;
+  --info: #006AB6;
 
-  /* PRIMARY ACCENT: VERMILION */
-  --accent-primary: #FF6747;
-  --accent-primary-hover: #FF8267;
-  --accent-primary-pressed: #D94F32;
+  /* Structural Aliases for Consistency */
+  --bg-primary: var(--background);
+  --bg-secondary: #EBEBE6;
+  --bg-tertiary: #E2E2DC;
 
-  /* SECONDARY & TERTIARY ACCENTS: WARM CLAY & SMOKED TAUPE */
-  --accent-secondary: #E8A083;
-  --accent-tertiary: #C6B8AB;
+  --surface-primary: var(--surface);
+  --surface-secondary: var(--surface-elevated);
+  --surface-glass: var(--surface);
 
-  /* OPERATIONAL STATUS TOKENS */
-  --status-success: #91B99A;
-  --status-warning: #F1C27D;
-  --status-critical: #FF7869;
-  --status-info: #C9BCAF;
-  --status-unknown: #AAA198;
+  --text-disabled: #98A19D;
 
-  /* Backward Compatibility Aliases */
-  --color-bg: var(--bg-primary);
-  --color-bg-secondary: var(--bg-secondary);
-  --accent-cyan: var(--accent-primary);
-  --accent-sapphire: var(--accent-secondary);
-  --accent-violet: var(--accent-tertiary);
-  --color-success: var(--status-success);
-  --color-warning: var(--status-warning);
-  --color-critical: var(--status-critical);
-  --color-neutral: var(--status-info);
+  --accent-primary: var(--accent);
+  --accent-primary-hover: var(--accent-hover);
+  --accent-primary-pressed: var(--accent-pressed);
+  --accent-secondary: #8C6A5A;
+  --accent-tertiary: #607270;
 
-  /* Semantic UI Tokens */
-  --btn-primary-bg: #FF6747;
-  --btn-primary-text: #171615;
-  --btn-primary-hover: #FF8267;
-  --btn-primary-pressed: #D94F32;
+  --status-success: var(--success);
+  --status-warning: var(--warning);
+  --status-critical: var(--critical);
+  --status-info: var(--info);
+  --status-unknown: var(--text-muted);
 
-  --btn-secondary-bg: rgba(45, 39, 36, 0.88);
-  --btn-secondary-text: #F5F0E8;
-  --btn-secondary-hover: rgba(53, 45, 41, 0.96);
+  /* Button Tokens */
+  --btn-primary-bg: var(--accent);
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-hover: var(--accent-hover);
+  --btn-primary-pressed: var(--accent-pressed);
 
-  --surface-hover: rgba(235, 220, 205, 0.04);
-  --surface-active: rgba(255, 103, 71, 0.12);
-  --focus-ring: 0 0 0 2px #171615, 0 0 0 4px #FF6747;
+  --btn-secondary-bg: var(--surface);
+  --btn-secondary-text: var(--text-primary);
+  --btn-secondary-border: var(--border);
+  --btn-secondary-hover: var(--surface-elevated);
 
-  /* CHARTS WARM ANALYTICAL PALETTE (Prompt 13 Section 10) */
-  --chart-observation: #C9BCAF;
-  --chart-forecast: #FF6747;
-  --chart-alternative: #E8A083;
-  --chart-secondary: #A89A8D;
-  --chart-success: #91B99A;
-  --chart-warning: #F1C27D;
-  --chart-critical: #FF7869;
+  --surface-hover: rgba(0, 0, 0, 0.03);
+  --surface-active: rgba(217, 79, 43, 0.08);
+
+  /* Chart Analytical Palette */
+  --chart-observation: #535B55;
+  --chart-forecast: #B82432;
+  --chart-alternative: #8C6A5A;
+  --chart-secondary: #707971;
+  --chart-success: var(--success);
+  --chart-warning: var(--warning);
+  --chart-critical: var(--critical);
 
   --chart-primary: var(--chart-forecast);
   --chart-tertiary: var(--chart-secondary);
   --chart-neutral: var(--chart-observation);
 
-  /* Smoked Charcoal & Burnt-Clay Illumination (No blue, cyan, or violet) */
-  --ambient-ember: rgba(255, 103, 71, 0.045);
-  --ambient-clay: rgba(232, 160, 131, 0.035);
-  --grid-line: rgba(235, 220, 205, 0.025);
+  --grid-line: rgba(0, 0, 0, 0.05);
 }
 
 .light-theme {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+
   /* ========================================================
-     LIGHT THEME — PORCELAIN ATELIER (Prompt 13 Tokens)
+     AEGISSTOR INDEPENDENT DARK THEME
+     Quiet Obsidian & Muted Hitit Crimson (WCAG 2.2 AA Certified)
      ======================================================== */
-  --bg-primary: #F5F0E8;
-  --bg-secondary: #EEE7DE;
-  --bg-tertiary: #E6DDD3;
+  --background: #121412;          /* Hitit obsidian graphite background */
+  --surface: #181B18;             /* Primary card surface */
+  --surface-elevated: #202420;    /* Elevated panels */
+  --surface-subtle: #272C27;      /* Inset metrics, table hover */
+  --text-primary: #F0F2EF;        /* Crisp white-slate text */
+  --text-secondary: #B0B8AF;      /* Secondary copy */
+  --text-muted: #7A8479;          /* Muted metadata */
+  --border: #323833;              /* Hairline structural dividers */
+  --border-subtle: #252A26;
+  --border-normal: #323833;
+  --border-visible: #424A43;
+  --border-highlight: #D13847;
 
-  --surface-primary: rgba(255, 252, 246, 0.88);
-  --surface-secondary: rgba(255, 252, 246, 0.95);
-  --surface-elevated: #FFFCF6;
-  --surface-glass: rgba(255, 252, 246, 0.88);
+  /* Primary Action */
+  --accent: #D13847;
+  --accent-hover: #E64C5B;
+  --accent-pressed: #B52B39;
+  --accent-soft: rgba(209, 56, 71, 0.15);
+  --focus-ring: #D13847;
 
-  --text-primary: #24211F;
-  --text-secondary: #554D46;
-  --text-muted: #776C62;
-  --text-disabled: #A39A90;
+  --deep-ink: #0A0C0A;
+  --deep-ink-surface: #131613;
+  --brand-blue: #3A92D2;
 
-  --border-subtle: rgba(65, 50, 40, 0.10);
-  --border-normal: rgba(65, 50, 40, 0.17);
-  --border-visible: rgba(65, 50, 40, 0.17);
-  --border-highlight: rgba(217, 79, 50, 0.38);
+  /* Semantic Status Tokens */
+  --success: #2EB369;
+  --warning: #CCA038;
+  --critical: #E24C43;
+  --danger: #E24C43;
+  --info: #3A92D2;
 
-  /* PRIMARY ACCENT: DEEP VERMILION */
-  --accent-primary: #D94F32;
-  --accent-primary-hover: #BE4028;
-  --accent-primary-pressed: #A73521;
+  --bg-primary: var(--background);
+  --bg-secondary: #181B18;
+  --bg-tertiary: #1E221E;
 
-  /* SECONDARY & TERTIARY ACCENT: WARM CLAY & SLATE TAUPE */
-  --accent-secondary: #8B6B5B;
-  --accent-tertiary: #71665D;
+  --surface-primary: var(--surface);
+  --surface-secondary: var(--surface-elevated);
+  --surface-glass: var(--surface);
 
-  /* STATUS TOKENS */
-  --status-success: #34754D;
-  --status-warning: #89520E;
-  --status-critical: #AE382B;
-  --status-info: #66574C;
-  --status-unknown: #746A60;
+  --text-disabled: #5A635B;
 
-  /* Backward Compatibility Aliases */
-  --color-bg: var(--bg-primary);
-  --color-bg-secondary: var(--bg-secondary);
-  --accent-cyan: var(--accent-primary);
-  --accent-sapphire: var(--accent-secondary);
-  --accent-violet: var(--accent-tertiary);
-  --color-success: var(--status-success);
-  --color-warning: var(--status-warning);
-  --color-critical: var(--status-critical);
-  --color-neutral: var(--status-info);
+  --accent-primary: var(--accent);
+  --accent-primary-hover: var(--accent-hover);
+  --accent-primary-pressed: var(--accent-pressed);
+  --accent-secondary: #BFA598;
+  --accent-tertiary: #8C9993;
 
-  /* Semantic UI Tokens */
-  --btn-primary-bg: #D94F32;
+  --status-success: var(--success);
+  --status-warning: var(--warning);
+  --status-critical: var(--critical);
+  --status-info: var(--info);
+  --status-unknown: var(--text-muted);
+
+  --btn-primary-bg: var(--accent);
   --btn-primary-text: #FFFFFF;
-  --btn-primary-hover: #BE4028;
-  --btn-primary-pressed: #A73521;
+  --btn-primary-hover: var(--accent-hover);
+  --btn-primary-pressed: var(--accent-pressed);
 
-  --btn-secondary-bg: #EEE7DE;
-  --btn-secondary-text: #24211F;
-  --btn-secondary-hover: #E6DDD3;
+  --btn-secondary-bg: var(--surface-elevated);
+  --btn-secondary-text: var(--text-primary);
+  --btn-secondary-border: var(--border);
+  --btn-secondary-hover: var(--surface-subtle);
 
-  --surface-hover: rgba(65, 50, 40, 0.04);
-  --surface-active: rgba(217, 79, 50, 0.08);
-  --focus-ring: 0 0 0 2px #FFFCF6, 0 0 0 4px #D94F32;
+  --surface-hover: rgba(255, 255, 255, 0.04);
+  --surface-active: rgba(209, 56, 71, 0.12);
 
-  /* CHARTS WARM ANALYTICAL PALETTE (Light Mode) */
-  --chart-observation: #66574C;
-  --chart-forecast: #D94F32;
-  --chart-alternative: #8B6B5B;
-  --chart-secondary: #71665D;
-  --chart-success: #34754D;
-  --chart-warning: #89520E;
-  --chart-critical: #AE382B;
+  --chart-observation: var(--text-secondary);
+  --chart-forecast: var(--accent);
+  --chart-alternative: #BFA598;
+  --chart-secondary: var(--text-muted);
+  --chart-success: var(--success);
+  --chart-warning: var(--warning);
+  --chart-critical: var(--critical);
 
   --chart-primary: var(--chart-forecast);
   --chart-tertiary: var(--chart-secondary);
   --chart-neutral: var(--chart-observation);
 
-  --ambient-ember: rgba(217, 79, 50, 0.035);
-  --ambient-clay: rgba(139, 107, 91, 0.03);
-  --grid-line: rgba(65, 50, 40, 0.035);
+  --grid-line: rgba(255, 255, 255, 0.05);
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--bg-primary);
+  background-color: var(--background);
   color: var(--text-primary);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
-  /* Architectural Graphite & Burnt Clay atmospheric illumination */
-  background-image: 
-    radial-gradient(circle at 12% 12%, var(--ambient-ember) 0%, transparent 45%),
-    radial-gradient(circle at 88% 88%, var(--ambient-clay) 0%, transparent 45%),
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
-  background-attachment: fixed;
+  transition: background-color 150ms ease, color 150ms ease;
 }
 
 /* ========================================================
-   THE SMOKED-GLASS DESIGN SYSTEM (Ember Noir Architectural)
+   REFINED ENTERPRISE COMPONENT SYSTEM
    ======================================================== */
 
-/* Standard Smoked Glass Surface */
+/* Surface Panels */
+.titan-card,
 .glass-panel,
 .glass-level-1 {
-  background-color: var(--surface-primary);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-subtle);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
-  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  background-color: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 rgba(32, 36, 33, 0.04);
+  transition: border-color 140ms ease, box-shadow 140ms ease;
 }
 
+.titan-card:hover,
 .glass-panel:hover,
 .glass-level-1:hover {
-  border-color: var(--border-normal);
+  border-color: var(--border-visible);
 }
 
-/* Elevated Smoked Glass (Sticky action bars, floating popovers, dropdowns) */
+.titan-card-elevated,
 .glass-panel-elevated,
 .glass-level-2 {
-  background-color: var(--surface-secondary);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border-normal);
-  box-shadow: 0 14px 44px 0 rgba(0, 0, 0, 0.50), inset 0 1px 0 0 rgba(235, 220, 205, 0.06);
+  background-color: var(--surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px -2px rgba(32, 36, 33, 0.06);
 }
 
-/* Modal and Complex Forms (Higher opacity, minimal blur behind text, strong contrast) */
+.titan-modal,
 .glass-modal,
 .glass-level-3,
 .glass-focus {
-  background-color: var(--surface-elevated);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--border-normal);
-  box-shadow: 0 24px 64px 0 rgba(0, 0, 0, 0.65), inset 0 1px 0 0 rgba(235, 220, 205, 0.10);
+  background-color: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-visible);
+  border-radius: 10px;
+  box-shadow: 0 16px 40px -4px rgba(32, 36, 33, 0.16);
 }
 
-/* Accessible fallbacks when backdrop-filter is unsupported */
-@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  .glass-panel,
-  .glass-level-1 {
-    background-color: var(--surface-secondary);
-  }
-  .glass-panel-elevated,
-  .glass-level-2 {
-    background-color: var(--surface-elevated);
-  }
-}
-
-/* ========================================================
-   STANDARDIZED ACTION BUTTONS & INTERACTIONS
-   ======================================================== */
-
+/* Primary Enterprise Action Button */
+.btn-primary,
 .btn-ember-primary,
 .btn-aurora-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   background-color: var(--btn-primary-bg);
   color: var(--btn-primary-text);
+  font-size: 0.75rem;
   font-weight: 600;
+  border-radius: 6px;
+  padding: 0.375rem 0.875rem;
   border: 1px solid transparent;
-  transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 2px 8px -1px rgba(255, 103, 71, 0.35);
+  transition: background-color 140ms ease, border-color 140ms ease, transform 100ms ease;
+  user-select: none;
 }
 
+.btn-primary:hover:not(:disabled),
 .btn-ember-primary:hover:not(:disabled),
 .btn-aurora-primary:hover:not(:disabled) {
-  background-color: var(--accent-primary-hover);
-  box-shadow: 0 4px 16px 0 rgba(255, 103, 71, 0.45);
-  transform: translateY(-1px);
+  background-color: var(--accent-hover);
 }
 
+.btn-primary:active:not(:disabled),
 .btn-ember-primary:active:not(:disabled),
 .btn-aurora-primary:active:not(:disabled) {
-  background-color: var(--accent-primary-pressed);
-  transform: translateY(0);
+  background-color: var(--accent-pressed);
+  transform: translateY(1px);
 }
 
+/* Secondary Enterprise Action Button */
+.btn-secondary,
 .btn-ember-secondary,
 .btn-aurora-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   background-color: var(--btn-secondary-bg);
   color: var(--btn-secondary-text);
-  border: 1px solid var(--border-normal);
+  font-size: 0.75rem;
   font-weight: 500;
-  transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 6px;
+  padding: 0.375rem 0.875rem;
+  border: 1px solid var(--border);
+  transition: background-color 140ms ease, border-color 140ms ease;
+  user-select: none;
 }
 
+.btn-secondary:hover:not(:disabled),
 .btn-ember-secondary:hover:not(:disabled),
 .btn-aurora-secondary:hover:not(:disabled) {
   background-color: var(--surface-elevated);
-  border-color: var(--border-highlight);
+  border-color: var(--border-visible);
+}
+
+.btn-secondary:active:not(:disabled),
+.btn-ember-secondary:active:not(:disabled),
+.btn-aurora-secondary:active:not(:disabled) {
+  background-color: var(--surface-subtle);
+}
+
+/* Quiet / Ghost Button */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: transparent;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 0.375rem 0.625rem;
+  border: 1px solid transparent;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background-color: var(--surface-hover);
   color: var(--text-primary);
+}
+
+/* Form Inputs, Selects, and Textareas */
+input, select, textarea {
+  color-scheme: light;
+  background-color: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.dark input,
+.dark select,
+.dark textarea {
+  color-scheme: dark;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+select option {
+  background-color: #FFFFFF;
+  color: #222522;
+}
+
+.dark select option {
+  background-color: #1C201D;
+  color: #F2F4F1;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 0.8;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  color: var(--text-disabled) !important;
+}
+
+/* Typography Invariants */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+}
+
+/* Tabular Numerics for Telemetry */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
 }
 
 /* Accessible Focus Rings */
 *:focus-visible {
   outline: none;
-  box-shadow: var(--focus-ring);
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--focus-ring);
 }
 
-/* Custom Smoked Scrollbars */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -299,20 +403,15 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-normal);
-  border-radius: 9999px;
+  background: var(--border);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
 
-/* Tabular Numerals for Tables & Metrics */
-.tabular-nums {
-  font-variant-numeric: tabular-nums;
-}
-
-/* Accessibility Reduced Motion */
+/* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,

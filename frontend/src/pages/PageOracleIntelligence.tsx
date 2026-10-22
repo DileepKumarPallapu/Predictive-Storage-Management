@@ -465,7 +465,7 @@ export const PageOracleIntelligence: React.FC = () => {
                             <span className={`w-fit px-1.5 py-0.2 rounded text-[9px] font-bold ${
                               w.priority === 'P0_CRITICAL' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' :
                               w.priority === 'P1_HIGH' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' :
-                              'bg-zinc-800 text-zinc-300 border border-zinc-700'
+                              'bg-[var(--surface-elevated)] text-[var(--text-secondary)] border border-[var(--border-normal)]'
                             }`}>
                               {w.priority}
                             </span>
@@ -586,7 +586,7 @@ export const PageOracleIntelligence: React.FC = () => {
                           {item.current_allocated_gb} GB ({pct}%)
                         </span>
                       </div>
-                      <div className="w-full bg-zinc-800 rounded-full h-1.5 overflow-hidden">
+                      <div className="w-full bg-[var(--surface-elevated)] rounded-full h-1.5 overflow-hidden">
                         <div
                           className={`h-full rounded-full ${isResidual ? 'bg-[var(--accent-primary)]' : 'bg-emerald-500'}`}
                           style={{ width: `${Math.min(100, pct)}%` }}
@@ -765,7 +765,7 @@ export const PageOracleIntelligence: React.FC = () => {
                     <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
                       finding.severity === 'CRITICAL' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' :
                       finding.severity === 'HIGH' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' :
-                      'bg-zinc-800 text-zinc-300 border border-zinc-700'
+                      'bg-[var(--surface-elevated)] text-[var(--text-secondary)] border border-[var(--border-normal)]'
                     }`}>
                       {finding.severity}
                     </span>
@@ -773,7 +773,7 @@ export const PageOracleIntelligence: React.FC = () => {
                   <div className="flex gap-1.5 mt-2 flex-wrap">
                     <span className="text-[10px] text-[var(--text-secondary)] font-mono">Associated Workloads:</span>
                     {finding.contributing_workloads.map((wId: string) => (
-                      <span key={wId} className="px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-300 text-[10px] font-mono border border-zinc-800">
+                      <span key={wId} className="px-1.5 py-0.5 rounded bg-[var(--surface-secondary)] text-[var(--text-secondary)] text-[10px] font-mono border border-[var(--border-normal)]">
                         {wId}
                       </span>
                     ))}
@@ -1012,7 +1012,7 @@ export const PageOracleIntelligence: React.FC = () => {
                     className={`p-4 rounded-xl border cursor-pointer transition-all ${
                       isSelected
                         ? 'bg-[var(--surface-secondary)] border-[var(--accent-primary)] shadow-md'
-                        : 'bg-[var(--surface-primary)] border-[var(--border-subtle)] hover:border-zinc-700'
+                        : 'bg-[var(--surface-primary)] border-[var(--border-subtle)] hover:border-[var(--border-highlight)]'
                     }`}
                   >
                     <div className="flex justify-between items-start mb-2">
@@ -1021,7 +1021,7 @@ export const PageOracleIntelligence: React.FC = () => {
                         hyp.status === 'SUPPORTED_WITHIN_CONDITIONS' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' :
                         hyp.status === 'READY_FOR_TESTING' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40' :
                         hyp.status === 'UNDER_EVALUATION' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' :
-                        'bg-zinc-800 text-zinc-300 border border-zinc-700'
+                        'bg-[var(--surface-elevated)] text-[var(--text-secondary)] border border-[var(--border-normal)]'
                       }`}>
                         {hyp.status}
                       </span>
@@ -1099,7 +1099,7 @@ export const PageOracleIntelligence: React.FC = () => {
                         </li>
                       ))}
                       {selectedHypothesis.supporting_evidence.length === 0 && (
-                        <li className="italic text-zinc-500">No supporting evidence recorded.</li>
+                        <li className="italic text-[var(--text-muted)]">No supporting evidence recorded.</li>
                       )}
                     </ul>
                   </div>
@@ -1117,7 +1117,7 @@ export const PageOracleIntelligence: React.FC = () => {
                         </li>
                       ))}
                       {selectedHypothesis.contradicting_evidence.length === 0 && (
-                        <li className="italic text-zinc-500">No contradicting evidence recorded.</li>
+                        <li className="italic text-[var(--text-muted)]">No contradicting evidence recorded.</li>
                       )}
                     </ul>
                   </div>
@@ -1135,7 +1135,7 @@ export const PageOracleIntelligence: React.FC = () => {
                         Tests hypothesis counterfactually without mutating real production storage.
                       </p>
                     </div>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-zinc-800 text-zinc-300 border border-zinc-700">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[var(--surface-elevated)] text-[var(--text-secondary)] border border-[var(--border-normal)]">
                       Zero Host Mutations
                     </span>
                   </div>
@@ -1205,7 +1205,7 @@ export const PageOracleIntelligence: React.FC = () => {
                             type="text"
                             disabled
                             value="Controller Cap Relaxed (-35% Queue Delay)"
-                            className="w-full bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded p-2 text-xs font-mono text-zinc-400"
+                            className="w-full bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded p-2 text-xs font-mono text-[var(--text-secondary)]"
                           />
                         </div>
                       )}
@@ -1231,7 +1231,7 @@ export const PageOracleIntelligence: React.FC = () => {
                         <span className={`px-2 py-0.5 rounded font-bold text-[10px] ${
                           simResult.sla_breach_prevented
                             ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                            : 'bg-zinc-800 text-zinc-300'
+                            : 'bg-[var(--surface-elevated)] text-[var(--text-secondary)]'
                         }`}>
                           {simResult.sla_breach_prevented ? 'SLA BREACH PREVENTED' : 'LATENCY REDUCED'}
                         </span>
@@ -1268,7 +1268,7 @@ export const PageOracleIntelligence: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="md:col-span-2 p-8 text-center text-zinc-500 font-mono text-xs bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl flex items-center justify-center">
+              <div className="md:col-span-2 p-8 text-center text-[var(--text-muted)] font-mono text-xs bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl flex items-center justify-center">
                 Select a hypothesis to view evidence audit trail and run controlled counterfactuals.
               </div>
             )}
@@ -1293,7 +1293,7 @@ export const PageOracleIntelligence: React.FC = () => {
               </div>
               <button
                 onClick={() => setShowHypModal(false)}
-                className="text-zinc-400 hover:text-white font-bold"
+                className="text-[var(--text-muted)] hover:text-[var(--text-primary)] font-bold"
               >
                 ✕
               </button>
@@ -1377,7 +1377,7 @@ export const PageOracleIntelligence: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowHypModal(false)}
-                  className="px-4 py-2 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold"
+                  className="px-4 py-2 rounded bg-[var(--surface-secondary)] hover:bg-[var(--surface-elevated)] text-[var(--text-primary)] border border-[var(--border-normal)] font-bold"
                 >
                   Cancel
                 </button>

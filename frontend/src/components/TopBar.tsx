@@ -1,16 +1,17 @@
 import React from 'react';
 import {
-  Shield,
   Sun,
   Moon,
-  Radio,
   Bell,
   Search,
   User,
   Sparkles,
-  BookOpen,
   SlidersHorizontal,
-  Compass
+  BookOpen,
+  Radio,
+  ChevronRight,
+  Menu,
+  Database
 } from 'lucide-react';
 import { usePresentationMode } from '../context/PresentationModeContext';
 
@@ -28,6 +29,8 @@ interface TopBarProps {
     username: string;
     role: string;
   };
+  currentPageLabel?: string;
+  onToggleMobileMenu?: () => void;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -41,40 +44,117 @@ export const TopBar: React.FC<TopBarProps> = ({
   onOpenAuth,
   onOpenTour,
   currentUser,
+  currentPageLabel = 'Executive Overview',
+  onToggleMobileMenu,
 }) => {
-  const { mode, toggleMode, isGuided } = usePresentationMode();
+  const { toggleMode, isGuided } = usePresentationMode();
 
   return (
-    <header className="h-14 glass-panel-elevated border-b border-[var(--border-subtle)] px-4 sm:px-6 flex items-center justify-between text-xs select-none sticky top-0 z-20">
-      {/* Left: Mode Status & Guided/Expert Toggle */}
-      <div className="flex items-center gap-3 sm:gap-4">
-        {/* Operating Mode Dropdown */}
-        <div className="flex items-center gap-2">
+    <header className="h-16 bg-[var(--surface)] border-b border-[var(--border)] px-4 sm:px-6 flex items-center justify-between text-xs select-none sticky top-0 z-30 transition-colors gap-2">
+      {/* LEFT: Mobile toggle, Brand Mark & Context */}
+      <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+        {onToggleMobileMenu && (
+          <button
+            type="button"
+            onClick={onToggleMobileMenu}
+            className="lg:hidden p-1.5 rounded-md hover:bg-[var(--surface-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+            title="Toggle Navigation Menu"
+            aria-label="Toggle Navigation Menu"
+          >
+            <Menu size={18} />
+          </button>
+        )}
+
+        {/* Hitit-Inspired Authoritative Storage Resilience Brand Identity */}
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-[var(--accent)] text-white flex items-center justify-center shadow-xs shrink-0 transition-transform hover:scale-[1.02]">
+            {/* Storage Resilience Geometric Vault Prism */}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-white">
+              <rect x="3" y="4" width="18" height="6" rx="1.5" />
+              <rect x="3" y="14" width="18" height="6" rx="1.5" />
+              <circle cx="7" cy="7" r="1" fill="currentColor" stroke="none" />
+              <circle cx="7" cy="17" r="1" fill="currentColor" stroke="none" />
+              <path d="M14 7h3" stroke="currentColor" strokeWidth="1.8" />
+              <path d="M14 17h3" stroke="currentColor" strokeWidth="1.8" />
+            </svg>
+          </div>
+          <div className="flex flex-col shrink-0">
+            <span className="font-extrabold tracking-tight text-sm font-display text-[var(--text-primary)] leading-none whitespace-nowrap">
+              AEGIS<span className="text-[var(--accent)]">STOR</span>
+            </span>
+            <span className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider leading-tight mt-0.5 whitespace-nowrap">
+              RESILIENCE INTELLIGENCE
+            </span>
+          </div>
+        </div>
+
+        {/* Context Separator & Page Label */}
+        <div className="hidden 2xl:flex items-center gap-2 text-[var(--text-muted)] text-[12px] pl-3 border-l border-[var(--border)] shrink-0">
+          <span className="text-[var(--text-secondary)] font-medium whitespace-nowrap">{currentPageLabel}</span>
+        </div>
+      </div>
+
+      {/* CENTER: Search Bar + Intelligently Grouped Data Source Environment */}
+      <div className="hidden lg:flex items-center gap-2 shrink min-w-0 justify-center">
+        {/* Universal Command Search (Desktop full bar) */}
+        <button
+          onClick={onOpenSearch}
+          className="hidden 2xl:flex items-center gap-2.5 w-60 px-3 py-1.5 rounded-lg bg-[var(--surface-elevated)] border border-[var(--border)] hover:border-[var(--border-visible)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-all shadow-xs group"
+          title="Search storage pools, telemetry, actions (Ctrl+K)"
+          aria-label="Global Search"
+        >
+          <Search size={14} className="text-[var(--text-muted)] group-hover:text-[var(--text-primary)]" />
+          <span className="text-xs font-normal flex-1 text-left text-[var(--text-secondary)] truncate">Search pools, signals...</span>
+          <kbd className="text-[10px] font-mono bg-[var(--surface)] px-1.5 py-0.5 rounded border border-[var(--border)] text-[var(--text-muted)] shrink-0">
+            Ctrl K
+          </kbd>
+        </button>
+
+        {/* Compact Search button on tablet / < 2xl */}
+        <button
+          onClick={onOpenSearch}
+          className="2xl:hidden flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[var(--surface-elevated)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all text-xs shrink-0"
+          title="Search (Ctrl+K)"
+          aria-label="Search"
+        >
+          <Search size={14} />
+          <span className="hidden xl:inline font-medium text-[11px]">Search</span>
+        </button>
+
+        {/* Grouped Data Source Environment */}
+        <div className="flex items-center bg-[var(--surface-elevated)] rounded-lg p-0.5 border border-[var(--border)] shrink-0">
+          <div className="hidden xl:flex items-center gap-1.5 px-2 py-1 text-[11px] font-medium text-[var(--text-secondary)] border-r border-[var(--border)]">
+            <Database size={12} className="text-[var(--accent)]" />
+            <span className="text-[var(--text-muted)]">Source:</span>
+          </div>
           <select
             value={currentMode}
             onChange={(e) => onModeChange(e.target.value)}
-            className="bg-[var(--surface-secondary)] border border-[var(--border-normal)] text-[var(--text-primary)] text-xs rounded-lg px-2.5 py-1 focus:outline-none focus:border-[var(--accent-primary)] cursor-pointer transition-colors font-medium"
-            aria-label="Operating Mode"
+            className="bg-transparent border-0 text-[var(--text-primary)] text-xs font-medium px-2 py-1 focus:outline-none cursor-pointer max-w-[130px] sm:max-w-none truncate"
+            aria-label="Select Operating Data Mode"
           >
-            <option value="demo" className="bg-[var(--bg-secondary)]">Demo Mode (Synthetic Telemetry)</option>
-            <option value="replay" className="bg-[var(--bg-secondary)]">Replay Mode (Chronological Traces)</option>
-            <option value="live" className="bg-[var(--bg-secondary)]">Live Read-Only (Passive Host)</option>
+            <option value="demo">Synthetic Demo</option>
+            <option value="replay">Benchmark Traces</option>
+            <option value="live">Passive Host (C:\)</option>
           </select>
         </div>
+      </div>
 
-        {/* Guided vs Expert Mode Switch */}
-        <div className="hidden md:flex items-center glass-panel rounded-lg p-0.5 border border-[var(--border-subtle)]">
+      {/* RIGHT: Mode Switcher, Status, Notifications, Account, Theme */}
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* Guided vs Expert Segmented Control */}
+        <div className="flex items-center bg-[var(--surface-elevated)] rounded-lg p-0.5 border border-[var(--border)]">
           <button
             type="button"
             onClick={() => toggleMode()}
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
               isGuided
-                ? 'bg-[var(--accent-primary)] text-[var(--bg-primary)] font-bold shadow-sm'
+                ? 'bg-[var(--surface)] text-[var(--accent)] font-semibold shadow-sm border border-[var(--border)]'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
-            title="Guided Mode: Simplified plain-language explanations"
+            title="Guided Mode: Clear operational narratives for storage administrators"
           >
-            <Sparkles size={12} />
+            <Sparkles size={11} className={isGuided ? 'text-[var(--accent)]' : 'text-[var(--text-muted)]'} />
             <span>Guided</span>
           </button>
           <button
@@ -82,96 +162,104 @@ export const TopBar: React.FC<TopBarProps> = ({
             onClick={() => toggleMode()}
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
               !isGuided
-                ? 'bg-[var(--accent-secondary)] text-[var(--bg-primary)] font-bold shadow-sm'
+                ? 'bg-[var(--surface)] text-[var(--text-primary)] font-semibold shadow-sm border border-[var(--border)]'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
-            title="Expert Mode: Raw mathematical formulas and deep diagnostics"
+            title="Expert Mode: Machine learning loss functions, quantiles, and raw telemetry parameters"
           >
-            <SlidersHorizontal size={12} />
+            <SlidersHorizontal size={11} />
             <span>Expert</span>
           </button>
         </div>
-      </div>
 
-      {/* Right: Quick Search, Guided Tour, Safety Badge, Alerts, Identity, Theme */}
-      <div className="flex items-center gap-2 sm:gap-3">
-        {/* Quick Search Button */}
-        <button
-          onClick={onOpenSearch}
-          className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-lg glass-panel hover:border-[var(--accent-primary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-all"
-          title="Search storage pools and views (Ctrl+K)"
-          aria-label="Search Commands"
+        {/* Real Synchronized Provenance Indicator (Strictly accurate) */}
+        <div
+          className={`hidden xl:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono border ${
+            currentMode === 'live'
+              ? 'bg-[var(--success)]/10 text-[var(--success)] border-[var(--success)]/30'
+              : currentMode === 'replay'
+              ? 'bg-[var(--warning)]/10 text-[var(--warning)] border-[var(--warning)]/30'
+              : 'bg-[var(--surface-elevated)] text-[var(--text-muted)] border-[var(--border)]'
+          }`}
+          title={
+            currentMode === 'live'
+              ? 'Connected to real host operating system storage metrics'
+              : currentMode === 'replay'
+              ? 'Replaying chronological storage benchmark traces'
+              : 'Synthesized multi-tier storage telemetry with diurnal variance'
+          }
         >
-          <Search size={13} className="text-[var(--accent-primary)]" />
-          <span className="text-[11px] font-medium">Search Commands</span>
-          <kbd className="text-[9px] font-mono bg-[var(--surface-secondary)] px-1.5 py-0.5 rounded border border-[var(--border-subtle)] text-[var(--text-secondary)]">
-            Ctrl+K
-          </kbd>
-        </button>
+          <span
+            className={`w-1.5 h-1.5 rounded-full ${
+              currentMode === 'live'
+                ? 'bg-[var(--success)] animate-pulse'
+                : currentMode === 'replay'
+                ? 'bg-[var(--warning)]'
+                : 'bg-[var(--text-muted)]'
+            }`}
+          />
+          <span className="font-medium">
+            {currentMode === 'live'
+              ? 'Live Host Synced'
+              : currentMode === 'replay'
+              ? 'Trace Replay'
+              : 'Synthetic Demo'}
+          </span>
+        </div>
 
-        {/* Interactive Tour Trigger */}
+        {/* Tour / Guide Button */}
         {onOpenTour && (
           <button
             onClick={onOpenTour}
-            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg glass-panel hover:border-[var(--accent-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-[11px]"
-            title="Open Interactive Guide"
+            className="p-1.5 rounded-lg hover:bg-[var(--surface-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+            title="Platform Orientation Tour"
+            aria-label="Platform Tour"
           >
-            <BookOpen size={13} className="text-[var(--accent-primary)]" />
-            <span className="font-medium">Tour</span>
+            <BookOpen size={15} />
           </button>
         )}
 
-        {/* Shadow Mode Safe Badge */}
-        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--status-success)]/15 border border-[var(--status-success)]/30 text-[var(--status-success)] text-[11px] font-mono font-semibold">
-          <Shield size={12} className="text-[var(--status-success)]" />
-          <span>SAFE SHADOW</span>
-        </div>
-
-        {/* Collector Status Pulse */}
-        <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full glass-panel border border-[var(--border-subtle)] text-[11px] font-mono text-[var(--text-secondary)]">
-          <Radio size={12} className="text-[var(--status-success)] animate-pulse" />
-          <span>SYNC ACTIVE</span>
-        </div>
-
-        {/* Alerts Pill */}
+        {/* Notifications / Alerts Pill */}
         <button
           onClick={onOpenAlerts}
-          className="relative p-2 rounded-lg glass-panel hover:border-[var(--accent-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-          title="View Incidents and Alerts"
-          aria-label="Alerts"
+          className="relative p-1.5 rounded-lg hover:bg-[var(--surface-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+          title="Active Alerts and SLA Incidents"
+          aria-label="Active Alerts"
         >
-          <Bell size={14} />
+          <Bell size={16} />
           {activeAlertsCount > 0 && (
-            <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[var(--status-critical)] text-[var(--bg-primary)] text-[9px] font-bold flex items-center justify-center shadow-sm">
+            <span className="absolute top-0 right-0 min-w-[15px] h-[15px] px-1 rounded-full bg-[var(--critical)] text-white text-[9px] font-bold flex items-center justify-center font-mono">
               {activeAlertsCount}
             </span>
           )}
         </button>
 
-        {/* User / RBAC Session Pill */}
+        {/* User Account / RBAC Pill */}
         <button
           onClick={onOpenAuth}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg glass-panel hover:border-[var(--accent-primary)] text-[var(--text-primary)] transition-colors text-[11px] font-mono"
+          className="flex items-center gap-2 pl-2 pr-2.5 py-1 rounded-lg bg-[var(--surface-elevated)] border border-[var(--border)] hover:border-[var(--border-visible)] text-[var(--text-primary)] transition-colors text-xs"
           title="Session & Role-Based Access Control"
         >
-          <User size={13} className="text-[var(--accent-secondary)]" />
-          <span className="font-bold hidden sm:inline">{currentUser.username}</span>
-          <span className="text-[9px] px-1 py-0.5 rounded bg-[var(--surface-secondary)] border border-[var(--border-subtle)] text-[var(--accent-primary)]">
+          <div className="w-5 h-5 rounded-full bg-[var(--surface-subtle)] text-[var(--text-primary)] font-bold text-[10px] flex items-center justify-center border border-[var(--border)]">
+            {currentUser.username[0]?.toUpperCase() || 'A'}
+          </div>
+          <span className="font-medium hidden sm:inline">{currentUser.username}</span>
+          <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-[var(--surface)] text-[var(--text-muted)] border border-[var(--border)]">
             {currentUser.role}
           </span>
         </button>
 
-        {/* Theme Toggle (Ember Noir / Porcelain Atelier) */}
+        {/* Light / Dark Theme Toggle Button */}
         <button
           onClick={onToggleTheme}
-          className="p-2 rounded-lg glass-panel hover:border-[var(--accent-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-          title={isLightTheme ? 'Switch to Ember Noir Dark Theme' : 'Switch to Porcelain Atelier Light Theme'}
-          aria-label="Toggle Theme"
+          className="p-1.5 rounded-lg hover:bg-[var(--surface-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+          title={isLightTheme ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+          aria-label="Toggle Color Theme"
         >
           {isLightTheme ? (
-            <Moon size={14} className="text-[var(--accent-primary)]" />
+            <Moon size={16} className="text-[var(--text-secondary)]" />
           ) : (
-            <Sun size={14} className="text-[var(--status-warning)]" />
+            <Sun size={16} className="text-[var(--warning)]" />
           )}
         </button>
       </div>

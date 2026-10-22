@@ -49,7 +49,29 @@ def initialize_database_and_seed_demo():
                     conn.execute(text("ALTER TABLE devices ADD COLUMN pool_id VARCHAR(64)"))
                 if "system_id" not in columns:
                     conn.execute(text("ALTER TABLE devices ADD COLUMN system_id VARCHAR(64)"))
-                conn.commit()
+                if "organization_id" not in columns:
+                    conn.execute(text("ALTER TABLE devices ADD COLUMN organization_id VARCHAR(64) DEFAULT 'org-primary-enterprise'"))
+            if "users" in inspector.get_table_names():
+                user_cols = [c["name"] for c in inspector.get_columns("users")]
+                if "organization_id" not in user_cols:
+                    conn.execute(text("ALTER TABLE users ADD COLUMN organization_id VARCHAR(64) DEFAULT 'org-primary-enterprise'"))
+            if "audit_logs" in inspector.get_table_names():
+                audit_cols = [c["name"] for c in inspector.get_columns("audit_logs")]
+                if "organization_id" not in audit_cols:
+                    conn.execute(text("ALTER TABLE audit_logs ADD COLUMN organization_id VARCHAR(64) DEFAULT 'org-primary-enterprise'"))
+                if "client_ip" not in audit_cols:
+                    conn.execute(text("ALTER TABLE audit_logs ADD COLUMN client_ip VARCHAR(64) DEFAULT '127.0.0.1'"))
+                if "prev_hash" not in audit_cols:
+                    conn.execute(text("ALTER TABLE audit_logs ADD COLUMN prev_hash VARCHAR(64)"))
+                if "entry_hash" not in audit_cols:
+                    conn.execute(text("ALTER TABLE audit_logs ADD COLUMN entry_hash VARCHAR(64)"))
+            if "recommendations" in inspector.get_table_names():
+                rec_cols = [c["name"] for c in inspector.get_columns("recommendations")]
+                if "details_json" not in rec_cols:
+                    conn.execute(text("ALTER TABLE recommendations ADD COLUMN details_json TEXT DEFAULT '{}'"))
+            conn.commit()
+
+
     except Exception as e:
         logger.warning(f"Column migration check note: {e}")
 
@@ -306,6 +328,8 @@ async def request_tracing_and_security_middleware(request: Request, call_next):
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' http: ws:;"
+
     
     if request.url.path not in ["/metrics", "/api/v1/health"]:
         logger.info(

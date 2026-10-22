@@ -327,7 +327,98 @@ export interface ReliabilityMetrics {
   active_drift_alerts: number;
   last_evaluation_timestamp: string;
   is_fallback_active: boolean;
+  trust_status?: string;
+  status_reason?: string;
+  max_metric_psi?: number;
 }
+
+export interface SentinelWorkloadMetricDrift {
+  psi: number;
+  ks_statistic: number;
+  ks_p_value: number;
+  severity: string;
+  reference_distribution: { mean: number; std: number; median: number; p95: number };
+  current_distribution: { mean: number; std: number; median: number; p95: number };
+}
+
+export interface SentinelForecastVsActualSample {
+  timestamp: string;
+  actual_used_gb: number;
+  predicted_q50_gb: number;
+  predicted_q10_gb: number;
+  predicted_q90_gb: number;
+  absolute_error_gb: number;
+  within_interval: boolean;
+}
+
+export interface SentinelTrustAssessment {
+  evaluation_id: string;
+  device_id: string;
+  evaluated_at: string;
+  trust_status: 'HEALTHY' | 'WATCH' | 'DEGRADED' | 'INSUFFICIENT_EVIDENCE';
+  status_reason: string;
+  recommended_action: string;
+  workload_data_drift: {
+    detected: boolean;
+    severity: string;
+    max_psi: number;
+    psi_threshold_moderate: number;
+    psi_threshold_critical: number;
+    drifted_metrics_count: number;
+    drifted_metrics: string[];
+    metrics_breakdown: Record<string, SentinelWorkloadMetricDrift>;
+  };
+  prediction_drift: {
+    detected: boolean;
+    prediction_psi: number;
+    severity: string;
+  };
+  performance_reliability: {
+    deterioration_detected: boolean;
+    evaluated_mae_gb: number;
+    evaluated_rmse_gb: number;
+    evaluated_wape_pct: number;
+    empirical_coverage_pct: number;
+    target_nominal_coverage_pct: number;
+    actual_samples_evaluated: number;
+    forecast_vs_actual_samples: SentinelForecastVsActualSample[];
+  };
+  data_quality: {
+    total_telemetry_samples: number;
+    reference_window_samples: number;
+    evaluation_window_samples: number;
+    is_stale: boolean;
+    latest_observation_age_hours: number;
+    missing_intervals_detected: number;
+    missing_intervals: Array<{ from: string; to: string; gap_hours: number }>;
+  };
+  safe_model_improvement: {
+    recalibration_eligible: boolean;
+    retraining_eligible: boolean;
+    automatic_replacement_blocked: boolean;
+    approval_required: string;
+    validation_design: string;
+    governance_note: string;
+  };
+}
+
+export interface SentinelTrustHistoryItem {
+  id: string;
+  device_id: string;
+  evaluated_at?: string;
+  trust_status: 'HEALTHY' | 'WATCH' | 'DEGRADED' | 'INSUFFICIENT_EVIDENCE';
+  status_reason: string;
+  data_drift_detected: boolean;
+  prediction_drift_detected: boolean;
+  performance_degraded: boolean;
+  max_metric_psi: number;
+  evaluated_mae_gb: number;
+  evaluated_rmse_gb: number;
+  empirical_coverage_pct: number;
+  recommended_action: string;
+  details: Record<string, any>;
+}
+
 
 export interface DatasetItem {
   id: string;
@@ -349,6 +440,38 @@ export interface AuditItem {
   target_type: string;
   target_id: string;
   details: Record<string, any>;
+}
+
+export interface VaultBackupItem {
+  id: string;
+  created_at: string;
+  created_by: string;
+  format_version: string;
+  database_size_bytes: number;
+  database_size_mb: number;
+  files_count: number;
+  checksum_status: string;
+  restoration_status: string;
+  last_test_rto_seconds: number | null;
+  last_test_rpo_hours: number | null;
+  last_test_timestamp: string | null;
+  manifest: any;
+}
+
+export interface VaultTestRestoreResult {
+  status: string;
+  backup_id: string;
+  measured_rto_seconds: number;
+  target_rto_seconds: number;
+  rto_sla_met: boolean;
+  measured_rpo_hours: number;
+  target_rpo_hours: number;
+  rpo_sla_met: boolean;
+  integrity_check_passed: boolean;
+  verified_tables: Record<string, number>;
+  tested_at: string;
+  safety_guarantee: string;
+  error?: string;
 }
 
 export class ApiError extends Error {
@@ -514,14 +637,47 @@ export interface ExecutiveOverviewResponse {
   };
 }
 
+export interface ReplayTraceItem {
+  id: string;
+  filename: string;
+  format: string;
+  size_bytes: number;
+  is_active: boolean;
+}
+
+export interface ReplayStatus {
+  has_trace: boolean;
+  active_trace_id: string | null;
+  active_trace_name: string | null;
+  current_frame_index: number;
+  total_frames: number;
+  progress_pct: number;
+  is_playing: boolean;
+  playback_speed: number;
+  current_timestamp: string | null;
+  start_timestamp: string | null;
+  end_timestamp: string | null;
+  volume_count: number;
+  available_traces: ReplayTraceItem[];
+}
+
 export const api = {
   getHealth: () => apiFetch<SystemHealth>("/health"),
   getOverview: () => apiFetch<ExecutiveOverviewResponse>("/overview"),
   setOperatingMode: (mode: string) =>
-    apiFetch<{ message: string; mode: string }>("/system/mode", {
+    apiFetch<{ message: string; mode: string; diagnostics?: any }>("/system/mode", {
       method: "POST",
       body: JSON.stringify({ mode }),
     }),
+
+  // Trace Replay Pipeline Controls
+  getReplayStatus: () => apiFetch<ReplayStatus>("/replay/status"),
+  controlReplay: (action: string, value?: any) =>
+    apiFetch<ReplayStatus>("/replay/control", {
+      method: "POST",
+      body: JSON.stringify({ action, value }),
+    }),
+  listReplayTraces: () => apiFetch<ReplayTraceItem[]>("/replay/traces"),
 
   getDevices: (tier?: string, status?: string, search?: string) => {
     const params = new URLSearchParams();
@@ -625,6 +781,35 @@ export const api = {
 
   getModelReliability: () =>
     apiFetch<ReliabilityMetrics>("/models/reliability"),
+
+  getSentinelTrust: (deviceId: string = "vol-nvme-tier1-db", evalHours: number = 168, refHours: number = 336) => {
+    const params = new URLSearchParams({
+      device_id: deviceId,
+      evaluation_window_hours: evalHours.toString(),
+      reference_window_hours: refHours.toString(),
+    });
+    return apiFetch<SentinelTrustAssessment>(`/sentinel/trust?${params.toString()}`);
+  },
+
+  getSentinelTrustHistory: (deviceId: string = "vol-nvme-tier1-db", limit: number = 20) =>
+    apiFetch<SentinelTrustHistoryItem[]>(`/sentinel/trust/history?device_id=${deviceId}&limit=${limit}`),
+
+  recalibrateSentinelModel: (payload: { device_id: string; adjustment_factor_gamma?: number; notes?: string }) =>
+    apiFetch<{ status: string; conformal_adjustment_factor_gamma: number; recalibrated_at: string }>(
+      "/sentinel/model/recalibrate",
+      { method: "POST", body: JSON.stringify(payload) }
+    ),
+
+  evaluateRetrainCandidate: (payload: { device_id: string; candidate_model_type?: string }) =>
+    apiFetch<{
+      device_id: string;
+      candidate_model: string;
+      validation_design: string;
+      production_model: any;
+      candidate_evaluation: any;
+      governance_decision: any;
+    }>("/sentinel/model/retrain-evaluation", { method: "POST", body: JSON.stringify(payload) }),
+
 
   getAlerts: (category?: string, severity?: string, status?: string) => {
     const params = new URLSearchParams();
@@ -940,5 +1125,29 @@ export const api = {
       method: "POST",
     }),
   getSovereignExportMarkdownUrl: () => `${API_BASE}/sovereign/export/markdown`,
+
+  // ==========================================
+  // AEGISSTOR VAULT (Disaster Recovery & Backup)
+  // ==========================================
+  getVaultBackups: () =>
+    apiFetch<{ status: string; backups_count: number; backups: VaultBackupItem[] }>("/vault/backups"),
+  createVaultBackup: (notes?: string) =>
+    apiFetch<{ status: string; backup: any }>("/vault/backups", {
+      method: "POST",
+      body: JSON.stringify({ notes: notes || "" }),
+    }),
+  verifyVaultBackupIntegrity: (backupId: string) =>
+    apiFetch<{ backup_id: string; checksum_status: string; verified_files: Record<string, boolean>; error?: string }>(
+      `/vault/backups/${backupId}/integrity`
+    ),
+  testVaultIsolatedRestore: (backupId: string) =>
+    apiFetch<VaultTestRestoreResult>(`/vault/backups/${backupId}/test-restore`, {
+      method: "POST",
+    }),
+  restoreVaultProduction: (backupId: string, confirmationToken: string) =>
+    apiFetch<any>(`/vault/backups/${backupId}/restore-production`, {
+      method: "POST",
+      body: JSON.stringify({ confirmation_token: confirmationToken }),
+    }),
 };
 

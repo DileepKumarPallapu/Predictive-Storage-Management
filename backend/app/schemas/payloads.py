@@ -161,9 +161,57 @@ class RecommendationItem(BaseModel):
     reviewed_by: Optional[str] = None
     review_notes: Optional[str] = None
     created_at: datetime
+    evidence_summary: Optional[Dict[str, Any]] = None
+    expected_impact: Optional[Dict[str, Any]] = None
+    confidence_score: Optional[float] = 0.92
+    assumptions: Optional[List[str]] = []
+    constraints_checked: Optional[List[str]] = []
+    possible_risks: Optional[List[str]] = []
+    rollback_guidance: Optional[Dict[str, Any]] = None
 
 class RecommendationApprovalRequest(BaseModel):
     notes: Optional[str] = None
+
+class RecommendationPreviewResponse(BaseModel):
+    recommendation_id: str
+    device_id: str
+    action_type: str
+    title: str
+    dry_run_success: bool = True
+    pre_capacity_used_gb: float
+    post_capacity_used_gb: float
+    capacity_freed_gb: float
+    estimated_duration_minutes: float
+    transient_io_penalty_pct: float
+    transient_latency_impact_ms: float
+    projected_runway_hours_after: float
+    assumptions_evaluated: List[str]
+    constraints_passed: List[str]
+    possible_risks: List[str]
+    rollback_plan: Dict[str, Any]
+    previewed_at: datetime
+
+class RecommendationOutcomeVerificationRequest(BaseModel):
+    measured_used_bytes: Optional[int] = None
+    measured_runway_hours: Optional[float] = None
+    notes: Optional[str] = None
+
+class RecommendationOutcomeVerificationResponse(BaseModel):
+    verification_id: str
+    recommendation_id: str
+    device_id: str
+    action_type: str
+    predicted_used_bytes: int
+    measured_used_bytes: int
+    discrepancy_bytes: int
+    discrepancy_pct: float
+    predicted_runway_hours: float
+    measured_runway_hours: float
+    verification_status: str  # VERIFIED_WITHIN_TOLERANCE, DISCREPANCY_FLAGGED
+    rollback_recommended: bool
+    rollback_guidance: Dict[str, Any]
+    verified_at: datetime
+    details: Dict[str, Any]
 
 # Alerts
 class AlertItem(BaseModel):
@@ -212,6 +260,40 @@ class ReliabilityMetrics(BaseModel):
     active_drift_alerts: int
     last_evaluation_timestamp: datetime
     is_fallback_active: bool
+    trust_status: Optional[str] = "HEALTHY"
+    status_reason: Optional[str] = None
+    max_metric_psi: Optional[float] = 0.04
+
+# Sentinel Drift-Aware Prediction Trust
+class SentinelTrustAssessmentResponse(BaseModel):
+    evaluation_id: str
+    device_id: str
+    evaluated_at: datetime
+    trust_status: str  # HEALTHY, WATCH, DEGRADED, INSUFFICIENT_EVIDENCE
+    status_reason: str
+    recommended_action: str
+    workload_data_drift: Dict[str, Any]
+    prediction_drift: Dict[str, Any]
+    performance_reliability: Dict[str, Any]
+    data_quality: Dict[str, Any]
+    safe_model_improvement: Dict[str, Any]
+
+class SentinelTrustHistoryItem(BaseModel):
+    id: str
+    device_id: str
+    evaluated_at: Optional[datetime] = None
+    trust_status: str
+    status_reason: str
+    data_drift_detected: bool
+    prediction_drift_detected: bool
+    performance_degraded: bool
+    max_metric_psi: float
+    evaluated_mae_gb: float
+    evaluated_rmse_gb: float
+    empirical_coverage_pct: float
+    recommended_action: str
+    details: Dict[str, Any] = {}
+
 
 # Datasets
 class DatasetItem(BaseModel):

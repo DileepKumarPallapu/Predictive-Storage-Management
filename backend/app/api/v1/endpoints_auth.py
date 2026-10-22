@@ -26,12 +26,14 @@ class TokenResponse(BaseModel):
     user_id: str
     username: str
     role: str
+    organization_id: str = "org-primary-enterprise"
 
 class UserProfileResponse(BaseModel):
     id: str
     username: str
     email: str
     role: str
+    organization_id: str = "org-primary-enterprise"
     is_active: bool
 
 class RegisterRequest(BaseModel):
@@ -39,10 +41,11 @@ class RegisterRequest(BaseModel):
     email: str
     password: str
     role: Optional[str] = "OPERATOR"
+    organization_id: Optional[str] = "org-primary-enterprise"
 
 @router.post("/login", response_model=TokenResponse)
 def login(payload: LoginRequest, db: Session = Depends(get_db)):
-    """Authenticates credentials and returns a cryptographic JWT bearer token."""
+    """Authenticates credentials and returns a cryptographic JWT bearer token with tenant context."""
     user = db.query(User).filter(User.username == payload.username).first()
     if not user or not verify_password(payload.password, user.hashed_password):
         raise HTTPException(
@@ -56,24 +59,33 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
             detail="Account is currently inactive"
         )
     
-    token = create_access_token(data={"sub": user.username, "role": user.role, "user_id": user.id})
+    org_id = getattr(user, "organization_id", "org-primary-enterprise") or "org-primary-enterprise"
+    token = create_access_token(data={
+        "sub": user.username,
+        "role": user.role,
+        "user_id": user.id,
+        "organization_id": org_id
+    })
     return TokenResponse(
         access_token=token,
         user_id=user.id,
         username=user.username,
-        role=user.role
+        role=user.role,
+        organization_id=org_id
     )
 
 @router.get("/me", response_model=UserProfileResponse)
 def get_current_user_profile(current_user: User = Depends(get_current_user)):
-    """Returns the authenticated user profile and assigned resilience role."""
+    """Returns the authenticated user profile, organization ID, and assigned resilience role."""
     return UserProfileResponse(
         id=current_user.id,
         username=current_user.username,
         email=current_user.email,
         role=current_user.role,
+        organization_id=getattr(current_user, "organization_id", "org-primary-enterprise") or "org-primary-enterprise",
         is_active=current_user.is_active
     )
+
 
 @router.post("/register", response_model=UserProfileResponse)
 def register_user(
@@ -92,12 +104,14 @@ def register_user(
         )
     
     role = payload.role if payload.role in ["ADMIN", "OPERATOR", "AUDITOR"] else "OPERATOR"
+    org_id = payload.organization_id or getattr(admin_user, "organization_id", "org-primary-enterprise") or "org-primary-enterprise"
     new_user = User(
         id=f"usr-{uuid.uuid4().hex[:10]}",
         username=payload.username,
         email=payload.email,
         hashed_password=hash_password(payload.password),
         role=role,
+        organization_id=org_id,
         is_active=True
     )
     db.add(new_user)
@@ -108,5 +122,37 @@ def register_user(
         username=new_user.username,
         email=new_user.email,
         role=new_user.role,
+        organization_id=new_user.organization_id,
         is_active=new_user.is_active
     )
+
+@router.get("/permissions")
+def get_current_user_permissions(current_user: User = Depends(get_current_user)):
+    """Returns the authenticated user's assigned role and active server-enforced permissions."""
+    from app.auth.security import ROLE_PERMISSIONS
+    permissions = ROLE_PERMISSIONS.get(current_user.role, [])
+    return {
+        "user_id": current_user.id,
+        "username": current_user.username,
+        "role": current_user.role,
+        "organization_id": getattr(current_user, "organization_id", "org-primary-enterprise") or "org-primary-enterprise",
+        "permissions_count": len(permissions),
+        "permissions": permissions,
+        "enforcement_mode": "SERVER_ENFORCED_RBAC"
+    }
+
+@router.get("/audit/verify-chain")
+def verify_audit_trail_tamper_chain(
+    organization_id: Optional[str] = None,
+    current_user: User = Depends(require_role(["ADMIN", "AUDITOR"])),
+    db: Session = Depends(get_db)
+):
+    """
+    Cryptographically verifies the immutable SHA-256 forward-linked Merkle chain of the audit trail.
+    Enforces multi-tenant isolation and checks for unauthorized deletions or modifications.
+    """
+    from app.services.audit_service import AuditService
+    target_org = organization_id if (current_user.role == "ADMIN" and organization_id) else getattr(current_user, "organization_id", "org-primary-enterprise")
+    res = AuditService.verify_audit_chain(db, organization_id=target_org)
+    return res
+

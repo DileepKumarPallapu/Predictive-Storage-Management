@@ -117,25 +117,25 @@ export const PageGauntletWorkbench: React.FC = () => {
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
       {/* Editorial Header Banner */}
-      <div className="border border-white/10 rounded-2xl bg-gradient-to-r from-[#14161D] via-[#101217] to-[#0D0E11] p-6 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#E06D53]/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="border border-[var(--border-subtle)] rounded-2xl titan-card-elevated p-6 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--accent-primary)]/5 rounded-full blur-3xl pointer-events-none" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <span className="px-3 py-0.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-[#E64A19]/20 text-[#E06D53] border border-[#E06D53]/30">
+              <span className="px-3 py-0.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border border-[var(--accent-primary)]/30">
                 PROMPT 18.0 VALIDATION
               </span>
               <span className="px-3 py-0.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-emerald-950/60 text-emerald-400 border border-emerald-500/30">
                 101/101 TESTS GREEN
               </span>
-              <span className="px-3 py-0.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-zinc-800 text-zinc-300 border border-zinc-700">
+              <span className="px-3 py-0.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-[var(--surface-secondary)] text-[var(--text-primary)] border border-[var(--border-normal)]">
                 EXAMINER MODE ACTIVE
               </span>
             </div>
-            <h1 className="text-3xl font-bold tracking-tight text-[#F7F5F0]">
-              GAUNTLET <span className="text-[#E06D53] font-serif italic text-2xl">— Independent Research & Benchmark Workbench</span>
+            <h1 className="text-3xl font-bold tracking-tight text-[var(--text-primary)]">
+              GAUNTLET <span className="text-[var(--accent-primary)] font-serif italic text-2xl">— Independent Research & Benchmark Workbench</span>
             </h1>
-            <p className="text-sm text-zinc-400 mt-1 max-w-3xl">
+            <p className="text-sm text-[var(--text-secondary)] mt-1 max-w-3xl">
               Deterministic, repeatable test harness connecting real telemetry, quantile forecasting, Atlas fidelity, and the Evidence-Gated Planner. Verifies technical claims with versioned manifests and cryptographic SHA-256 integrity.
             </p>
           </div>
@@ -145,23 +145,23 @@ export const PageGauntletWorkbench: React.FC = () => {
               href={api.getGauntletExportMarkdownUrl()}
               target="_blank"
               rel="noreferrer"
-              className="px-3 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs font-medium text-zinc-300 hover:text-white hover:border-[#E06D53]/40 flex items-center gap-2 transition"
+              className="px-3 py-2 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border-subtle)] text-xs font-medium text-[var(--text-primary)] hover:text-white hover:border-[var(--accent-primary)]/40 flex items-center gap-2 transition"
             >
-              <Download className="w-3.5 h-3.5 text-[#E06D53]" />
+              <Download className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
               Markdown Dossier
             </a>
             <a
               href={api.getGauntletExportCsvUrl()}
               target="_blank"
               rel="noreferrer"
-              className="px-3 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs font-medium text-zinc-300 hover:text-white hover:border-[#E06D53]/40 flex items-center gap-2 transition"
+              className="px-3 py-2 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border-subtle)] text-xs font-medium text-[var(--text-primary)] hover:text-white hover:border-[var(--accent-primary)]/40 flex items-center gap-2 transition"
             >
-              <FileText className="w-3.5 h-3.5 text-zinc-400" />
+              <FileText className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
               CSV Metrics
             </a>
             <button
               onClick={loadAllData}
-              className="p-2 rounded-xl bg-zinc-900 border border-white/10 text-zinc-400 hover:text-white transition"
+              className="p-2 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white transition"
               title="Refresh Workbench Data"
             >
               <RefreshCw className="w-4 h-4" />
@@ -170,7 +170,7 @@ export const PageGauntletWorkbench: React.FC = () => {
         </div>
 
         {/* Tab Navigation Navigation */}
-        <div className="flex items-center gap-2 mt-6 pt-4 border-t border-white/5 overflow-x-auto">
+        <div className="flex items-center gap-2 mt-6 pt-4 border-t border-[var(--border-subtle)] overflow-x-auto">
           {[
             { id: 'overview', label: '1. Review Overview', icon: Activity },
             { id: 'catalog', label: '2. Benchmark Catalog', icon: Layers },
@@ -188,11 +188,11 @@ export const PageGauntletWorkbench: React.FC = () => {
                 onClick={() => setActiveTab(t.id as any)}
                 className={`px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-2 whitespace-nowrap transition-all ${
                   isSel
-                    ? 'bg-[#E64A19] text-white shadow-lg shadow-[#E64A19]/20'
-                    : 'bg-zinc-900/60 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/80 border border-transparent'
+                    ? 'bg-[var(--accent-primary)] text-white shadow-sm'
+                    : 'bg-[var(--surface-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-elevated)] border border-transparent'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isSel ? 'text-white' : 'text-zinc-400'}`} />
+                <Icon className={`w-3.5 h-3.5 ${isSel ? 'text-white' : 'text-[var(--text-secondary)]'}`} />
                 {t.label}
               </button>
             );
@@ -207,57 +207,57 @@ export const PageGauntletWorkbench: React.FC = () => {
         <div className="space-y-6">
           {/* Top Quick Stats */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="p-5 rounded-2xl bg-[#14161D] border border-white/10 relative overflow-hidden">
-              <span className="text-xs uppercase tracking-wider text-zinc-400">Total Regression Pass</span>
+            <div className="p-5 rounded-2xl titan-card border border-[var(--border-subtle)] relative overflow-hidden">
+              <span className="text-xs uppercase tracking-wider text-[var(--text-secondary)]">Total Regression Pass</span>
               <div className="text-2xl font-bold text-emerald-400 mt-1">100% Pass</div>
-              <span className="text-xs text-zinc-500 mt-1 block">110 / 110 automated tests passing</span>
+              <span className="text-xs text-[var(--text-muted)] mt-1 block">110 / 110 automated tests passing</span>
             </div>
-            <div className="p-5 rounded-2xl bg-[#14161D] border border-white/10 relative overflow-hidden">
-              <span className="text-xs uppercase tracking-wider text-zinc-400">Catalog Suites Available</span>
-              <div className="text-2xl font-bold text-[#F7F5F0] mt-1">{catalog.length} Active Suites</div>
-              <span className="text-xs text-zinc-500 mt-1 block">Capacity, Perf, Planning, Chaos</span>
+            <div className="p-5 rounded-2xl titan-card border border-[var(--border-subtle)] relative overflow-hidden">
+              <span className="text-xs uppercase tracking-wider text-[var(--text-secondary)]">Catalog Suites Available</span>
+              <div className="text-2xl font-bold text-[var(--text-primary)] mt-1">{catalog.length} Active Suites</div>
+              <span className="text-xs text-[var(--text-muted)] mt-1 block">Capacity, Perf, Planning, Chaos</span>
             </div>
-            <div className="p-5 rounded-2xl bg-[#14161D] border border-white/10 relative overflow-hidden">
-              <span className="text-xs uppercase tracking-wider text-zinc-400">Claims Grounded</span>
-              <div className="text-2xl font-bold text-[#E06D53] mt-1">
+            <div className="p-5 rounded-2xl titan-card border border-[var(--border-subtle)] relative overflow-hidden">
+              <span className="text-xs uppercase tracking-wider text-[var(--text-secondary)]">Claims Grounded</span>
+              <div className="text-2xl font-bold text-[var(--accent-primary)] mt-1">
                 {overviewData?.claims_summary?.supported_within_conditions || 3} / {overviewData?.claims_summary?.total_claims || 4}
               </div>
-              <span className="text-xs text-zinc-500 mt-1 block">1 Unverified (Marked with Caveat)</span>
+              <span className="text-xs text-[var(--text-muted)] mt-1 block">1 Unverified (Marked with Caveat)</span>
             </div>
-            <div className="p-5 rounded-2xl bg-[#14161D] border border-white/10 relative overflow-hidden">
-              <span className="text-xs uppercase tracking-wider text-zinc-400">Recorded Failures</span>
+            <div className="p-5 rounded-2xl titan-card border border-[var(--border-subtle)] relative overflow-hidden">
+              <span className="text-xs uppercase tracking-wider text-[var(--text-secondary)]">Recorded Failures</span>
               <div className="text-2xl font-bold text-amber-400 mt-1">{failures.length} Documented</div>
-              <span className="text-xs text-zinc-500 mt-1 block">Transparently retained for audit</span>
+              <span className="text-xs text-[var(--text-muted)] mt-1 block">Transparently retained for audit</span>
             </div>
           </div>
 
           {/* Capabilities Verification Register */}
-          <div className="rounded-2xl bg-[#14161D] border border-white/10 p-6 space-y-4">
+          <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold text-[#F7F5F0]">Implemented Capabilities Register</h3>
-                <p className="text-xs text-zinc-400">Audited against live repository code and test execution outcomes.</p>
+                <h3 className="text-lg font-semibold text-[var(--text-primary)]">Implemented Capabilities Register</h3>
+                <p className="text-xs text-[var(--text-secondary)]">Audited against live repository code and test execution outcomes.</p>
               </div>
-              <span className="text-xs text-zinc-500 italic">No hypothetical claims accepted</span>
+              <span className="text-xs text-[var(--text-muted)] italic">No hypothetical claims accepted</span>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="border-b border-white/10 text-zinc-400 pb-2">
+                  <tr className="border-b border-[var(--border-subtle)] text-[var(--text-secondary)] pb-2">
                     <th className="py-2.5 font-medium">Subsystem / Capability</th>
                     <th className="py-2.5 font-medium">Verification Status</th>
                     <th className="py-2.5 font-medium">Supporting Automated Test</th>
                     <th className="py-2.5 font-medium">Defect Risk Profile</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 text-zinc-300">
+                <tbody className="divide-y divide-[var(--border-subtle)] text-[var(--text-primary)]">
                   {(overviewData?.capabilities_register || []).map((c: any, idx: number) => {
                     const isTested = c.status === "Implemented and tested";
                     const isDemo = c.status === "Demonstration only";
                     return (
                       <tr key={idx} className="hover:bg-white/[0.02] transition">
-                        <td className="py-3 font-medium text-[#F7F5F0] flex items-center gap-2">
+                        <td className="py-3 font-medium text-[var(--text-primary)] flex items-center gap-2">
                           <CheckCircle2 className={`w-4 h-4 ${isTested ? 'text-emerald-400' : 'text-amber-400'}`} />
                           {c.capability}
                         </td>
@@ -267,12 +267,12 @@ export const PageGauntletWorkbench: React.FC = () => {
                               ? 'bg-emerald-950/40 text-emerald-300 border-emerald-500/30'
                               : isDemo
                               ? 'bg-amber-950/40 text-amber-300 border-amber-500/30'
-                              : 'bg-zinc-800 text-zinc-400 border-zinc-700'
+                              : 'bg-[var(--surface-secondary)] text-[var(--text-secondary)] border-[var(--border-normal)]'
                           }`}>
                             {c.status}
                           </span>
                         </td>
-                        <td className="py-3 font-mono text-[11px] text-zinc-400">{c.test_ref}</td>
+                        <td className="py-3 font-mono text-[11px] text-[var(--text-secondary)]">{c.test_ref}</td>
                         <td className="py-3">
                           <span className={`px-2 py-0.5 rounded text-[10px] ${
                             c.defect_risk === 'Low' ? 'text-emerald-400 bg-emerald-950/20' : 'text-amber-400 bg-amber-950/20'
@@ -289,12 +289,12 @@ export const PageGauntletWorkbench: React.FC = () => {
           </div>
 
           {/* Unresolved High Priority Defects & Limitations */}
-          <div className="rounded-2xl bg-[#14161D] border border-amber-500/20 p-6 space-y-3 bg-gradient-to-r from-amber-950/10 to-transparent">
+          <div className="rounded-2xl titan-card border border-amber-500/20 p-6 space-y-3 bg-gradient-to-r from-amber-950/10 to-transparent">
             <div className="flex items-center gap-2 text-amber-400 font-semibold text-sm">
               <AlertTriangle className="w-4 h-4" />
               Explicitly Disclosed Known Defects & Technical Boundaries
             </div>
-            <ul className="list-disc list-inside space-y-1.5 text-xs text-zinc-400">
+            <ul className="list-disc list-inside space-y-1.5 text-xs text-[var(--text-secondary)]">
               {(overviewData?.unresolved_high_priority_defects || [
                 "NVMe internal queue opacity: controller garbage collection cycles produce unmodeled transient spikes",
                 "Hardware interconnect bounds are software-simulated when physical SAN switch telemetry is unmapped"
@@ -315,32 +315,32 @@ export const PageGauntletWorkbench: React.FC = () => {
             {catalog.map((suite) => (
               <div
                 key={suite.id}
-                className="rounded-2xl bg-[#14161D] border border-white/10 p-6 space-y-4 hover:border-[#E06D53]/40 transition flex flex-col justify-between"
+                className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4 hover:border-[var(--accent-primary)]/40 transition flex flex-col justify-between"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="px-2.5 py-0.5 rounded text-[10px] font-mono tracking-wider bg-zinc-800 text-zinc-300 border border-zinc-700">
+                    <span className="px-2.5 py-0.5 rounded text-[10px] font-mono tracking-wider bg-[var(--surface-secondary)] text-[var(--text-primary)] border border-[var(--border-normal)]">
                       {suite.id} • v{suite.version}
                     </span>
-                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#E64A19]/20 text-[#E06D53] border border-[#E06D53]/30">
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border border-[var(--accent-primary)]/30">
                       {suite.category}
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-bold text-[#F7F5F0]">{suite.name}</h3>
-                  <p className="text-xs text-zinc-400 leading-relaxed">{suite.objective}</p>
+                  <h3 className="text-lg font-bold text-[var(--text-primary)]">{suite.name}</h3>
+                  <p className="text-xs text-[var(--text-secondary)] leading-relaxed">{suite.objective}</p>
 
-                  <div className="space-y-2 pt-2 border-t border-white/5 text-xs">
+                  <div className="space-y-2 pt-2 border-t border-[var(--border-subtle)] text-xs">
                     <div>
-                      <span className="text-zinc-500 font-medium">Dataset: </span>
-                      <span className="text-zinc-300 font-mono text-[11px]">{suite.required_dataset}</span>
+                      <span className="text-[var(--text-muted)] font-medium">Dataset: </span>
+                      <span className="text-[var(--text-primary)] font-mono text-[11px]">{suite.required_dataset}</span>
                     </div>
                     <div>
-                      <span className="text-zinc-500 font-medium">Expected Metrics: </span>
-                      <span className="text-zinc-300">{suite.expected_outputs.join(', ')}</span>
+                      <span className="text-[var(--text-muted)] font-medium">Expected Metrics: </span>
+                      <span className="text-[var(--text-primary)]">{suite.expected_outputs.join(', ')}</span>
                     </div>
                     <div>
-                      <span className="text-zinc-500 font-medium">Acceptance Criteria: </span>
+                      <span className="text-[var(--text-muted)] font-medium">Acceptance Criteria: </span>
                       <ul className="list-disc list-inside text-emerald-400/90 text-[11px] mt-1 space-y-0.5">
                         {suite.acceptance_criteria.map((ac: string, i: number) => (
                           <li key={i}>{ac}</li>
@@ -348,20 +348,20 @@ export const PageGauntletWorkbench: React.FC = () => {
                       </ul>
                     </div>
                     <div>
-                      <span className="text-zinc-500 font-medium">Known Limitations: </span>
-                      <p className="text-zinc-400 text-[11px] italic mt-0.5">{suite.known_limitations}</p>
+                      <span className="text-[var(--text-muted)] font-medium">Known Limitations: </span>
+                      <p className="text-[var(--text-secondary)] text-[11px] italic mt-0.5">{suite.known_limitations}</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-                  <span className="text-[11px] text-zinc-500">Zero physical mutation enabled</span>
+                <div className="pt-4 border-t border-[var(--border-subtle)] flex items-center justify-between">
+                  <span className="text-[11px] text-[var(--text-muted)]">Zero physical mutation enabled</span>
                   <button
                     onClick={() => {
                       setSelectedSuiteId(suite.id);
                       setActiveTab('runner');
                     }}
-                    className="px-3 py-1.5 rounded-xl bg-[#E64A19] text-white text-xs font-medium hover:bg-[#D84315] flex items-center gap-1.5 transition"
+                    className="px-3 py-1.5 rounded-xl bg-[var(--accent-primary)] text-white text-xs font-medium hover:bg-[var(--accent-hover)] flex items-center gap-1.5 transition"
                   >
                     Configure & Run <ArrowRight className="w-3.5 h-3.5" />
                   </button>
@@ -379,19 +379,19 @@ export const PageGauntletWorkbench: React.FC = () => {
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Run Configuration Controls */}
-            <div className="rounded-2xl bg-[#14161D] border border-white/10 p-6 space-y-5">
+            <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-5">
               <div>
-                <h3 className="text-lg font-semibold text-[#F7F5F0]">Benchmark Execution Configuration</h3>
-                <p className="text-xs text-zinc-400">Executes only upon explicit user submission. Strict temporal split applied.</p>
+                <h3 className="text-lg font-semibold text-[var(--text-primary)]">Benchmark Execution Configuration</h3>
+                <p className="text-xs text-[var(--text-secondary)]">Executes only upon explicit user submission. Strict temporal split applied.</p>
               </div>
 
               <div className="space-y-4 text-xs">
                 <div>
-                  <label className="text-zinc-400 font-medium block mb-1">Target Evaluation Suite</label>
+                  <label className="text-[var(--text-secondary)] font-medium block mb-1">Target Evaluation Suite</label>
                   <select
                     value={selectedSuiteId}
                     onChange={(e) => setSelectedSuiteId(e.target.value)}
-                    className="w-full bg-zinc-900 border border-white/10 rounded-xl px-3 py-2 text-zinc-200 focus:outline-none focus:border-[#E06D53]"
+                    className="w-full bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)]"
                   >
                     {catalog.map((s) => (
                       <option key={s.id} value={s.id}>
@@ -402,11 +402,11 @@ export const PageGauntletWorkbench: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="text-zinc-400 font-medium block mb-1">Storage Volume / Device</label>
+                  <label className="text-[var(--text-secondary)] font-medium block mb-1">Storage Volume / Device</label>
                   <select
                     value={selectedDeviceId}
                     onChange={(e) => setSelectedDeviceId(e.target.value)}
-                    className="w-full bg-zinc-900 border border-white/10 rounded-xl px-3 py-2 text-zinc-200 focus:outline-none focus:border-[#E06D53]"
+                    className="w-full bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-xl px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)]"
                   >
                     <option value="vol-nvme-tier1-db">vol-nvme-tier1-db (Production OLTP NVMe)</option>
                     <option value="vol-ssd-tier2-app">vol-ssd-tier2-app (Application SAS SSD)</option>
@@ -415,7 +415,7 @@ export const PageGauntletWorkbench: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="text-zinc-400 font-medium block mb-1">Planning Horizon (Hours): {horizonHours}h</label>
+                  <label className="text-[var(--text-secondary)] font-medium block mb-1">Planning Horizon (Hours): {horizonHours}h</label>
                   <input
                     type="range"
                     min="12"
@@ -423,26 +423,26 @@ export const PageGauntletWorkbench: React.FC = () => {
                     step="12"
                     value={horizonHours}
                     onChange={(e) => setHorizonHours(parseInt(e.target.value))}
-                    className="w-full accent-[#E64A19]"
+                    className="w-full accent-[var(--accent-primary)]"
                   />
-                  <div className="flex justify-between text-[10px] text-zinc-500 mt-0.5">
+                  <div className="flex justify-between text-[10px] text-[var(--text-muted)] mt-0.5">
                     <span>12h</span>
                     <span>72h (Standard)</span>
                     <span>168h (7 Days)</span>
                   </div>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-zinc-900/80 border border-white/5 space-y-1.5 text-[11px]">
-                  <span className="text-zinc-400 font-semibold block">Dataset Split Protocol:</span>
-                  <div className="flex justify-between text-zinc-400">
+                <div className="p-3.5 rounded-xl bg-[var(--surface-secondary)]/80 border border-[var(--border-subtle)] space-y-1.5 text-[11px]">
+                  <span className="text-[var(--text-secondary)] font-semibold block">Dataset Split Protocol:</span>
+                  <div className="flex justify-between text-[var(--text-secondary)]">
                     <span>Train Window:</span>
-                    <span className="text-zinc-200 font-mono">70% (Earliest History)</span>
+                    <span className="text-[var(--text-primary)] font-mono">70% (Earliest History)</span>
                   </div>
-                  <div className="flex justify-between text-zinc-400">
+                  <div className="flex justify-between text-[var(--text-secondary)]">
                     <span>Validation Window:</span>
-                    <span className="text-zinc-200 font-mono">15% (Drift Tuning)</span>
+                    <span className="text-[var(--text-primary)] font-mono">15% (Drift Tuning)</span>
                   </div>
-                  <div className="flex justify-between text-zinc-400">
+                  <div className="flex justify-between text-[var(--text-secondary)]">
                     <span>Holdout Test:</span>
                     <span className="text-emerald-400 font-mono">15% (Strict Future)</span>
                   </div>
@@ -452,7 +452,7 @@ export const PageGauntletWorkbench: React.FC = () => {
               <button
                 onClick={handleExecuteBenchmark}
                 disabled={runningBenchmark}
-                className="w-full py-3 rounded-xl bg-[#E64A19] text-white font-medium text-xs hover:bg-[#D84315] disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-[#E64A19]/25 transition"
+                className="w-full py-3 rounded-xl bg-[var(--accent-primary)] text-white font-medium text-xs hover:bg-[var(--accent-hover)] disabled:opacity-50 flex items-center justify-center gap-2 shadow-sm transition"
               >
                 {runningBenchmark ? (
                   <>
@@ -471,67 +471,67 @@ export const PageGauntletWorkbench: React.FC = () => {
             {/* Run Output & Manifest Inspector */}
             <div className="lg:col-span-2 space-y-6">
               {lastRunResult ? (
-                <div className="rounded-2xl bg-[#14161D] border border-emerald-500/30 p-6 space-y-4">
+                <div className="rounded-2xl titan-card border border-emerald-500/30 p-6 space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                      <h4 className="text-base font-bold text-[#F7F5F0]">Benchmark Run Completed</h4>
+                      <h4 className="text-base font-bold text-[var(--text-primary)]">Benchmark Run Completed</h4>
                     </div>
-                    <span className="px-2.5 py-0.5 rounded text-[11px] font-mono bg-zinc-800 text-zinc-300">
+                    <span className="px-2.5 py-0.5 rounded text-[11px] font-mono bg-[var(--surface-secondary)] text-[var(--text-primary)]">
                       Run ID: {lastRunResult.run_id}
                     </span>
                   </div>
 
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-                    <div className="p-3 rounded-xl bg-zinc-900 border border-white/5">
-                      <span className="text-zinc-500 block text-[10px] uppercase">Execution Duration</span>
-                      <span className="text-sm font-semibold text-zinc-200">{lastRunResult.execution_seconds}s</span>
+                    <div className="p-3 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border-subtle)]">
+                      <span className="text-[var(--text-muted)] block text-[10px] uppercase">Execution Duration</span>
+                      <span className="text-sm font-semibold text-[var(--text-primary)]">{lastRunResult.execution_seconds}s</span>
                     </div>
-                    <div className="p-3 rounded-xl bg-zinc-900 border border-white/5">
-                      <span className="text-zinc-500 block text-[10px] uppercase">Manifest SHA-256</span>
-                      <span className="text-xs font-mono text-zinc-300 truncate block" title={lastRunResult.manifest_sha256}>
+                    <div className="p-3 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border-subtle)]">
+                      <span className="text-[var(--text-muted)] block text-[10px] uppercase">Manifest SHA-256</span>
+                      <span className="text-xs font-mono text-[var(--text-primary)] truncate block" title={lastRunResult.manifest_sha256}>
                         {lastRunResult.manifest_sha256.substring(0, 16)}...
                       </span>
                     </div>
-                    <div className="p-3 rounded-xl bg-zinc-900 border border-white/5">
-                      <span className="text-zinc-500 block text-[10px] uppercase">Criteria Status</span>
+                    <div className="p-3 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border-subtle)]">
+                      <span className="text-[var(--text-muted)] block text-[10px] uppercase">Criteria Status</span>
                       <span className="text-sm font-semibold text-emerald-400">PASSED</span>
                     </div>
                   </div>
 
                   {/* Output Metrics View */}
-                  <div className="p-4 rounded-xl bg-zinc-900/90 border border-white/5 space-y-2">
-                    <span className="text-xs font-semibold text-[#E06D53] block">Extracted Metrics:</span>
-                    <pre className="text-[11px] font-mono text-zinc-300 overflow-x-auto p-2 bg-black/40 rounded-lg">
+                  <div className="p-4 rounded-xl bg-[var(--surface-secondary)]/90 border border-[var(--border-subtle)] space-y-2">
+                    <span className="text-xs font-semibold text-[var(--accent-primary)] block">Extracted Metrics:</span>
+                    <pre className="text-[11px] font-mono text-[var(--text-primary)] overflow-x-auto p-2 bg-black/40 rounded-lg">
                       {JSON.stringify(lastRunResult.results.metrics || lastRunResult.results, null, 2)}
                     </pre>
                   </div>
 
                   <button
                     onClick={() => handleReproduce(lastRunResult.run_id)}
-                    className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-medium text-zinc-200 flex items-center gap-2 transition"
+                    className="px-4 py-2 rounded-xl bg-[var(--surface-secondary)] hover:bg-[var(--surface-elevated)] text-xs font-medium text-[var(--text-primary)] flex items-center gap-2 transition"
                   >
-                    <RotateCcw className="w-3.5 h-3.5 text-[#E06D53]" />
+                    <RotateCcw className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
                     Trigger One-Click Reproduction Test
                   </button>
                 </div>
               ) : (
-                <div className="rounded-2xl bg-[#14161D] border border-dashed border-white/10 p-12 text-center space-y-3">
-                  <Play className="w-10 h-10 text-zinc-600 mx-auto" />
-                  <h4 className="text-sm font-medium text-zinc-300">No Benchmark In Progress</h4>
-                  <p className="text-xs text-zinc-500 max-w-sm mx-auto">
+                <div className="rounded-2xl titan-card border border-dashed border-[var(--border-subtle)] p-12 text-center space-y-3">
+                  <Play className="w-10 h-10 text-[var(--text-muted)] mx-auto" />
+                  <h4 className="text-sm font-medium text-[var(--text-primary)]">No Benchmark In Progress</h4>
+                  <p className="text-xs text-[var(--text-muted)] max-w-sm mx-auto">
                     Configure your justified evaluation parameters and click "Start Benchmark Run" to generate a versioned manifest.
                   </p>
                 </div>
               )}
 
               {/* Historical Runs Table */}
-              <div className="rounded-2xl bg-[#14161D] border border-white/10 p-6 space-y-4">
-                <h4 className="text-sm font-bold text-[#F7F5F0]">Recent Benchmark Run Manifests</h4>
+              <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4">
+                <h4 className="text-sm font-bold text-[var(--text-primary)]">Recent Benchmark Run Manifests</h4>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
                     <thead>
-                      <tr className="border-b border-white/10 text-zinc-500">
+                      <tr className="border-b border-[var(--border-subtle)] text-[var(--text-muted)]">
                         <th className="py-2">Run ID</th>
                         <th className="py-2">Suite</th>
                         <th className="py-2">Manifest SHA-256</th>
@@ -539,12 +539,12 @@ export const PageGauntletWorkbench: React.FC = () => {
                         <th className="py-2">Action</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5 text-zinc-300">
+                    <tbody className="divide-y divide-[var(--border-subtle)] text-[var(--text-primary)]">
                       {runs.slice(0, 6).map((r) => (
                         <tr key={r.id} className="hover:bg-white/[0.02]">
-                          <td className="py-2.5 font-mono text-[11px] text-[#F7F5F0]">{r.id}</td>
-                          <td className="py-2.5 text-zinc-400">{r.suite_id}</td>
-                          <td className="py-2.5 font-mono text-[10px] text-zinc-500">{r.manifest_sha256.substring(0, 12)}...</td>
+                          <td className="py-2.5 font-mono text-[11px] text-[var(--text-primary)]">{r.id}</td>
+                          <td className="py-2.5 text-[var(--text-secondary)]">{r.suite_id}</td>
+                          <td className="py-2.5 font-mono text-[10px] text-[var(--text-muted)]">{r.manifest_sha256.substring(0, 12)}...</td>
                           <td className="py-2.5">
                             <span className="px-2 py-0.5 rounded text-[10px] bg-emerald-950/40 text-emerald-400 border border-emerald-500/20">
                               {r.exit_status}
@@ -554,7 +554,7 @@ export const PageGauntletWorkbench: React.FC = () => {
                             <button
                               onClick={() => handleReproduce(r.id)}
                               disabled={reproducingRunId === r.id}
-                              className="text-xs text-[#E06D53] hover:underline flex items-center gap-1"
+                              className="text-xs text-[var(--accent-primary)] hover:underline flex items-center gap-1"
                             >
                               <RotateCcw className="w-3 h-3" />
                               Reproduce
@@ -576,11 +576,11 @@ export const PageGauntletWorkbench: React.FC = () => {
       {/* ==================================================================== */}
       {activeTab === 'tournament' && (
         <div className="space-y-6">
-          <div className="rounded-2xl bg-[#14161D] border border-white/10 p-6 space-y-4">
+          <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-[#F7F5F0]">Storage Decision Quality Baseline Tournament</h3>
-                <p className="text-xs text-zinc-400">
+                <h3 className="text-lg font-bold text-[var(--text-primary)]">Storage Decision Quality Baseline Tournament</h3>
+                <p className="text-xs text-[var(--text-secondary)]">
                   Head-to-head comparison under strictly equivalent starting states, 72-hour planning horizons, and multi-resource constraints.
                 </p>
               </div>
@@ -592,7 +592,7 @@ export const PageGauntletWorkbench: React.FC = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="border-b border-white/10 text-zinc-400">
+                  <tr className="border-b border-[var(--border-subtle)] text-[var(--text-secondary)]">
                     <th className="py-3 font-semibold">Evaluated Architecture / Method</th>
                     <th className="py-3 font-semibold">Warning Lead Time (h*)</th>
                     <th className="py-3 font-semibold">False Alarm Rate (FAR)</th>
@@ -602,7 +602,7 @@ export const PageGauntletWorkbench: React.FC = () => {
                     <th className="py-3 font-semibold">Recommendation Feasibility</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 text-zinc-300">
+                <tbody className="divide-y divide-[var(--border-subtle)] text-[var(--text-primary)]">
                   {(tournamentData?.tournament_comparison || [
                     {
                       method_name: "Baseline A: Fixed Threshold Alert",
@@ -636,13 +636,13 @@ export const PageGauntletWorkbench: React.FC = () => {
                     return (
                       <tr
                         key={i}
-                        className={`transition ${isProposed ? 'bg-[#E64A19]/10 font-medium' : 'hover:bg-white/[0.02]'}`}
+                        className={`transition ${isProposed ? 'bg-[var(--accent-primary)]/10 font-medium' : 'hover:bg-white/[0.02]'}`}
                       >
-                        <td className="py-3.5 text-[#F7F5F0] flex items-center gap-2">
+                        <td className="py-3.5 text-[var(--text-primary)] flex items-center gap-2">
                           {isProposed ? (
-                            <ShieldCheck className="w-4 h-4 text-[#E06D53]" />
+                            <ShieldCheck className="w-4 h-4 text-[var(--accent-primary)]" />
                           ) : (
-                            <div className="w-1.5 h-1.5 rounded-full bg-zinc-600" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-[var(--text-muted)]" />
                           )}
                           {t.method_name}
                         </td>
@@ -655,7 +655,7 @@ export const PageGauntletWorkbench: React.FC = () => {
                           </span>
                         </td>
                         <td className="py-3.5 font-mono">
-                          <span className={isProposed ? 'text-emerald-400 font-bold' : 'text-zinc-300'}>
+                          <span className={isProposed ? 'text-emerald-400 font-bold' : 'text-[var(--text-primary)]'}>
                             {t.residual_operational_risk.toFixed(2)}
                           </span>
                         </td>
@@ -665,7 +665,7 @@ export const PageGauntletWorkbench: React.FC = () => {
                               ? 'bg-emerald-950/50 text-emerald-300 border border-emerald-500/30'
                               : t.infeasible_action_rate > 0
                               ? 'bg-rose-950/40 text-rose-300 border border-rose-500/30'
-                              : 'bg-zinc-800 text-zinc-400'
+                              : 'bg-[var(--surface-secondary)] text-[var(--text-secondary)]'
                           }`}>
                             {isProposed ? '100% Feasible' : t.infeasible_action_rate > 0 ? '34% Infeasible' : 'No Actions'}
                           </span>
@@ -677,9 +677,9 @@ export const PageGauntletWorkbench: React.FC = () => {
               </table>
             </div>
 
-            <div className="p-4 rounded-xl bg-zinc-900/60 border border-white/5 space-y-1.5 text-xs text-zinc-400">
-              <span className="text-zinc-300 font-semibold block">Examiner Evaluation Takeaways:</span>
-              <ul className="list-disc list-inside space-y-1 text-zinc-400 text-[11px]">
+            <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-1.5 text-xs text-[var(--text-secondary)]">
+              <span className="text-[var(--text-primary)] font-semibold block">Examiner Evaluation Takeaways:</span>
+              <ul className="list-disc list-inside space-y-1 text-[var(--text-secondary)] text-[11px]">
                 <li>Baseline F eliminates 100% of infeasible actions by disqualifying candidates whose execution duration T_exec &gt;= h*.</li>
                 <li>Conformal interval bounds reduce false alarm rates by 50% relative to pure point forecasting.</li>
                 <li>Simulated counterfactual effects are explicitly bounded and discounted by the Atlas Kolmogorov-Smirnov reality discrepancy metric.</li>
@@ -694,15 +694,15 @@ export const PageGauntletWorkbench: React.FC = () => {
       {/* ==================================================================== */}
       {activeTab === 'claims' && (
         <div className="space-y-6">
-          <div className="rounded-2xl bg-[#14161D] border border-white/10 p-6 space-y-4">
+          <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-[#F7F5F0]">Claim-to-Evidence Audit Ledger</h3>
-                <p className="text-xs text-zinc-400">
+                <h3 className="text-lg font-bold text-[var(--text-primary)]">Claim-to-Evidence Audit Ledger</h3>
+                <p className="text-xs text-[var(--text-secondary)]">
                   Connects concrete engineering claims to test identifiers, verified run manifests, and code artifacts.
                 </p>
               </div>
-              <span className="text-xs text-zinc-400">
+              <span className="text-xs text-[var(--text-secondary)]">
                 Status: <strong className="text-emerald-400">Strict Verification Active</strong>
               </span>
             </div>
@@ -716,16 +716,16 @@ export const PageGauntletWorkbench: React.FC = () => {
                     key={claim.id}
                     className={`rounded-xl p-5 border transition space-y-3 ${
                       isSupported
-                        ? 'bg-zinc-900/40 border-white/10 hover:border-emerald-500/30'
+                        ? 'bg-[var(--surface-secondary)]/40 border-[var(--border-subtle)] hover:border-emerald-500/30'
                         : isUnverified
                         ? 'bg-amber-950/10 border-amber-500/20'
-                        : 'bg-zinc-900/40 border-white/10'
+                        : 'bg-[var(--surface-secondary)]/40 border-[var(--border-subtle)]'
                     }`}
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs text-zinc-400 font-semibold">{claim.id}</span>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-zinc-800 text-zinc-300">
+                        <span className="font-mono text-xs text-[var(--text-secondary)] font-semibold">{claim.id}</span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[var(--surface-secondary)] text-[var(--text-primary)]">
                           {claim.category}
                         </span>
                       </div>
@@ -733,34 +733,34 @@ export const PageGauntletWorkbench: React.FC = () => {
                         isSupported
                           ? 'bg-emerald-950/60 text-emerald-400 border-emerald-500/30'
                           : isUnverified
-                          ? 'bg-zinc-800 text-zinc-400 border-zinc-700'
+                          ? 'bg-[var(--surface-secondary)] text-[var(--text-secondary)] border-[var(--border-normal)]'
                           : 'bg-amber-950/40 text-amber-300 border-amber-500/30'
                       }`}>
                         {claim.verification_status}
                       </span>
                     </div>
 
-                    <p className="text-sm font-medium text-[#F7F5F0] leading-relaxed">
+                    <p className="text-sm font-medium text-[var(--text-primary)] leading-relaxed">
                       "{claim.claim_text}"
                     </p>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs pt-2 border-t border-white/5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs pt-2 border-t border-[var(--border-subtle)]">
                       <div>
-                        <span className="text-zinc-500 font-medium">Supporting Evidence: </span>
-                        <span className="text-zinc-300 font-mono text-[11px]">
+                        <span className="text-[var(--text-muted)] font-medium">Supporting Evidence: </span>
+                        <span className="text-[var(--text-primary)] font-mono text-[11px]">
                           {claim.evidence_artifacts.length > 0 ? claim.evidence_artifacts.join(', ') : 'None (Holdout pending)'}
                         </span>
                       </div>
                       <div>
-                        <span className="text-zinc-500 font-medium">Verified Test Suites: </span>
-                        <span className="text-zinc-300 font-mono text-[11px]">
+                        <span className="text-[var(--text-muted)] font-medium">Verified Test Suites: </span>
+                        <span className="text-[var(--text-primary)] font-mono text-[11px]">
                           {claim.relevant_test_ids.length > 0 ? claim.relevant_test_ids.join(', ') : 'Pending test definition'}
                         </span>
                       </div>
                     </div>
 
-                    <div className="text-[11px] text-zinc-400 bg-black/30 p-2.5 rounded-lg border border-white/5">
-                      <strong className="text-zinc-300">Explicit Caveat / Limitation: </strong>
+                    <div className="text-[11px] text-[var(--text-secondary)] bg-black/30 p-2.5 rounded-lg border border-[var(--border-subtle)]">
+                      <strong className="text-[var(--text-primary)]">Explicit Caveat / Limitation: </strong>
                       {claim.known_limitations}
                     </div>
                   </div>
@@ -776,38 +776,38 @@ export const PageGauntletWorkbench: React.FC = () => {
       {/* ==================================================================== */}
       {activeTab === 'failures' && (
         <div className="space-y-6">
-          <div className="rounded-2xl bg-[#14161D] border border-white/10 p-6 space-y-4">
+          <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-[#F7F5F0]">Failure & Anomaly Ledger</h3>
-                <p className="text-xs text-zinc-400">
+                <h3 className="text-lg font-bold text-[var(--text-primary)]">Failure & Anomaly Ledger</h3>
+                <p className="text-xs text-[var(--text-secondary)]">
                   Preserved records of edge cases, sensor dropouts, and rejected operations. Failures are never silently discarded.
                 </p>
               </div>
-              <span className="text-xs text-zinc-400">
+              <span className="text-xs text-[var(--text-secondary)]">
                 Audited Cases: <strong>{failures.length}</strong>
               </span>
             </div>
 
             <div className="space-y-4">
               {failures.map((f) => (
-                <div key={f.id} className="p-5 rounded-xl bg-zinc-900/60 border border-white/10 space-y-3">
+                <div key={f.id} className="p-5 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-subtle)] space-y-3">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-xs text-rose-400 font-bold">{f.id}</span>
-                      <span className="px-2 py-0.5 rounded text-[10px] bg-zinc-800 text-zinc-300">{f.failure_category}</span>
+                      <span className="px-2 py-0.5 rounded text-[10px] bg-[var(--surface-secondary)] text-[var(--text-primary)]">{f.failure_category}</span>
                       <span className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
                         f.severity === 'HIGH' ? 'bg-rose-950/60 text-rose-300' : 'bg-amber-950/60 text-amber-300'
                       }`}>
                         {f.severity} SEVERITY
                       </span>
                     </div>
-                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-zinc-800 text-zinc-300 border border-zinc-700">
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-[var(--surface-secondary)] text-[var(--text-primary)] border border-[var(--border-normal)]">
                       {f.resolution_state}
                     </span>
                   </div>
 
-                  <h4 className="text-sm font-semibold text-zinc-200">{f.error_summary}</h4>
+                  <h4 className="text-sm font-semibold text-[var(--text-primary)]">{f.error_summary}</h4>
 
                   <div className="p-3 rounded-lg bg-black/40 font-mono text-xs text-rose-300/90 border border-rose-500/20">
                     {f.detailed_logs}
@@ -815,11 +815,11 @@ export const PageGauntletWorkbench: React.FC = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-1">
                     <div>
-                      <span className="text-zinc-500 font-medium block">Reproduction Steps:</span>
-                      <p className="text-zinc-400 text-[11px] mt-0.5">{f.reproduction_steps}</p>
+                      <span className="text-[var(--text-muted)] font-medium block">Reproduction Steps:</span>
+                      <p className="text-[var(--text-secondary)] text-[11px] mt-0.5">{f.reproduction_steps}</p>
                     </div>
                     <div>
-                      <span className="text-zinc-500 font-medium block">Follow-up Verification:</span>
+                      <span className="text-[var(--text-muted)] font-medium block">Follow-up Verification:</span>
                       <p className="text-emerald-400 text-[11px] mt-0.5">{f.follow_up_verification}</p>
                     </div>
                   </div>
@@ -835,16 +835,16 @@ export const PageGauntletWorkbench: React.FC = () => {
       {/* ==================================================================== */}
       {activeTab === 'reproduce' && (
         <div className="space-y-6">
-          <div className="rounded-2xl bg-[#14161D] border border-white/10 p-6 space-y-5">
+          <div className="rounded-2xl titan-card border border-[var(--border-subtle)] p-6 space-y-5">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-[#F7F5F0]">One-Click Reproduction Verification</h3>
-                <p className="text-xs text-zinc-400">
+                <h3 className="text-lg font-bold text-[var(--text-primary)]">One-Click Reproduction Verification</h3>
+                <p className="text-xs text-[var(--text-secondary)]">
                   Re-executes an identical configuration from a saved manifest and verifies numerical stability within tolerance.
                 </p>
               </div>
               <div className="flex items-center gap-2 text-xs">
-                <span className="text-zinc-400">Tolerance:</span>
+                <span className="text-[var(--text-secondary)]">Tolerance:</span>
                 <input
                   type="number"
                   min="0.5"
@@ -852,20 +852,20 @@ export const PageGauntletWorkbench: React.FC = () => {
                   step="0.5"
                   value={tolerancePct}
                   onChange={(e) => setTolerancePct(parseFloat(e.target.value))}
-                  className="w-16 bg-zinc-900 border border-white/10 rounded-lg px-2 py-1 text-zinc-200 font-mono text-right"
+                  className="w-16 bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-lg px-2 py-1 text-[var(--text-primary)] font-mono text-right"
                 />
-                <span className="text-zinc-400">%</span>
+                <span className="text-[var(--text-secondary)]">%</span>
               </div>
             </div>
 
             {lastReproResult && (
-              <div className="p-5 rounded-xl bg-zinc-900/80 border border-emerald-500/30 space-y-4">
+              <div className="p-5 rounded-xl bg-[var(--surface-secondary)]/80 border border-emerald-500/30 space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
                     <CheckCircle2 className="w-4 h-4" />
                     Reproduction Status: {lastReproResult.status}
                   </span>
-                  <span className="text-xs font-mono text-zinc-400">
+                  <span className="text-xs font-mono text-[var(--text-secondary)]">
                     Max Drift: {lastReproResult.max_relative_drift_pct}% (Limit: {lastReproResult.tolerance_threshold_pct}%)
                   </span>
                 </div>
@@ -873,7 +873,7 @@ export const PageGauntletWorkbench: React.FC = () => {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
                     <thead>
-                      <tr className="border-b border-white/10 text-zinc-500">
+                      <tr className="border-b border-[var(--border-subtle)] text-[var(--text-muted)]">
                         <th className="py-2">Metric</th>
                         <th className="py-2">Original Value</th>
                         <th className="py-2">Reproduced Value</th>
@@ -881,13 +881,13 @@ export const PageGauntletWorkbench: React.FC = () => {
                         <th className="py-2">Status</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5 text-zinc-300">
+                    <tbody className="divide-y divide-[var(--border-subtle)] text-[var(--text-primary)]">
                       {Object.entries(lastReproResult.metric_deltas || {}).map(([k, v]: [string, any]) => (
                         <tr key={k}>
-                          <td className="py-2 font-mono text-zinc-300">{k}</td>
-                          <td className="py-2 font-mono text-zinc-400">{v.original}</td>
-                          <td className="py-2 font-mono text-[#F7F5F0]">{v.reproduced}</td>
-                          <td className="py-2 font-mono text-[#E06D53]">{v.relative_drift_pct}%</td>
+                          <td className="py-2 font-mono text-[var(--text-primary)]">{k}</td>
+                          <td className="py-2 font-mono text-[var(--text-secondary)]">{v.original}</td>
+                          <td className="py-2 font-mono text-[var(--text-primary)]">{v.reproduced}</td>
+                          <td className="py-2 font-mono text-[var(--accent-primary)]">{v.relative_drift_pct}%</td>
                           <td className="py-2">
                             <span className="px-2 py-0.5 rounded text-[10px] bg-emerald-950/40 text-emerald-400">
                               PASS
@@ -902,23 +902,23 @@ export const PageGauntletWorkbench: React.FC = () => {
             )}
 
             <div className="space-y-3 pt-2">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)]">
                 Select Past Run to Reproduce:
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {runs.slice(0, 4).map((r) => (
                   <div
                     key={r.id}
-                    className="p-4 rounded-xl bg-zinc-900/50 border border-white/5 flex items-center justify-between"
+                    className="p-4 rounded-xl bg-[var(--surface-secondary)]/50 border border-[var(--border-subtle)] flex items-center justify-between"
                   >
                     <div>
-                      <span className="font-mono text-xs text-[#F7F5F0] font-semibold block">{r.id}</span>
-                      <span className="text-[11px] text-zinc-500">{r.suite_id}</span>
+                      <span className="font-mono text-xs text-[var(--text-primary)] font-semibold block">{r.id}</span>
+                      <span className="text-[11px] text-[var(--text-muted)]">{r.suite_id}</span>
                     </div>
                     <button
                       onClick={() => handleReproduce(r.id)}
                       disabled={reproducingRunId === r.id}
-                      className="px-3 py-1.5 rounded-lg bg-[#E64A19] text-white text-xs font-medium hover:bg-[#D84315] disabled:opacity-50 transition"
+                      className="px-3 py-1.5 rounded-lg bg-[var(--accent-primary)] text-white text-xs font-medium hover:bg-[var(--accent-hover)] disabled:opacity-50 transition"
                     >
                       {reproducingRunId === r.id ? 'Verifying...' : 'Re-run'}
                     </button>

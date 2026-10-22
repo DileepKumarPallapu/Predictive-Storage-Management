@@ -1,0 +1,40 @@
+{
+  "backup_id": "vault-backup-20261022-133749-ef0457",
+  "created_at": "2026-10-22T13:37:49.335824+00:00",
+  "created_by": "vault_admin",
+  "format_version": "AEGISSTOR_VAULT_V1",
+  "backup_format": "AEGISSTOR_VAULT_V1",
+  "resource_scope": [
+    "APPLICATION_DATABASE",
+    "SAFE_SYSTEM_CONFIG",
+    "MODEL_METADATA",
+    "AUDIT_LEDGER"
+  ],
+  "database_engine": "SQLite3",
+  "database_size_bytes": 24440832,
+  "files_count": 3,
+  "files": [
+    "database.sqlite",
+    "config_safe.json",
+    "model_metadata.json"
+  ],
+  "sha256_checksums": {
+    "database.sqlite": "3b6ceff36fe863add2632df7b82595e648a32c77fd9e9a11ca0c07cbd7adbc09",
+    "config_safe.json": "06db5173a1a9ca5820812979489efcf3d5af46525b8250b1e2265662e30b4e1f",
+    "model_metadata.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "table_record_counts": {
+    "devices": 5,
+    "telemetry": 2970,
+    "audit_logs": 744,
+    "users": 4,
+    "recommendations": 5,
+    "model_versions": 0
+  },
+  "latest_telemetry_timestamp": "2026-10-22T13:27:49.321895",
+  "status": "COMPLETED",
+  "rpo_target_hours": 1.0,
+  "rto_target_seconds": 60.0,
+  "notes": "",
+  "tamper_evidence_disclaimer": "SHA-256 checksums verify file-level integrity. Protection against physical disk loss requires replicating backup bundles to offsite / secondary WORM cloud storage."
+}

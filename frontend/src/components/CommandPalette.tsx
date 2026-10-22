@@ -49,10 +49,11 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   if (!isOpen) return null;
 
   const devices = [
-    { id: 'vol-nvme-tier1-db', name: 'PostgreSQL Primary Cluster', tier: 'NVMe' },
-    { id: 'vol-sas-tier2-analytics', name: 'Analytics & OLAP Pool', tier: 'SAS' },
-    { id: 'vol-cold-tier3-backup', name: 'Disaster Recovery Vault', tier: 'Cold' },
-    { id: 'vol-edge-cache-01', name: 'Edge Ingestion Buffer', tier: 'NVMe' },
+    { id: 'vol-nvme-tier1-db', name: 'Production E-Commerce OLTP NVMe', tier: 'NVMe Tier 1' },
+    { id: 'vol-sas-tier2-analytics', name: 'Corporate Data Warehouse & ETL SAS', tier: 'SAS Tier 2' },
+    { id: 'vol-hdd-archive', name: 'Object & Media Archive Cold Pool', tier: 'Cold Archive' },
+    { id: 'vol-backup-target', name: 'Secondary Veeam / SnapMirror Target', tier: 'Backup Target' },
+    { id: 'host-vol-C', name: 'Host Storage Drive (C:\\)', tier: 'Host Local OS' },
   ];
 
   const pages: { id: PageId; label: string; icon: any }[] = [
@@ -70,6 +71,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     { id: 'phoenix', label: 'Phoenix Safe Incident Orchestrator', icon: ShieldAlert },
     { id: 'atlas', label: 'Atlas Reality Calibration & Fidelity', icon: Compass },
     { id: 'oracle', label: 'Oracle Workload Attribution & Bottlenecks', icon: Sparkles },
+    { id: 'gauntlet', label: 'Gauntlet Scientific Benchmark Workbench', icon: FlaskConical },
+    { id: 'sovereign', label: 'Sovereign Federated Privacy Intelligence', icon: Network },
     { id: 'experiments', label: 'Ablation Experiments & Benchmarks', icon: FlaskConical },
     { id: 'datasets', label: 'Dataset Provenance & Quality Checks', icon: Database },
     { id: 'settings', label: 'Settings & Audit Governance', icon: Settings },

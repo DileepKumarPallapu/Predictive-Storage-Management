@@ -9,23 +9,21 @@ import {
 import { ScientificForecastChart } from '../components/ScientificForecastChart';
 import { ContextualHelp } from '../components/ContextualHelp';
 import { usePresentationMode } from '../context/PresentationModeContext';
+import { useOperatingMode } from '../context/OperatingModeContext';
 import {
   Activity,
-  ShieldAlert,
   Clock,
   ArrowUpRight,
   AlertTriangle,
   Layers,
   Radio,
   Sliders,
-  Info,
   Sparkles,
-  Server,
-  Zap,
-  TrendingUp,
-  ShieldCheck,
   CheckCircle2,
-  HardDrive
+  HardDrive,
+  ShieldCheck,
+  ShieldAlert,
+  Server
 } from 'lucide-react';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
 
@@ -45,10 +43,11 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
   const [throughputTelemetry, setThroughputTelemetry] = useState<TelemetryResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const { isGuided, isExpert } = usePresentationMode();
+  const { operatingMode, provenanceLabel, refreshKey } = useOperatingMode();
 
   useEffect(() => {
     loadInitialData();
-  }, []);
+  }, [refreshKey, operatingMode]);
 
   useEffect(() => {
     if (selectedDeviceId) {
@@ -69,7 +68,7 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
         setSelectedDeviceId(devList[0].id);
       }
     } catch (e) {
-      console.error(e);
+      console.error('Failed to load overview data:', e);
     } finally {
       setLoading(false);
     }
@@ -88,7 +87,7 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
       setLatencyTelemetry(latTel);
       setThroughputTelemetry(tpTel);
     } catch (e) {
-      console.error(e);
+      console.error('Failed to load device charts:', e);
     }
   };
 
@@ -98,55 +97,53 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
     return <LoadingSkeleton rows={8} height="h-10" />;
   }
 
-  // Plain-Language Summary Generator
-  const getSystemConditionSummary = () => {
-    if (!overview) return 'Evaluating fleet condition telemetry...';
-    if (overview.highest_current_risk.level === 'CRITICAL') {
-      return `Attention required: Pool ${overview.highest_current_risk.device_id} is projected to approach its safety limit in approximately ${overview.estimated_reserve_runway_hours.toFixed(0)} hours. Simulated intervention recommended.`;
-    }
-    if (overview.highest_current_risk.level === 'ELEVATED') {
-      return `Fleet is operating within acceptable limits. Note that ${overview.highest_current_risk.device_id} exhibits elevated write growth with ~${overview.estimated_reserve_runway_hours.toFixed(0)} hours of reserve runway.`;
-    }
-    return `All ${overview.monitored_device_count} monitored storage pools are operating with nominal headroom. No emergency interventions are required.`;
-  };
+  const isCritical = overview?.highest_current_risk.level === 'CRITICAL';
+  const isElevated = overview?.highest_current_risk.level === 'ELEVATED';
 
   return (
     <div className="space-y-6">
-      {/* 1. Header with Mode & Condition Summary */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* SECTION A: Page Introduction & Environment Controls */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-[var(--border)]">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)] shadow-glow-vermilion">
-              <Activity size={18} />
-            </div>
-            <h1 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
-              {isGuided ? 'Storage Health & Capacity Overview' : 'Executive Storage Resilience Overview'}
+            <h1 className="text-2xl font-bold text-[var(--text-primary)] tracking-tight">
+              {isGuided ? 'Storage Health & Capacity Overview' : 'Storage Resilience & Capacity Intelligence'}
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[var(--accent-primary)]/15 text-[var(--accent-primary)] border border-[var(--accent-primary)]/35 shadow-sm">
-              SYNTHETIC DEMO DATA
+            <span
+              className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold border ${
+                operatingMode === 'live'
+                  ? 'bg-[var(--success)]/10 text-[var(--success)] border-[var(--success)]/30'
+                  : operatingMode === 'replay'
+                  ? 'bg-[var(--warning)]/10 text-[var(--warning)] border-[var(--warning)]/30'
+                  : 'bg-[var(--surface-elevated)] text-[var(--text-muted)] border-[var(--border)]'
+              }`}
+            >
+              {overview?.data_mode_label || provenanceLabel}
             </span>
           </div>
-          <p className="text-xs text-[var(--text-secondary)] mt-1.5 leading-relaxed">
+          <p className="text-xs text-[var(--text-secondary)] mt-1.5 max-w-2xl leading-relaxed">
             {isGuided
-              ? 'Real-time overview of current capacity, expected runway, and proactive suggestions.'
-              : 'Multi-horizon risk envelope and lead-time estimation derived from calibrated quantile forecasting.'}
+              ? 'Real-time monitoring of fleet capacity, machine-learned reserve runways, and proactive suggestions.'
+              : 'Multi-horizon risk envelope and predictive time-to-breach estimation powered by conformal quantile regressors.'}
           </p>
         </div>
 
-        {/* Prediction Horizon Selector */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 text-xs">
-            <span className="text-[var(--text-secondary)] font-medium">
-              {isGuided ? 'Forecast Horizon:' : 'Prediction Horizon:'}
-            </span>
+        {/* Forecast Horizon Switcher */}
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-1.5 text-xs text-[var(--text-muted)]">
+            <Clock size={13} />
+            <span className="font-medium">{isGuided ? 'Projection:' : 'Forecast Horizon:'}</span>
+          </div>
+          <div className="flex items-center bg-[var(--surface-elevated)] p-0.5 rounded-lg border border-[var(--border)]">
             {[24, 72, 168].map((h) => (
               <button
                 key={h}
+                type="button"
                 onClick={() => setHorizonHours(h)}
-                className={`px-3 py-1 rounded-lg text-xs font-mono font-medium border transition-all ${
+                className={`px-2.5 py-1 text-xs font-mono font-semibold rounded-md transition-all ${
                   horizonHours === h
-                    ? 'bg-[var(--accent-primary)]/15 border-[var(--accent-primary)] text-[var(--accent-primary)] font-bold shadow-glow-vermilion'
-                    : 'glass-panel text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
+                    ? 'bg-[var(--accent)] text-white shadow-xs'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                 }`}
               >
                 +{h}h
@@ -156,245 +153,272 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
         </div>
       </div>
 
-      {/* 2. Plain-Language System Condition Banner */}
-      <div className="glass-panel rounded-2xl px-5 py-3.5 flex items-start gap-3 border-l-4 border-l-[var(--accent-primary)]">
-        <Sparkles size={18} className="text-[var(--accent-primary)] shrink-0 mt-0.5" />
-        <div className="flex-1">
-          <div className="text-xs font-semibold text-[var(--text-primary)] flex items-center gap-2">
-            <span>System Condition Summary</span>
-            {overview && (
-              <span className="text-[10px] font-mono text-[var(--text-muted)]">
-                • Updated {new Date(overview.last_successful_collection).toLocaleTimeString()}
-              </span>
-            )}
-          </div>
-          <p className="text-xs text-[var(--text-secondary)] mt-0.5 leading-relaxed">
-            {getSystemConditionSummary()}
-          </p>
-        </div>
-      </div>
-
-      {/* 3. High-Value KPI Metrics (6 Critical Dimensions) */}
+      {/* SECTION B: Storage Condition Panel */}
       {overview && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3.5">
-          {/* Tile 1: Fleet Storage Used */}
-          <div className="glass-panel rounded-xl p-4 flex flex-col justify-between hover:border-[var(--accent-primary)]/40 transition-all">
-            <div>
-              <div className="text-[11px] text-[var(--text-secondary)] font-medium flex items-center justify-between">
-                <span>{isGuided ? 'Storage Used' : 'Fleet Used Capacity'}</span>
-                <ContextualHelp
-                  title="Storage Capacity Used"
-                  simpleExplanation="Percentage of all provisioned storage currently holding data across all tiers."
-                  technicalDetails="Aggregated bytes_used / bytes_total across NVMe, SAS, and Cold Archive pools."
-                  evidenceSource="Host LUN telemetry agent"
-                />
+        <div
+          className={`p-4 rounded-lg border transition-all ${
+            isCritical
+              ? 'bg-[var(--critical)]/5 border-[var(--critical)]/30'
+              : isElevated
+              ? 'bg-[var(--warning)]/5 border-[var(--warning)]/30'
+              : 'bg-[var(--surface)] border-[var(--border)]'
+          }`}
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 shrink-0">
+                {isCritical ? (
+                  <ShieldAlert size={18} className="text-[var(--critical)]" />
+                ) : isElevated ? (
+                  <AlertTriangle size={18} className="text-[var(--warning)]" />
+                ) : (
+                  <ShieldCheck size={18} className="text-[var(--success)]" />
+                )}
               </div>
-              <div className="text-xl font-bold font-mono text-[var(--text-primary)] mt-1.5">
-                {overview.capacity_utilization_pct.toFixed(1)}%
-              </div>
-              <div className="w-full bg-[var(--surface-secondary)] h-1.5 rounded-full overflow-hidden mt-2 border border-[var(--border-subtle)]">
-                <div
-                  className={`h-full rounded-full ${
-                    overview.capacity_utilization_pct > 85
-                      ? 'bg-[var(--status-critical)] shadow-[0_0_8px_var(--status-critical)]'
-                      : 'bg-gradient-to-r from-[var(--accent-secondary)] to-[var(--accent-primary)]'
-                  }`}
-                  style={{ width: `${Math.min(100, overview.capacity_utilization_pct)}%` }}
-                />
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-xs font-bold text-[var(--text-primary)]">
+                    {isCritical
+                      ? 'Critical Capacity Runway Alert'
+                      : isElevated
+                      ? 'Elevated Growth Notice'
+                      : 'Operational Condition Nominal'}
+                  </span>
+                  <span className="text-[10px] font-mono text-[var(--text-muted)]">
+                    • Evaluated at {new Date(overview.last_successful_collection).toLocaleTimeString()}
+                  </span>
+                </div>
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+                  {isCritical ? (
+                    <>
+                      Target pool <strong className="font-mono text-[var(--text-primary)]">{overview.highest_current_risk.device_id}</strong> is projected to reach its safety limit in approximately{' '}
+                      <span className="font-mono font-bold text-[var(--critical)]">~{overview.estimated_reserve_runway_hours.toFixed(0)} hours</span>. Countermeasure simulation recommended.
+                    </>
+                  ) : isElevated ? (
+                    <>
+                      Pool <strong className="font-mono text-[var(--text-primary)]">{overview.highest_current_risk.device_id}</strong> has increased write pressure with{' '}
+                      <span className="font-mono font-bold text-[var(--warning)]">~{overview.estimated_reserve_runway_hours.toFixed(0)} hours</span> of reserve runway.
+                    </>
+                  ) : (
+                    <>All {overview.monitored_device_count} monitored storage pools are operating with healthy reserve headroom.</>
+                  )}
+                </p>
               </div>
             </div>
-            <div className="text-[10px] text-[var(--text-muted)] font-mono mt-2">
-              {formatTB(overview.total_used_bytes)} of {formatTB(overview.total_capacity_bytes)}
+
+            <button
+              onClick={() => onNavigateToTwin(overview.highest_current_risk.device_id || selectedDeviceId)}
+              className="btn-secondary text-xs shrink-0 self-start sm:self-center inline-flex items-center gap-1.5"
+            >
+              <Layers size={13} className="text-[var(--accent)]" />
+              <span>{isGuided ? 'Test Action in Digital Twin' : 'Simulate in Sandbox'}</span>
+              <ArrowUpRight size={12} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* SECTION C: 4 Primary Metrics & 2 Secondary Health Indicators */}
+      {overview && (
+        <div className="space-y-3">
+          {/* 4 Primary Key Metrics */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Primary 1: Storage Utilization */}
+            <div className="titan-card p-4 flex flex-col justify-between">
+              <div>
+                <div className="text-xs text-[var(--text-muted)] font-medium flex items-center justify-between">
+                  <span>{isGuided ? 'Storage Utilization' : 'Fleet Utilization'}</span>
+                  <ContextualHelp
+                    title="Storage Utilization"
+                    simpleExplanation="Total storage capacity in active use across all monitored tiers."
+                    technicalDetails="Aggregated bytes_used / bytes_total across NVMe, SAS, and Cold Archive."
+                  />
+                </div>
+                <div className="text-2xl font-bold font-mono text-[var(--text-primary)] mt-1.5 tabular-nums">
+                  {overview.capacity_utilization_pct.toFixed(1)}%
+                </div>
+                <div className="w-full bg-[var(--surface-subtle)] h-1.5 rounded-full overflow-hidden mt-2 border border-[var(--border)]">
+                  <div
+                    className={`h-full rounded-full transition-all ${
+                      overview.capacity_utilization_pct > 85 ? 'bg-[var(--critical)]' : 'bg-[var(--accent)]'
+                    }`}
+                    style={{ width: `${Math.min(100, overview.capacity_utilization_pct)}%` }}
+                  />
+                </div>
+              </div>
+              <div className="text-[11px] text-[var(--text-muted)] font-mono mt-3">
+                {formatTB(overview.total_used_bytes)} used / {formatTB(overview.total_capacity_bytes)} total
+              </div>
+            </div>
+
+            {/* Primary 2: Available Capacity */}
+            <div className="titan-card p-4 flex flex-col justify-between">
+              <div>
+                <div className="text-xs text-[var(--text-muted)] font-medium flex items-center justify-between">
+                  <span>{isGuided ? 'Available Capacity' : 'Available Headroom'}</span>
+                  <ContextualHelp
+                    title="Available Headroom"
+                    simpleExplanation="Total unallocated space available for writes before reaching any configured limits."
+                    technicalDetails="Unallocated block storage bytes reported by storage controller."
+                  />
+                </div>
+                <div className="text-2xl font-bold font-mono text-[var(--success)] mt-1.5 tabular-nums">
+                  {formatTB(overview.total_free_bytes)}
+                </div>
+                <div className="text-[11px] text-[var(--text-secondary)] mt-2">
+                  Unallocated headroom
+                </div>
+              </div>
+              <div className="text-[11px] text-[var(--success)] font-medium flex items-center gap-1.5 mt-3">
+                <CheckCircle2 size={13} />
+                <span>Ready for writes</span>
+              </div>
+            </div>
+
+            {/* Primary 3: Estimated Reserve Runway */}
+            <div className="titan-card p-4 flex flex-col justify-between">
+              <div>
+                <div className="text-xs text-[var(--text-muted)] font-medium flex items-center justify-between">
+                  <span>{isGuided ? 'Estimated Runway' : 'Shortest Reserve Runway'}</span>
+                  <ContextualHelp
+                    title="Reserve Runway"
+                    simpleExplanation="Estimated operational hours until the fastest-filling pool hits its critical safety limit."
+                    technicalDetails="Derived from LightGBM median forecast crossing the 90% hard threshold."
+                  />
+                </div>
+                <div className="text-2xl font-bold font-mono text-[var(--warning)] mt-1.5 tabular-nums">
+                  ~{overview.estimated_reserve_runway_hours.toFixed(0)}h
+                </div>
+                <div className="text-[11px] text-[var(--text-secondary)] mt-2 truncate">
+                  Leading on <span className="font-mono text-[var(--text-primary)] font-semibold">{overview.highest_current_risk.device_id}</span>
+                </div>
+              </div>
+              <div className="text-[11px] text-[var(--text-muted)] font-medium flex items-center gap-1.5 mt-3">
+                <Clock size={13} className="text-[var(--warning)]" />
+                <span>Proactive lead time</span>
+              </div>
+            </div>
+
+            {/* Primary 4: Storage Risk State */}
+            <div className="titan-card p-4 flex flex-col justify-between">
+              <div>
+                <div className="text-xs text-[var(--text-muted)] font-medium flex items-center justify-between">
+                  <span>{isGuided ? 'Risk State' : 'Fleet Risk State'}</span>
+                  <ContextualHelp
+                    title="Risk State Classification"
+                    simpleExplanation="Overall assessment of storage health based on capacity exhaustion and tail latency."
+                    technicalDetails="Calculates joint risk: P(Capacity > 90%) + P(P95 Latency > SLA)."
+                  />
+                </div>
+                <div className="text-2xl font-bold font-mono mt-1.5">
+                  <span className={isCritical ? 'text-[var(--critical)]' : 'text-[var(--success)]'}>
+                    {overview.highest_current_risk.level}
+                  </span>
+                </div>
+                <div className="text-[11px] text-[var(--text-secondary)] mt-2">
+                  {overview.monitored_device_count} monitored storage pools
+                </div>
+              </div>
+              <div className="text-[11px] text-[var(--text-muted)] font-medium flex items-center gap-1.5 mt-3">
+                <ShieldCheck size={13} className="text-[var(--text-muted)]" />
+                <span>SLA limits active</span>
+              </div>
             </div>
           </div>
 
-          {/* Tile 2: Available Free Space */}
-          <div className="glass-panel rounded-xl p-4 flex flex-col justify-between hover:border-[var(--status-success)]/40 transition-all">
-            <div>
-              <div className="text-[11px] text-[var(--text-secondary)] font-medium flex items-center justify-between">
-                <span>{isGuided ? 'Available Free Space' : 'Unallocated Headroom'}</span>
-                <ContextualHelp
-                  title="Available Space"
-                  simpleExplanation="Remaining free capacity before any configured reserve limit is reached."
-                  technicalDetails="Unallocated block storage bytes across all monitored storage pools."
-                  evidenceSource="Physical block controller"
-                />
+          {/* Secondary Health Indicators (Supporting Region) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="p-3 bg-[var(--surface-elevated)] border border-[var(--border)] rounded-lg flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2.5">
+                <Radio size={15} className="text-[var(--success)] shrink-0" />
+                <div>
+                  <span className="font-semibold text-[var(--text-primary)]">Telemetry Sync & Heartbeat: </span>
+                  <span className="text-[var(--text-secondary)]">100% healthy, zero dropouts observed (cadence: 1 sample/hr).</span>
+                </div>
               </div>
-              <div className="text-xl font-bold font-mono text-[var(--status-success)] mt-1.5">
-                {formatTB(overview.total_free_bytes)}
-              </div>
-              <p className="text-[10px] text-[var(--text-muted)] mt-1">
-                Safe operational margin
-              </p>
+              <span className="text-[10px] font-mono text-[var(--success)] font-semibold px-2 py-0.5 rounded bg-[var(--success)]/10 border border-[var(--success)]/20 shrink-0">
+                ACTIVE
+              </span>
             </div>
-            <div className="text-[10px] text-[var(--status-success)] font-mono flex items-center gap-1 mt-2">
-              <CheckCircle2 size={11} /> Ready for writes
-            </div>
-          </div>
 
-          {/* Tile 3: Shortest Reserve Runway */}
-          <div className="glass-panel rounded-xl p-4 flex flex-col justify-between hover:border-[var(--status-warning)]/40 transition-all">
-            <div>
-              <div className="text-[11px] text-[var(--text-secondary)] font-medium flex items-center justify-between">
-                <span>{isGuided ? 'Runway to Limit' : 'Shortest Reserve Runway'}</span>
-                <ContextualHelp
-                  title="Runway to Configured Reserve"
-                  simpleExplanation="Estimated hours until the fastest-filling storage pool hits its critical safety limit."
-                  technicalDetails="Derived from LightGBM median forecast crossing the 90% hard critical threshold."
-                  evidenceSource="Quantile Time-to-Breach Model"
-                />
+            <div className="p-3 bg-[var(--surface-elevated)] border border-[var(--border)] rounded-lg flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2.5">
+                <Sparkles size={15} className="text-[var(--accent)] shrink-0" />
+                <div>
+                  <span className="font-semibold text-[var(--text-primary)]">Forecast Calibration: </span>
+                  <span className="text-[var(--text-secondary)]">81.4% empirical coverage (Target: 80% CI [q10, q90]).</span>
+                </div>
               </div>
-              <div className="text-xl font-bold font-mono text-[var(--status-warning)] mt-1.5">
-                ~{overview.estimated_reserve_runway_hours.toFixed(0)} hrs
-              </div>
-              <p className="text-[10px] text-[var(--text-secondary)] mt-1 truncate">
-                On <span className="font-mono text-[var(--text-primary)] font-semibold">{overview.highest_current_risk.device_id}</span>
-              </p>
-            </div>
-            <div className="text-[10px] text-[var(--text-muted)] font-mono mt-2 flex items-center gap-1">
-              <Clock size={11} className="text-[var(--status-warning)]" /> Proactive lead time
-            </div>
-          </div>
-
-          {/* Tile 4: Fleet Risk Status */}
-          <div className="glass-panel rounded-xl p-4 flex flex-col justify-between hover:border-[var(--accent-secondary)]/40 transition-all">
-            <div>
-              <div className="text-[11px] text-[var(--text-secondary)] font-medium flex items-center justify-between">
-                <span>{isGuided ? 'Risk Level' : 'Fleet Risk Envelope'}</span>
-                <ContextualHelp
-                  title="Fleet Risk Status"
-                  simpleExplanation="Overall assessment based on capacity consumption, tail latency, and hardware health."
-                  technicalDetails="Multi-factor evaluation: P(Capacity > 90%) + P(P95 Latency > SLA)."
-                  evidenceSource="Risk Assessment Engine"
-                />
-              </div>
-              <div className="text-xl font-bold font-mono text-[var(--text-primary)] mt-1.5 flex items-center gap-1.5">
-                <span className={overview.highest_current_risk.level === 'CRITICAL' ? 'text-[var(--status-critical)]' : 'text-[var(--status-success)]'}>
-                  {overview.highest_current_risk.level}
-                </span>
-              </div>
-              <p className="text-[10px] text-[var(--text-muted)] mt-1">
-                {overview.monitored_device_count} monitored storage pools
-              </p>
-            </div>
-            <div className="text-[10px] text-[var(--accent-secondary)] font-mono mt-2">
-              SLA thresholds enforced
-            </div>
-          </div>
-
-          {/* Tile 5: Collector Heartbeat */}
-          <div className="glass-panel rounded-xl p-4 flex flex-col justify-between hover:border-[var(--status-success)]/40 transition-all">
-            <div>
-              <div className="text-[11px] text-[var(--text-secondary)] font-medium flex items-center justify-between">
-                <span>{isGuided ? 'Telemetry Sync' : 'Collector Heartbeat'}</span>
-                <ContextualHelp
-                  title="Telemetry Collection Health"
-                  simpleExplanation="Confirms the background telemetry collector is actively capturing readings without drops."
-                  technicalDetails="Sampling cadence: 1 hour intervals. Missingness rate: 0.00%."
-                  evidenceSource="Passive Prometheus / OS collector"
-                />
-              </div>
-              <div className="text-sm font-bold font-mono text-[var(--text-primary)] mt-2 truncate">
-                {new Date(overview.last_successful_collection).toLocaleTimeString()}
-              </div>
-              <p className="text-[10px] text-[var(--status-success)] mt-1 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--status-success)] animate-pulse" />
-                Nominal cadence
-              </p>
-            </div>
-            <div className="text-[10px] text-[var(--text-muted)] font-mono mt-2">
-              Zero telemetry gaps
-            </div>
-          </div>
-
-          {/* Tile 6: Forecast Reliability */}
-          <div className="glass-panel rounded-xl p-4 flex flex-col justify-between hover:border-[var(--accent-tertiary)]/40 transition-all">
-            <div>
-              <div className="text-[11px] text-[var(--text-secondary)] font-medium flex items-center justify-between">
-                <span>{isGuided ? 'Forecast Reliability' : 'Interval Calibration'}</span>
-                <ContextualHelp
-                  title="Forecast Model Reliability"
-                  simpleExplanation="Percentage of past test observations that fell within our predicted range."
-                  technicalDetails="Empirical interval coverage for 80% nominal conformal quantile intervals."
-                  evidenceSource="Historical Backtest Benchmark"
-                />
-              </div>
-              <div className="text-xl font-bold font-mono text-[var(--accent-secondary)] mt-1.5">
-                81.4%
-              </div>
-              <p className="text-[10px] text-[var(--text-muted)] mt-1">
-                Target: 80% expected
-              </p>
-            </div>
-            <div className="text-[10px] text-[var(--status-success)] font-mono mt-2 flex items-center gap-1">
-              <ShieldCheck size={11} /> Conformal guarantee
+              <span className="text-[10px] font-mono text-[var(--text-primary)] font-semibold px-2 py-0.5 rounded bg-[var(--surface)] border border-[var(--border)] shrink-0">
+                CALIBRATED
+              </span>
             </div>
           </div>
         </div>
       )}
 
-      {/* 4. Storage Pool Inspector & Main Forecast Chart */}
-      <div className="space-y-3.5">
-        <div className="flex items-center justify-between flex-wrap gap-2.5">
-          <div className="flex items-center gap-3">
-            <span className="text-xs font-semibold text-[var(--text-primary)]">
-              {isGuided ? 'Select Storage Pool to Inspect:' : 'Inspected Resource Target:'}
-            </span>
-            <select
-              value={selectedDeviceId}
-              onChange={(e) => setSelectedDeviceId(e.target.value)}
-              className="bg-[var(--surface-secondary)] border border-[var(--border-normal)] focus:border-[var(--accent-primary)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-mono cursor-pointer focus:outline-none"
-              aria-label="Storage Pool Selector"
-            >
-              {devices.map((d) => (
-                <option key={d.id} value={d.id} className="bg-[var(--surface-primary)] text-[var(--text-primary)]">
-                  {d.name} ({d.tier})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <button
-            onClick={() => onNavigateToTwin(selectedDeviceId)}
-            className="btn-ember-primary flex items-center gap-1.5 px-3.5 py-1.5 text-xs rounded-lg font-semibold"
+      {/* Target Resource Inspection Selector */}
+      <div className="titan-card p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-[var(--surface-elevated)]">
+        <div className="flex items-center gap-2.5 flex-1 min-w-0 flex-wrap sm:flex-nowrap">
+          <HardDrive size={16} className="text-[var(--accent)] shrink-0" />
+          <span className="text-xs font-semibold text-[var(--text-primary)] shrink-0">
+            {isGuided ? 'Inspect Storage Pool:' : 'Target Resource:'}
+          </span>
+          <select
+            value={selectedDeviceId}
+            onChange={(e) => setSelectedDeviceId(e.target.value)}
+            className="bg-[var(--surface)] border border-[var(--border)] text-[var(--text-primary)] text-xs font-medium rounded-md px-2.5 py-1 focus:outline-none cursor-pointer flex-1 max-w-md min-w-[200px]"
+            aria-label="Select Storage Pool"
           >
-            <Layers size={14} />
-            {isGuided ? 'Test Actions in Digital Twin' : 'Simulate Counterfactuals in Sandbox'}
-          </button>
+            {devices.map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.name} ({d.id}) — {d.current_utilization_pct.toFixed(1)}% used
+              </option>
+            ))}
+          </select>
         </div>
 
-        {/* Central Capacity Forecast Fan Chart */}
-        {capacityTelemetry && capacityForecast && (
-          <ScientificForecastChart
-            title={`Capacity Trajectory & Expected Range — ${capacityForecast.model_name}`}
-            historicalTimestamps={capacityTelemetry.timestamps}
-            historicalValues={capacityTelemetry.values}
-            forecastTimestamps={capacityForecast.timestamps}
-            q10={capacityForecast.q10}
-            q50={capacityForecast.q50}
-            q90={capacityForecast.q90}
-            hardConstraint={capacityForecast.hard_constraint_value}
-            units="Bytes"
-            isBytes={true}
-          />
-        )}
+        <button
+          onClick={() => onNavigateToTwin(selectedDeviceId)}
+          className="btn-secondary text-xs whitespace-nowrap shrink-0 inline-flex items-center gap-1.5"
+        >
+          <Layers size={13} className="text-[var(--accent)]" />
+          <span>{isGuided ? 'Test Actions in Digital Twin' : 'Simulate Counterfactuals'}</span>
+          <ArrowUpRight size={12} />
+        </button>
       </div>
 
-      {/* 5. Latency and Throughput Diagnostics */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {/* SECTION D: Forecast Centerpiece (Central Visualization) */}
+      {capacityTelemetry && capacityForecast && (
+        <ScientificForecastChart
+          title={`Calibrated Capacity Quantile Forecast: ${selectedDeviceId}`}
+          historicalTimestamps={capacityTelemetry.timestamps}
+          historicalValues={capacityTelemetry.values}
+          forecastTimestamps={capacityForecast.timestamps}
+          q10={capacityForecast.q10}
+          q50={capacityForecast.q50}
+          q90={capacityForecast.q90}
+          hardConstraint={capacityForecast.hard_constraint_value}
+          units={capacityForecast.units}
+          isBytes={true}
+        />
+      )}
+
+      {/* SECTION E: Supporting Analysis */}
+      {/* 1. Secondary Performance Signals: Tail Latency & Throughput */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {latencyTelemetry && (
           <ScientificForecastChart
-            title={`P95 Tail Latency — ${selectedDeviceId}`}
+            title={`P95 Tail Latency: ${selectedDeviceId}`}
             historicalTimestamps={latencyTelemetry.timestamps}
             historicalValues={latencyTelemetry.values}
             units="ms"
             isBytes={false}
           />
         )}
-
         {throughputTelemetry && (
           <ScientificForecastChart
-            title={`Throughput Activity (MB/s) — ${selectedDeviceId}`}
+            title={`I/O Throughput: ${selectedDeviceId}`}
             historicalTimestamps={throughputTelemetry.timestamps}
             historicalValues={throughputTelemetry.values}
             units="MB/s"
@@ -403,71 +427,48 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
         )}
       </div>
 
-      {/* 6. Operational Incidents & 4-Question Alert Framework + Recommended Action */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Operational Incidents (2 cols) */}
-        <div className="lg:col-span-2 glass-panel rounded-2xl p-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
-              <Clock className="text-[var(--status-warning)]" size={16} />
-              <span>{isGuided ? 'Operational Alerts & 4-Point Diagnosis' : 'Incident Stream & Diagnostic Context'}</span>
+      {/* 2. Operational Incidents & Top Recommendation */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Incident Stream (2 columns) */}
+        <div className="lg:col-span-2 titan-card p-4 space-y-3">
+          <div className="flex items-center justify-between pb-2 border-b border-[var(--border)]">
+            <h3 className="text-xs font-bold text-[var(--text-primary)] flex items-center gap-2">
+              <Clock className="text-[var(--warning)]" size={14} />
+              <span>{isGuided ? 'Operational Incidents & Signals' : 'Recent Telemetry Events & Anomalies'}</span>
             </h3>
-            <span className="text-[11px] font-mono text-[var(--text-muted)]">Chronological Sequence</span>
+            <span className="text-[11px] font-mono text-[var(--text-muted)]">
+              {overview?.risk_timeline.length || 0} events recorded
+            </span>
           </div>
 
-          <div className="space-y-3">
-            {overview?.risk_timeline.map((item) => (
+          <div className="space-y-2.5">
+            {overview?.risk_timeline.slice(0, 3).map((item) => (
               <div
                 key={item.id}
-                className={`p-4 rounded-xl border text-xs transition-all ${
-                  item.severity === 'CRITICAL'
-                    ? 'bg-[var(--status-critical)]/10 border-[var(--status-critical)]/30 text-[var(--status-critical)]'
-                    : 'bg-[var(--surface-secondary)] border border-[var(--border-subtle)] text-[var(--text-primary)]'
-                }`}
+                className="bg-[var(--surface-elevated)] rounded-md p-3 border border-[var(--border)] space-y-2 text-xs"
               >
-                <div className="flex items-start gap-3">
-                  <div className="mt-0.5 shrink-0">
-                    {item.severity === 'CRITICAL' ? (
-                      <ShieldAlert size={18} className="text-[var(--status-critical)]" />
-                    ) : (
-                      <AlertTriangle size={18} className="text-[var(--status-warning)]" />
-                    )}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`w-2 h-2 rounded-full ${
+                        item.severity === 'CRITICAL' ? 'bg-[var(--critical)]' : 'bg-[var(--warning)]'
+                      }`}
+                    />
+                    <span className="font-semibold text-[var(--text-primary)]">{item.title}</span>
                   </div>
-                  <div className="flex-1 space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold text-sm">{item.title}</span>
-                      <span className="text-[10px] font-mono text-[var(--text-muted)]">
-                        {new Date(item.timestamp).toLocaleTimeString()}
-                      </span>
-                    </div>
+                  <span className="text-[10px] font-mono text-[var(--text-muted)]">
+                    {new Date(item.timestamp).toLocaleTimeString()}
+                  </span>
+                </div>
 
-                    {/* 4-Question Plain Language Explanatory Framework */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] pt-1 border-t border-[var(--border-subtle)]/60 font-sans">
-                      <div>
-                        <strong className="text-[var(--text-primary)]">1. What happened?</strong>
-                        <p className="text-[var(--text-secondary)] mt-0.5">
-                          Capacity write growth on pool <span className="font-mono text-[var(--accent-primary)]">{item.device_id}</span> is outpacing unallocated headroom.
-                        </p>
-                      </div>
-                      <div>
-                        <strong className="text-[var(--text-primary)]">2. Why does it matter?</strong>
-                        <p className="text-[var(--text-secondary)] mt-0.5">
-                          Exceeding 90% hard limit will cause write queue contention and violate production latency SLAs.
-                        </p>
-                      </div>
-                      <div>
-                        <strong className="text-[var(--text-primary)]">3. Supporting evidence:</strong>
-                        <p className="text-[var(--text-secondary)] mt-0.5">
-                          LightGBM forecast median crosses safety envelope at +72 hours with 81.4% conformal calibration confidence.
-                        </p>
-                      </div>
-                      <div>
-                        <strong className="text-[var(--text-primary)]">4. Recommended action:</strong>
-                        <p className="text-[var(--text-secondary)] mt-0.5">
-                          Test cold data migration in the Digital Twin simulator or expand storage pool capacity.
-                        </p>
-                      </div>
-                    </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] pt-1.5 border-t border-[var(--border)] text-[var(--text-secondary)]">
+                  <div>
+                    <span className="text-[var(--text-primary)] font-medium">Affected Resource: </span>
+                    <span className="font-mono text-[var(--accent)] font-semibold">{item.device_id}</span>
+                  </div>
+                  <div>
+                    <span className="text-[var(--text-primary)] font-medium">Category: </span>
+                    <span className="font-mono">{item.category}</span>
                   </div>
                 </div>
               </div>
@@ -475,36 +476,36 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
           </div>
         </div>
 
-        {/* Ranked Recommendation Panel (1 col) */}
-        <div className="glass-panel rounded-2xl p-5 space-y-4 flex flex-col justify-between">
+        {/* Top Recommendation (1 column) */}
+        <div className="titan-card p-4 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
-                <Sliders className="text-[var(--accent-primary)]" size={16} />
-                <span>{isGuided ? 'Suggested Action' : 'Ranked Recommendation'}</span>
+            <div className="flex items-center justify-between pb-2 border-b border-[var(--border)]">
+              <h3 className="text-xs font-bold text-[var(--text-primary)] flex items-center gap-1.5">
+                <Sliders className="text-[var(--accent)]" size={14} />
+                <span>{isGuided ? 'Top Recommendation' : 'Ranked Intervention'}</span>
               </h3>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-[var(--accent-primary)]/15 text-[var(--accent-primary)] border border-[var(--accent-primary)]/40 shadow-sm">
+              <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/20">
                 #1 Priority
               </span>
             </div>
 
             {overview?.top_recommendation ? (
-              <div className="mt-3.5 space-y-3 text-xs">
-                <div className="font-semibold text-[var(--text-primary)] text-sm">
+              <div className="mt-3 space-y-2.5 text-xs">
+                <div className="font-semibold text-[var(--text-primary)]">
                   {overview.top_recommendation.title}
                 </div>
-                <div className="bg-[var(--surface-secondary)] rounded-xl p-3.5 border border-[var(--border-subtle)] space-y-1.5 font-mono text-[11px]">
-                  <div>Target Pool: <span className="text-[var(--accent-primary)] font-bold">{overview.top_recommendation.device_id}</span></div>
+                <div className="bg-[var(--surface-elevated)] rounded-md p-2.5 border border-[var(--border)] space-y-1 font-mono text-[11px]">
+                  <div>Target: <span className="text-[var(--accent)] font-bold">{overview.top_recommendation.device_id}</span></div>
                   <div>Strategy: <span className="text-[var(--text-primary)] font-bold">{overview.top_recommendation.action_type}</span></div>
-                  <div>Runway Headroom Gain: <span className="text-[var(--status-warning)] font-bold">+{overview.top_recommendation.estimated_runway_gain_hours} hrs</span></div>
-                  <div>Utility Score: <span className="text-[var(--status-success)] font-bold">{overview.top_recommendation.utility_score.toFixed(1)}</span></div>
+                  <div>Runway Gain: <span className="text-[var(--warning)] font-bold">+{overview.top_recommendation.estimated_runway_gain_hours} hrs</span></div>
+                  <div>Utility Score: <span className="text-[var(--success)] font-bold">{overview.top_recommendation.utility_score.toFixed(1)}</span></div>
                 </div>
-                <p className="text-[var(--text-secondary)] text-xs leading-relaxed">
-                  Evaluated against the Hard Safety Envelope. Disqualifies any action that would create high latency contention during migration.
+                <p className="text-[var(--text-secondary)] text-[11px] leading-relaxed">
+                  Evaluated against the Hard Safety Envelope. Disqualifies any action that would violate P95 latency SLAs.
                 </p>
               </div>
             ) : (
-              <div className="text-xs text-[var(--text-secondary)] mt-3">
+              <div className="text-xs text-[var(--text-muted)] mt-3">
                 No immediate critical intervention required.
               </div>
             )}
@@ -512,93 +513,94 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
 
           <button
             onClick={() => onNavigateToTwin(overview?.top_recommendation?.device_id || selectedDeviceId)}
-            className="w-full mt-4 py-2.5 px-3 rounded-xl btn-ember-primary font-bold text-xs flex items-center justify-center gap-1.5"
+            className="w-full mt-4 btn-primary text-xs flex items-center justify-center gap-1.5"
           >
-            {isGuided ? 'Test This in Digital Twin' : 'Launch Digital Twin Sandbox'} <ArrowUpRight size={13} />
+            <span>{isGuided ? 'Test in Digital Twin' : 'Launch Digital Twin Sandbox'}</span>
+            <ArrowUpRight size={13} />
           </button>
         </div>
       </div>
 
-      {/* 7. Monitored Storage Pools & Health Table */}
-      <div className="glass-panel rounded-2xl overflow-hidden">
-        <div className="px-5 py-4 border-b border-[var(--border-subtle)] flex items-center justify-between">
+      {/* 3. Monitored Storage Pools & Service Constraints Table */}
+      <div className="titan-card overflow-hidden">
+        <div className="px-4 py-3 border-b border-[var(--border)] flex items-center justify-between">
           <div>
-            <h3 className="text-sm font-semibold text-[var(--text-primary)]">
-              {isGuided ? 'Storage Pool Status & Health' : 'Monitored Storage Pools & Service Constraints'}
+            <h3 className="text-xs font-bold text-[var(--text-primary)]">
+              {isGuided ? 'Monitored Storage Pools' : 'Monitored Storage Pools & Service Constraints'}
             </h3>
             <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
-              Live capacity utilization, P95 tail latency, and reserve runway across all physical storage tiers.
+              Live capacity utilization, P95 tail latency, and reserve runway across all physical tiers.
             </p>
           </div>
-          <span className="text-xs text-[var(--text-secondary)] font-mono">{devices.length} Active Pools</span>
+          <span className="text-xs text-[var(--text-muted)] font-mono">{devices.length} Monitored Pools</span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs font-mono">
-            <thead className="bg-[var(--surface-secondary)] text-[var(--text-secondary)] uppercase text-[10px] border-b border-[var(--border-subtle)]">
+            <thead className="bg-[var(--surface-elevated)] text-[var(--text-muted)] uppercase text-[10px] border-b border-[var(--border)]">
               <tr>
-                <th className="px-5 py-3 font-semibold">{isGuided ? 'Pool Name' : 'Storage Pool'}</th>
-                <th className="px-5 py-3 font-semibold">{isGuided ? 'Hardware Tier' : 'Tier & Profile'}</th>
-                <th className="px-5 py-3 font-semibold">{isGuided ? 'Used / Total' : 'Used / Capacity'}</th>
-                <th className="px-5 py-3 font-semibold">Utilization</th>
-                <th className="px-5 py-3 font-semibold">{isGuided ? 'Response Latency' : 'P95 Latency'}</th>
-                <th className="px-5 py-3 font-semibold">{isGuided ? 'Runway Left' : 'Reserve Runway'}</th>
-                <th className="px-5 py-3 font-semibold">Status</th>
-                <th className="px-5 py-3 font-semibold text-right">Action</th>
+                <th className="px-4 py-2.5 font-semibold">{isGuided ? 'Pool Name' : 'Storage Pool'}</th>
+                <th className="px-4 py-2.5 font-semibold">{isGuided ? 'Hardware Tier' : 'Tier & Profile'}</th>
+                <th className="px-4 py-2.5 font-semibold">{isGuided ? 'Used / Total' : 'Used / Capacity'}</th>
+                <th className="px-4 py-2.5 font-semibold">Utilization</th>
+                <th className="px-4 py-2.5 font-semibold">{isGuided ? 'Latency' : 'P95 Latency'}</th>
+                <th className="px-4 py-2.5 font-semibold">{isGuided ? 'Runway Left' : 'Reserve Runway'}</th>
+                <th className="px-4 py-2.5 font-semibold">Status</th>
+                <th className="px-4 py-2.5 font-semibold text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--border-subtle)]">
+            <tbody className="divide-y divide-[var(--border)]">
               {devices.map((d) => (
                 <tr key={d.id} className="hover:bg-[var(--surface-hover)] transition-colors">
-                  <td className="px-5 py-3.5 font-semibold text-[var(--text-primary)] font-sans">
+                  <td className="px-4 py-2.5 font-semibold text-[var(--text-primary)] font-sans">
                     {d.name}
-                    <div className="text-[10px] font-mono text-[var(--accent-primary)] font-normal">{d.id}</div>
+                    <div className="text-[10px] font-mono text-[var(--accent)] font-normal">{d.id}</div>
                   </td>
-                  <td className="px-5 py-3.5 text-[var(--text-secondary)] font-sans">
+                  <td className="px-4 py-2.5 text-[var(--text-secondary)] font-sans">
                     {d.tier}
                     <div className="text-[10px] text-[var(--text-muted)] font-mono">{d.workload_profile}</div>
                   </td>
-                  <td className="px-5 py-3.5 text-[var(--text-primary)] tabular-nums">
+                  <td className="px-4 py-2.5 text-[var(--text-primary)] tabular-nums">
                     {formatTB(d.current_used_bytes)} / {formatTB(d.total_capacity_bytes)}
                   </td>
-                  <td className="px-5 py-3.5">
-                    <div className="flex items-center gap-2.5">
+                  <td className="px-4 py-2.5">
+                    <div className="flex items-center gap-2">
                       <span className="w-10 text-[var(--text-primary)] tabular-nums">{d.current_utilization_pct.toFixed(1)}%</span>
-                      <div className="w-20 bg-[var(--surface-secondary)] h-2 rounded-full overflow-hidden p-0.5 border border-[var(--border-subtle)]">
+                      <div className="w-16 bg-[var(--surface-subtle)] h-1.5 rounded-full overflow-hidden border border-[var(--border)]">
                         <div
                           className={`h-full rounded-full ${
                             d.current_utilization_pct >= d.critical_threshold_pct
-                              ? 'bg-[var(--status-critical)] shadow-[0_0_6px_var(--status-critical)]'
+                              ? 'bg-[var(--critical)]'
                               : d.current_utilization_pct >= d.warning_threshold_pct
-                              ? 'bg-[var(--status-warning)] shadow-[0_0_6px_var(--status-warning)]'
-                              : 'bg-[var(--status-success)] shadow-[0_0_6px_var(--status-success)]'
+                              ? 'bg-[var(--warning)]'
+                              : 'bg-[var(--success)]'
                           }`}
                           style={{ width: `${Math.min(100, d.current_utilization_pct)}%` }}
                         />
                       </div>
                     </div>
                   </td>
-                  <td className="px-5 py-3.5 text-[var(--text-primary)] tabular-nums">{d.current_latency_p95_ms.toFixed(1)} ms</td>
-                  <td className="px-5 py-3.5 text-[var(--status-warning)] font-bold tabular-nums">~{d.runway_hours_estimate.toFixed(0)} hrs</td>
-                  <td className="px-5 py-3.5">
+                  <td className="px-4 py-2.5 text-[var(--text-primary)] tabular-nums">{d.current_latency_p95_ms.toFixed(1)} ms</td>
+                  <td className="px-4 py-2.5 text-[var(--warning)] font-bold tabular-nums">~{d.runway_hours_estimate.toFixed(0)}h</td>
+                  <td className="px-4 py-2.5">
                     <span
-                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                      className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                         d.risk_level === 'CRITICAL'
-                          ? 'bg-[var(--status-critical)]/15 text-[var(--status-critical)] border border-[var(--status-critical)]/40 shadow-sm'
+                          ? 'bg-[var(--critical)]/10 text-[var(--critical)] border border-[var(--critical)]/30'
                           : d.risk_level === 'ELEVATED'
-                          ? 'bg-[var(--status-warning)]/15 text-[var(--status-warning)] border border-[var(--status-warning)]/40 shadow-sm'
-                          : 'bg-[var(--status-success)]/15 text-[var(--status-success)] border border-[var(--status-success)]/40 shadow-sm'
+                          ? 'bg-[var(--warning)]/10 text-[var(--warning)] border border-[var(--warning)]/30'
+                          : 'bg-[var(--success)]/10 text-[var(--success)] border border-[var(--success)]/30'
                       }`}
                     >
                       {d.risk_level}
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 text-right">
+                  <td className="px-4 py-2.5 text-right">
                     <button
                       onClick={() => onNavigateToDevice(d.id)}
-                      className="px-3 py-1.5 rounded-lg btn-ember-secondary text-[11px] font-sans inline-flex items-center gap-1.5 font-medium"
+                      className="btn-secondary text-[11px] py-1 px-2.5 inline-flex items-center gap-1 font-sans"
                     >
-                      Inspect <ArrowUpRight size={12} />
+                      Inspect <ArrowUpRight size={11} />
                     </button>
                   </td>
                 </tr>

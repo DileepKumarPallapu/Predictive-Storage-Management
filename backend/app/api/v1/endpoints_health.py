@@ -29,9 +29,21 @@ def get_system_health(db: Session = Depends(get_db)):
 
 @router.get("/system/mode")
 def get_operating_mode():
+    from app.collector.host_collector import HostStorageCollector
+    diagnostics = None
+    if settings.OPERATING_MODE == "live":
+        prom_status = HostStorageCollector.scrape_prometheus_node_exporter()
+        diagnostics = {
+            "native_host_active": True,
+            "prometheus_operational": prom_status.get("status") == "ok",
+            "prometheus_message": prom_status.get("error_message") or "Operational",
+            "remedy": prom_status.get("remedy")
+        }
+
     return {
         "mode": settings.OPERATING_MODE,
         "shadow_mode_enabled": settings.SHADOW_MODE_ENABLED,
+        "diagnostics": diagnostics,
         "description": "Demo mode uses deterministic synthetic telemetry; Replay mode processes historical benchmark traces; Live mode reads local host OS metrics safely."
     }
 
@@ -44,6 +56,17 @@ def set_operating_mode(payload: ModeChangeRequest, db: Session = Depends(get_db)
     prev_mode = settings.OPERATING_MODE
     settings.OPERATING_MODE = payload.mode.lower()
 
+    diagnostics = None
+    if settings.OPERATING_MODE == "live":
+        from app.collector.host_collector import HostStorageCollector
+        prom_status = HostStorageCollector.scrape_prometheus_node_exporter()
+        diagnostics = {
+            "native_host_active": True,
+            "prometheus_operational": prom_status.get("status") == "ok",
+            "prometheus_message": prom_status.get("error_message") or "Operational",
+            "remedy": prom_status.get("remedy")
+        }
+
     AuditService.log_event(
         db=db,
         action="CHANGE_MODE",
@@ -54,5 +77,6 @@ def set_operating_mode(payload: ModeChangeRequest, db: Session = Depends(get_db)
 
     return {
         "message": f"Operating mode switched to {settings.OPERATING_MODE}",
-        "mode": settings.OPERATING_MODE
+        "mode": settings.OPERATING_MODE,
+        "diagnostics": diagnostics
     }

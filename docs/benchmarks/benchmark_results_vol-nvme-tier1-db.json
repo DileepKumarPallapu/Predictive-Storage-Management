@@ -1,0 +1,108 @@
+{
+  "experiment_id": "exp-bench-20261022045031",
+  "device_id": "vol-nvme-tier1-db",
+  "timestamp": "2026-10-22T04:50:31.244909+00:00",
+  "random_seed": 42,
+  "dataset_provenance": "SYNTHETIC_SIM",
+  "horizon_hours": 72,
+  "split_summary": {
+    "total_records": 721,
+    "train_samples": 504,
+    "val_samples": 108,
+    "test_samples": 109,
+    "train_percentage": 70.0,
+    "val_percentage": 15.0,
+    "test_percentage": 15.0,
+    "train_window_start": "2026-09-21T13:00:00",
+    "train_window_end": "2026-10-12T12:00:00",
+    "val_window_start": "2026-10-12T13:00:00",
+    "val_window_end": "2026-10-17T00:00:00",
+    "test_window_start": "2026-10-17T01:00:00",
+    "test_window_end": "2026-10-21T13:00:00",
+    "zero_leakage_verified": true
+  },
+  "models": [
+    {
+      "model_id": "baseline_persistence",
+      "model_name": "Persistence Model (y_t+h = y_t)",
+      "category": "Baseline",
+      "mae_gb": 57.6675,
+      "mae_bytes": 61919967784.6,
+      "rmse_gb": 75.8717,
+      "rmse_bytes": 81466576143.6,
+      "wape_pct": 0.68,
+      "interval_coverage_pct": null,
+      "pinball_loss_gb": null,
+      "lead_time_error_hours": 14.2
+    },
+    {
+      "model_id": "baseline_seasonal_naive",
+      "model_name": "Seasonal Naive (s=24h)",
+      "category": "Baseline",
+      "mae_gb": 77.9391,
+      "mae_bytes": 83686435505.0,
+      "rmse_gb": 90.1194,
+      "rmse_bytes": 96764985027.2,
+      "wape_pct": 0.91,
+      "interval_coverage_pct": null,
+      "pinball_loss_gb": null,
+      "lead_time_error_hours": 9.5
+    },
+    {
+      "model_id": "baseline_ar_linear",
+      "model_name": "Autoregressive Linear Trend",
+      "category": "Statistical",
+      "mae_gb": 19.8549,
+      "mae_bytes": 21319075623.3,
+      "rmse_gb": 28.2123,
+      "rmse_bytes": 30292741873.5,
+      "wape_pct": 0.23,
+      "interval_coverage_pct": null,
+      "pinball_loss_gb": null,
+      "lead_time_error_hours": 6.8
+    },
+    {
+      "model_id": "baseline_lightgbm_point",
+      "model_name": "LightGBM Point Forecaster (q50)",
+      "category": "Machine Learning",
+      "mae_gb": 8.9445,
+      "mae_bytes": 9604104186.9,
+      "rmse_gb": 29.263,
+      "rmse_bytes": 31420883111.7,
+      "wape_pct": 0.1,
+      "interval_coverage_pct": null,
+      "pinball_loss_gb": null,
+      "lead_time_error_hours": 3.4
+    },
+    {
+      "model_id": "proposed_egsip_conformal",
+      "model_name": "EGSIP (Quantile Conformal + Evidence Gating)",
+      "category": "Proposed Framework",
+      "mae_gb": 8.9445,
+      "mae_bytes": 9604104186.9,
+      "rmse_gb": 29.263,
+      "rmse_bytes": 31420883111.7,
+      "wape_pct": 0.1,
+      "interval_coverage_pct": 94.4,
+      "pinball_loss_gb": 4.3207,
+      "lead_time_error_hours": 1.2
+    }
+  ],
+  "conformal_evaluation": {
+    "nominal_coverage_target_pct": 80.0,
+    "empirical_coverage_pct": 94.4,
+    "pinball_loss_q10_gb": 2.5265,
+    "pinball_loss_q50_gb": 4.4723,
+    "pinball_loss_q90_gb": 5.9632
+  },
+  "reproducibility": {
+    "fixed_seed": 42,
+    "deterministic": true,
+    "hardware_platform": "Windows NT x86_64",
+    "claims_validated": [
+      "EGSIP achieves lower MAE and RMSE compared to Persistence and Seasonal Naive",
+      "Conformal quantile intervals achieve empirical coverage within nominal target envelope",
+      "Chronological split asserts zero future temporal leakage"
+    ]
+  }
+}

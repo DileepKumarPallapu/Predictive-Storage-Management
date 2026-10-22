@@ -1,0 +1,14 @@
+{
+  "project_name": "AEGISSTOR",
+  "project_version": "1.0.0",
+  "api_version_prefix": "/api/v1",
+  "operating_mode": "demo",
+  "shadow_mode_enabled": true,
+  "physical_mutation_disabled": true,
+  "telemetry_sampling_minutes": 60,
+  "default_forecast_horizon_hours": 72,
+  "nominal_uncertainty_coverage": 0.8,
+  "target_rpo_hours": 1.0,
+  "target_rto_seconds": 60.0,
+  "secret_recovery_note": "Secrets and private JWT keys are strictly excluded. Secret restoration must occur via enterprise KMS or secure environment secrets management."
+}

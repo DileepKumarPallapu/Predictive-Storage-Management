@@ -1,3 +1,4 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
@@ -10,6 +11,10 @@ if db_url.startswith("postgres://"):
 
 if db_url.startswith("sqlite"):
     connect_args["check_same_thread"] = False
+    if db_url.startswith("sqlite:///./") or db_url == "sqlite:///aegisstor.db":
+        backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        db_path = os.path.join(backend_dir, "aegisstor.db")
+        db_url = f"sqlite:///{db_path}"
 
 engine = create_engine(
     db_url,

@@ -21,7 +21,9 @@ class Device(Base):
     workload_profile = Column(String(64), default="OLTP Database")
     pool_id = Column(String(64), nullable=True)
     system_id = Column(String(64), nullable=True)
+    organization_id = Column(String(64), default="org-primary-enterprise", nullable=False, index=True)
     created_at = Column(DateTime, default=utc_now)
+
     updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
 
     telemetry = relationship("Telemetry", back_populates="device", cascade="all, delete-orphan")
@@ -142,9 +144,33 @@ class Recommendation(Base):
     approval_status = Column(String(32), default="PENDING_REVIEW")
     reviewed_by = Column(String(64), nullable=True)
     review_notes = Column(Text, nullable=True)
+    details_json = Column(Text, default="{}")
     created_at = Column(DateTime, default=utc_now)
 
     device = relationship("Device", back_populates="recommendations")
+    verifications = relationship("RecommendationVerification", back_populates="recommendation", cascade="all, delete-orphan")
+
+
+class RecommendationVerification(Base):
+    __tablename__ = "recommendation_verifications"
+
+    id = Column(String(64), primary_key=True)
+    recommendation_id = Column(String(64), ForeignKey("recommendations.id"), nullable=False, index=True)
+    device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    action_type = Column(String(64), nullable=False)
+    predicted_used_bytes = Column(BigInteger, default=0)
+    measured_used_bytes = Column(BigInteger, default=0)
+    discrepancy_bytes = Column(BigInteger, default=0)
+    discrepancy_pct = Column(Float, default=0.0)
+    predicted_runway_hours = Column(Float, default=0.0)
+    measured_runway_hours = Column(Float, default=0.0)
+    verification_status = Column(String(32), default="VERIFIED_WITHIN_TOLERANCE")
+    rollback_recommended = Column(Boolean, default=False)
+    details_json = Column(Text, default="{}")
+    verified_at = Column(DateTime, default=utc_now)
+
+    recommendation = relationship("Recommendation", back_populates="verifications")
+
 
 
 class Alert(Base):
@@ -191,6 +217,10 @@ class AuditLog(Base):
     action = Column(String(64), nullable=False)
     target_type = Column(String(64), nullable=False)
     target_id = Column(String(64), nullable=False)
+    organization_id = Column(String(64), default="org-primary-enterprise", nullable=False, index=True)
+    client_ip = Column(String(64), default="127.0.0.1")
+    prev_hash = Column(String(64), nullable=True)
+    entry_hash = Column(String(64), nullable=True)
     details_json = Column(Text, default="{}")
 
 
@@ -216,7 +246,9 @@ class User(Base):
     email = Column(String(128), unique=True, index=True, nullable=False)
     hashed_password = Column(String(256), nullable=False)
     role = Column(String(32), default="OPERATOR")
+    organization_id = Column(String(64), default="org-primary-enterprise", nullable=False, index=True)
     is_active = Column(Boolean, default=True)
+
 
 
 class WorkloadEvent(Base):
@@ -249,9 +281,46 @@ class ModelVersion(Base):
     trained_at = Column(DateTime, default=utc_now)
 
 
+class ModelTrustEvaluation(Base):
+    __tablename__ = "model_trust_evaluations"
+
+    id = Column(String(64), primary_key=True)
+    device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    evaluated_at = Column(DateTime, default=utc_now)
+    trust_status = Column(String(32), nullable=False)  # HEALTHY, WATCH, DEGRADED, INSUFFICIENT_EVIDENCE
+    status_reason = Column(Text, nullable=False)
+    data_drift_detected = Column(Boolean, default=False)
+    prediction_drift_detected = Column(Boolean, default=False)
+    performance_degraded = Column(Boolean, default=False)
+    max_metric_psi = Column(Float, default=0.0)
+    evaluated_mae_gb = Column(Float, default=0.0)
+    evaluated_rmse_gb = Column(Float, default=0.0)
+    empirical_coverage_pct = Column(Float, default=0.0)
+    recommended_action = Column(String(64), default="NO_ACTION_REQUIRED")
+    details_json = Column(Text, default="{}")
+
+
+class VaultBackupRecord(Base):
+    __tablename__ = "vault_backup_records"
+
+    id = Column(String(64), primary_key=True)
+    created_at = Column(DateTime, default=utc_now)
+    created_by = Column(String(64), default="operator@aegisstor.internal")
+    format_version = Column(String(32), default="AEGISSTOR_VAULT_V1")
+    database_size_bytes = Column(BigInteger, default=0)
+    files_count = Column(Integer, default=3)
+    checksum_status = Column(String(32), default="VERIFIED_VALID")
+    restoration_status = Column(String(32), default="UNTESTED")
+    last_test_rto_seconds = Column(Float, nullable=True)
+    last_test_rpo_hours = Column(Float, nullable=True)
+    last_test_timestamp = Column(DateTime, nullable=True)
+    manifest_json = Column(Text, default="{}")
+
+
 # =====================================================================
 # AEGISSTOR OMEGA FLEET & GOVERNANCE MODELS
 # =====================================================================
+
 
 class StorageSystem(Base):
     __tablename__ = "storage_systems"

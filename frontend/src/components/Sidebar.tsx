@@ -8,7 +8,6 @@ import {
   LineChart,
   Brain,
   FlaskConical,
-  Shield,
   ShieldCheck,
   AlertTriangle,
   Database,
@@ -20,8 +19,9 @@ import {
   ShieldAlert,
   Compass,
   Sparkles,
-  Search,
-  BookOpen
+  Lock,
+  Workflow,
+  X
 } from 'lucide-react';
 import { usePresentationMode } from '../context/PresentationModeContext';
 
@@ -53,16 +53,16 @@ interface SidebarProps {
   onToggleCollapsed: () => void;
   activeAlertsCount: number;
   onOpenOnboarding?: () => void;
+  mobileOpen?: boolean;
+  onCloseMobile?: () => void;
 }
 
 interface NavGroup {
   groupName: string;
   items: {
     id: PageId;
-    guidedLabel: string;
-    expertLabel: string;
-    icon: any;
-    highlight?: boolean;
+    label: string;
+    icon: React.ComponentType<{ size?: number; className?: string }>;
     badge?: number;
   }[];
 }
@@ -73,281 +73,288 @@ export const Sidebar: React.FC<SidebarProps> = ({
   collapsed,
   onToggleCollapsed,
   activeAlertsCount,
-  onOpenOnboarding,
+  mobileOpen = false,
+  onCloseMobile,
 }) => {
   const { isGuided } = usePresentationMode();
 
   const navGroups: NavGroup[] = [
     {
-      groupName: '1. OVERVIEW',
+      groupName: 'OVERVIEW',
       items: [
         {
           id: 'overview',
-          guidedLabel: 'Dashboard & Health',
-          expertLabel: 'Executive Overview',
+          label: isGuided ? 'Storage Health' : 'Executive Overview',
           icon: Activity,
         },
       ],
     },
     {
-      groupName: '2. MONITOR',
+      groupName: 'MONITOR',
       items: [
         {
           id: 'fleet',
-          guidedLabel: 'Storage Fleet',
-          expertLabel: 'Fleet Inventory & SLAs',
+          label: isGuided ? 'Storage Fleet' : 'Fleet Inventory & SLAs',
           icon: HardDrive,
         },
         {
           id: 'intelligence',
-          guidedLabel: 'Device Details',
-          expertLabel: 'Device Intelligence',
+          label: isGuided ? 'Device Details' : 'Device Telemetry & Tail',
           icon: Cpu,
         },
         {
           id: 'telemetry',
-          guidedLabel: 'Telemetry Signals',
-          expertLabel: 'Telemetry Explorer',
+          label: isGuided ? 'Telemetry Signals' : 'Raw Signals Explorer',
           icon: LineChart,
         },
         {
           id: 'alerts',
-          guidedLabel: 'Alerts & Safeguards',
-          expertLabel: 'Alerts & Incidents',
+          label: isGuided ? 'Alerts & Safeguards' : 'Incidents & Active Alerts',
           icon: AlertTriangle,
           badge: activeAlertsCount,
         },
       ],
     },
     {
-      groupName: '3. PREDICT',
+      groupName: 'PREDICT',
       items: [
         {
           id: 'ml-lab',
-          guidedLabel: 'Capacity Forecast',
-          expertLabel: 'ML Prediction Lab',
+          label: isGuided ? 'Capacity Forecast' : 'ML Quantile Lab',
           icon: Brain,
         },
         {
           id: 'reliability',
-          guidedLabel: 'Forecast Reliability',
-          expertLabel: 'Model Calibration & Drift',
+          label: isGuided ? 'Forecast Reliability' : 'Model Drift & Reliability',
           icon: ShieldCheck,
         },
       ],
     },
     {
-      groupName: '4. SIMULATE',
+      groupName: 'SIMULATE',
       items: [
         {
           id: 'twin',
-          guidedLabel: 'Digital Twin Sandbox',
-          expertLabel: 'Resilience Digital Twin',
+          label: isGuided ? 'Digital Twin Sandbox' : 'Resilience Digital Twin',
           icon: Layers,
-          highlight: true,
         },
         {
           id: 'interventions',
-          guidedLabel: 'Compare Actions',
-          expertLabel: 'Intervention Studio',
+          label: isGuided ? 'Compare Actions' : 'Counterfactual Interventions',
           icon: Sliders,
-          highlight: true,
         },
       ],
     },
     {
-      groupName: '5. RESPOND',
+      groupName: 'RESPOND',
       items: [
         {
           id: 'phoenix',
-          guidedLabel: 'Incident Command',
-          expertLabel: 'Phoenix Orchestrator',
+          label: isGuided ? 'Incident Command' : 'Phoenix Orchestrator',
           icon: ShieldAlert,
-          highlight: true,
         },
       ],
     },
     {
-      groupName: '6. RESEARCH',
+      groupName: 'RESEARCH LABS',
       items: [
         {
           id: 'omega',
-          guidedLabel: 'Fleet Topology Control',
-          expertLabel: 'Omega Fleet Control',
+          label: isGuided ? 'Fleet Topology' : 'Omega Correlated Risk',
           icon: Network,
         },
         {
           id: 'jurassic',
-          guidedLabel: 'Resilience Testing Lab',
-          expertLabel: 'Jurassic Resilience Lab',
+          label: isGuided ? 'Stress Testing' : 'Jurassic Resilience Lab',
           icon: Flame,
         },
         {
           id: 'atlas',
-          guidedLabel: 'Reality Calibration',
-          expertLabel: 'Atlas Reality Lab',
+          label: isGuided ? 'Reality Calibration' : 'Atlas Reality Lab',
           icon: Compass,
         },
         {
           id: 'oracle',
-          guidedLabel: 'Workload & Bottleneck AI',
-          expertLabel: 'Oracle Workload Attribution',
+          label: isGuided ? 'Bottleneck Analysis' : 'Oracle Attribution AI',
           icon: Sparkles,
-          highlight: true,
         },
         {
           id: 'gauntlet',
-          guidedLabel: 'Examiner Workbench',
-          expertLabel: 'Gauntlet Research & Audit',
-          icon: ShieldCheck,
-          highlight: true,
-        },
-        {
-          id: 'sovereign',
-          guidedLabel: 'Federated Intelligence',
-          expertLabel: 'Sovereign Federated Storage',
-          icon: Shield,
-          highlight: true,
-        },
-        {
-          id: 'experiments',
-          guidedLabel: 'Scientific Ablations',
-          expertLabel: 'Experiment Workbench',
+          label: isGuided ? 'Scientific Benchmarks' : 'Gauntlet Workbench',
           icon: FlaskConical,
         },
         {
-          id: 'datasets',
-          guidedLabel: 'Dataset Provenance',
-          expertLabel: 'Datasets & Schema Quality',
-          icon: Database,
+          id: 'sovereign',
+          label: isGuided ? 'Federated Privacy' : 'Sovereign Federation',
+          icon: Lock,
+        },
+        {
+          id: 'experiments',
+          label: isGuided ? 'Ablation Studies' : 'Research Benchmarks',
+          icon: Workflow,
         },
       ],
     },
     {
-      groupName: '7. ADMINISTRATION',
+      groupName: 'PLATFORM',
       items: [
         {
+          id: 'datasets',
+          label: isGuided ? 'Datasets & Quality' : 'Telemetry Repositories',
+          icon: Database,
+        },
+        {
           id: 'settings',
-          guidedLabel: 'Settings & Audit Log',
-          expertLabel: 'Settings & Governance Audit',
+          label: isGuided ? 'Settings & Backups' : 'Governance & Vault Recovery',
           icon: Settings,
         },
       ],
     },
   ];
 
-  return (
-    <aside
-      className={`h-screen glass-panel border-r border-[var(--border-subtle)] flex flex-col justify-between transition-all duration-200 select-none z-30 shrink-0 ${
-        collapsed ? 'w-16' : 'w-64'
-      }`}
-    >
-      {/* Brand Header */}
-      <div className="p-4 border-b border-[var(--border-subtle)] flex items-center justify-between">
-        {!collapsed && (
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[var(--accent-primary)] shadow-[0_0_10px_var(--accent-primary)] animate-pulse" />
-              <span className="font-black tracking-wider text-base text-[var(--text-primary)]">
-                AEGIS<span className="text-[var(--accent-primary)]">STOR</span>
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="text-[10px] text-[var(--text-muted)] font-mono tracking-tight uppercase">
-                Ember Noir Edition
-              </span>
-              <Sparkles size={11} className="text-[var(--accent-secondary)]" />
-            </div>
-          </div>
-        )}
-        <button
-          onClick={onToggleCollapsed}
-          className="p-1.5 rounded-lg glass-panel hover:border-[var(--accent-primary)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
-          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          {collapsed ? <ChevronRight size={15} /> : <ChevronLeft size={15} />}
-        </button>
-      </div>
+  const handleItemClick = (id: PageId) => {
+    onSelectPage(id);
+    if (onCloseMobile) onCloseMobile();
+  };
 
-      {/* Nav Menu */}
-      <nav className="flex-1 overflow-y-auto p-2.5 space-y-4">
-        {navGroups.map((group, gIdx) => (
-          <div key={gIdx} className="space-y-1">
+  const sidebarContent = (
+    <div className="flex flex-col h-full justify-between">
+      {/* Mobile Drawer Header */}
+      {mobileOpen && (
+        <div className="p-3 border-b border-[var(--border)] flex items-center justify-between">
+          <span className="font-bold text-sm text-[var(--text-primary)]">Navigation Menu</span>
+          <button
+            onClick={onCloseMobile}
+            className="p-1 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+            aria-label="Close Navigation Menu"
+          >
+            <X size={18} />
+          </button>
+        </div>
+      )}
+
+      {/* Navigation Scrollable Area */}
+      <div className="flex-1 overflow-y-auto py-3 px-2 space-y-4 pb-12">
+        {navGroups.map((group) => (
+          <div key={group.groupName} className="space-y-0.5">
+            {/* Group Header */}
             {!collapsed && (
-              <div className="px-3 pt-2 pb-1 text-[9px] font-mono font-bold tracking-widest text-[var(--text-muted)] uppercase">
+              <div className="px-2.5 py-1 text-[10px] font-mono font-semibold tracking-wider text-[var(--text-muted)] uppercase">
                 {group.groupName}
               </div>
             )}
-            {group.items.map((item) => {
-              const Icon = item.icon;
-              const isActive = currentPage === item.id;
-              const label = isGuided ? item.guidedLabel : item.expertLabel;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => onSelectPage(item.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                    isActive
-                      ? 'bg-[var(--accent-primary)]/15 text-[var(--accent-primary)] border border-[var(--accent-primary)]/50 font-bold shadow-glow-vermilion'
-                      : 'text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)] border border-transparent'
-                  } ${item.highlight && !isActive ? 'border-[var(--accent-secondary)]/25 text-[var(--text-primary)]' : ''}`}
-                  title={collapsed ? label : undefined}
-                >
-                  <Icon
-                    size={16}
-                    className={`shrink-0 transition-transform ${
-                      isActive ? 'text-[var(--accent-primary)] scale-110' : 'text-[var(--text-secondary)]'
+
+            {/* Navigation Items */}
+            <div className="space-y-0.5">
+              {group.items.map((item) => {
+                const IconComponent = item.icon;
+                const isActive = currentPage === item.id;
+
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => handleItemClick(item.id)}
+                    className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all relative group text-left ${
+                      isActive
+                        ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-bold shadow-xs'
+                        : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]'
                     }`}
-                  />
-                  {!collapsed && (
-                    <span className="flex-1 text-left truncate tracking-tight">{label}</span>
-                  )}
-                  {!collapsed && item.badge !== undefined && item.badge > 0 && (
-                    <span className="px-2 py-0.5 text-[10px] font-mono font-bold rounded-full bg-[var(--status-critical)]/20 text-[var(--status-critical)] border border-[var(--status-critical)]/40 shadow-sm">
-                      {item.badge}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
+                    title={collapsed ? item.label : undefined}
+                  >
+                    {/* Active Accent Bar */}
+                    {isActive && (
+                      <span className="absolute left-0 top-1 bottom-1 w-1 bg-[var(--accent)] rounded-r" />
+                    )}
+
+                    <IconComponent
+                      size={15}
+                      className={`shrink-0 transition-colors ${
+                        isActive
+                          ? 'text-[var(--accent)]'
+                          : 'text-[var(--text-muted)] group-hover:text-[var(--text-primary)]'
+                      }`}
+                    />
+
+                    {!collapsed && (
+                      <span className="truncate flex-1 text-left text-[12px]">
+                        {item.label}
+                      </span>
+                    )}
+
+                    {/* Badge */}
+                    {!collapsed && item.badge !== undefined && item.badge > 0 && (
+                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-[var(--critical)] text-white">
+                        {item.badge}
+                      </span>
+                    )}
+
+                    {/* Tooltip in collapsed mode */}
+                    {collapsed && (
+                      <div className="absolute left-full ml-2 px-2.5 py-1 rounded bg-[var(--surface-elevated)] border border-[var(--border)] text-[var(--text-primary)] text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity shadow-md z-50 font-medium">
+                        {item.label}
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         ))}
-      </nav>
-
-      {/* Footer Quick Tour / Onboarding & Profile */}
-      <div className="p-3 border-t border-[var(--border-subtle)] space-y-2 text-xs">
-        {onOpenOnboarding && !collapsed && (
-          <button
-            onClick={onOpenOnboarding}
-            className="w-full flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg btn-ember-secondary text-[11px] font-medium"
-          >
-            <BookOpen size={13} className="text-[var(--accent-primary)]" />
-            <span>Interactive Guide</span>
-          </button>
-        )}
-
-        {!collapsed ? (
-          <div className="flex items-center gap-2.5 p-2 rounded-xl glass-panel">
-            <div className="w-7 h-7 rounded-full bg-[var(--surface-secondary)] border border-[var(--border-normal)] flex items-center justify-center font-mono text-[11px] text-[var(--accent-primary)] font-bold shadow-sm shrink-0">
-              SA
-            </div>
-            <div className="truncate">
-              <div className="text-[var(--text-primary)] font-semibold truncate text-xs">Storage SRE</div>
-              <div className="text-[10px] text-[var(--status-success)] font-mono flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--status-success)] animate-pulse" />
-                Zero Physical Mutations
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="flex justify-center">
-            <div className="w-7 h-7 rounded-full bg-[var(--surface-secondary)] border border-[var(--border-subtle)] flex items-center justify-center font-mono text-[10px] text-[var(--accent-primary)] font-bold">
-              SA
-            </div>
-          </div>
-        )}
       </div>
-    </aside>
+
+      {/* Bottom Rail: Mutation Guard Status & Collapse Toggle */}
+      <div className="p-2 border-t border-[var(--border)] bg-[var(--surface)] shrink-0 space-y-1">
+        {!collapsed && (
+          <div className="px-2 py-1 flex items-center justify-between text-[10px] font-mono text-[var(--text-muted)]">
+            <span>MUTATION GUARD</span>
+            <span className="text-[var(--success)] font-semibold">READ-ONLY</span>
+          </div>
+        )}
+
+        <button
+          type="button"
+          onClick={onToggleCollapsed}
+          className="w-full flex items-center justify-center gap-2 py-1.5 px-2 rounded-md hover:bg-[var(--surface-hover)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors text-xs"
+          title={collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+          aria-label={collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+        >
+          {collapsed ? (
+            <ChevronRight size={15} />
+          ) : (
+            <>
+              <ChevronLeft size={15} />
+              <span className="text-[11px] font-medium">Collapse Sidebar</span>
+            </>
+          )}
+        </button>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <aside
+        className={`hidden lg:flex h-screen bg-[var(--surface)] border-r border-[var(--border)] flex-col justify-between select-none transition-all duration-150 ease-out z-20 shrink-0 sticky top-0 ${
+          collapsed ? 'w-16' : 'w-60'
+        }`}
+      >
+        {sidebarContent}
+      </aside>
+
+      {/* Mobile Drawer Overlay */}
+      {mobileOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 flex">
+          <div
+            className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity"
+            onClick={onCloseMobile}
+          />
+          <aside className="relative w-64 max-w-[80vw] bg-[var(--surface)] border-r border-[var(--border)] h-full z-10 shadow-xl flex flex-col">
+            {sidebarContent}
+          </aside>
+        </div>
+      )}
+    </>
   );
 };

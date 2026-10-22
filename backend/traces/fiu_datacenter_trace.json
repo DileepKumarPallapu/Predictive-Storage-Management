@@ -1,0 +1,1376 @@
+{
+  "trace_name": "FIU Production Datacenter Trace (Rapid Influx)",
+  "source": "Florida International University Storage Research",
+  "total_frames": 72,
+  "time_interval_hours": 1,
+  "frames": [
+    {
+      "timestamp": "2026-03-10T00:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 164926744166400,
+          "free_bytes": 109951162777600,
+          "utilization_pct": 60.0,
+          "read_iops": 7500.0,
+          "write_iops": 13000.0,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 2.5,
+          "queue_depth": 6.0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T01:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 165766648882062,
+          "free_bytes": 109111258061938,
+          "utilization_pct": 60.31,
+          "read_iops": 7990.8,
+          "write_iops": 12937.8,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 2.61,
+          "queue_depth": 6.3
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T02:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 166606553597724,
+          "free_bytes": 108271353346276,
+          "utilization_pct": 60.61,
+          "read_iops": 8427.6,
+          "write_iops": 12755.2,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 2.72,
+          "queue_depth": 6.6
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T03:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 167446458313386,
+          "free_bytes": 107431448630614,
+          "utilization_pct": 60.92,
+          "read_iops": 8762.2,
+          "write_iops": 12463.4,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 2.83,
+          "queue_depth": 6.8
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T04:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 168286363029048,
+          "free_bytes": 106591543914952,
+          "utilization_pct": 61.22,
+          "read_iops": 8957.9,
+          "write_iops": 12080.6,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 2.94,
+          "queue_depth": 7.1
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T05:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 169126267744711,
+          "free_bytes": 105751639199289,
+          "utilization_pct": 61.53,
+          "read_iops": 8993.1,
+          "write_iops": 11630.6,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 3.06,
+          "queue_depth": 7.4
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T06:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 169966172460373,
+          "free_bytes": 104911734483627,
+          "utilization_pct": 61.83,
+          "read_iops": 8863.9,
+          "write_iops": 11141.5,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 3.17,
+          "queue_depth": 7.7
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T07:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 170806077176035,
+          "free_bytes": 104071829767965,
+          "utilization_pct": 62.14,
+          "read_iops": 8584.6,
+          "write_iops": 10643.5,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 3.28,
+          "queue_depth": 7.9
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T08:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 171645981891697,
+          "free_bytes": 103231925052303,
+          "utilization_pct": 62.44,
+          "read_iops": 8185.9,
+          "write_iops": 10167.7,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 3.39,
+          "queue_depth": 8.2
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T09:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 172485886607360,
+          "free_bytes": 102392020336640,
+          "utilization_pct": 62.75,
+          "read_iops": 7711.7,
+          "write_iops": 9743.7,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 3.5,
+          "queue_depth": 8.5
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T10:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 173325791323022,
+          "free_bytes": 101552115620978,
+          "utilization_pct": 63.06,
+          "read_iops": 7214.1,
+          "write_iops": 9397.7,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 3.61,
+          "queue_depth": 8.8
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T11:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 174165696038684,
+          "free_bytes": 100712210905316,
+          "utilization_pct": 63.36,
+          "read_iops": 6748.1,
+          "write_iops": 9151.4,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 3.72,
+          "queue_depth": 9.1
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T12:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 175005600754346,
+          "free_bytes": 99872306189654,
+          "utilization_pct": 63.67,
+          "read_iops": 6364.8,
+          "write_iops": 9020.0,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 3.83,
+          "queue_depth": 9.3
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T13:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 175845505470008,
+          "free_bytes": 99032401473992,
+          "utilization_pct": 63.97,
+          "read_iops": 6106.5,
+          "write_iops": 9011.7,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 3.94,
+          "queue_depth": 9.6
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T14:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 176685410185671,
+          "free_bytes": 98192496758329,
+          "utilization_pct": 64.28,
+          "read_iops": 6001.6,
+          "write_iops": 9127.1,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 4.06,
+          "queue_depth": 9.9
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T15:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 177525314901333,
+          "free_bytes": 97352592042667,
+          "utilization_pct": 64.58,
+          "read_iops": 6061.6,
+          "write_iops": 9358.9,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 4.17,
+          "queue_depth": 10.2
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T16:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 178365219616995,
+          "free_bytes": 96512687327005,
+          "utilization_pct": 64.89,
+          "read_iops": 6280.0,
+          "write_iops": 9692.7,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 4.28,
+          "queue_depth": 10.4
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T17:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 179205124332657,
+          "free_bytes": 95672782611343,
+          "utilization_pct": 65.19,
+          "read_iops": 6632.7,
+          "write_iops": 10107.8,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 4.39,
+          "queue_depth": 10.7
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T18:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 180045029048320,
+          "free_bytes": 94832877895680,
+          "utilization_pct": 65.5,
+          "read_iops": 7080.9,
+          "write_iops": 10578.4,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 4.5,
+          "queue_depth": 11.0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T19:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 180884933763982,
+          "free_bytes": 93992973180018,
+          "utilization_pct": 65.81,
+          "read_iops": 7575.2,
+          "write_iops": 11075.2,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 4.61,
+          "queue_depth": 11.3
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T20:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 181724838479644,
+          "free_bytes": 93153068464356,
+          "utilization_pct": 66.11,
+          "read_iops": 8061.2,
+          "write_iops": 11567.3,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 4.72,
+          "queue_depth": 11.6
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T21:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 182564743195306,
+          "free_bytes": 92313163748694,
+          "utilization_pct": 66.42,
+          "read_iops": 8485.5,
+          "write_iops": 12024.2,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 4.83,
+          "queue_depth": 11.8
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T22:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 183404647910968,
+          "free_bytes": 91473259033032,
+          "utilization_pct": 66.72,
+          "read_iops": 8801.2,
+          "write_iops": 12417.3,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 4.94,
+          "queue_depth": 12.1
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-10T23:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 184244552626631,
+          "free_bytes": 90633354317369,
+          "utilization_pct": 67.03,
+          "read_iops": 8973.8,
+          "write_iops": 12722.4,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 5.06,
+          "queue_depth": 12.4
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T00:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 185084457342293,
+          "free_bytes": 89793449601707,
+          "utilization_pct": 67.33,
+          "read_iops": 8984.0,
+          "write_iops": 12920.3,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 5.17,
+          "queue_depth": 12.7
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T01:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 185924362057955,
+          "free_bytes": 88953544886045,
+          "utilization_pct": 67.64,
+          "read_iops": 8830.9,
+          "write_iops": 12998.9,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 5.28,
+          "queue_depth": 12.9
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T02:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 186764266773617,
+          "free_bytes": 88113640170383,
+          "utilization_pct": 67.94,
+          "read_iops": 8531.3,
+          "write_iops": 12953.2,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 5.39,
+          "queue_depth": 13.2
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T03:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 187604171489280,
+          "free_bytes": 87273735454720,
+          "utilization_pct": 68.25,
+          "read_iops": 8118.2,
+          "write_iops": 12786.0,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 5.5,
+          "queue_depth": 13.5
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T04:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 188444076204942,
+          "free_bytes": 86433830739058,
+          "utilization_pct": 68.56,
+          "read_iops": 7637.0,
+          "write_iops": 12507.8,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 5.61,
+          "queue_depth": 13.8
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T05:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 189283980920604,
+          "free_bytes": 85593926023396,
+          "utilization_pct": 68.86,
+          "read_iops": 7140.7,
+          "write_iops": 12135.8,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 5.72,
+          "queue_depth": 14.1
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T06:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 190123885636266,
+          "free_bytes": 84754021307734,
+          "utilization_pct": 69.17,
+          "read_iops": 6684.0,
+          "write_iops": 11693.3,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 5.83,
+          "queue_depth": 14.3
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T07:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 190963790351928,
+          "free_bytes": 83914116592072,
+          "utilization_pct": 69.47,
+          "read_iops": 6317.1,
+          "write_iops": 11207.6,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 5.94,
+          "queue_depth": 14.6
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T08:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 191803695067591,
+          "free_bytes": 83074211876409,
+          "utilization_pct": 69.78,
+          "read_iops": 6080.4,
+          "write_iops": 10709.0,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 6.06,
+          "queue_depth": 14.9
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T09:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 192643599783253,
+          "free_bytes": 82234307160747,
+          "utilization_pct": 70.08,
+          "read_iops": 6000.0,
+          "write_iops": 10228.5,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 6.17,
+          "queue_depth": 15.2
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T10:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 193483504498915,
+          "free_bytes": 81394402445085,
+          "utilization_pct": 70.39,
+          "read_iops": 6084.8,
+          "write_iops": 9796.0,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 6.28,
+          "queue_depth": 15.4
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T11:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 194323409214577,
+          "free_bytes": 80554497729423,
+          "utilization_pct": 70.69,
+          "read_iops": 6325.3,
+          "write_iops": 9438.3,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 6.39,
+          "queue_depth": 15.7
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T12:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 195163313930240,
+          "free_bytes": 79714593013760,
+          "utilization_pct": 71.0,
+          "read_iops": 6695.1,
+          "write_iops": 9177.7,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 6.5,
+          "queue_depth": 16.0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T13:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 196003218645902,
+          "free_bytes": 78874688298098,
+          "utilization_pct": 71.31,
+          "read_iops": 7153.6,
+          "write_iops": 9030.5,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 6.61,
+          "queue_depth": 16.3
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T14:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 196843123361564,
+          "free_bytes": 78034783582436,
+          "utilization_pct": 71.61,
+          "read_iops": 7650.2,
+          "write_iops": 9005.7,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 6.72,
+          "queue_depth": 16.6
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T15:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 197683028077226,
+          "free_bytes": 77194878866774,
+          "utilization_pct": 71.92,
+          "read_iops": 8130.3,
+          "write_iops": 9104.8,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 6.83,
+          "queue_depth": 16.8
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T16:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 198522932792888,
+          "free_bytes": 76354974151112,
+          "utilization_pct": 72.22,
+          "read_iops": 8540.9,
+          "write_iops": 9321.9,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 6.94,
+          "queue_depth": 17.1
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T17:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 199362837508551,
+          "free_bytes": 75515069435449,
+          "utilization_pct": 72.53,
+          "read_iops": 8837.0,
+          "write_iops": 9643.2,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 7.06,
+          "queue_depth": 17.4
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T18:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 200202742224213,
+          "free_bytes": 74675164719787,
+          "utilization_pct": 72.83,
+          "read_iops": 8985.9,
+          "write_iops": 10048.9,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 7.17,
+          "queue_depth": 17.7
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T19:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 201042646939875,
+          "free_bytes": 73835260004125,
+          "utilization_pct": 73.14,
+          "read_iops": 8971.2,
+          "write_iops": 10513.8,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 7.28,
+          "queue_depth": 17.9
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T20:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 201882551655537,
+          "free_bytes": 72995355288463,
+          "utilization_pct": 73.44,
+          "read_iops": 8794.6,
+          "write_iops": 11008.9,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 7.39,
+          "queue_depth": 18.2
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T21:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 202722456371200,
+          "free_bytes": 72155450572800,
+          "utilization_pct": 73.75,
+          "read_iops": 8475.4,
+          "write_iops": 11503.4,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 7.5,
+          "queue_depth": 18.5
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T22:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 203562361086862,
+          "free_bytes": 71315545857138,
+          "utilization_pct": 74.06,
+          "read_iops": 8048.9,
+          "write_iops": 11966.6,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 7.61,
+          "queue_depth": 18.8
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-11T23:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 204402265802524,
+          "free_bytes": 70475641141476,
+          "utilization_pct": 74.36,
+          "read_iops": 7561.9,
+          "write_iops": 12369.7,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 7.72,
+          "queue_depth": 19.1
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T00:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 205242170518186,
+          "free_bytes": 69635736425814,
+          "utilization_pct": 74.67,
+          "read_iops": 7068.1,
+          "write_iops": 12687.7,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 7.83,
+          "queue_depth": 19.3
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T01:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 206082075233848,
+          "free_bytes": 68795831710152,
+          "utilization_pct": 74.97,
+          "read_iops": 6621.9,
+          "write_iops": 12900.7,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 7.94,
+          "queue_depth": 19.6
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T02:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 206921979949511,
+          "free_bytes": 67955926994489,
+          "utilization_pct": 75.28,
+          "read_iops": 6272.3,
+          "write_iops": 12995.6,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 8.06,
+          "queue_depth": 19.9
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T03:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 207761884665173,
+          "free_bytes": 67116022278827,
+          "utilization_pct": 75.58,
+          "read_iops": 6057.9,
+          "write_iops": 12966.4,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 8.17,
+          "queue_depth": 20.2
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T04:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 208601789380835,
+          "free_bytes": 66276117563165,
+          "utilization_pct": 75.89,
+          "read_iops": 6002.2,
+          "write_iops": 12814.9,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 8.28,
+          "queue_depth": 20.4
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T05:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 209441694096497,
+          "free_bytes": 65436212847503,
+          "utilization_pct": 76.19,
+          "read_iops": 6111.4,
+          "write_iops": 12550.6,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 8.39,
+          "queue_depth": 20.7
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T06:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 210281598812160,
+          "free_bytes": 64596308131840,
+          "utilization_pct": 76.5,
+          "read_iops": 6373.5,
+          "write_iops": 12189.8,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 8.5,
+          "queue_depth": 21.0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T07:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 211121503527822,
+          "free_bytes": 63756403416178,
+          "utilization_pct": 76.81,
+          "read_iops": 6759.6,
+          "write_iops": 11755.1,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 8.61,
+          "queue_depth": 21.3
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T08:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 211961408243484,
+          "free_bytes": 62916498700516,
+          "utilization_pct": 77.11,
+          "read_iops": 7227.2,
+          "write_iops": 11273.5,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 8.72,
+          "queue_depth": 21.6
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T09:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 212801312959146,
+          "free_bytes": 62076593984854,
+          "utilization_pct": 77.42,
+          "read_iops": 7724.8,
+          "write_iops": 10774.8,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 8.83,
+          "queue_depth": 21.8
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T10:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 213641217674808,
+          "free_bytes": 61236689269192,
+          "utilization_pct": 77.72,
+          "read_iops": 8197.7,
+          "write_iops": 10290.2,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 8.94,
+          "queue_depth": 22.1
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T11:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 214481122390471,
+          "free_bytes": 60396784553529,
+          "utilization_pct": 78.03,
+          "read_iops": 8593.8,
+          "write_iops": 9849.6,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 9.06,
+          "queue_depth": 22.4
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T12:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 215321027106133,
+          "free_bytes": 59556879837867,
+          "utilization_pct": 78.33,
+          "read_iops": 8869.4,
+          "write_iops": 9480.6,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 9.17,
+          "queue_depth": 22.7
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T13:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 216160931821795,
+          "free_bytes": 58716975122205,
+          "utilization_pct": 78.64,
+          "read_iops": 8994.3,
+          "write_iops": 9206.1,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 9.28,
+          "queue_depth": 22.9
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T14:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 217000836537457,
+          "free_bytes": 57877070406543,
+          "utilization_pct": 78.94,
+          "read_iops": 8954.7,
+          "write_iops": 9043.1,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 9.39,
+          "queue_depth": 23.2
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T15:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 217840741253120,
+          "free_bytes": 57037165690880,
+          "utilization_pct": 79.25,
+          "read_iops": 8755.0,
+          "write_iops": 9001.8,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 9.5,
+          "queue_depth": 23.5
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T16:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 218680645968782,
+          "free_bytes": 56197260975218,
+          "utilization_pct": 79.56,
+          "read_iops": 8417.1,
+          "write_iops": 9084.7,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 9.61,
+          "queue_depth": 23.8
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T17:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 219520550684444,
+          "free_bytes": 55357356259556,
+          "utilization_pct": 79.86,
+          "read_iops": 7978.2,
+          "write_iops": 9286.7,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 9.72,
+          "queue_depth": 24.1
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T18:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 220360455400106,
+          "free_bytes": 54517451543894,
+          "utilization_pct": 80.17,
+          "read_iops": 7486.7,
+          "write_iops": 9595.2,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 9.83,
+          "queue_depth": 24.3
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T19:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 221200360115768,
+          "free_bytes": 53677546828232,
+          "utilization_pct": 80.47,
+          "read_iops": 6996.7,
+          "write_iops": 9991.1,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 9.94,
+          "queue_depth": 24.6
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T20:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 222040264831431,
+          "free_bytes": 52837642112569,
+          "utilization_pct": 80.78,
+          "read_iops": 6562.0,
+          "write_iops": 10449.7,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 10.06,
+          "queue_depth": 24.9
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T21:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 222880169547093,
+          "free_bytes": 51997737396907,
+          "utilization_pct": 81.08,
+          "read_iops": 6230.7,
+          "write_iops": 10942.5,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 10.17,
+          "queue_depth": 25.2
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T22:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 223720074262755,
+          "free_bytes": 51157832681245,
+          "utilization_pct": 81.39,
+          "read_iops": 6039.0,
+          "write_iops": 11438.9,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 10.28,
+          "queue_depth": 25.4
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-03-12T23:00:00+00:00",
+      "volumes": [
+        {
+          "volume_id": "vol-fiu-analytics",
+          "volume_name": "FIU Analytics Production Store",
+          "tier": "SSD",
+          "total_capacity_bytes": 274877906944000,
+          "used_bytes": 224559978978417,
+          "free_bytes": 50317927965583,
+          "utilization_pct": 81.69,
+          "read_iops": 6008.2,
+          "write_iops": 11908.0,
+          "throughput_mb_s": 320.0,
+          "latency_p95_ms": 10.39,
+          "queue_depth": 25.7
+        }
+      ]
+    }
+  ]
+}

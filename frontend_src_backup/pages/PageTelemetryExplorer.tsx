@@ -1,0 +1,178 @@
+import React, { useState, useEffect } from 'react';
+import { api, DeviceSummary, TelemetryResponse } from '../api/client';
+import { ScientificForecastChart } from '../components/ScientificForecastChart';
+import { LineChart, Download, Calendar, HardDrive, AlertTriangle, Sparkles } from 'lucide-react';
+import { usePresentationMode } from '../context/PresentationModeContext';
+
+export const PageTelemetryExplorer: React.FC = () => {
+  const [devices, setDevices] = useState<DeviceSummary[]>([]);
+  const [selectedDevice, setSelectedDevice] = useState<string>('vol-nvme-tier1-db');
+  const [selectedMetric, setSelectedMetric] = useState<string>('used_bytes');
+  const [timeRangeHours, setTimeRangeHours] = useState<number>(168); // 7 days
+  const [telemetry, setTelemetry] = useState<TelemetryResponse | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const { isGuided } = usePresentationMode();
+
+  useEffect(() => {
+    loadDevices();
+  }, []);
+
+  useEffect(() => {
+    if (selectedDevice) {
+      loadTelemetry();
+    }
+  }, [selectedDevice, selectedMetric, timeRangeHours]);
+
+  const loadDevices = async () => {
+    try {
+      const list = await api.getDevices();
+      setDevices(list);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const loadTelemetry = async () => {
+    setLoading(true);
+    try {
+      const data = await api.getTelemetry(selectedDevice, selectedMetric, timeRangeHours);
+      setTelemetry(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleExportCsv = () => {
+    window.open(`http://localhost:8000/api/v1/telemetry/export?device_id=${selectedDevice}`, '_blank');
+  };
+
+  const metrics = [
+    { id: 'used_bytes', guidedLabel: 'Storage Used', expertLabel: 'Used Storage Capacity', isBytes: true },
+    { id: 'utilization_pct', guidedLabel: 'Drive Fullness (%)', expertLabel: 'Utilization Percentage (%)', isBytes: false },
+    { id: 'read_iops', guidedLabel: 'Read Activity (IOPS)', expertLabel: 'Read IOPS', isBytes: false },
+    { id: 'write_iops', guidedLabel: 'Write Activity (IOPS)', expertLabel: 'Write IOPS', isBytes: false },
+    { id: 'throughput_mb_s', guidedLabel: 'Data Speed (MB/s)', expertLabel: 'Throughput (MB/s)', isBytes: false },
+    { id: 'latency_p95_ms', guidedLabel: 'Response Delay (ms)', expertLabel: 'Tail Latency P95 (ms)', isBytes: false },
+    { id: 'queue_depth', guidedLabel: 'Queue Length', expertLabel: 'Queue Depth', isBytes: false },
+  ];
+
+  const currentMetricCfg = metrics.find((m) => m.id === selectedMetric) || metrics[0];
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center text-[var(--accent-primary)] shadow-glow-vermilion">
+              <LineChart size={18} />
+            </div>
+            <h2 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
+              {isGuided ? 'Telemetry Explorer & Raw Signal Data' : 'Telemetry Explorer & Raw Signal Diagnostics'}
+            </h2>
+          </div>
+          <p className="text-xs text-[var(--text-secondary)] mt-1.5 leading-relaxed">
+            {isGuided
+              ? 'Inspect time-series telemetry directly from physical or synthetic storage pools. No data points are ever fabricated.'
+              : 'High-fidelity time-series telemetry inspection, missingness detection, and empirical data export.'}
+          </p>
+        </div>
+
+        <button
+          onClick={handleExportCsv}
+          className="btn-ember-secondary flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold font-mono"
+        >
+          <Download size={14} className="text-[var(--accent-primary)]" />
+          Export Dataset (CSV)
+        </button>
+      </div>
+
+      {/* Control Bar */}
+      <div className="glass-panel rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
+        {/* Device select */}
+        <div className="flex items-center gap-2">
+          <HardDrive size={15} className="text-[var(--text-muted)]" />
+          <span className="text-xs text-[var(--text-secondary)] font-medium">Pool:</span>
+          <select
+            value={selectedDevice}
+            onChange={(e) => setSelectedDevice(e.target.value)}
+            className="bg-[var(--surface-secondary)] border border-[var(--border-normal)] focus:border-[var(--accent-primary)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] font-mono focus:outline-none cursor-pointer"
+            aria-label="Storage Pool"
+          >
+            {devices.map((d) => (
+              <option key={d.id} value={d.id} className="bg-[var(--surface-primary)] text-[var(--text-primary)]">
+                {d.name} ({d.id})
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Time range */}
+        <div className="flex items-center gap-2">
+          <Calendar size={15} className="text-[var(--text-muted)]" />
+          <span className="text-xs text-[var(--text-secondary)] font-medium">Window:</span>
+          {[
+            { hours: 24, label: '24 Hours' },
+            { hours: 72, label: '3 Days' },
+            { hours: 168, label: '7 Days' },
+            { hours: 720, label: '30 Days' },
+          ].map((t) => (
+            <button
+              key={t.hours}
+              onClick={() => setTimeRangeHours(t.hours)}
+              className={`px-3 py-1 rounded-lg text-xs font-mono font-medium border transition-all ${
+                timeRangeHours === t.hours
+                  ? 'bg-[var(--accent-primary)]/15 border-[var(--accent-primary)] text-[var(--accent-primary)] font-bold shadow-glow-vermilion'
+                  : 'glass-panel text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Metric Selector Tabs */}
+      <div className="flex flex-wrap gap-2">
+        {metrics.map((m) => (
+          <button
+            key={m.id}
+            onClick={() => setSelectedMetric(m.id)}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-medium border transition-all ${
+              selectedMetric === m.id
+                ? 'bg-[var(--accent-primary)]/15 border-[var(--accent-primary)] text-[var(--accent-primary)] shadow-[0_0_10px_rgba(97,221,248,0.2)] font-semibold'
+                : 'glass-panel text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
+            }`}
+          >
+            {isGuided ? m.guidedLabel : m.expertLabel}
+          </button>
+        ))}
+      </div>
+
+      {/* Main Chart */}
+      {telemetry && (
+        <ScientificForecastChart
+          title={`${isGuided ? currentMetricCfg.guidedLabel : currentMetricCfg.expertLabel} — ${selectedDevice}`}
+          historicalTimestamps={telemetry.timestamps}
+          historicalValues={telemetry.values}
+          units={telemetry.units}
+          isBytes={currentMetricCfg.isBytes}
+        />
+      )}
+
+      {/* Missingness Notification if present */}
+      {telemetry && telemetry.missing_intervals.length > 0 && (
+        <div className="bg-[var(--status-warning)]/10 border border-[var(--status-warning)]/30 rounded-2xl p-4 text-xs text-[var(--status-warning)] space-y-1">
+          <div className="font-bold flex items-center gap-2">
+            <AlertTriangle size={15} /> Telemetry Gaps Detected (Zero Fabrication Policy):
+          </div>
+          <p className="text-[11px] text-[var(--text-secondary)] font-mono">
+            Collector recorded {telemetry.missing_intervals.length} intermittent dropout window(s). AEGISSTOR displays gaps honestly rather than drawing misleading straight lines.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};

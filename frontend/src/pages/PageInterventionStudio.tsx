@@ -48,6 +48,12 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
   }, []);
 
   useEffect(() => {
+    if (initialDeviceId && initialDeviceId !== selectedDeviceId) {
+      setSelectedDeviceId(initialDeviceId);
+    }
+  }, [initialDeviceId]);
+
+  useEffect(() => {
     if (selectedDeviceId) {
       loadDeviceIntelligence(selectedDeviceId);
     }
