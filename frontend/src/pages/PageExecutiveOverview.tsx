@@ -105,8 +105,8 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
       {/* SECTION A: Page Introduction & Environment Controls */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-[var(--border)]">
         <div>
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl font-bold text-[var(--text-primary)] tracking-tight">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-bold text-[var(--text-primary)] tracking-tight">
               {isGuided ? 'Storage Health & Capacity Overview' : 'Storage Resilience & Capacity Intelligence'}
             </h1>
             <span
