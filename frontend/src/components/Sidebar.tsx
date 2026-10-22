@@ -258,16 +258,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onClick={() => handleItemClick(item.id)}
                     className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all relative group text-left ${
                       isActive
-                        ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-bold shadow-xs'
+                        ? 'bg-[var(--accent-soft)] text-[var(--color-burnt-orange)] dark:text-[#FB923C] font-bold shadow-xs'
                         : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]'
                     }`}
                     title={collapsed ? item.label : undefined}
                   >
-                    {/* Active Aurora Accent Bar */}
+                    {/* Active Ember Accent Bar */}
                     {isActive && (
                       <span
-                        className="absolute left-0 top-1 bottom-1 w-1 rounded-r shadow-xs"
-                        style={{ background: 'var(--gradient-aurora)' }}
+                        className="absolute left-0 top-1 bottom-1 w-1 rounded-r shadow-xs bg-[var(--color-ember-orange)]"
+                        style={{ background: 'linear-gradient(180deg, #F97316 0%, #EA580C 100%)' }}
                       />
                     )}
 
@@ -275,7 +275,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       size={15}
                       className={`shrink-0 transition-colors ${
                         isActive
-                          ? 'text-[var(--accent)]'
+                          ? 'text-[var(--color-ember-orange)]'
                           : 'text-[var(--text-muted)] group-hover:text-[var(--text-primary)]'
                       }`}
                     />
@@ -341,7 +341,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Desktop Sidebar */}
       <aside
         className={`hidden lg:flex h-screen bg-[var(--surface)] border-r border-[var(--border)] flex-col justify-between select-none transition-all duration-150 ease-out z-20 shrink-0 sticky top-0 ${
-          collapsed ? 'w-16' : 'w-60'
+          collapsed ? 'w-16' : 'w-64'
         }`}
       >
         {sidebarContent}

@@ -6,81 +6,89 @@
   color-scheme: light;
 
   /* ========================================================
-     AEGISSTOR TWAIN-INSPIRED AURORA PASTEL DESIGN SYSTEM
-     LIGHT THEME (WCAG 2.2 AA Certified)
+     AEGISSTOR EMBER FUSION DESIGN SYSTEM
+     TEN-COLOR CENTRALIZED PALETTE
      ======================================================== */
-  --app-background: #FBFAF8;      /* Twain warm canvas */
+  --color-ember-orange: #F97316;
+  --color-burnt-orange: #EA580C;
+  --color-coral: #FF6B6B;
+  --color-golden-amber: #F4B942;
+  --color-mint-green: #36B37E;
+  --color-lagoon-teal: #2EC4B6;
+  --color-sky-blue: #4EA8DE;
+  --color-periwinkle: #7C83FD;
+  --color-royal-violet: #9B5DE5;
+  --color-rose-pink: #F15BB5;
+
+  /* Light Theme Canvas (Rich layered warm ember glow) */
+  --app-background: #FFF7ED;      /* Warm radiant amber-orange canvas */
+  --app-bg-gradient: radial-gradient(circle at 12% 14%, rgba(249, 115, 22, 0.22) 0%, transparent 48%),
+                     radial-gradient(circle at 88% 86%, rgba(244, 185, 66, 0.20) 0%, transparent 50%),
+                     radial-gradient(circle at 50% 40%, rgba(234, 88, 12, 0.08) 0%, transparent 65%),
+                     #FFF7ED;
+
   --surface-primary: #FFFFFF;     /* Crisp white primary card surface */
-  --surface-secondary: #F1F0EE;   /* Warm neutral supporting surface */
-  --surface-tertiary: #E9E8E4;    /* Subtle inset panels & table headers */
+  --surface-secondary: #FFFBF5;   /* Warm cream elevation */
+  --surface-tertiary: #FED7AA44;  /* Inset panels with soft ember sheen */
+  --surface-elevated: #FFFBF5;
+  --surface-subtle: #FED7AA33;
+  --surface: #FFFFFF;
 
-  --text-primary: #1D2935;        /* Deep ink charcoal for high contrast */
-  --text-secondary: #4F6071;      /* Refined editorial secondary text */
-  --text-muted: #718092;          /* Muted metadata and units */
-  --text-disabled: #A1ABB8;
+  --text-primary: #1C130E;        /* High-contrast deep charcoal-espresso (>12:1) */
+  --text-secondary: #574438;      /* Warm secondary editorial text */
+  --text-muted: #826E62;          /* Muted metadata, timestamps & units */
+  --text-disabled: #B4A69F;
 
-  --border-subtle: #E4E5E8;       /* Hairline subtle divider */
-  --border-strong: #CFD2D7;       /* Interactive and active borders */
-  --border-normal: #E4E5E8;
-  --border-visible: #CFD2D7;
+  --border-subtle: #F0E3D8;       /* Subtle warm divider */
+  --border-strong: #FDBA74;       /* Interactive ember-accented border */
+  --border-normal: #F0E3D8;
+  --border-visible: #FDBA74;
+  --border: #F0E3D8;
 
-  /* Twain Pastel Surface System */
-  --pastel-mint-surface: #DDF5E5;
-  --pastel-mint-text: #254A36;
-  --pastel-mint-border: #B7E8C8;
+  /* Ember Fusion Pastel Card Tokens (Light Mode) */
+  --pastel-mint-surface: #E8F8F0;
+  --pastel-mint-text: #145336;
+  --pastel-mint-border: #B7ECCD;
 
-  --pastel-lavender-surface: #EAE9FC;
-  --pastel-lavender-text: #263D60;
-  --pastel-lavender-border: #D6D5F6;
+  --pastel-lavender-surface: #EFF1FE;
+  --pastel-lavender-text: #282F6D;
+  --pastel-lavender-border: #D4D7FD;
 
-  --pastel-blue-surface: #E4F0FC;
-  --pastel-blue-text: #234969;
-  --pastel-blue-border: #C5DDF7;
+  --pastel-blue-surface: #EBF6FE;
+  --pastel-blue-text: #11456B;
+  --pastel-blue-border: #C6E3FB;
 
-  --pastel-peach-surface: #FBE8DF;
-  --pastel-peach-text: #6E362B;
-  --pastel-peach-border: #F5CEBE;
-  --pastel-coral-accent: #E76550;
+  --pastel-peach-surface: #FFF1F2;
+  --pastel-peach-text: #881337;
+  --pastel-peach-border: #FECDD3;
 
-  --pastel-yellow-surface: #FBF0CF;
-  --pastel-yellow-text: #655020;
-  --pastel-yellow-border: #F4E0A0;
-  --pastel-yellow-accent: #D9AC41;
+  --pastel-yellow-surface: #FFFBEB;
+  --pastel-yellow-text: #78350F;
+  --pastel-yellow-border: #FDE68A;
 
-  --pastel-periwinkle-surface: #E6E7FF;
-  --pastel-periwinkle-text: #383A78;
-  --pastel-periwinkle-border: #D0D2FE;
-  --pastel-periwinkle-accent: #7778EF;
+  --pastel-periwinkle-surface: #F3E8FF;
+  --pastel-periwinkle-text: #581C87;
+  --pastel-periwinkle-border: #E9D5FF;
 
-  /* Brand Accents */
-  --brand-indigo: #5B5CE5;
-  --brand-periwinkle: #7778EF;
-  --brand-lavender: #9B99E9;
-  --brand-coral: #E76550;
-  --brand-pink: #F0718F;
-  --brand-mint: #2BAF82;
-  --brand-blue: #3B82F6;
+  /* Brand Semantic Primary */
+  --accent: #EA580C;
+  --accent-hover: #C2410C;
+  --accent-pressed: #9A3412;
+  --accent-soft: rgba(249, 115, 22, 0.12);
+  --focus-ring: #F97316;
 
-  /* Semantic Action & Focus */
-  --accent: #5B5CE5;
-  --accent-hover: #4849D6;
-  --accent-pressed: #3A3BBF;
-  --accent-soft: rgba(91, 92, 229, 0.08);
-  --focus-ring: #5B5CE5;
+  /* Gradients */
+  --gradient-ember: linear-gradient(135deg, #F97316 0%, #EA580C 50%, #F4B942 100%);
+  --gradient-brand: linear-gradient(135deg, #F97316 0%, #EA580C 45%, #F4B942 85%, #FF6B6B 100%);
+  --gradient-cta: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+  --gradient-aurora: linear-gradient(135deg, #F97316 0%, #EA580C 50%, #FF6B6B 100%);
 
-  /* Semantic Gradients */
-  --gradient-brand: linear-gradient(135deg, #7778EF 0%, #9B99E9 45%, #F0718F 80%, #E76550 100%);
-  --gradient-lavender-pink: linear-gradient(135deg, #EAE9FC 0%, #FBE8DF 100%);
-  --gradient-mint-blue: linear-gradient(135deg, #DDF5E5 0%, #E4F0FC 100%);
-  --gradient-peach-coral: linear-gradient(135deg, #FBE8DF 0%, #E76550 100%);
-  --gradient-cta: linear-gradient(135deg, #7778EF 0%, #5B5CE5 100%);
-
-  /* Semantic Status Tokens (Distinct from pastel surfaces) */
+  /* Semantic Status Tokens */
   --status-success: #15803D;
   --status-warning: #B45309;
   --status-critical: #DC2626;
   --status-info: #2563EB;
-  --status-unknown: #718092;
+  --status-unknown: #826E62;
 
   --success: var(--status-success);
   --warning: var(--status-warning);
@@ -88,37 +96,25 @@
   --danger: var(--status-critical);
   --info: var(--status-info);
 
-  /* Core Aliases for Backwards Compatibility */
-  --background: var(--app-background);
-  --surface: var(--surface-primary);
-  --surface-elevated: var(--surface-secondary);
-  --surface-subtle: var(--surface-tertiary);
-  --border: var(--border-subtle);
-
-  --accent-primary: var(--brand-indigo);
-  --accent-primary-hover: var(--accent-hover);
-  --accent-secondary: var(--brand-periwinkle);
-  --accent-tertiary: var(--brand-coral);
-
   /* Button Tokens */
-  --btn-primary-bg: var(--brand-indigo);
+  --btn-primary-bg: #EA580C;
   --btn-primary-text: #FFFFFF;
-  --btn-primary-hover: var(--accent-hover);
-  --btn-primary-pressed: var(--accent-pressed);
+  --btn-primary-hover: #C2410C;
+  --btn-primary-pressed: #9A3412;
 
   --btn-secondary-bg: var(--surface-primary);
   --btn-secondary-text: var(--text-primary);
   --btn-secondary-border: var(--border-subtle);
   --btn-secondary-hover: var(--surface-secondary);
 
-  --surface-hover: rgba(91, 92, 229, 0.04);
-  --surface-active: rgba(91, 92, 229, 0.08);
+  --surface-hover: rgba(249, 115, 22, 0.05);
+  --surface-active: rgba(249, 115, 22, 0.10);
 
-  /* Chart Analytical Palette */
-  --chart-observation: #4F6071;
-  --chart-forecast: #5B5CE5;
-  --chart-alternative: #2BAF82;
-  --chart-secondary: #9B99E9;
+  /* Chart Palette */
+  --chart-observation: #64748B;
+  --chart-forecast: #EA580C;
+  --chart-alternative: #36B37E;
+  --chart-secondary: #7C83FD;
   --chart-success: var(--status-success);
   --chart-warning: var(--status-warning);
   --chart-critical: var(--status-critical);
@@ -127,7 +123,7 @@
   --chart-tertiary: var(--chart-secondary);
   --chart-neutral: var(--chart-observation);
 
-  --grid-line: rgba(29, 41, 53, 0.05);
+  --grid-line: rgba(28, 19, 14, 0.06);
 
   /* Motion Tokens */
   --motion-instant: 120ms;
@@ -143,82 +139,75 @@
 .dark {
   color-scheme: dark;
 
-  /* ========================================================
-     AEGISSTOR TWAIN-INSPIRED AURORA PASTEL DESIGN SYSTEM
-     DARK THEME (Deep Ink & Soft Luminous Pastel Parity)
-     ======================================================== */
-  --app-background: #0D111A;      /* Deep ink canvas */
-  --surface-primary: #141A26;     /* Primary dark surface */
-  --surface-secondary: #1D2536;   /* Elevated panels */
-  --surface-tertiary: #273248;    /* Inset rows, hover states */
+  /* Dark Theme Canvas (Deep glowing obsidian-ember base) */
+  --app-background: #140B07;
+  --app-bg-gradient: radial-gradient(circle at 12% 14%, rgba(234, 88, 12, 0.25) 0%, transparent 52%),
+                     radial-gradient(circle at 88% 86%, rgba(244, 185, 66, 0.18) 0%, transparent 52%),
+                     radial-gradient(circle at 50% 35%, rgba(249, 115, 22, 0.12) 0%, transparent 65%),
+                     #140B07;
 
-  --text-primary: #F4F6FB;        /* Crisp readable white text */
-  --text-secondary: #BAC5D6;      /* Secondary editorial copy */
-  --text-muted: #8391A7;          /* Muted metadata */
-  --text-disabled: #566479;
+  --surface-primary: #1C120C;     /* Deep rich ember-tinted card surface */
+  --surface-secondary: #251811;   /* Elevated surface */
+  --surface-tertiary: #311E15;    /* Inset panels */
+  --surface-elevated: #251811;
+  --surface-subtle: #311E15;
+  --surface: #1C120C;
 
-  --border-subtle: #273248;       /* Subtle dark dividers */
-  --border-strong: #3E4D69;       /* Active focus rings */
-  --border-normal: #273248;
-  --border-visible: #3E4D69;
+  --text-primary: #FFF8F0;        /* High-contrast luminous cream (>12:1) */
+  --text-secondary: #FED7AA;      /* Warm peach secondary text */
+  --text-muted: #B49A89;          /* Readable warm muted text */
+  --text-disabled: #5E4E45;
 
-  /* Dark Pastel Surface System (Muted, luminous dark parity) */
-  --pastel-mint-surface: #13271D;
-  --pastel-mint-text: #86EFAC;
-  --pastel-mint-border: #1F4231;
+  --border-subtle: #342218;
+  --border-strong: #7C3A18;
+  --border-normal: #342218;
+  --border-visible: #7C3A18;
+  --border: #342218;
 
-  --pastel-lavender-surface: #1A1C33;
-  --pastel-lavender-text: #C7D2FE;
-  --pastel-lavender-border: #2D3157;
+  /* Ember Fusion Pastel Card Tokens (Dark Mode) */
+  --pastel-mint-surface: #10281E;
+  --pastel-mint-text: #6EE7B7;
+  --pastel-mint-border: #1B4834;
 
-  --pastel-blue-surface: #132236;
-  --pastel-blue-text: #93C5FD;
-  --pastel-blue-border: #203A5C;
+  --pastel-lavender-surface: #171936;
+  --pastel-lavender-text: #A5B4FC;
+  --pastel-lavender-border: #292E5B;
 
-  --pastel-peach-surface: #2E1815;
-  --pastel-peach-text: #FCA5A5;
-  --pastel-peach-border: #522722;
-  --pastel-coral-accent: #F87171;
+  --pastel-blue-surface: #112338;
+  --pastel-blue-text: #7DD3FC;
+  --pastel-blue-border: #1C3E60;
 
-  --pastel-yellow-surface: #2A210F;
+  --pastel-peach-surface: #36141B;
+  --pastel-peach-text: #FDA4AF;
+  --pastel-peach-border: #5B1C28;
+
+  --pastel-yellow-surface: #2E1D07;
   --pastel-yellow-text: #FDE047;
-  --pastel-yellow-border: #4D3C19;
-  --pastel-yellow-accent: #EAB308;
+  --pastel-yellow-border: #523610;
 
-  --pastel-periwinkle-surface: #181A33;
-  --pastel-periwinkle-text: #C4B5FD;
-  --pastel-periwinkle-border: #2E325C;
-  --pastel-periwinkle-accent: #818CF8;
+  --pastel-periwinkle-surface: #25143A;
+  --pastel-periwinkle-text: #D8B4FE;
+  --pastel-periwinkle-border: #482370;
 
-  /* Brand Accents */
-  --brand-indigo: #818CF8;
-  --brand-periwinkle: #A5B4FC;
-  --brand-lavender: #C4B5FD;
-  --brand-coral: #F87171;
-  --brand-pink: #F472B6;
-  --brand-mint: #34D399;
-  --brand-blue: #60A5FA;
+  /* Brand Semantic Primary */
+  --accent: #FB923C;
+  --accent-hover: #F97316;
+  --accent-pressed: #EA580C;
+  --accent-soft: rgba(249, 115, 22, 0.18);
+  --focus-ring: #FB923C;
 
-  /* Semantic Action & Focus */
-  --accent: #818CF8;
-  --accent-hover: #9CA3AF;
-  --accent-pressed: #6366F1;
-  --accent-soft: rgba(129, 140, 248, 0.12);
-  --focus-ring: #818CF8;
+  /* Gradients */
+  --gradient-ember: linear-gradient(135deg, #F97316 0%, #EA580C 50%, #F4B942 100%);
+  --gradient-brand: linear-gradient(135deg, #F97316 0%, #EA580C 45%, #F4B942 85%, #FF6B6B 100%);
+  --gradient-cta: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+  --gradient-aurora: linear-gradient(135deg, #F97316 0%, #EA580C 50%, #FF6B6B 100%);
 
-  /* Semantic Gradients */
-  --gradient-brand: linear-gradient(135deg, #818CF8 0%, #C4B5FD 45%, #F472B6 80%, #F87171 100%);
-  --gradient-lavender-pink: linear-gradient(135deg, #1A1C33 0%, #2E1815 100%);
-  --gradient-mint-blue: linear-gradient(135deg, #13271D 0%, #132236 100%);
-  --gradient-peach-coral: linear-gradient(135deg, #2E1815 0%, #F87171 100%);
-  --gradient-cta: linear-gradient(135deg, #818CF8 0%, #6366F1 100%);
-
-  /* Semantic Status Tokens */
+  /* Status Tokens */
   --status-success: #22C55E;
   --status-warning: #F59E0B;
   --status-critical: #EF4444;
   --status-info: #38BDF8;
-  --status-unknown: #8391A7;
+  --status-unknown: #94A3B8;
 
   --success: var(--status-success);
   --warning: var(--status-warning);
@@ -226,37 +215,25 @@
   --danger: var(--status-critical);
   --info: var(--status-info);
 
-  /* Core Aliases for Backwards Compatibility */
-  --background: var(--app-background);
-  --surface: var(--surface-primary);
-  --surface-elevated: var(--surface-secondary);
-  --surface-subtle: var(--surface-tertiary);
-  --border: var(--border-subtle);
-
-  --accent-primary: var(--brand-indigo);
-  --accent-primary-hover: var(--accent-hover);
-  --accent-secondary: var(--brand-periwinkle);
-  --accent-tertiary: var(--brand-coral);
-
   /* Button Tokens */
-  --btn-primary-bg: var(--brand-indigo);
-  --btn-primary-text: #0D111A;
-  --btn-primary-hover: var(--accent-hover);
-  --btn-primary-pressed: var(--accent-pressed);
+  --btn-primary-bg: #EA580C;
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-hover: #F97316;
+  --btn-primary-pressed: #FB923C;
 
   --btn-secondary-bg: var(--surface-secondary);
   --btn-secondary-text: var(--text-primary);
   --btn-secondary-border: var(--border-subtle);
   --btn-secondary-hover: var(--surface-tertiary);
 
-  --surface-hover: rgba(129, 140, 248, 0.06);
-  --surface-active: rgba(129, 140, 248, 0.12);
+  --surface-hover: rgba(249, 115, 22, 0.08);
+  --surface-active: rgba(249, 115, 22, 0.16);
 
-  /* Chart Analytical Palette */
-  --chart-observation: #BAC5D6;
-  --chart-forecast: #818CF8;
+  /* Chart Palette */
+  --chart-observation: #94A3B8;
+  --chart-forecast: #FB923C;
   --chart-alternative: #34D399;
-  --chart-secondary: #C4B5FD;
+  --chart-secondary: #A5B4FC;
   --chart-success: var(--status-success);
   --chart-warning: var(--status-warning);
   --chart-critical: var(--status-critical);
@@ -265,13 +242,15 @@
   --chart-tertiary: var(--chart-secondary);
   --chart-neutral: var(--chart-observation);
 
-  --grid-line: rgba(244, 246, 251, 0.05);
+  --grid-line: rgba(255, 248, 240, 0.06);
 }
 
 body {
   margin: 0;
   padding: 0;
   background-color: var(--app-background);
+  background-image: var(--app-bg-gradient);
+  background-attachment: fixed;
   color: var(--text-primary);
   font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -280,8 +259,13 @@ body {
   transition: background-color var(--motion-snappy) var(--motion-ease), color var(--motion-snappy) var(--motion-ease);
 }
 
+/* Base Containment Rules */
+*, ::before, ::after {
+  box-sizing: border-box;
+}
+
 /* ========================================================
-   TWAIN-INSPIRED COMPONENT SUITE
+   EMBER FUSION COMPONENT SUITE
    ======================================================== */
 
 /* Surface Panels */
@@ -293,7 +277,7 @@ body {
   color: var(--text-primary);
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
-  box-shadow: 0 1px 3px 0 rgba(29, 41, 53, 0.04), 0 1px 2px -1px rgba(29, 41, 53, 0.03);
+  box-shadow: 0 1px 3px 0 rgba(28, 19, 14, 0.04), 0 1px 2px -1px rgba(28, 19, 14, 0.03);
   transition: border-color var(--motion-snappy) var(--motion-ease),
               box-shadow var(--motion-snappy) var(--motion-ease),
               transform var(--motion-snappy) var(--motion-ease);
@@ -304,6 +288,8 @@ body {
 .glass-panel:hover,
 .glass-level-1:hover {
   border-color: var(--border-strong);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px -2px rgba(234, 88, 12, 0.10);
 }
 
 /* Dedicated Pastel Cards for Key Metric Displays */
@@ -312,13 +298,13 @@ body {
   color: var(--pastel-mint-text);
   border: 1px solid var(--pastel-mint-border);
   border-radius: 14px;
-  box-shadow: 0 2px 6px -1px rgba(37, 74, 54, 0.06);
+  box-shadow: 0 2px 6px -1px rgba(20, 83, 54, 0.06);
   transition: transform var(--motion-snappy) var(--motion-ease), box-shadow var(--motion-snappy) var(--motion-ease);
 }
 
 .card-pastel-mint:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px -2px rgba(37, 74, 54, 0.12);
+  box-shadow: 0 4px 12px -2px rgba(20, 83, 54, 0.14);
 }
 
 .card-pastel-lavender {
@@ -326,13 +312,13 @@ body {
   color: var(--pastel-lavender-text);
   border: 1px solid var(--pastel-lavender-border);
   border-radius: 14px;
-  box-shadow: 0 2px 6px -1px rgba(38, 61, 96, 0.06);
+  box-shadow: 0 2px 6px -1px rgba(40, 47, 109, 0.06);
   transition: transform var(--motion-snappy) var(--motion-ease), box-shadow var(--motion-snappy) var(--motion-ease);
 }
 
 .card-pastel-lavender:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px -2px rgba(38, 61, 96, 0.12);
+  box-shadow: 0 4px 12px -2px rgba(40, 47, 109, 0.14);
 }
 
 .card-pastel-blue {
@@ -340,13 +326,13 @@ body {
   color: var(--pastel-blue-text);
   border: 1px solid var(--pastel-blue-border);
   border-radius: 14px;
-  box-shadow: 0 2px 6px -1px rgba(35, 73, 105, 0.06);
+  box-shadow: 0 2px 6px -1px rgba(17, 69, 107, 0.06);
   transition: transform var(--motion-snappy) var(--motion-ease), box-shadow var(--motion-snappy) var(--motion-ease);
 }
 
 .card-pastel-blue:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px -2px rgba(35, 73, 105, 0.12);
+  box-shadow: 0 4px 12px -2px rgba(17, 69, 107, 0.14);
 }
 
 .card-pastel-peach {
@@ -354,13 +340,13 @@ body {
   color: var(--pastel-peach-text);
   border: 1px solid var(--pastel-peach-border);
   border-radius: 14px;
-  box-shadow: 0 2px 6px -1px rgba(110, 54, 43, 0.06);
+  box-shadow: 0 2px 6px -1px rgba(136, 19, 55, 0.06);
   transition: transform var(--motion-snappy) var(--motion-ease), box-shadow var(--motion-snappy) var(--motion-ease);
 }
 
 .card-pastel-peach:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px -2px rgba(110, 54, 43, 0.12);
+  box-shadow: 0 4px 12px -2px rgba(136, 19, 55, 0.14);
 }
 
 .card-pastel-yellow {
@@ -368,13 +354,13 @@ body {
   color: var(--pastel-yellow-text);
   border: 1px solid var(--pastel-yellow-border);
   border-radius: 14px;
-  box-shadow: 0 2px 6px -1px rgba(101, 80, 32, 0.06);
+  box-shadow: 0 2px 6px -1px rgba(120, 53, 15, 0.06);
   transition: transform var(--motion-snappy) var(--motion-ease), box-shadow var(--motion-snappy) var(--motion-ease);
 }
 
 .card-pastel-yellow:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px -2px rgba(101, 80, 32, 0.12);
+  box-shadow: 0 4px 12px -2px rgba(120, 53, 15, 0.14);
 }
 
 .card-pastel-periwinkle {
@@ -382,13 +368,13 @@ body {
   color: var(--pastel-periwinkle-text);
   border: 1px solid var(--pastel-periwinkle-border);
   border-radius: 14px;
-  box-shadow: 0 2px 6px -1px rgba(56, 58, 120, 0.06);
+  box-shadow: 0 2px 6px -1px rgba(88, 28, 135, 0.06);
   transition: transform var(--motion-snappy) var(--motion-ease), box-shadow var(--motion-snappy) var(--motion-ease);
 }
 
 .card-pastel-periwinkle:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px -2px rgba(56, 58, 120, 0.12);
+  box-shadow: 0 4px 12px -2px rgba(88, 28, 135, 0.14);
 }
 
 /* Elevated and Modal Surfaces */
@@ -400,7 +386,7 @@ body {
   color: var(--text-primary);
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
-  box-shadow: 0 4px 14px -2px rgba(29, 41, 53, 0.06);
+  box-shadow: 0 4px 14px -2px rgba(28, 19, 14, 0.06);
 }
 
 .aurora-modal,
@@ -412,10 +398,10 @@ body {
   color: var(--text-primary);
   border: 1px solid var(--border-strong);
   border-radius: 14px;
-  box-shadow: 0 20px 48px -4px rgba(29, 41, 53, 0.22);
+  box-shadow: 0 20px 48px -4px rgba(28, 19, 14, 0.25);
 }
 
-/* Twain Refined Buttons */
+/* Ember Buttons */
 .btn-primary,
 .btn-aurora-primary,
 .btn-ember-primary {
@@ -430,7 +416,7 @@ body {
   border-radius: 8px;
   padding: 0.45rem 1rem;
   border: 1px solid transparent;
-  box-shadow: 0 2px 6px -1px rgba(91, 92, 229, 0.3);
+  box-shadow: 0 2px 6px -1px rgba(234, 88, 12, 0.35);
   transition: all var(--motion-snappy) var(--motion-ease);
   user-select: none;
   cursor: pointer;
@@ -439,114 +425,57 @@ body {
 .btn-primary:hover:not(:disabled),
 .btn-aurora-primary:hover:not(:disabled),
 .btn-ember-primary:hover:not(:disabled) {
-  box-shadow: 0 4px 14px -1px rgba(91, 92, 229, 0.4);
+  box-shadow: 0 4px 14px -1px rgba(234, 88, 12, 0.45);
   transform: translateY(-1px);
-  filter: brightness(1.04);
+  filter: brightness(1.05);
 }
 
 .btn-primary:active:not(:disabled),
 .btn-aurora-primary:active:not(:disabled),
 .btn-ember-primary:active:not(:disabled) {
   transform: translateY(1px);
-  box-shadow: 0 1px 3px 0 rgba(91, 92, 229, 0.25);
-  filter: brightness(0.96);
 }
 
-/* Secondary Button */
 .btn-secondary,
-.btn-aurora-secondary,
-.btn-ember-secondary {
+.btn-aurora-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: var(--surface-primary);
-  color: var(--text-primary);
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border: 1px solid var(--btn-secondary-border);
   font-size: 0.75rem;
   font-weight: 500;
   border-radius: 8px;
-  padding: 0.45rem 0.95rem;
-  border: 1px solid var(--border-subtle);
-  box-shadow: 0 1px 2px 0 rgba(29, 41, 53, 0.03);
+  padding: 0.45rem 0.9rem;
+  box-shadow: 0 1px 2px 0 rgba(28, 19, 14, 0.04);
   transition: all var(--motion-snappy) var(--motion-ease);
-  user-select: none;
   cursor: pointer;
 }
 
 .btn-secondary:hover:not(:disabled),
-.btn-aurora-secondary:hover:not(:disabled),
-.btn-ember-secondary:hover:not(:disabled) {
-  background-color: var(--surface-secondary);
+.btn-aurora-secondary:hover:not(:disabled) {
+  background-color: var(--btn-secondary-hover);
   border-color: var(--border-strong);
   color: var(--text-primary);
 }
 
-.btn-secondary:active:not(:disabled),
-.btn-aurora-secondary:active:not(:disabled),
-.btn-ember-secondary:active:not(:disabled) {
-  background-color: var(--surface-tertiary);
-  transform: translateY(1px);
-}
-
-/* Ghost Button */
-.btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background-color: transparent;
-  color: var(--text-secondary);
-  font-size: 0.75rem;
-  font-weight: 500;
-  border-radius: 8px;
-  padding: 0.4rem 0.65rem;
-  border: 1px solid transparent;
-  transition: all var(--motion-instant) var(--motion-ease);
-  cursor: pointer;
-}
-
-.btn-ghost:hover:not(:disabled) {
-  background-color: var(--surface-hover);
-  color: var(--text-primary);
-}
-
-/* Inputs and Selects */
+/* Form Inputs & Selects */
 input, select, textarea {
-  color-scheme: light;
   background-color: var(--surface-primary);
   color: var(--text-primary);
   border: 1px solid var(--border-subtle);
   border-radius: 8px;
-  font-size: 0.75rem;
-  transition: border-color var(--motion-snappy) var(--motion-ease), box-shadow var(--motion-snappy) var(--motion-ease);
-}
-
-.dark input,
-.dark select,
-.dark textarea {
-  color-scheme: dark;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.8125rem;
+  transition: border-color var(--motion-instant) var(--motion-ease), box-shadow var(--motion-instant) var(--motion-ease);
 }
 
 input:focus, select:focus, textarea:focus {
   outline: none;
-  border-color: var(--brand-indigo);
-  box-shadow: 0 0 0 2px var(--accent-soft);
-}
-
-select option {
-  background-color: #FFFFFF;
-  color: #1D2935;
-}
-
-.dark select option {
-  background-color: #141A26;
-  color: #F4F6FB;
-}
-
-input::placeholder,
-textarea::placeholder {
-  color: var(--text-muted) !important;
-  opacity: 0.85;
+  border-color: var(--focus-ring);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 button:disabled,
@@ -600,28 +529,38 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+  background: var(--color-ember-orange);
 }
 
 /* Keyframe Animations */
-@keyframes twain-ambient-pulse {
-  0%, 100% { opacity: 0.85; transform: scale(1); }
-  50% { opacity: 0.65; transform: scale(1.02); }
+@keyframes emberAmbientGlow {
+  0%, 100% {
+    opacity: 0.88;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.72;
+    transform: scale(1.02);
+  }
 }
 
-@keyframes twain-shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+@keyframes logoEntrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
-.animate-ambient-pulse {
-  animation: twain-ambient-pulse 6s ease-in-out infinite;
+.animate-ember-glow {
+  animation: emberAmbientGlow 7s ease-in-out infinite;
 }
 
-.skeleton-shimmer {
-  background: linear-gradient(90deg, var(--surface-secondary) 25%, var(--surface-tertiary) 50%, var(--surface-secondary) 75%);
-  background-size: 200% 100%;
-  animation: twain-shimmer 1.8s infinite;
+.animate-logo-entrance {
+  animation: logoEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Reduced Motion Support */

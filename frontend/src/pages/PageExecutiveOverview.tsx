@@ -328,12 +328,12 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
 
           {/* Secondary Health Indicators (Supporting Region) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="p-3 bg-[var(--surface-elevated)] border border-[var(--border)] rounded-lg flex items-center justify-between text-xs">
-              <div className="flex items-center gap-2.5">
+            <div className="p-3 bg-[var(--surface-elevated)] border border-[var(--border)] rounded-lg flex items-center justify-between text-xs gap-2">
+              <div className="flex items-center gap-2.5 min-w-0">
                 <Radio size={15} className="text-[var(--success)] shrink-0" />
-                <div>
-                  <span className="font-semibold text-[var(--text-primary)]">Telemetry Sync & Heartbeat: </span>
-                  <span className="text-[var(--text-secondary)]">100% healthy, zero dropouts observed (cadence: 1 sample/hr).</span>
+                <div className="truncate">
+                  <span className="font-semibold text-[var(--text-primary)]">Telemetry Heartbeat: </span>
+                  <span className="text-[var(--text-secondary)]">100% healthy, zero dropouts (1 sample/hr)</span>
                 </div>
               </div>
               <span className="text-[10px] font-mono text-[var(--success)] font-semibold px-2 py-0.5 rounded bg-[var(--success)]/10 border border-[var(--success)]/20 shrink-0">
@@ -341,12 +341,12 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
               </span>
             </div>
 
-            <div className="p-3 bg-[var(--surface-elevated)] border border-[var(--border)] rounded-lg flex items-center justify-between text-xs">
-              <div className="flex items-center gap-2.5">
+            <div className="p-3 bg-[var(--surface-elevated)] border border-[var(--border)] rounded-lg flex items-center justify-between text-xs gap-2">
+              <div className="flex items-center gap-2.5 min-w-0">
                 <Sparkles size={15} className="text-[var(--accent)] shrink-0" />
-                <div>
+                <div className="truncate">
                   <span className="font-semibold text-[var(--text-primary)]">Forecast Calibration: </span>
-                  <span className="text-[var(--text-secondary)]">81.4% empirical coverage (Target: 80% CI [q10, q90]).</span>
+                  <span className="text-[var(--text-secondary)]">81.4% coverage (Target: 80% CI [q10, q90])</span>
                 </div>
               </div>
               <span className="text-[10px] font-mono text-[var(--text-primary)] font-semibold px-2 py-0.5 rounded bg-[var(--surface)] border border-[var(--border)] shrink-0">
