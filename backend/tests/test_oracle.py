@@ -34,6 +34,8 @@ client = TestClient(app)
 
 @pytest.fixture
 def db_session():
+    from app.main import initialize_database_and_seed_demo
+    initialize_database_and_seed_demo()
     db = SessionLocal()
     try:
         WorkloadCatalogService.seed_workloads_if_missing(db)

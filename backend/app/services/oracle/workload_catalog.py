@@ -157,8 +157,26 @@ class WorkloadCatalogService:
         Generates 168 hours (7 days) of hourly deterministic workload telemetry.
         """
         count = db.query(OracleWorkloadTelemetry).count()
-        if count > 0:
+        latest_wt = (
+            db.query(OracleWorkloadTelemetry)
+            .order_by(OracleWorkloadTelemetry.timestamp.desc())
+            .first()
+        )
+        is_stale = False
+        if latest_wt and latest_wt.timestamp:
+            t_val = latest_wt.timestamp
+            if t_val.tzinfo is None:
+                t_val = t_val.replace(tzinfo=timezone.utc)
+            age_h = (utc_now() - t_val).total_seconds() / 3600.0
+            if age_h > 24.0:
+                is_stale = True
+
+        if count > 0 and not is_stale:
             return
+
+        if is_stale:
+            db.query(OracleWorkloadTelemetry).delete()
+            db.flush()
 
         now = utc_now().replace(minute=0, second=0, microsecond=0)
         start_time = now - timedelta(hours=hours)

@@ -1,8 +1,16 @@
-const API_BASE = (import.meta as any).env?.VITE_API_BASE_URL || (
-  typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1"
-    ? "/api/v1"
-    : "http://localhost:8000/api/v1"
-);
+const getInitialApiBase = (): string => {
+  const envUrl = (import.meta as any).env?.VITE_API_BASE_URL;
+  if (envUrl && typeof envUrl === "string" && envUrl.trim() !== "") {
+    const trimmed = envUrl.trim().replace(/\/+$/, "");
+    return trimmed.endsWith("/api/v1") ? trimmed : `${trimmed}/api/v1`;
+  }
+  if (typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+    return "/api/v1";
+  }
+  return "http://localhost:8000/api/v1";
+};
+
+const API_BASE = getInitialApiBase();
 
 export interface SystemHealth {
   status: string;

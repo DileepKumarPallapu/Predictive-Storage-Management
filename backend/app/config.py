@@ -28,6 +28,9 @@ class Settings(BaseSettings):
     # Uncertainty nominal coverage (e.g. 80% interval: [q10, q90])
     NOMINAL_COVERAGE: float = 0.80
 
+    # CORS configuration
+    CORS_ALLOWED_ORIGINS: str = os.getenv("CORS_ALLOWED_ORIGINS", "*")
+
     # Disaster Recovery & Vault Backup
     BACKUP_STORAGE_DIR: str = os.getenv("BACKUP_STORAGE_DIR", "vault_backups")
     DEFAULT_RPO_HOURS: float = 1.0  # Recovery Point Objective: Max 1 hour data loss

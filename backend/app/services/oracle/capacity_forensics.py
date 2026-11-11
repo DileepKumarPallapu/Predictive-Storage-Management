@@ -31,11 +31,40 @@ class CapacityForensicsService:
         )
 
         if not telemetry_rows or len(telemetry_rows) < 2:
+            # Fallback to most recent available telemetry if time drift or gap
+            telemetry_rows = (
+                db.query(Telemetry)
+                .filter(Telemetry.device_id == device_id)
+                .order_by(Telemetry.timestamp.desc())
+                .limit(window_hours)
+                .all()
+            )
+            telemetry_rows.reverse()
+
+        if not telemetry_rows or len(telemetry_rows) < 2:
+            total_cap_gb = (device.total_capacity_bytes / (1024 ** 3)) if device else 1000.0
+            crit_pct = device.critical_threshold_pct if device else 90.0
             return {
                 "device_id": device_id,
                 "status": "INSUFFICIENT_TELEMETRY",
                 "message": "Fewer than 2 telemetry points recorded in selected window.",
                 "window_hours": window_hours,
+                "initial_used_gb": 0.0,
+                "final_used_gb": 0.0,
+                "net_growth_gb": 0.0,
+                "growth_rate_gb_per_day": 0.0,
+                "acceleration_gb_per_day2": 0.0,
+                "growth_pattern": "STEADY",
+                "changepoints_detected": [],
+                "workload_contributions": [],
+                "unattributed_residual_growth_gb": 0.0,
+                "unattributed_share_pct": 0.0,
+                "period_comparison": {},
+                "reserve_runway_projection": {
+                    "remaining_headroom_gb": 0.0,
+                    "projected_days_to_breach": None,
+                    "critical_threshold_pct": crit_pct
+                },
                 "data": None
             }
 
@@ -107,6 +136,20 @@ class CapacityForensicsService:
                 .order_by(OracleWorkloadTelemetry.timestamp.desc())
                 .first()
             )
+            if not w_first:
+                w_first = (
+                    db.query(OracleWorkloadTelemetry)
+                    .filter(OracleWorkloadTelemetry.workload_id == w.id)
+                    .order_by(OracleWorkloadTelemetry.timestamp.asc())
+                    .first()
+                )
+            if not w_last:
+                w_last = (
+                    db.query(OracleWorkloadTelemetry)
+                    .filter(OracleWorkloadTelemetry.workload_id == w.id)
+                    .order_by(OracleWorkloadTelemetry.timestamp.desc())
+                    .first()
+                )
             if w_first and w_last:
                 w_delta_gb = (w_last.allocated_bytes - w_first.allocated_bytes) / (1024 ** 3)
                 if w.attribution_available:

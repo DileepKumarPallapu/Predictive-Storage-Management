@@ -1,6 +1,7 @@
 import logging
 import time
 import uuid
+from datetime import datetime, timezone, timedelta
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,6 +30,9 @@ from app.services.sovereign_service import SovereignService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("aegisstor")
+
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
 
 def initialize_database_and_seed_demo():
     """
@@ -133,9 +137,27 @@ def initialize_database_and_seed_demo():
             else:
                 device = existing_dev
 
-            # Check if telemetry already seeded for this device
+            # Check if telemetry already seeded for this device and is fresh
             tel_count = db.query(Telemetry).filter(Telemetry.device_id == dev_id).count()
-            if tel_count < 100:
+            latest_tel = (
+                db.query(Telemetry)
+                .filter(Telemetry.device_id == dev_id)
+                .order_by(Telemetry.timestamp.desc())
+                .first()
+            )
+            is_stale = False
+            if latest_tel and latest_tel.timestamp:
+                t_val = latest_tel.timestamp
+                if t_val.tzinfo is None:
+                    t_val = t_val.replace(tzinfo=timezone.utc)
+                age_h = (utc_now() - t_val).total_seconds() / 3600.0
+                if age_h > 24.0:
+                    is_stale = True
+
+            if tel_count < 100 or is_stale:
+                if is_stale:
+                    db.query(Telemetry).filter(Telemetry.device_id == dev_id).delete()
+                    db.flush()
                 telemetry_data = gen.generate_device_telemetry(dev_cfg, hours_history=720)
                 telemetry_objects = [
                     Telemetry(
@@ -279,9 +301,14 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# Dynamic CORS Configuration with support for local, Vercel deployments and custom origins
+cors_env = settings.model_dump().get("CORS_ALLOWED_ORIGINS", "*") if hasattr(settings, "CORS_ALLOWED_ORIGINS") else "*"
+configured_origins = [o.strip() for o in cors_env.split(",") if o.strip()] if cors_env != "*" else []
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=configured_origins if configured_origins else ["*"],
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1|.*\.vercel\.app|.*\.onrender\.com)(:\d+)?$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -348,4 +375,14 @@ def root():
         "mode": settings.OPERATING_MODE,
         "docs_url": "/docs",
         "api_v1": settings.API_V1_STR
+    }
+
+@app.get("/health")
+def root_health():
+    return {
+        "status": "ok",
+        "platform": settings.PROJECT_NAME,
+        "version": settings.PROJECT_VERSION,
+        "mode": settings.OPERATING_MODE,
+        "timestamp": time.time()
     }

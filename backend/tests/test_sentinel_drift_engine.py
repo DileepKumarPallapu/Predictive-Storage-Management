@@ -8,6 +8,11 @@ from app.services.sentinel_service import SentinelEngine
 
 client = TestClient(app)
 
+@pytest.fixture(autouse=True)
+def ensure_fresh_demo_data():
+    from app.main import initialize_database_and_seed_demo
+    initialize_database_and_seed_demo()
+
 
 # ==============================================================================
 # SENTINEL DRIFT & PREDICTION TRUST ENGINE TESTS

@@ -66,6 +66,22 @@ class AttributionEngine:
                 .first()
             )
 
+            # Fallback to nearest available telemetry for workload
+            if not latest_tel:
+                latest_tel = (
+                    db.query(OracleWorkloadTelemetry)
+                    .filter(OracleWorkloadTelemetry.workload_id == w.id)
+                    .order_by(OracleWorkloadTelemetry.timestamp.desc())
+                    .first()
+                )
+            if not oldest_tel:
+                oldest_tel = (
+                    db.query(OracleWorkloadTelemetry)
+                    .filter(OracleWorkloadTelemetry.workload_id == w.id)
+                    .order_by(OracleWorkloadTelemetry.timestamp.asc())
+                    .first()
+                )
+
             if latest_tel and oldest_tel:
                 delta_bytes = latest_tel.allocated_bytes - oldest_tel.allocated_bytes
                 delta_gb = delta_bytes / (1024 ** 3)
