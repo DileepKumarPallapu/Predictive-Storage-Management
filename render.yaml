@@ -38,6 +38,8 @@ services:
     healthCheckPath: /api/v1/health
     autoDeploy: true
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
       - key: AEGISSTOR_MODE
         value: demo
       - key: DATABASE_URL
@@ -46,3 +48,5 @@ services:
         generateValue: true
       - key: SHADOW_MODE_ENABLED
         value: "true"
+      - key: CORS_ALLOWED_ORIGINS
+        value: "https://frontend-gray-two-29.vercel.app,https://frontend-rnfoq9wro-dileepkumarpallapus-projects.vercel.app"
