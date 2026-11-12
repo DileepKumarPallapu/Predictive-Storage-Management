@@ -146,11 +146,15 @@ def get_device(
         raise HTTPException(status_code=404, detail=f"Replay trace volume '{device_id}' not found in active trace")
 
     if device_id.startswith("host-vol"):
+        HostStorageCollector.sync_live_partitions_to_db(db)
         partitions = HostStorageCollector.get_available_partitions()
         for p in partitions:
             if p["id"] == device_id:
-                free_gb = p["free_bytes"] / (1024 ** 3)
-                runway = min(720.0, max(48.0, free_gb / 0.5))
+                current_status = (
+                    "CRITICAL" if p["utilization_pct"] >= 90.0
+                    else "WARNING" if p["utilization_pct"] >= 80.0
+                    else "HEALTHY"
+                )
                 return DeviceSummary(
                     id=p["id"],
                     name=p["name"],
@@ -171,6 +175,7 @@ def get_device(
                     runway_hours_estimate=None,
                     risk_level="CRITICAL" if current_status == "CRITICAL" else "ELEVATED" if current_status == "WARNING" else "INSUFFICIENT_EVIDENCE"
                 )
+        raise HTTPException(status_code=404, detail=f"Host storage volume '{device_id}' not found")
 
     d = db.query(Device).filter(Device.id == device_id).first()
     if not d:
