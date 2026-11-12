@@ -181,7 +181,9 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
                   </div>
                   <div className="text-[var(--text-primary)] font-semibold mt-0.5 truncate">{d.workload_profile}</div>
                   <div className="text-[var(--text-secondary)] text-[10px]">
-                    Active IOPS: {(d.current_read_iops + d.current_write_iops).toLocaleString()}
+                    Active IOPS: {d.current_read_iops !== null && d.current_write_iops !== null
+                      ? (d.current_read_iops + d.current_write_iops).toLocaleString()
+                      : 'Not collected'}
                   </div>
                 </div>
               </div>
