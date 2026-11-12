@@ -217,3 +217,96 @@ def test_realtime_ticket_is_short_lived_and_only_hash_is_persisted():
         assert data["single_use"] is True
         assert data["expires_in_seconds"] == 60
         assert len(data["ticket"]) >= 20
+
+
+
+def test_action_definitions_are_bootstrapped_on_application_startup():
+    with TestClient(app) as client:
+        _, token = _user("OPERATOR", f"org-cp-defs-{uuid.uuid4().hex[:6]}")
+        response = client.get("/api/v1/control-plane/action-definitions", headers=_headers(token))
+        assert response.status_code == 200
+        definitions = {item["action_type"]: item for item in response.json()}
+        assert set(definitions) >= {"resource.inspect", "storage.capacity.plan", "storage.volume.resize"}
+        assert definitions["resource.inspect"]["is_executable"] is True
+        assert definitions["storage.capacity.plan"]["requires_approval"] is True
+        assert definitions["storage.volume.resize"]["is_enabled"] is False
+
+
+def test_resource_inspection_is_available_without_telemetry():
+    org = f"org-cp-no-telemetry-{uuid.uuid4().hex[:6]}"
+    _, operator_token = _user("OPERATOR", org)
+    db = SessionLocal()
+    device_id = f"cp-empty-{uuid.uuid4().hex[:10]}"
+    db.add(Device(
+        id=device_id,
+        name="Inventory-only resource",
+        tier="TEST_TIER",
+        media_type="TEST",
+        total_capacity_bytes=10_000_000,
+        warning_threshold_pct=80.0,
+        critical_threshold_pct=90.0,
+        status="HEALTHY",
+        organization_id=org,
+    ))
+    db.commit()
+    db.close()
+
+    with TestClient(app) as client:
+        created = client.post(
+            "/api/v1/control-plane/actions",
+            headers=_headers(operator_token),
+            json={
+                "action_type": "resource.inspect",
+                "target_type": "DEVICE",
+                "target_id": device_id,
+                "parameters": {},
+                "idempotency_key": f"inspect-empty-{uuid.uuid4().hex}",
+            },
+        )
+        assert created.status_code == 201
+        assert created.json()["status"] == "DRY_RUN"
+        assert created.json()["preflight"]["data_provenance"] == "UNKNOWN"
+        assert created.json()["preflight"]["warnings"]
+
+        executed = client.post(
+            f"/api/v1/control-plane/actions/{created.json()['id']}/execute-read-only",
+            headers=_headers(operator_token),
+        )
+        assert executed.status_code == 200
+        assert executed.json()["status"] == "SUCCEEDED"
+        assert executed.json()["output"]["latest_telemetry"] is None
+
+
+def test_idempotency_key_cannot_be_reused_for_a_different_action():
+    org = f"org-cp-idem-{uuid.uuid4().hex[:6]}"
+    _, operator_token = _user("OPERATOR", org)
+    device_a = _device(org, telemetry_synthetic=True)
+    device_b = _device(org, telemetry_synthetic=True)
+    key = f"same-key-{uuid.uuid4().hex}"
+
+    with TestClient(app) as client:
+        first = client.post(
+            "/api/v1/control-plane/actions",
+            headers=_headers(operator_token),
+            json={
+                "action_type": "resource.inspect",
+                "target_type": "DEVICE",
+                "target_id": device_a,
+                "parameters": {},
+                "idempotency_key": key,
+            },
+        )
+        assert first.status_code == 201
+
+        changed = client.post(
+            "/api/v1/control-plane/actions",
+            headers=_headers(operator_token),
+            json={
+                "action_type": "resource.inspect",
+                "target_type": "DEVICE",
+                "target_id": device_b,
+                "parameters": {},
+                "idempotency_key": key,
+            },
+        )
+        assert changed.status_code == 409
