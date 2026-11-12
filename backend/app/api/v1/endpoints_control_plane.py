@@ -8,6 +8,7 @@ import json
 import logging
 import secrets
 import uuid
+import re
 from datetime import timedelta
 from typing import Any, Literal
 
@@ -25,6 +26,8 @@ from app.models.control_plane import (
     ConnectorRegistry, ControlPlaneAuditEvent, ControlPlaneOutboxEvent, RealtimeTicket
 )
 from app.models.entities import Device, Telemetry, User
+from app.models.enterprise_data import ConnectorMetricSnapshot, ConnectorTableSnapshot, ConnectorSyncRun
+from app.services.connector_sync_service import ConnectorSyncService
 from app.realtime.control_plane_manager import control_plane_connections
 from app.utils.datetime_utils import utc_now
 
@@ -36,8 +39,10 @@ OPERATOR = require_control_plane_roles("ADMIN", "OPERATOR")
 READ_ACCESS = require_control_plane_roles("ADMIN", "OPERATOR", "AUDITOR", "VIEWER")
 
 ALLOWED_PROVIDERS = {
+    "POSTGRESQL", "MYSQL", "SQL_SERVER", "ORACLE",
     "LINUX_AGENT", "PROMETHEUS", "KUBERNETES_CSI", "S3_COMPATIBLE", "GENERIC_REST"
 }
+CREDENTIAL_REFERENCE_PATTERN = re.compile(r"^AEGISSTOR_CONNECTOR_[A-Z0-9_]{2,80}_URL$")
 FORBIDDEN_CONFIG_KEYS = {
     "password", "secret", "token", "api_key", "apikey", "private_key",
     "client_secret", "access_key_secret", "authorization"
@@ -60,6 +65,13 @@ class ConnectorCreate(BaseModel):
             raise ValueError(f"Unsupported provider. Allowed values: {', '.join(sorted(ALLOWED_PROVIDERS))}")
         return value
 
+    @field_validator("credential_ref")
+    @classmethod
+    def validate_credential_reference(cls, value: str | None) -> str | None:
+        if value is not None and not CREDENTIAL_REFERENCE_PATTERN.fullmatch(value.strip()):
+            raise ValueError("Use an environment secret reference such as AEGISSTOR_CONNECTOR_HOSPITAL_PG_URL; never send a password or URL here.")
+        return value.strip() if value else None
+
     @field_validator("configuration")
     @classmethod
     def reject_inline_secrets(cls, value: dict[str, Any]) -> dict[str, Any]:
@@ -69,6 +81,10 @@ class ConnectorCreate(BaseModel):
                     if str(key).lower() in FORBIDDEN_CONFIG_KEYS:
                         raise ValueError(f"Secret-like field '{path}.{key}' is not permitted. Use credential_ref.")
                     walk(child, f"{path}.{key}")
+            elif isinstance(obj, str):
+                lowered = obj.lower()
+                if "://" in obj or "password=" in lowered or "pwd=" in lowered or "authorization:" in lowered:
+                    raise ValueError(f"Connection URLs and credentials are not permitted in {path}. Use the backend secret reference.")
             elif isinstance(obj, list):
                 for index, child in enumerate(obj):
                     walk(child, f"{path}[{index}]")
@@ -420,25 +436,29 @@ async def check_connector_health(
     if connector is None:
         raise HTTPException(status_code=404, detail="Connector not found.")
 
-    # No provider adapter is claimed as connected in Sprint 1.
+    result = ConnectorSyncService.health_check(connector)
     connector.last_health_check_at = _now()
-    connector.last_error = f"No operational {connector.provider} adapter is registered in this Sprint 1 build."
-    connector.status = "NOT_CONFIGURED"
-    connector.capabilities_json = []
+    connector.status = result["status"]
+    connector.last_error = None if result["connection_established"] else result.get("detail")
+    connector.capabilities_json = result.get("capabilities", [])
     event = _append_audit_and_outbox(
-        db, user, "connector.health_check_blocked", "connector", connector.id,
-        {"status": connector.status, "reason": connector.last_error},
+        db, user,
+        "connector.health_check_succeeded" if result["connection_established"] else "connector.health_check_failed",
+        "connector", connector.id,
+        {
+            "status": connector.status,
+            "connection_established": result["connection_established"],
+            "provider": connector.provider,
+            "capabilities": connector.capabilities_json,
+        },
     )
     db.commit()
     db.refresh(connector)
     await _publish_committed_event(event)
     return {
         "connector_id": connector.id,
-        "status": "BLOCKED_BY_CONFIGURATION",
-        "connection_established": False,
-        "capabilities": [],
+        **result,
         "checked_at": connector.last_health_check_at.isoformat(),
-        "detail": connector.last_error,
     }
 
 
@@ -798,3 +818,171 @@ async def control_plane_websocket(websocket: WebSocket, ticket: str = Query(...,
         pass
     finally:
         await control_plane_connections.disconnect(organization_id, websocket)
+
+
+
+@router.post("/connectors/{connector_id}/sync")
+def sync_enterprise_database_connector(
+    connector_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(OPERATOR),
+):
+    connector = db.query(ConnectorRegistry).filter(
+        ConnectorRegistry.id == connector_id,
+        ConnectorRegistry.organization_id == _org(user),
+    ).first()
+    if connector is None:
+        raise HTTPException(status_code=404, detail="Connector not found.")
+    if connector.provider not in {"POSTGRESQL", "MYSQL", "SQL_SERVER", "ORACLE"}:
+        raise HTTPException(status_code=422, detail="This connector provider does not have a database metadata adapter.")
+
+    result = ConnectorSyncService.sync(db, connector)
+    event = _append_audit_and_outbox(
+        db, user,
+        "connector.sync_succeeded" if result["status"] == "SUCCEEDED" else "connector.sync_failed",
+        "connector", connector.id,
+        {
+            "status": result["status"],
+            "sync_run_id": result.get("sync_run_id"),
+            "database_size_bytes": result.get("database_size_bytes"),
+            "table_count": result.get("table_count"),
+            "provenance": result.get("provenance", "LIVE"),
+            "synthetic": False,
+        },
+    )
+    db.commit()
+    db.refresh(connector)
+    return {**result, "connector_id": connector.id, "connector_status": connector.status}
+
+
+@router.get("/connectors/{connector_id}/snapshots")
+def list_connector_snapshots(
+    connector_id: str,
+    limit: int = Query(default=50, ge=1, le=500),
+    db: Session = Depends(get_db),
+    user: User = Depends(READ_ACCESS),
+):
+    connector = db.query(ConnectorRegistry).filter(
+        ConnectorRegistry.id == connector_id,
+        ConnectorRegistry.organization_id == _org(user),
+    ).first()
+    if connector is None:
+        raise HTTPException(status_code=404, detail="Connector not found.")
+    rows = (
+        db.query(ConnectorMetricSnapshot)
+        .filter(
+            ConnectorMetricSnapshot.connector_id == connector_id,
+            ConnectorMetricSnapshot.organization_id == _org(user),
+        )
+        .order_by(ConnectorMetricSnapshot.sampled_at.desc())
+        .limit(limit)
+        .all()
+    )
+    return [
+        {
+            "id": row.id,
+            "sync_run_id": row.sync_run_id,
+            "provider": row.provider,
+            "database_name": row.database_name,
+            "server_version": row.server_version,
+            "sampled_at": row.sampled_at.isoformat(),
+            "database_size_bytes": row.database_size_bytes,
+            "configured_capacity_bytes": row.configured_capacity_bytes,
+            "used_bytes": row.used_bytes,
+            "free_bytes": row.free_bytes,
+            "utilization_pct": row.utilization_pct,
+            "table_count": row.table_count,
+            "estimated_row_count": row.estimated_row_count,
+            "active_connections": row.active_connections,
+            "read_operations_total": row.read_operations_total,
+            "write_operations_total": row.write_operations_total,
+            "cache_hit_ratio_pct": row.cache_hit_ratio_pct,
+            "provenance": row.provenance,
+            "is_synthetic": row.is_synthetic,
+            "metrics": row.metrics_json or {},
+        }
+        for row in rows
+    ]
+
+
+@router.get("/database-inventory")
+def list_enterprise_database_inventory(
+    connector_id: str | None = None,
+    limit: int = Query(default=100, ge=1, le=500),
+    db: Session = Depends(get_db),
+    user: User = Depends(READ_ACCESS),
+):
+    query = db.query(ConnectorTableSnapshot).filter(
+        ConnectorTableSnapshot.organization_id == _org(user)
+    )
+    if connector_id:
+        owned = db.query(ConnectorRegistry.id).filter(
+            ConnectorRegistry.id == connector_id,
+            ConnectorRegistry.organization_id == _org(user),
+        ).first()
+        if owned is None:
+            raise HTTPException(status_code=404, detail="Connector not found.")
+        query = query.filter(ConnectorTableSnapshot.connector_id == connector_id)
+
+    rows = query.order_by(
+        ConnectorTableSnapshot.sampled_at.desc(),
+        ConnectorTableSnapshot.total_bytes.desc(),
+    ).limit(limit).all()
+    return [
+        {
+            "id": row.id,
+            "connector_id": row.connector_id,
+            "sync_run_id": row.sync_run_id,
+            "schema_name": row.schema_name,
+            "table_name": row.table_name,
+            "estimated_row_count": row.estimated_row_count,
+            "data_bytes": row.data_bytes,
+            "index_bytes": row.index_bytes,
+            "total_bytes": row.total_bytes,
+            "sampled_at": row.sampled_at.isoformat(),
+            "provenance": "LIVE",
+        }
+        for row in rows
+    ]
+
+
+@router.get("/data-source-summary")
+def get_enterprise_data_source_summary(
+    db: Session = Depends(get_db),
+    user: User = Depends(READ_ACCESS),
+):
+    org_id = _org(user)
+    connectors = db.query(ConnectorRegistry).filter(
+        ConnectorRegistry.organization_id == org_id
+    ).all()
+    results = []
+    for connector in connectors:
+        latest = (
+            db.query(ConnectorMetricSnapshot)
+            .filter(
+                ConnectorMetricSnapshot.connector_id == connector.id,
+                ConnectorMetricSnapshot.organization_id == org_id,
+            )
+            .order_by(ConnectorMetricSnapshot.sampled_at.desc())
+            .first()
+        )
+        results.append({
+            "connector_id": connector.id,
+            "name": connector.name,
+            "provider": connector.provider,
+            "status": connector.status,
+            "last_successful_snapshot_at": latest.sampled_at.isoformat() if latest else None,
+            "database_name": latest.database_name if latest else None,
+            "database_size_bytes": latest.database_size_bytes if latest else None,
+            "table_count": latest.table_count if latest else None,
+            "provenance": latest.provenance if latest else "NO_DATA",
+            "is_synthetic": latest.is_synthetic if latest else False,
+        })
+    return {
+        "connector_count": len(connectors),
+        "healthy_count": sum(1 for x in connectors if x["status"] == "HEALTHY"),
+        "degraded_count": sum(1 for x in connectors if x["status"] == "DEGRADED"),
+        "error_count": sum(1 for x in connectors if x["status"] == "ERROR"),
+        "not_configured_count": sum(1 for x in connectors if x["status"] == "NOT_CONFIGURED"),
+        "sources": results,
+    }
