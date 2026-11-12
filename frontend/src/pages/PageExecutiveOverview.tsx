@@ -353,7 +353,7 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
           >
             {devices.map((d) => (
               <option key={d.id} value={d.id}>
-                {d.name} ({d.id}) — {d.current_utilization_pct.toFixed(1)}% used
+                {d.name} ({d.id}) — {d.current_utilization_pct === null ? '—' : d.current_utilization_pct.toFixed(1) + '%'} used
               </option>
             ))}
           </select>
@@ -542,7 +542,7 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
                     <div className="text-[10px] text-[var(--text-muted)] font-mono">{d.workload_profile}</div>
                   </td>
                   <td className="px-4 py-2.5 text-[var(--text-primary)] tabular-nums">
-                    {formatTB(d.current_used_bytes)} / {formatTB(d.total_capacity_bytes)}
+                    {d.current_used_bytes === null ? '—' : formatTB(d.current_used_bytes)} / {formatTB(d.total_capacity_bytes)}
                   </td>
                   <td className="px-4 py-2.5">
                     <div className="flex items-center gap-2">
@@ -550,19 +550,19 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
                       <div className="w-16 bg-[var(--surface-subtle)] h-1.5 rounded-full overflow-hidden border border-[var(--border)]">
                         <div
                           className={`h-full rounded-full ${
-                            d.current_utilization_pct >= d.critical_threshold_pct
+                            (d.current_utilization_pct ?? 0) >= d.critical_threshold_pct
                               ? 'bg-[var(--critical)]'
-                              : d.current_utilization_pct >= d.warning_threshold_pct
+                              : (d.current_utilization_pct ?? 0) >= d.warning_threshold_pct
                               ? 'bg-[var(--warning)]'
                               : 'bg-[var(--success)]'
                           }`}
-                          style={{ width: `${Math.min(100, d.current_utilization_pct)}%` }}
+                          style={{ width: `${Math.min(100, d.current_utilization_pct ?? 0)}%` }}
                         />
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-2.5 text-[var(--text-primary)] tabular-nums">{d.current_latency_p95_ms.toFixed(1)} ms</td>
-                  <td className="px-4 py-2.5 text-[var(--warning)] font-bold tabular-nums">~{d.runway_hours_estimate.toFixed(0)}h</td>
+                  <td className="px-4 py-2.5 text-[var(--text-primary)] tabular-nums">{d.current_latency_p95_ms === null ? 'Not collected' : d.current_latency_p95_ms.toFixed(1) + ' ms'}</td>
+                  <td className="px-4 py-2.5 text-[var(--warning)] font-bold tabular-nums">{d.runway_hours_estimate === null ? 'Collecting history' : '~' + d.runway_hours_estimate.toFixed(0) + 'h'}</td>
                   <td className="px-4 py-2.5">
                     <span
                       className={`px-2 py-0.5 rounded text-[10px] font-bold ${
