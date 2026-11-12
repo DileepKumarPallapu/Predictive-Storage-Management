@@ -47,13 +47,13 @@ class PerformanceRiskEngine:
             )
 
         latest = telemetry_history[-1]
-        current_lat_p95 = float(latest.get("latency_p95_ms", 1.5))
-        current_read_iops = float(latest.get("read_iops", 0.0))
-        current_write_iops = float(latest.get("write_iops", 0.0))
+        current_lat_p95 = float(latest.get("latency_p95_ms") or 0.0)
+        current_read_iops = float(latest.get("read_iops") or 0.0)
+        current_write_iops = float(latest.get("write_iops") or 0.0)
         current_total_iops = current_read_iops + current_write_iops
-        current_throughput = float(latest.get("throughput_mb_s", 0.0))
-        current_queue = float(latest.get("queue_depth", 1.0))
-        current_util = float(latest.get("utilization_pct", 70.0))
+        current_throughput = float(latest.get("throughput_mb_s") or 0.0)
+        current_queue = float(latest.get("queue_depth") or 1.0)
+        current_util = float(latest.get("utilization_pct") or 70.0)
 
         # Check for missing latency readings
         if current_lat_p95 <= 0.0:

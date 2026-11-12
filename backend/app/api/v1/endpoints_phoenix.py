@@ -18,8 +18,12 @@ from app.services.phoenix import (
     RecoveryVerifier, EvidenceGraphEngine
 )
 from app.utils.datetime_utils import utc_now
+from app.auth.permissions import require_method_permission
 
-router = APIRouter(prefix="/phoenix")
+router = APIRouter(
+    prefix="/phoenix",
+    dependencies=[Depends(require_method_permission("alerts.read", "alerts.acknowledge"))],
+)
 
 
 # ---------------------------------------------------------

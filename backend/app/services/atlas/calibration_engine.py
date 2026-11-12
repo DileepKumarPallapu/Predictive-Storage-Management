@@ -170,7 +170,7 @@ class DigitalTwinCalibrationEngine:
 
             discrepancy_records.append(
                 AtlasDiscrepancyRecord(
-                    id=f"disc-{run_id[:12]}-{idx:04d}",
+                    id=f"disc-{run_id}-{idx:04d}",
                     run_id=run_id,
                     device_id=config.device_id,
                     metric_name=config.target_metric,

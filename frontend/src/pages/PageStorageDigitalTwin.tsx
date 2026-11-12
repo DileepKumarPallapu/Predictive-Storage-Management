@@ -31,6 +31,9 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
   const [migrationRateMb, setMigrationRateMb] = useState<number>(150);
   const [addedCapacityGb, setAddedCapacityGb] = useState<number>(3000);
   const [relocatedIopsPct, setRelocatedIopsPct] = useState<number>(25);
+  const [growthMultiplier, setGrowthMultiplier] = useState<number>(0.5);
+  const [maintHours, setMaintHours] = useState<number>(4);
+  const [maintOverheadPct, setMaintOverheadPct] = useState<number>(12);
 
   const [simulation, setSimulation] = useState<ScenarioSimulationResponse | null>(null);
   const [telemetry, setTelemetry] = useState<TelemetryResponse | null>(null);
@@ -89,6 +92,10 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
         params = { added_capacity_gb: addedCapacityGb, provisioning_lead_hours: 1.5 };
       } else if (actionType === 'REBALANCE_WORKLOAD') {
         params = { relocated_iops_pct: relocatedIopsPct };
+      } else if (actionType === 'CAPACITY_GROWTH_CHANGE') {
+        params = { growth_multiplier: growthMultiplier };
+      } else if (actionType === 'MAINTENANCE_PLANNING') {
+        params = { maintenance_window_hours: maintHours, expected_io_overhead_pct: maintOverheadPct };
       }
 
       const res = await api.createScenario({
@@ -175,11 +182,13 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
                 className="w-full bg-[var(--surface-secondary)] border border-[var(--border-normal)] focus:border-[var(--accent-primary)] rounded-lg px-3 py-2 text-[var(--text-primary)] font-semibold focus:outline-none cursor-pointer"
                 aria-label="Remediation Strategy"
               >
-                <option value="TIER_COLD_DATA" className="bg-[var(--surface-primary)]">Move Inactive Cold Data to Tier 2/Archive</option>
-                <option value="EXPAND_CAPACITY" className="bg-[var(--surface-primary)]">Online Capacity Provisioning (+LUN Growth)</option>
-                <option value="RESCHEDULE_TASK" className="bg-[var(--surface-primary)]">Reschedule Background RAID Scrub / Backup</option>
-                <option value="REBALANCE_WORKLOAD" className="bg-[var(--surface-primary)]">Rebalance Noisy Workloads to Adjacent Pool</option>
-                <option value="DO_NOTHING" className="bg-[var(--surface-primary)]">Do Nothing (Observe Baseline Trajectory)</option>
+                <option value="TIER_COLD_DATA" className="bg-[var(--surface-primary)]">Data Tiering / Cold Archival</option>
+                <option value="EXPAND_CAPACITY" className="bg-[var(--surface-primary)]">Capacity Expansion (+Provisioning)</option>
+                <option value="REBALANCE_WORKLOAD" className="bg-[var(--surface-primary)]">Workload Distribution / Rebalance</option>
+                <option value="CAPACITY_GROWTH_CHANGE" className="bg-[var(--surface-primary)]">Capacity Growth Rate Change</option>
+                <option value="MAINTENANCE_PLANNING" className="bg-[var(--surface-primary)]">Maintenance Window Planning</option>
+                <option value="RESCHEDULE_TASK" className="bg-[var(--surface-primary)]">Reschedule Background Scrub / Backup</option>
+                <option value="DO_NOTHING" className="bg-[var(--surface-primary)]">Do Nothing (Baseline Trajectory)</option>
               </select>
             </div>
 
@@ -260,6 +269,67 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
               </div>
             )}
 
+            {actionType === 'CAPACITY_GROWTH_CHANGE' && (
+              <div className="space-y-4 pt-3 border-t border-[var(--border-subtle)]">
+                <div>
+                  <div className="flex justify-between text-[var(--text-secondary)] mb-1.5 font-mono">
+                    <span>Growth Rate Multiplier:</span>
+                    <span className="text-[var(--accent-primary)] font-bold">{growthMultiplier.toFixed(1)}x</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0.0"
+                    max="3.0"
+                    step="0.1"
+                    value={growthMultiplier}
+                    onChange={(e) => setGrowthMultiplier(Number(e.target.value))}
+                    className="w-full accent-[var(--accent-primary)] cursor-pointer"
+                  />
+                </div>
+              </div>
+            )}
+
+            {actionType === 'MAINTENANCE_PLANNING' && (
+              <div className="space-y-4 pt-3 border-t border-[var(--border-subtle)]">
+                <div>
+                  <div className="flex justify-between text-[var(--text-secondary)] mb-1.5 font-mono">
+                    <span>Maintenance Window:</span>
+                    <span className="text-[var(--accent-primary)] font-bold">{maintHours} hrs</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="1"
+                    max="24"
+                    step="1"
+                    value={maintHours}
+                    onChange={(e) => setMaintHours(Number(e.target.value))}
+                    className="w-full accent-[var(--accent-primary)] cursor-pointer"
+                  />
+                </div>
+                <div>
+                  <div className="flex justify-between text-[var(--text-secondary)] mb-1.5 font-mono">
+                    <span>Expected I/O Overhead:</span>
+                    <span className="text-[var(--accent-primary)] font-bold">{maintOverheadPct}%</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="50"
+                    step="2"
+                    value={maintOverheadPct}
+                    onChange={(e) => setMaintOverheadPct(Number(e.target.value))}
+                    className="w-full accent-[var(--accent-primary)] cursor-pointer"
+                  />
+                </div>
+              </div>
+            )}
+
+            {errorMsg && (
+              <div className="p-2.5 rounded-lg bg-[var(--status-critical)]/10 border border-[var(--status-critical)] text-xs text-[var(--status-critical)]">
+                {errorMsg}
+              </div>
+            )}
+
             <button
               onClick={runSimulation}
               disabled={loading}
@@ -268,6 +338,15 @@ export const PageStorageDigitalTwin: React.FC<Props> = ({ initialDeviceId }) => 
               <Play size={14} />
               {loading ? 'Simulating Digital Twin Physics...' : 'Run Simulation'}
             </button>
+
+            {simulation && (
+              <a
+                href={`/api/v1/digital-twin/scenarios/${simulation.scenario_id}/export?format=csv`}
+                className="block text-center mt-2 text-[11px] font-mono text-[var(--accent-primary)] underline"
+              >
+                Export Simulation Results (CSV)
+              </a>
+            )}
           </div>
         </div>
 

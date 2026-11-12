@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.entities import User
 from app.auth.security import get_current_user, require_role
+from app.auth.permissions import require_permission
 from app.services.vault_backup_engine import VaultBackupEngine
 
 router = APIRouter(prefix="/vault", tags=["AEGISSTOR VAULT — Backup & Disaster Recovery"])
@@ -21,7 +22,7 @@ class RestoreProductionRequest(BaseModel):
 @router.post("/backups")
 def create_vault_backup(
     payload: CreateBackupRequest = CreateBackupRequest(),
-    current_user: User = Depends(require_role(["ADMIN", "OPERATOR"])),
+    current_user: User = Depends(require_permission("storage.update")),
     db: Session = Depends(get_db)
 ):
     """
@@ -44,7 +45,7 @@ def create_vault_backup(
 
 @router.get("/backups")
 def list_vault_backups(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_permission("storage.read")),
     db: Session = Depends(get_db)
 ):
     """Lists all available backup archives, their integrity state, and last tested recovery metrics."""
@@ -59,7 +60,7 @@ def list_vault_backups(
 @router.get("/backups/{backup_id}/integrity")
 def verify_backup_integrity(
     backup_id: str,
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_permission("storage.read"))
 ):
     """
     Verifies SHA-256 checksums of database, configuration, and model metadata files
@@ -72,7 +73,7 @@ def verify_backup_integrity(
 @router.post("/backups/{backup_id}/test-restore")
 def test_isolated_restoration(
     backup_id: str,
-    current_user: User = Depends(require_role(["ADMIN", "OPERATOR", "AUDITOR"])),
+    current_user: User = Depends(require_permission("digital_twin.execute")),
     db: Session = Depends(get_db)
 ):
     """
@@ -91,7 +92,7 @@ def test_isolated_restoration(
 def restore_production_database(
     backup_id: str,
     payload: RestoreProductionRequest,
-    current_user: User = Depends(require_role(["ADMIN"])),
+    current_user: User = Depends(require_permission("settings.update")),
     db: Session = Depends(get_db)
 ):
     """

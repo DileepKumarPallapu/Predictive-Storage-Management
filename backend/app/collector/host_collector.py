@@ -474,54 +474,88 @@ class HostStorageCollector:
         }
 
     @staticmethod
-    def scrape_prometheus_node_exporter(endpoint_url: str = "http://127.0.0.1:9100/metrics", timeout_seconds: float = 3.0) -> Dict[str, Any]:
+    def scrape_prometheus_node_exporter(
+        endpoint_url: Optional[str] = None,
+        timeout_seconds: Optional[float] = None,
+        bearer_token: Optional[str] = None,
+        tls_verify: Optional[bool] = None,
+    ) -> Dict[str, Any]:
         """
-        Executes a non-destructive, read-only HTTP GET to the specified Prometheus Node Exporter.
-        Captures network failures, timeouts, and malformed outputs without crashing.
+        Executes a non-destructive, read-only HTTP/HTTPS GET to the configured Prometheus Node Exporter.
+        Returns NOT_CONFIGURED if no Prometheus URL is configured; supports Bearer auth and TLS validation.
         """
+        import ssl
+        from app.config import settings
+
         now = datetime.now(timezone.utc)
-        req = urllib.request.Request(
-            endpoint_url,
-            headers={"User-Agent": "AegisStor-TelemetryCollector/2.0 (read-only)"}
-        )
+        target_url = (endpoint_url if endpoint_url is not None else settings.PROMETHEUS_URL).strip()
+        if not target_url:
+            return {
+                "status": "NOT_CONFIGURED",
+                "endpoint_url": None,
+                "timestamp": now.isoformat(),
+                "provenance": PROVENANCE_LIVE,
+                "error_message": "Prometheus URL is not configured (set PROMETHEUS_URL or configure connector).",
+                "collection_failure": False,
+                "is_operational": False,
+                "remedy": "Set PROMETHEUS_URL and optional PROMETHEUS_BEARER_TOKEN in environment or Integration Management.",
+                "filesystems": [],
+            }
+
+        timeout_val = float(timeout_seconds if timeout_seconds is not None else settings.PROMETHEUS_TIMEOUT_SEC)
+        token_val = (bearer_token if bearer_token is not None else settings.PROMETHEUS_BEARER_TOKEN).strip()
+        verify_tls = settings.PROMETHEUS_TLS_VERIFY if tls_verify is None else tls_verify
+
+        headers = {"User-Agent": "AegisStor-TelemetryCollector/2.1 (read-only)"}
+        if token_val:
+            headers["Authorization"] = f"Bearer {token_val}"
+
+        req = urllib.request.Request(target_url, headers=headers)
+        ssl_ctx = None
+        if target_url.lower().startswith("https://"):
+            ssl_ctx = ssl.create_default_context()
+            if not verify_tls:
+                ssl_ctx.check_hostname = False
+                ssl_ctx.verify_mode = ssl.CERT_NONE
 
         try:
-            with urllib.request.urlopen(req, timeout=timeout_seconds) as response:
+            with urllib.request.urlopen(req, timeout=timeout_val, context=ssl_ctx) as response:
                 if response.status != 200:
                     return {
                         "status": "HTTP_ERROR",
                         "status_code": response.status,
-                        "endpoint_url": endpoint_url,
+                        "endpoint_url": target_url,
                         "timestamp": now.isoformat(),
                         "provenance": PROVENANCE_LIVE,
                         "error_message": f"Non-200 HTTP response: {response.status}",
                         "collection_failure": True,
-                        "filesystems": []
+                        "filesystems": [],
                     }
-                content = response.read().decode('utf-8', errors='replace')
+                content = response.read().decode("utf-8", errors="replace")
                 parsed = HostStorageCollector.parse_prometheus_text(content)
-                parsed["endpoint_url"] = endpoint_url
+                parsed["endpoint_url"] = target_url
+                parsed["last_successful_scrape"] = now.isoformat()
                 return parsed
 
         except urllib.error.URLError as e:
             return {
                 "status": "ENDPOINT_UNREACHABLE",
-                "endpoint_url": endpoint_url,
+                "endpoint_url": target_url,
                 "timestamp": now.isoformat(),
                 "provenance": PROVENANCE_LIVE,
                 "error_message": f"Connection failed: {str(e.reason)}",
                 "collection_failure": True,
                 "is_operational": False,
-                "remedy": "Ensure prometheus node_exporter is running on port 9100 or configure custom endpoint.",
-                "filesystems": []
+                "remedy": "Verify private network route / connector tunnel and Prometheus exporter endpoint.",
+                "filesystems": [],
             }
         except Exception as e:
             return {
                 "status": "COLLECTION_EXCEPTION",
-                "endpoint_url": endpoint_url,
+                "endpoint_url": target_url,
                 "timestamp": now.isoformat(),
                 "provenance": PROVENANCE_LIVE,
                 "error_message": str(e),
                 "collection_failure": True,
-                "filesystems": []
+                "filesystems": [],
             }

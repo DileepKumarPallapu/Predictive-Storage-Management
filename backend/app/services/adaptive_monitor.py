@@ -165,8 +165,8 @@ class AdaptiveMonitorService:
                 .order_by(Telemetry.timestamp.desc())
                 .first()
             )
-            util_pct = latest_tel.utilization_pct if latest_tel else 70.0
-            p95_lat = latest_tel.latency_p95_ms if latest_tel else 2.0
+            util_pct = float(latest_tel.utilization_pct or 70.0) if latest_tel else 70.0
+            p95_lat = float(latest_tel.latency_p95_ms or 2.0) if latest_tel else 2.0
 
             # Calculate Attention Score
             cap_risk = max(0.0, (util_pct - 60.0) / 35.0)

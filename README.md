@@ -248,13 +248,20 @@ The interface implements a high-contrast, technical dark theme (#080D18) with cy
 
 ### Option 1: Local Development (Windows / Linux / macOS)
 
-#### 1. Backend Setup
+#### 1. Backend Setup & Database Migrations
 ```bash
 cd backend
 python -m pip install -r requirements.txt
-python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+python -m alembic upgrade head
+python run.py
 ```
-*The database and deterministic synthetic dataset (4 enterprise storage pools, 2,884 hourly records) will initialize automatically on first startup.*
+- Backend API & Interactive OpenAPI Docs: `http://localhost:8000/docs`
+- Health Endpoint: `http://localhost:8000/api/v1/health` (and `/api/health`, `/health`)
+- Sample CSV Import Template: [`backend/sample_telemetry_template.csv`](backend/sample_telemetry_template.csv)
+- Default Seeded Accounts (Demo/Dev):
+  - **Admin**: `admin` / `admin123`
+  - **Operator**: `operator` / `operator123`
+  - **Viewer**: `viewer` / `viewer123`
 
 #### 2. Frontend Setup
 ```bash
@@ -280,20 +287,48 @@ docker-compose up --build
 
 ```bash
 cd backend
-python -m pytest -v
+python -m pytest tests/ -v
 ```
 
 Tests cover:
-- Deterministic synthetic generator reproducibility.
-- Temporal leakage prevention (features strictly $\le t$).
-- Quantile monotonicity ($q_{10} \le q_{50} \le q_{90}$) and physical capacity bounds.
-- Digital Twin Hard Safety Envelope enforcement and constraint violations.
-- Reserve Runway computation and risk level attribution.
-- FastAPI endpoints (Health, Devices, Telemetry, Forecasts, Risks, Scenarios, Recommendations, Alerts, Audit).
+- Authentication, JWT revocation on logout, User Management, and RBAC (`ADMIN`, `OPERATOR`, `VIEWER`, `AUDITOR`).
+- Storage Inventory CRUD (`POST/PUT/DELETE /api/v1/storage`), capacity validation, and dependency checks.
+- CSV upload preview/commit, duplicate detection, error report downloads, and Data Quality preprocessing pipeline.
+- Dual-Model Scikit-Learn Engine (`RandomForestRegressor` & `HistGradientBoostingRegressor`), chronological 80/20 split, `joblib` persistence, insufficient history gate, and 7/30/90-day forecasts.
+- Capacity Runway computation including zero/negative growth edge cases.
+- Performance Monitoring (`No data available` preservation for missing metrics), Rule-Based Alert Lifecycle (acknowledge/resolve/reopen).
+- Digital Twin 5 scenario types, validation of impossible scenarios, edit/compare/export, traceable Recommendations, JSON/CSV/PDF Reporting (`reportlab`), and Persistent Settings/Audit logs.
 
 ---
 
-## 8. Security & IP Notice
+## 8. Patent-Grade Intelligence Pipeline & Production Operations
+
+See [`docs/ARCHITECTURE_BLUEPRINT.md`](docs/ARCHITECTURE_BLUEPRINT.md) for the complete 18-domain Entity-Relationship Diagram (ERD), data-flow architecture, and API contract blueprint.
+
+- **Telemetry Connectors (`LINUX_HOST`, `PROMETHEUS`, `CSV_HISTORICAL`, `HTTP_API`)**: Read-only adapter registry via `/api/v1/connectors/*`, hashed `X-API-Key` authentication (`/api/v1/admin/api-keys`), and replay-safe ingestion via `Idempotency-Key`.
+- **9-Factor Data Reliability Engine (`/api/v1/reliability/data/{storage_id}`)**: Computes completeness, freshness, continuity, duplicate rate, invalid rate, capacity consistency, missing metric ratio, source availability, and historical stability (`HIGH` / `MEDIUM` / `LOW`), dynamically widening conformal uncertainty bands and blocking automated high-confidence recommendations on `LOW` / `STALE` data.
+- **Workload Regime & Drift Engine (`/api/v1/workload-regime/{storage_id}`)**: OLS growth trend slopes, lag-24 autocorrelation, Z-score burst changepoints, and KS/PSI distribution shift detection.
+- **Two-Model Champion-Challenger ML Engine (`/api/v1/v2/models/*`, `/api/v1/v2/forecasts/*`)**: Evaluates `LightGBM` (`LGBMRegressor`) vs `SARIMAX` (`statsmodels`) against a `SeasonalNaiveBenchmark` using chronological 3-way splits, rolling-origin CV, MASE/Pinball Loss/Empirical Coverage, Split Conformal calibration, and async background jobs (`/api/v1/v2/models/train-async/{storage_id}`, `/api/v1/jobs/{job_id}`).
+- **Probabilistic Capacity Risk Engine (`/api/v1/risk/capacity/{storage_id}`)**: Empirical residual-CDF crossing probability, Brier calibration check, safety-threshold crossing date, exhaustion date, and expected shortfall bytes.
+- **Constrained Decision Optimizer (`/api/v1/digital-twin/optimize/{storage_id}`)**: Ranks feasible interventions under budget (cost calculated only when unit costs are supplied), utilization, free space, latency, and transfer limits.
+
+### PostgreSQL Backup, Recovery & Retention
+When running in production with PostgreSQL (`DATABASE_URL=postgresql://...`):
+
+```bash
+# 1. Logical Consistent Backup
+pg_dump --format=custom --no-owner --file=aegisstor_backup_$(date +%Y%m%d).dump "$DATABASE_URL"
+
+# 2. Point-in-Time / Logical Restore
+pg_restore --clean --if-exists --no-owner --dbname="$DATABASE_URL" aegisstor_backup_YYYYMMDD.dump
+python -m alembic upgrade head
+```
+
+- **Automated Retention Pruning**: Administrators can invoke `POST /api/v1/admin/retention/run` (supports `dry_run: true`) to prune telemetry, ingestion jobs, and report history older than configured `retention_days` while preserving the latest telemetry snapshot per volume and immutable audit logs.
+
+---
+
+## 9. Security & IP Notice
 
 - **Host Safety**: AEGISSTOR never executes destructive operations against host disks. Telemetry collection defaults to read-only OS counters.
 - **Shadow Mode**: All administrative intervention approvals execute in shadow simulation mode.

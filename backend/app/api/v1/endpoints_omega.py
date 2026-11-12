@@ -11,10 +11,15 @@ from app.services.adaptive_monitor import AdaptiveMonitorService
 from app.services.fleet_planner import FleetPlannerService
 from app.services.outcome_ledger import OutcomeLedgerService
 from app.services.model_governance import ModelGovernanceService
+from app.auth.permissions import require_method_permission
 
 logger = logging.getLogger("aegisstor.api.omega")
 
-router = APIRouter(prefix="/omega", tags=["AEGISSTOR Omega Intelligence"])
+router = APIRouter(
+    prefix="/omega",
+    tags=["AEGISSTOR Omega Intelligence"],
+    dependencies=[Depends(require_method_permission("risk.read", "optimisation.execute"))],
+)
 
 # --- Request / Response Pydantic Schemas ---
 

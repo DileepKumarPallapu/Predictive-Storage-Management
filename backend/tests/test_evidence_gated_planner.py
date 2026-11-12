@@ -4,8 +4,9 @@ from app.main import app
 from app.database import SessionLocal
 from app.services.evidence_gated_planner import EvidenceGatedPlanner
 from app.services.research_benchmark_engine import ResearchBenchmarkEngine
+from tests.auth_helper import attach_admin_auth
 
-client = TestClient(app)
+client = attach_admin_auth(TestClient(app))
 
 @pytest.fixture
 def db_session():

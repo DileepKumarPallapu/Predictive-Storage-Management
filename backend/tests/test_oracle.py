@@ -19,6 +19,7 @@ from datetime import datetime, timezone, timedelta
 import json
 
 from app.main import app
+from tests.auth_helper import attach_admin_auth
 from app.database import SessionLocal
 from app.models.entities import (
     Device, OracleWorkload, OracleWorkloadTelemetry, OracleHypothesis,
@@ -30,7 +31,7 @@ from app.services.oracle import (
     OracleReportGenerator
 )
 
-client = TestClient(app)
+client = attach_admin_auth(TestClient(app))
 
 @pytest.fixture
 def db_session():

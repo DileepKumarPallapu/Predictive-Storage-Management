@@ -9,6 +9,7 @@ import json
 import uuid
 
 from app.main import app
+from tests.auth_helper import attach_admin_auth
 from app.database import SessionLocal
 from app.models.entities import (
     Device, Telemetry, Forecast, RiskAssessment, PhoenixIncident,
@@ -20,7 +21,7 @@ from app.services.phoenix import (
     IncidentCorrelationEngine
 )
 
-client = TestClient(app)
+client = attach_admin_auth(TestClient(app))
 
 
 @pytest.fixture

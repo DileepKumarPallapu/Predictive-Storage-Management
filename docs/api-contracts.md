@@ -154,3 +154,29 @@ Base URL: `/api/v1`
 - `GET /api/v1/alerts` / `POST /api/v1/alerts/{alert_id}/acknowledge`
 - `GET /api/v1/audit`
   Immutable log of approvals, mode changes, threshold updates.
+
+---
+
+## 9. Enterprise Modules (v2 Endpoints — `/api/v1/...` and `/api/...`)
+- **Authentication & Users**:
+  - `POST /api/v1/auth/login`, `POST /api/v1/auth/logout`, `GET /api/v1/auth/me`, `POST /api/v1/auth/register`, `POST /api/v1/auth/change-password`
+  - `GET/POST /api/v1/users`, `PATCH/DELETE /api/v1/users/{user_id}` (`ADMIN` only)
+- **Storage Inventory CRUD**:
+  - `GET /api/v1/storage`, `GET /api/v1/storage/{id}`, `POST /api/v1/storage`, `PUT /api/v1/storage/{id}`, `DELETE /api/v1/storage/{id}?confirm=true`
+- **Data Ingestion & Preprocessing Quality**:
+  - `GET /api/v1/ingestion/template`, `POST /api/v1/ingestion/csv/preview`, `POST /api/v1/ingestion/csv/import`
+  - `POST /api/v1/ingestion/manual`, `GET /api/v1/ingestion/jobs`, `GET /api/v1/ingestion/jobs/{job_id}/errors`
+  - `GET /api/v1/data-quality`, `GET /api/v1/data-quality/{storage_id}`
+- **Dual-Model ML Engine (`RandomForestRegressor` + `HistGradientBoostingRegressor`) & Runway**:
+  - `POST /api/v1/models/train/{storage_id}`, `GET /api/v1/models`, `GET /api/v1/models/{storage_id}`
+  - `POST /api/v1/forecasts/generate/{storage_id}?horizon_days=30`, `GET /api/v1/forecasts/{storage_id}`, `GET /api/v1/forecasts/{storage_id}/runway`
+- **Performance Monitoring & Risk Alerts**:
+  - `GET /api/v1/performance/{storage_id}?start_date=...&end_date=...`
+  - `POST /api/v1/alerts/evaluate/{storage_id}`, `POST /api/v1/alerts/{id}/acknowledge`, `POST /api/v1/alerts/{id}/resolve`, `POST /api/v1/alerts/{id}/reopen`
+- **Digital Twin Lifecycle**:
+  - `POST /api/v1/digital-twin/scenarios`, `GET /api/v1/digital-twin/scenarios/{id}`, `PUT /api/v1/digital-twin/scenarios/{id}`, `DELETE /api/v1/digital-twin/scenarios/{id}`
+  - `POST /api/v1/digital-twin/compare`, `GET /api/v1/digital-twin/scenarios/{id}/export`
+- **Recommendations, Reports & Settings**:
+  - `GET /api/v1/recommendations`, `POST /api/v1/recommendations/generate/{storage_id}`
+  - `GET /api/v1/reports/types`, `GET/POST /api/v1/reports/generate?report_type=...&format=json|csv|pdf`, `GET /api/v1/reports/history`
+  - `GET/PUT /api/v1/settings`, `GET /api/v1/health`

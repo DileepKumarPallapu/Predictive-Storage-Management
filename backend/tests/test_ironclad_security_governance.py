@@ -107,16 +107,16 @@ def test_privilege_escalation_operator_blocked_from_admin_endpoints():
             json={"username": "hacked_admin", "email": "hacked@test.internal", "password": "123", "role": "ADMIN"}
         )
         assert reg_resp.status_code == 403
-        assert "Access denied" in reg_resp.json()["detail"]
+        assert "denied" in reg_resp.json()["detail"].lower()
 
-        # 2. Attempt threshold modification (ADMIN required)
-        thresh_resp = client.patch(
-            "/api/v1/devices/vol-nvme-tier1-db/thresholds",
+        # 2. Attempt global system policy modification (ADMIN required)
+        sett_resp = client.put(
+            "/api/v1/settings",
             headers={"Authorization": f"Bearer {op_token}"},
-            json={"warning_threshold_pct": 50.0}
+            json={"capacity_thresholds": {"default_warning_pct": 50.0, "default_critical_pct": 90.0}}
         )
-        assert thresh_resp.status_code == 403
-        assert "Access denied" in thresh_resp.json()["detail"]
+        assert sett_resp.status_code == 403
+        assert "denied" in sett_resp.json()["detail"].lower()
 
     finally:
         db.query(User).filter(User.id == op_user_id).delete()
@@ -147,10 +147,13 @@ def test_auditor_role_read_only_boundaries():
         # 1. Permitted: Read permissions
         perm_resp = client.get("/api/v1/auth/permissions", headers={"Authorization": f"Bearer {aud_token}"})
         assert perm_resp.status_code == 200
-        assert "audits:verify" in perm_resp.json()["permissions"]
+        assert "audit.export" in perm_resp.json()["permissions"]
 
         # 2. Blocked: Cannot approve recommendation
-        recs_resp = client.get("/api/v1/devices/vol-nvme-tier1-db/recommendations")
+        recs_resp = client.get(
+            "/api/v1/devices/vol-nvme-tier1-db/recommendations",
+            headers={"Authorization": f"Bearer {aud_token}"},
+        )
         rec_id = recs_resp.json()[0]["id"]
         app_resp = client.post(
             f"/api/v1/recommendations/{rec_id}/approve",
@@ -158,7 +161,7 @@ def test_auditor_role_read_only_boundaries():
             json={"notes": "Auditor unauthorized approval attempt"}
         )
         assert app_resp.status_code == 403
-        assert "Access denied" in app_resp.json()["detail"]
+        assert "denied" in app_resp.json()["detail"].lower()
 
     finally:
         db.query(User).filter(User.id == aud_id).delete()
@@ -300,12 +303,12 @@ def test_audit_trail_tamper_chain_integrity():
 # ==============================================================================
 
 def test_secure_password_hashing():
-    """Validates that credentials use salted bcrypt and never plaintext."""
+    """Validates that credentials use salted Argon2id hashing and never plaintext."""
     raw_pass = "EnterpriseResilience@2026!"
     hashed = hash_password(raw_pass)
 
-    # 1. Bcrypt signature check ($2b$)
-    assert hashed.startswith("$2b$") or hashed.startswith("$2a$")
+    # 1. Argon2id signature check ($argon2id$)
+    assert hashed.startswith("$argon2id$")
     assert hashed != raw_pass
 
     # 2. Verification correctness

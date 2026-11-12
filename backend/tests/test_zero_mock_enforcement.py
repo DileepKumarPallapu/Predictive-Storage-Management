@@ -1,6 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
+from tests.auth_helper import attach_admin_auth
 from app.config import settings
 from app.services.replay_service import replay_engine
 from app.collector.host_collector import HostStorageCollector, PROVENANCE_LIVE, PROVENANCE_SYNTHETIC
@@ -9,7 +10,7 @@ from app.collector.host_collector import HostStorageCollector, PROVENANCE_LIVE, 
 @pytest.fixture(scope="module")
 def client():
     with TestClient(app) as c:
-        yield c
+        yield attach_admin_auth(c)
 
 
 def test_operating_mode_switching(client):

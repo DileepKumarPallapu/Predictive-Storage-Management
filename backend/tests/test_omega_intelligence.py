@@ -1,11 +1,12 @@
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
+from tests.auth_helper import attach_admin_auth
 
 @pytest.fixture(scope="module")
 def client():
     with TestClient(app) as c:
-        yield c
+        yield attach_admin_auth(c)
 
 def test_omega_topology_endpoint(client):
     """Verify fleet resource topology graph returns nodes, edges, provenance, and workloads."""

@@ -20,8 +20,12 @@ from app.services.atlas import (
     FidelityAssessor, EvidenceGatedPlanner, ValueOfExperimentPlanner
 )
 from app.utils.datetime_utils import utc_now
+from app.auth.permissions import require_method_permission
 
-router = APIRouter(prefix="/atlas")
+router = APIRouter(
+    prefix="/atlas",
+    dependencies=[Depends(require_method_permission("digital_twin.read", "digital_twin.execute"))],
+)
 
 
 # ---------------------------------------------------------

@@ -5,16 +5,17 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models.entities import Experiment, Telemetry, Device
+from app.models.entities import Experiment, Telemetry, Device, User
 from app.schemas.payloads import ExperimentItem, ExperimentCreate
 from app.ml.models import run_forecast
 from app.ml.calibration import ModelCalibrator
 from app.experiments.ablation_runner import AblationStudyRunner
+from app.auth.permissions import require_permission
 
 router = APIRouter()
 
 @router.get("/experiments/ablations")
-def get_ablation_studies():
+def get_ablation_studies(current_user: User = Depends(require_permission("models.read"))):
     """
     Executes and returns scientific ablation study results comparing:
     1. Multi-quantile forecast calibration.
@@ -24,7 +25,10 @@ def get_ablation_studies():
     return AblationStudyRunner.run_all_ablations()
 
 @router.get("/experiments", response_model=List[ExperimentItem])
-def list_experiments(db: Session = Depends(get_db)):
+def list_experiments(
+    current_user: User = Depends(require_permission("models.read")),
+    db: Session = Depends(get_db),
+):
     experiments = db.query(Experiment).order_by(Experiment.created_at.desc()).all()
     results = []
     for exp in experiments:
@@ -48,7 +52,11 @@ def list_experiments(db: Session = Depends(get_db)):
     return results
 
 @router.post("/experiments", response_model=ExperimentItem)
-def run_backtest_experiment(payload: ExperimentCreate, db: Session = Depends(get_db)):
+def run_backtest_experiment(
+    payload: ExperimentCreate,
+    current_user: User = Depends(require_permission("models.train")),
+    db: Session = Depends(get_db),
+):
     device = db.query(Device).first()
     if not device:
         raise HTTPException(status_code=400, detail="No storage devices registered to run backtest")

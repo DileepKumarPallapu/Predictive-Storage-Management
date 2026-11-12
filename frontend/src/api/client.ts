@@ -7,10 +7,28 @@ const getInitialApiBase = (): string => {
   if (typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
     return "/api/v1";
   }
-  return "http://localhost:8000/api/v1";
+  const host = typeof window !== "undefined" ? window.location.hostname : "127.0.0.1";
+  return `http://${host}:8000/api/v1`;
 };
 
 const API_BASE = getInitialApiBase();
+
+export function getWebSocketUrl(token?: string | null, sinceSeq?: number | null, route?: string): string {
+  let wsBase: string;
+  if (API_BASE.startsWith("http://") || API_BASE.startsWith("https://")) {
+    wsBase = API_BASE.replace(/^http/, "ws");
+  } else {
+    const proto = typeof window !== "undefined" && window.location.protocol === "https:" ? "wss:" : "ws:";
+    const host = typeof window !== "undefined" ? window.location.host : "127.0.0.1:8000";
+    wsBase = `${proto}//${host}${API_BASE}`;
+  }
+  const params = new URLSearchParams();
+  if (token) params.set("token", token);
+  if (sinceSeq !== null && sinceSeq !== undefined) params.set("since_seq", String(sinceSeq));
+  if (route) params.set("route", route);
+  const qs = params.toString();
+  return `${wsBase}/realtime/ws${qs ? `?${qs}` : ""}`;
+}
 
 export interface SystemHealth {
   status: string;
@@ -41,6 +59,10 @@ export interface DeviceSummary {
   current_latency_p95_ms: number;
   runway_hours_estimate: number;
   risk_level: string;
+  version?: number;
+  updated_at?: string;
+  created_by?: string;
+  updated_by?: string;
 }
 
 export interface TelemetryResponse {
@@ -494,11 +516,29 @@ export class ApiError extends Error {
   }
 }
 
-// Token storage helpers
+// Token & CSRF storage helpers
+function getCookieValue(name: string): string | null {
+  if (typeof document === "undefined") return null;
+  const parts = document.cookie.split(";").map((c) => c.trim());
+  for (const part of parts) {
+    if (part.startsWith(`${name}=`)) {
+      return decodeURIComponent(part.slice(name.length + 1));
+    }
+  }
+  return null;
+}
+
 export const authStorage = {
   getToken: () => localStorage.getItem("aegisstor_jwt"),
   setToken: (token: string) => localStorage.setItem("aegisstor_jwt", token),
-  clearToken: () => localStorage.removeItem("aegisstor_jwt"),
+  getCsrfToken: () => getCookieValue("aegisstor_csrf") || localStorage.getItem("aegisstor_csrf"),
+  setCsrfToken: (token: string) => {
+    if (token) localStorage.setItem("aegisstor_csrf", token);
+  },
+  clearToken: () => {
+    localStorage.removeItem("aegisstor_jwt");
+    localStorage.removeItem("aegisstor_csrf");
+  },
 };
 
 // ==========================================
@@ -557,15 +597,18 @@ async function apiFetch<T>(endpoint: string, options?: FetchOptions): Promise<T>
   }
 
   const token = authStorage.getToken();
+  const csrfToken = !isGet ? authStorage.getCsrfToken() : null;
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(csrfToken ? { "X-CSRF-Token": csrfToken } : {}),
     ...(options?.headers as Record<string, string>),
   };
 
   const fetchPromise = (async () => {
     try {
       const res = await fetch(`${API_BASE}${endpoint}`, {
+        credentials: "include",
         ...options,
         headers,
       });
@@ -578,6 +621,19 @@ async function apiFetch<T>(endpoint: string, options?: FetchOptions): Promise<T>
           errMsg = errData.detail || errData.message || errMsg;
         } catch {
           errMsg = await res.text();
+        }
+        if (
+          res.status === 401 &&
+          typeof window !== "undefined" &&
+          !endpoint.startsWith("/auth/login") &&
+          !endpoint.startsWith("/auth/setup") &&
+          !endpoint.startsWith("/auth/forgot-password") &&
+          !endpoint.startsWith("/auth/reset-password") &&
+          !endpoint.startsWith("/auth/me")
+        ) {
+          authStorage.clearToken();
+          invalidateApiCache();
+          window.dispatchEvent(new CustomEvent("aegisstor:auth-expired"));
         }
         throw new ApiError(res.status, errMsg, errData);
       }
@@ -840,19 +896,40 @@ export const api = {
   getAuditTrail: () => apiFetch<AuditItem[]>("/audit"),
 
   // Authentication & RBAC methods
+  getSetupStatus: () =>
+    apiFetch<{
+      setup_required: boolean;
+      active_admin_count: number;
+      total_user_count: number;
+    }>("/auth/setup-status", { forceFresh: true }),
+
+  setupFirstAdmin: (payload: { username: string; email: string; password: string }) =>
+    apiFetch<any>("/auth/setup", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
   login: async (username: string, password: string) => {
+    invalidateApiCache();
     const data = await apiFetch<{
       access_token: string;
       token_type: string;
+      csrf_token?: string;
       user_id: string;
       username: string;
+      email?: string;
       role: string;
+      landing_route?: string;
+      permissions?: string[];
     }>("/auth/login", {
       method: "POST",
       body: JSON.stringify({ username, password }),
     });
     if (data.access_token) {
       authStorage.setToken(data.access_token);
+    }
+    if (data.csrf_token) {
+      authStorage.setCsrfToken(data.csrf_token);
     }
     return data;
   },
@@ -864,11 +941,208 @@ export const api = {
       email: string;
       role: string;
       is_active: boolean;
-    }>("/auth/me"),
+      landing_route?: string;
+      permissions?: string[];
+      last_login_at?: string | null;
+      failed_login_attempts?: number;
+      locked_until?: string | null;
+      password_changed_at?: string | null;
+    }>("/auth/me", { forceFresh: true }),
 
-  logout: () => {
+  logout: async () => {
+    try {
+      await apiFetch("/auth/logout", { method: "POST" });
+    } catch {
+      // Clear local session even if backend token already expired
+    }
     authStorage.clearToken();
+    invalidateApiCache();
   },
+
+  forgotPassword: (identifier: string) =>
+    apiFetch<{ message: string; reset_token?: string; expires_in_minutes?: number }>("/auth/forgot-password", {
+      method: "POST",
+      body: JSON.stringify({ identifier }),
+    }),
+
+  resetPassword: (token: string, new_password: string) =>
+    apiFetch<{ message: string }>("/auth/reset-password", {
+      method: "POST",
+      body: JSON.stringify({ token, new_password }),
+    }),
+
+  changePassword: (current_password: string, new_password: string) =>
+    apiFetch<{ message: string }>("/auth/change-password", {
+      method: "POST",
+      body: JSON.stringify({ current_password, new_password }),
+    }),
+
+  listSessions: () =>
+    apiFetch<{ sessions: any[]; count: number }>("/auth/sessions", { forceFresh: true }),
+
+  revokeSession: (sessionId: string) =>
+    apiFetch<{ message: string }>(`/auth/sessions/${sessionId}`, { method: "DELETE" }),
+
+  getLoginHistory: () =>
+    apiFetch<{ attempts: any[]; count: number }>("/auth/login-history", { forceFresh: true }),
+
+  getMyPermissions: () =>
+    apiFetch<{ role: string; permissions: string[]; landing_route: string }>("/auth/permissions", { forceFresh: true }),
+
+  verifyAuditChain: () =>
+    apiFetch<any>("/auth/audit/verify-chain", { forceFresh: true }),
+
+  getOperatorDashboard: () =>
+    apiFetch<any>("/operator/dashboard", { forceFresh: true }),
+
+  assignAlert: (alertId: string, assigned_to: string, notes = "") =>
+    apiFetch<any>(`/alerts/${alertId}/assign`, {
+      method: "POST",
+      body: JSON.stringify({ assigned_to, notes }),
+    }),
+
+  submitRecommendation: (recId: string, notes = "") =>
+    apiFetch<any>(`/recommendations/${recId}/submit`, {
+      method: "POST",
+      body: JSON.stringify({ notes }),
+    }),
+
+  // ==========================================
+  // MODULE 1-12 ENTERPRISE PLATFORM ENDPOINTS
+  // ==========================================
+  listUsers: () => apiFetch<any[]>("/users", { forceFresh: true }),
+  createUser: (payload: { username: string; email: string; password: string; role: string }) =>
+    apiFetch<any>("/users", { method: "POST", body: JSON.stringify(payload) }),
+  updateUser: (userId: string, payload: { email?: string; role?: string; is_active?: boolean }) =>
+    apiFetch<any>(`/users/${userId}`, { method: "PATCH", body: JSON.stringify(payload) }),
+  revokeUserSessions: (userId: string) =>
+    apiFetch<any>(`/users/${userId}/revoke-sessions`, { method: "POST" }),
+  triggerUserReset: (userId: string) =>
+    apiFetch<any>(`/users/${userId}/trigger-reset`, { method: "POST" }),
+  getUserAudit: (userId: string) =>
+    apiFetch<any>(`/users/${userId}/audit`, { forceFresh: true }),
+  getPermissionCatalog: () =>
+    apiFetch<{
+      roles: any[];
+      permissions: any[];
+      role_matrix: Record<string, string[]>;
+    }>("/permissions/catalog", { forceFresh: true }),
+  updateRolePermissions: (roleName: string, permissions: string[]) =>
+    apiFetch<any>(`/permissions/roles/${roleName}`, {
+      method: "PUT",
+      body: JSON.stringify({ permissions }),
+    }),
+
+  createStorage: (payload: any) =>
+    apiFetch<DeviceSummary>("/storage", { method: "POST", body: JSON.stringify(payload) }),
+  updateStorage: (storageId: string, payload: any) =>
+    apiFetch<DeviceSummary>(`/storage/${storageId}`, { method: "PUT", body: JSON.stringify(payload) }),
+  deleteStorage: (storageId: string, confirm = true) =>
+    apiFetch<any>(`/storage/${storageId}?confirm=${confirm}`, { method: "DELETE" }),
+
+  getCsvTemplateUrl: () => `${API_BASE}/ingestion/template`,
+  previewCsvImport: (csvContent: string, defaultStorageId?: string) => {
+    const fd = new FormData();
+    fd.append("csv_content", csvContent);
+    if (defaultStorageId) fd.append("default_storage_id", defaultStorageId);
+    const token = authStorage.getToken();
+    const csrf = authStorage.getCsrfToken();
+    return fetch(`${API_BASE}/ingestion/csv/preview`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(csrf ? { "X-CSRF-Token": csrf } : {}),
+      },
+      body: fd,
+    }).then((r) => r.json());
+  },
+  commitCsvImport: (csvContent: string, defaultStorageId?: string) => {
+    const fd = new FormData();
+    fd.append("csv_content", csvContent);
+    if (defaultStorageId) fd.append("default_storage_id", defaultStorageId);
+    const token = authStorage.getToken();
+    const csrf = authStorage.getCsrfToken();
+    return fetch(`${API_BASE}/ingestion/csv/import`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(csrf ? { "X-CSRF-Token": csrf } : {}),
+      },
+      body: fd,
+    }).then((r) => r.json());
+  },
+  manualTelemetryEntry: (payload: any) =>
+    apiFetch<any>("/ingestion/manual", { method: "POST", body: JSON.stringify(payload) }),
+  getIngestionJobs: (storageId?: string) =>
+    apiFetch<any[]>(`/ingestion/jobs${storageId ? `?storage_id=${storageId}` : ""}`),
+  getIngestionJobErrors: (jobId: string) =>
+    apiFetch<any>(`/ingestion/jobs/${jobId}/errors?format=json`, { forceFresh: true }),
+  getDataQuality: (storageId: string) =>
+    apiFetch<any>(`/data-quality/${storageId}`),
+
+  trainStorageModels: (storageId: string) =>
+    apiFetch<any>(`/models/train/${storageId}`, { method: "POST" }),
+  getStorageModels: (storageId: string) =>
+    apiFetch<any>(`/models/${storageId}`),
+  generateCapacityForecast: (storageId: string, horizonDays: 7 | 30 | 90 = 30) =>
+    apiFetch<any>(`/forecasts/generate/${storageId}?horizon_days=${horizonDays}`, { method: "POST" }),
+  getSavedForecasts: (storageId: string) =>
+    apiFetch<any[]>(`/forecasts/${storageId}`),
+  getCapacityRunway: (storageId: string, safetyThresholdPct?: number) =>
+    apiFetch<any>(`/forecasts/${storageId}/runway${safetyThresholdPct ? `?safety_threshold_pct=${safetyThresholdPct}` : ""}`),
+  getStoragePerformance: (storageId: string, startDate?: string, endDate?: string) => {
+    const p = new URLSearchParams();
+    if (startDate) p.append("start_date", startDate);
+    if (endDate) p.append("end_date", endDate);
+    const qs = p.toString() ? `?${p.toString()}` : "";
+    return apiFetch<any>(`/performance/${storageId}${qs}`);
+  },
+  evaluateAlerts: (storageId?: string) =>
+    apiFetch<any>(storageId ? `/alerts/evaluate/${storageId}` : "/alerts/evaluate", { method: "POST" }),
+  reopenAlert: (alertId: string) =>
+    apiFetch<any>(`/alerts/${alertId}/reopen`, { method: "POST" }),
+  compareDigitalTwinScenarios: (scenarioIds: string[]) =>
+    apiFetch<any>("/digital-twin/compare", { method: "POST", body: JSON.stringify({ scenario_ids: scenarioIds }) }),
+  updateDigitalTwinScenario: (scenarioId: string, payload: any) =>
+    apiFetch<any>(`/digital-twin/scenarios/${scenarioId}`, { method: "PUT", body: JSON.stringify(payload) }),
+  deleteDigitalTwinScenario: (scenarioId: string) =>
+    apiFetch<any>(`/digital-twin/scenarios/${scenarioId}`, { method: "DELETE" }),
+  generateRecommendationsForStorage: (storageId: string) =>
+    apiFetch<any>(`/recommendations/generate/${storageId}`, { method: "POST" }),
+  generateReportUrl: (reportType: string, format: "json" | "csv" | "pdf", storageId?: string) => {
+    const p = new URLSearchParams({ report_type: reportType, format });
+    if (storageId) p.append("storage_id", storageId);
+    return `${API_BASE}/reports/generate?${p.toString()}`;
+  },
+  downloadAuthenticatedReport: async (reportType: string, format: "csv" | "pdf", storageId?: string, startDate?: string, endDate?: string) => {
+    const p = new URLSearchParams({ report_type: reportType, format });
+    if (storageId) p.append("storage_id", storageId);
+    if (startDate) p.append("start_date", startDate);
+    if (endDate) p.append("end_date", endDate);
+    const token = authStorage.getToken();
+    const res = await fetch(`${API_BASE}/reports/generate?${p.toString()}`, {
+      credentials: "include",
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    });
+    if (!res.ok) {
+      throw new ApiError(res.status, `Failed to export ${format.toUpperCase()} report (HTTP ${res.status})`);
+    }
+    return res.blob();
+  },
+  previewReportJson: (reportType: string, storageId?: string, startDate?: string, endDate?: string) => {
+    const p = new URLSearchParams({ report_type: reportType, format: "json" });
+    if (storageId) p.append("storage_id", storageId);
+    if (startDate) p.append("start_date", startDate);
+    if (endDate) p.append("end_date", endDate);
+    return apiFetch<any>(`/reports/generate?${p.toString()}`, { forceFresh: true });
+  },
+  generateReportJson: (reportType: string, storageId?: string) =>
+    apiFetch<any>("/reports/generate", { method: "POST", body: JSON.stringify({ report_type: reportType, format: "json", storage_id: storageId }) }),
+  getReportHistory: () => apiFetch<any[]>("/reports/history"),
+  updateSettings: (payload: any) =>
+    apiFetch<any>("/settings", { method: "PUT", body: JSON.stringify(payload) }),
 
   // ==========================================
   // AEGISSTOR OMEGA FLEET INTELLIGENCE API
@@ -1157,5 +1431,295 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ confirmation_token: confirmationToken }),
     }),
+
+  // ==========================================
+  // PATENT-GRADE REAL BACKEND PIPELINE (V2 & OPS)
+  // ==========================================
+  getStorageTopology: () => apiFetch<any>("/storage/topology", { forceFresh: true }),
+
+  // Connectors & Collectors
+  getConnectorTypes: () => apiFetch<{ status: string; permission_mode: string; supported_types: string[] }>("/connectors/types"),
+  getConnectors: () => apiFetch<{ connectors: any[]; count: number }>("/connectors", { forceFresh: true }),
+  registerConnector: (payload: {
+    name: string;
+    connector_type: string;
+    endpoint_url?: string;
+    target_storage_id?: string;
+    config?: Record<string, any>;
+    is_enabled?: boolean;
+  }) =>
+    apiFetch<any>("/connectors", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  updateConnector: (connectorId: string, payload: Record<string, any>) =>
+    apiFetch<any>(`/connectors/${connectorId}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    }),
+  deleteConnector: (connectorId: string) =>
+    apiFetch<any>(`/connectors/${connectorId}`, {
+      method: "DELETE",
+    }),
+  testConnector: (connectorId: string) =>
+    apiFetch<any>(`/connectors/${connectorId}/test`, {
+      method: "POST",
+    }),
+  collectFromConnector: (connectorId: string, payload?: { persist_to_storage_id?: string; mountpoint_filter?: string }) =>
+    apiFetch<any>(`/connectors/${connectorId}/collect`, {
+      method: "POST",
+      body: JSON.stringify(payload || {}),
+    }),
+
+  // API Keys & Retention
+  getApiKeys: () => apiFetch<{ api_keys: any[] }>("/admin/api-keys", { forceFresh: true }),
+  createApiKey: (name: string, role: string = "OPERATOR") =>
+    apiFetch<any>("/admin/api-keys", {
+      method: "POST",
+      body: JSON.stringify({ name, role }),
+    }),
+  revokeApiKey: (keyId: string) =>
+    apiFetch<any>(`/admin/api-keys/${keyId}`, {
+      method: "DELETE",
+    }),
+  runRetention: (retentionDays?: number, dryRun: boolean = true) =>
+    apiFetch<any>("/admin/retention/run", {
+      method: "POST",
+      body: JSON.stringify({ retention_days: retentionDays, dry_run: dryRun }),
+    }),
+
+  // Telemetry Record Inspector & Explicit Demo Synthetic Generator
+  getTelemetryRecords: (storageId?: string, isSynthetic?: boolean, limit: number = 100, offset: number = 0) => {
+    const p = new URLSearchParams();
+    if (storageId) p.append("storage_id", storageId);
+    if (isSynthetic !== undefined) p.append("is_synthetic", String(isSynthetic));
+    p.append("limit", String(limit));
+    p.append("offset", String(offset));
+    return apiFetch<any>(`/telemetry/records?${p.toString()}`, { forceFresh: true });
+  },
+  generateSyntheticDemo: (storageId: string, hours: number = 96, regime: string = "STABLE_GROWTH") =>
+    apiFetch<any>("/telemetry/synthetic/generate", {
+      method: "POST",
+      body: JSON.stringify({ storage_id: storageId, hours, regime }),
+    }),
+
+  // 9-Factor Data Reliability Engine
+  getDataReliability: (storageId: string) => apiFetch<any>(`/reliability/data/${storageId}`, { forceFresh: true }),
+  evaluateDataReliability: (storageId: string, weights?: Record<string, number>) =>
+    apiFetch<any>(`/reliability/data/${storageId}`, {
+      method: "POST",
+      body: JSON.stringify({ weights }),
+    }),
+
+  // Workload Regime & Drift Engine
+  getWorkloadRegime: (storageId: string) => apiFetch<any>(`/workload-regime/${storageId}`, { forceFresh: true }),
+  analyzeWorkloadRegime: (storageId: string) =>
+    apiFetch<any>(`/workload-regime/${storageId}`, {
+      method: "POST",
+    }),
+
+  // V2 Champion-Challenger ML & Multi-Horizon Split Conformal Forecasts
+  getV2ModelsByFamily: () => apiFetch<any>("/v2/models/by-family", { forceFresh: true }),
+  getV2ModelsForStorage: (storageId: string) => apiFetch<any>(`/v2/models/${storageId}`, { forceFresh: true }),
+  getV2FleetReliability: () => apiFetch<any>("/v2/models/reliability", { forceFresh: true }),
+  trainV2ChampionChallenger: (storageId: string) =>
+    apiFetch<any>(`/v2/models/train/${storageId}`, {
+      method: "POST",
+    }),
+  trainV2ChampionChallengerAsync: (storageId: string) =>
+    apiFetch<any>(`/v2/models/train-async/${storageId}`, {
+      method: "POST",
+    }),
+  getBackgroundJobStatus: (jobId: string) => apiFetch<any>(`/jobs/${jobId}`, { forceFresh: true }),
+  generateV2Forecast: (storageId: string, horizonDays: number = 30, persist: boolean = true) =>
+    apiFetch<any>(`/v2/forecasts/generate/${storageId}`, {
+      method: "POST",
+      body: JSON.stringify({ horizon_days: horizonDays, persist }),
+    }),
+  getV2ForecastHistory: (storageId: string, limit: number = 15) =>
+    apiFetch<any>(`/v2/forecasts/${storageId}?limit=${limit}`, { forceFresh: true }),
+  runScheduledForecasts: (horizonDays: number = 30) =>
+    apiFetch<any>(`/v2/forecasts/schedule?horizon_days=${horizonDays}`, {
+      method: "POST",
+    }),
+
+  // Probabilistic Capacity Risk Engine
+  getCapacityRisk: (storageId: string, horizonDays: number = 30, safetyThresholdPct?: number) => {
+    const p = new URLSearchParams({ horizon_days: String(horizonDays) });
+    if (safetyThresholdPct !== undefined) p.append("safety_threshold_pct", String(safetyThresholdPct));
+    return apiFetch<any>(`/risk/capacity/${storageId}?${p.toString()}`, { forceFresh: true });
+  },
+  evaluateCapacityRisk: (storageId: string, horizonDays: number = 30, safetyThresholdPct?: number) =>
+    apiFetch<any>(`/risk/capacity/${storageId}`, {
+      method: "POST",
+      body: JSON.stringify({ horizon_days: horizonDays, safety_threshold_pct: safetyThresholdPct }),
+    }),
+
+  // Multi-Volume Performance Compare & Constrained Decision Optimizer
+  compareStoragePerformance: (storageIds?: string[]) => {
+    const qs = storageIds && storageIds.length ? `?storage_ids=${encodeURIComponent(storageIds.join(","))}` : "";
+    return apiFetch<any>(`/performance/compare${qs}`, { forceFresh: true });
+  },
+  optimizeInterventions: (storageId: string, payload: Record<string, any>) =>
+    apiFetch<any>(`/digital-twin/optimize/${storageId}`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  // Alert Escalation & Recommendation Completion Lifecycle
+  escalateAlert: (alertId: string, escalationTier: string = "L2_STORAGE_SRE", reason?: string) =>
+    apiFetch<any>(`/alerts/${alertId}/escalate`, {
+      method: "POST",
+      body: JSON.stringify({ escalation_tier: escalationTier, reason }),
+    }),
+  completeRecommendation: (recId: string, notes?: string) =>
+    apiFetch<any>(`/recommendations/${recId}/complete`, {
+      method: "POST",
+      body: JSON.stringify({ notes: notes || "Confirmed completed by operator (non-execution advisory)." }),
+    }),
+  failRecommendation: (recId: string, notes?: string) =>
+    apiFetch<any>(`/recommendations/${recId}/fail`, {
+      method: "POST",
+      body: JSON.stringify({ notes: notes || "Marked failed during operational verification." }),
+    }),
+  listAllRecommendations: (storageId?: string) => {
+    const qs = storageId ? `?storage_id=${encodeURIComponent(storageId)}` : "";
+    return apiFetch<{ recommendations: any[]; count: number }>(`/recommendations${qs}`, { forceFresh: true });
+  },
+  generateRecommendations: (storageId: string) =>
+    apiFetch<any>(`/recommendations/generate/${storageId}`, { method: "POST" }),
+  getLiveHostTelemetry: () => apiFetch<any>("/telemetry/live-host", { forceFresh: true }),
+  scrapePrometheus: (endpointUrl: string, timeoutSeconds: number = 3.0) =>
+    apiFetch<any>("/telemetry/prometheus/scrape", {
+      method: "POST",
+      body: JSON.stringify({ endpoint_url: endpointUrl, timeout_seconds: timeoutSeconds }),
+    }),
+
+  // ==========================================
+  // REAL-TIME SYNC, PRESENCE, NOTIFICATIONS & TASKS
+  // ==========================================
+  replayRealtimeEvents: (sinceSeq: number = 0, limit: number = 100) =>
+    apiFetch<{ since_seq: number; latest_seq: number; events: any[] }>(
+      `/realtime/events?since_seq=${sinceSeq}&limit=${limit}`,
+      { forceFresh: true },
+    ),
+  getLivePresence: () =>
+    apiFetch<{ online_count: number; active_connections: number; users: any[] }>(
+      "/realtime/presence",
+      { forceFresh: true },
+    ),
+  getSharedActivity: (limit: number = 40) =>
+    apiFetch<{ items: any[]; count: number }>(`/realtime/activity?limit=${limit}`, { forceFresh: true }),
+  listNotifications: (unreadOnly: boolean = false) =>
+    apiFetch<{ unread_count: number; notifications: any[] }>(
+      `/notifications?unread_only=${unreadOnly}`,
+      { forceFresh: true },
+    ),
+  markNotificationRead: (notifId: string) =>
+    apiFetch<{ status: string; id: string }>(`/notifications/${notifId}/read`, { method: "POST" }),
+  markAllNotificationsRead: () =>
+    apiFetch<{ status: string; marked_count: number }>("/notifications/read-all", { method: "POST" }),
+  listTasks: (statusFilter?: string, assignedToMe: boolean = false) => {
+    const params = new URLSearchParams();
+    if (statusFilter) params.set("status_filter", statusFilter);
+    if (assignedToMe) params.set("assigned_to_me", "true");
+    const qs = params.toString();
+    return apiFetch<{ tasks: any[]; count: number }>(`/tasks${qs ? `?${qs}` : ""}`, { forceFresh: true });
+  },
+  createTask: (payload: {
+    title: string;
+    description?: string;
+    priority?: string;
+    assigned_to_user_id: string;
+    linked_device_id?: string;
+    linked_alert_id?: string;
+    due_date?: string;
+  }) => apiFetch<any>("/tasks", { method: "POST", body: JSON.stringify(payload) }),
+  updateTask: (
+    taskId: string,
+    payload: {
+      status?: string;
+      priority?: string;
+      assigned_to_user_id?: string;
+      description?: string;
+      expected_version?: number;
+    },
+  ) => apiFetch<any>(`/tasks/${taskId}`, { method: "PATCH", body: JSON.stringify(payload) }),
+  addTaskComment: (taskId: string, body: string) =>
+    apiFetch<any>(`/tasks/${taskId}/comments`, { method: "POST", body: JSON.stringify({ body }) }),
+
+  // Control Plane Foundation (Sprint 1)
+  listControlPlaneConnectors: () =>
+    apiFetch<{ organization_id: string; connectors: any[] }>("/control-plane/connectors", { forceFresh: true }),
+  getControlPlaneConnector: (connectorId: string) =>
+    apiFetch<any>(`/control-plane/connectors/${connectorId}`, { forceFresh: true }),
+  registerControlPlaneConnector: (payload: {
+    name: string;
+    provider: string;
+    version?: string;
+    credential_ref: string;
+    metadata?: Record<string, any>;
+  }) => apiFetch<any>("/control-plane/connectors", { method: "POST", body: JSON.stringify(payload) }),
+  registerControlPlaneCapability: (
+    connectorId: string,
+    payload: { action_key: string; is_supported?: boolean; dry_run_mode: string; constraints?: Record<string, any> },
+  ) =>
+    apiFetch<any>(`/control-plane/connectors/${connectorId}/capabilities`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  checkControlPlaneConnectorHealth: (connectorId: string) =>
+    apiFetch<any>(`/control-plane/connectors/${connectorId}/health-check`, { method: "POST" }),
+  listControlPlaneActionDefinitions: () =>
+    apiFetch<{ definitions: any[] }>("/control-plane/action-definitions", { forceFresh: true }),
+  updateControlPlaneActionPolicy: (
+    actionId: string,
+    payload: { requires_approval?: boolean; risk_level?: string; is_active?: boolean },
+  ) =>
+    apiFetch<any>(`/control-plane/action-definitions/${actionId}`, {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    }),
+  listControlPlaneActions: (status?: string) =>
+    apiFetch<{ organization_id: string; actions: any[] }>(
+      `/control-plane/actions${status ? `?status=${encodeURIComponent(status)}` : ""}`,
+      { forceFresh: true },
+    ),
+  createControlPlaneAction: (payload: {
+    connector_id: string;
+    operation: string;
+    resource_type: string;
+    resource_id: string;
+    resource_version?: number;
+    parameters?: Record<string, any>;
+    idempotency_key?: string;
+  }) => apiFetch<any>("/control-plane/actions", { method: "POST", body: JSON.stringify(payload) }),
+  getControlPlaneActionDetail: (actionId: string) =>
+    apiFetch<any>(`/control-plane/actions/${actionId}`, { forceFresh: true }),
+  runControlPlanePreflight: (actionId: string) =>
+    apiFetch<any>(`/control-plane/actions/${actionId}/preflight`, { method: "POST" }),
+  submitControlPlaneApproval: (actionId: string) =>
+    apiFetch<any>(`/control-plane/actions/${actionId}/submit-approval`, { method: "POST" }),
+  approveControlPlaneAction: (actionId: string, comment = "", expectedVersion?: number) =>
+    apiFetch<any>(`/control-plane/actions/${actionId}/approve`, {
+      method: "POST",
+      body: JSON.stringify({ comment, expected_version: expectedVersion }),
+    }),
+  rejectControlPlaneAction: (actionId: string, comment = "", expectedVersion?: number) =>
+    apiFetch<any>(`/control-plane/actions/${actionId}/reject`, {
+      method: "POST",
+      body: JSON.stringify({ comment, expected_version: expectedVersion }),
+    }),
+  cancelControlPlaneAction: (actionId: string, reason = "Cancelled", expectedVersion?: number) =>
+    apiFetch<any>(`/control-plane/actions/${actionId}/cancel`, {
+      method: "POST",
+      body: JSON.stringify({ reason, expected_version: expectedVersion }),
+    }),
+  executeControlPlaneAction: (actionId: string) =>
+    apiFetch<any>(`/control-plane/actions/${actionId}/execute`, { method: "POST" }),
+  listControlPlaneLocks: () =>
+    apiFetch<{ locks: any[] }>("/control-plane/locks", { forceFresh: true }),
+  listControlPlaneAudit: () =>
+    apiFetch<{ events: any[] }>("/control-plane/audit", { forceFresh: true }),
 };
 

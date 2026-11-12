@@ -10,8 +10,13 @@ from app.models.entities import (
 )
 from app.services.sovereign_service import SovereignService
 from app.auth.security import get_current_user, require_role
+from app.auth.permissions import require_method_permission
 
-router = APIRouter(prefix="/sovereign", tags=["SOVEREIGN Federated Storage Intelligence"])
+router = APIRouter(
+    prefix="/sovereign",
+    tags=["SOVEREIGN Federated Storage Intelligence"],
+    dependencies=[Depends(require_method_permission("models.read", "models.train"))],
+)
 
 # ------------------------------------------------------------------------------
 # Pydantic Schemas

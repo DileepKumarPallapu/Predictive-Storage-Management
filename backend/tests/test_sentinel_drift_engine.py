@@ -2,11 +2,12 @@ import pytest
 from datetime import datetime, timezone, timedelta
 from fastapi.testclient import TestClient
 from app.main import app
+from tests.auth_helper import attach_admin_auth
 from app.database import SessionLocal
 from app.models.entities import Device, Telemetry, ModelTrustEvaluation
 from app.services.sentinel_service import SentinelEngine
 
-client = TestClient(app)
+client = attach_admin_auth(TestClient(app))
 
 @pytest.fixture(autouse=True)
 def ensure_fresh_demo_data():

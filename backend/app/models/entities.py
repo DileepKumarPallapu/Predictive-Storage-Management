@@ -19,9 +19,17 @@ class Device(Base):
     min_free_reserve_pct = Column(Float, default=10.0)
     status = Column(String(32), default="HEALTHY")  # HEALTHY, WARNING, CRITICAL, MAINTENANCE
     workload_profile = Column(String(64), default="OLTP Database")
+    storage_type = Column(String(64), default="SAN")  # Local storage, NAS, SAN, Cloud storage, Backup storage, Object storage
+    environment_location = Column(String(128), default="Primary Data Center")
+    description = Column(Text, default="")
+    notes = Column(Text, default="")
+    last_telemetry_at = Column(DateTime, nullable=True)
     pool_id = Column(String(64), nullable=True)
     system_id = Column(String(64), nullable=True)
     organization_id = Column(String(64), default="org-primary-enterprise", nullable=False, index=True)
+    version = Column(Integer, default=1, nullable=False)
+    created_by = Column(String(64), default="system", nullable=False)
+    updated_by = Column(String(64), default="system", nullable=False)
     created_at = Column(DateTime, default=utc_now)
 
     updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
@@ -40,13 +48,16 @@ class Telemetry(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     device_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
     timestamp = Column(DateTime, nullable=False, index=True)
+    total_capacity_bytes = Column(BigInteger, nullable=True)
     used_bytes = Column(BigInteger, nullable=False)
     free_bytes = Column(BigInteger, nullable=False)
     utilization_pct = Column(Float, nullable=False)
-    read_iops = Column(Float, default=0.0)
-    write_iops = Column(Float, default=0.0)
-    throughput_mb_s = Column(Float, default=0.0)
-    latency_p95_ms = Column(Float, default=0.0)
+    read_iops = Column(Float, nullable=True)
+    write_iops = Column(Float, nullable=True)
+    throughput_mb_s = Column(Float, nullable=True)
+    latency_p95_ms = Column(Float, nullable=True)
+    read_latency_ms = Column(Float, nullable=True)
+    write_latency_ms = Column(Float, nullable=True)
     queue_depth = Column(Float, default=1.0)
     is_synthetic = Column(Boolean, default=True)
     source_label = Column(String(64), default="synthetic_generator")
@@ -74,6 +85,11 @@ class Forecast(Base):
     q90_json = Column(Text, nullable=False)
     interval_coverage = Column(Float, default=0.80)
     inference_ms = Column(Float, default=0.0)
+    model_version_id = Column(String(64), nullable=True)
+    horizon_days = Column(Integer, nullable=True)
+    daily_predictions_json = Column(Text, nullable=True)
+    projected_capacity_breach = Column(Boolean, default=False)
+    breach_timestamp = Column(DateTime, nullable=True)
 
     device = relationship("Device", back_populates="forecasts")
 
@@ -105,8 +121,11 @@ class Scenario(Base):
     name = Column(String(128), nullable=False)
     action_type = Column(String(64), nullable=False)
     parameters_json = Column(Text, default="{}")
+    version = Column(Integer, default=1, nullable=False)
     created_at = Column(DateTime, default=utc_now)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
     created_by = Column(String(64), default="system_operator")
+    updated_by = Column(String(64), default="system_operator")
 
     device = relationship("Device", back_populates="scenarios")
     outcome = relationship("SimulatedOutcome", back_populates="scenario", uselist=False, cascade="all, delete-orphan")
@@ -184,7 +203,11 @@ class Alert(Base):
     message = Column(Text, nullable=False)
     status = Column(String(32), default="ACTIVE")
     triggered_at = Column(DateTime, default=utc_now)
+    acknowledged_by = Column(String(64), nullable=True)
+    acknowledged_at = Column(DateTime, nullable=True)
     resolved_at = Column(DateTime, nullable=True)
+    resolution_details = Column(Text, nullable=True)
+    supporting_evidence_json = Column(Text, default="{}")
 
     device = relationship("Device", back_populates="alerts")
 
@@ -214,6 +237,9 @@ class AuditLog(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     timestamp = Column(DateTime, default=utc_now, index=True)
     user = Column(String(64), default="operator@aegisstor.internal")
+    user_id = Column(String(64), nullable=True, index=True)
+    user_role = Column(String(32), nullable=True)
+    outcome = Column(String(32), default="SUCCESS")
     action = Column(String(64), nullable=False)
     target_type = Column(String(64), nullable=False)
     target_id = Column(String(64), nullable=False)
@@ -248,6 +274,11 @@ class User(Base):
     role = Column(String(32), default="OPERATOR")
     organization_id = Column(String(64), default="org-primary-enterprise", nullable=False, index=True)
     is_active = Column(Boolean, default=True)
+    failed_login_attempts = Column(Integer, default=0)
+    locked_until = Column(DateTime, nullable=True)
+    last_login_at = Column(DateTime, nullable=True)
+    password_changed_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=utc_now)
 
 
 
@@ -268,17 +299,28 @@ class ModelVersion(Base):
     __tablename__ = "model_versions"
 
     id = Column(String(64), primary_key=True)
+    storage_id = Column(String(64), ForeignKey("devices.id"), nullable=True, index=True)
     name = Column(String(128), nullable=False)
-    model_type = Column(String(64), nullable=False)
+    model_type = Column(String(64), nullable=False)  # RandomForestRegressor, HistGradientBoostingRegressor, etc.
     version_tag = Column(String(32), nullable=False)
     feature_schema_json = Column(Text, default="[]")
+    feature_version = Column(String(32), default="v2.0")
+    artifact_path = Column(String(512), nullable=True)
     target_metric = Column(String(64), default="used_bytes")
     train_samples_count = Column(Integer, default=0)
+    validation_samples = Column(Integer, default=0)
+    train_start_at = Column(DateTime, nullable=True)
+    train_end_at = Column(DateTime, nullable=True)
     mae = Column(Float, default=0.0)
     rmse = Column(Float, default=0.0)
     interval_coverage = Column(Float, default=0.80)
     is_active = Column(Boolean, default=True)
+    status = Column(String(32), default="TRAINED")
+    error_message = Column(Text, nullable=True)
+    trained_by = Column(String(64), default="system")
     trained_at = Column(DateTime, default=utc_now)
+
+    metrics = relationship("ModelMetric", back_populates="model_version", cascade="all, delete-orphan")
 
 
 class ModelTrustEvaluation(Base):
@@ -1145,6 +1187,408 @@ class SovereignExperiment(Base):
     manifest_json = Column(Text, nullable=False)
     manifest_sha256 = Column(String(64), nullable=False, index=True)
     created_at = Column(DateTime, default=utc_now)
+
+
+# ==============================================================================
+# MODULE 1-12 PERSISTENT ENTERPRISE MODELS (AUTH, INGESTION, QUALITY, ML, REPORTS, SETTINGS)
+# ==============================================================================
+
+class RevokedToken(Base):
+    """Stores invalidated JWT tokens upon user logout."""
+    __tablename__ = "revoked_tokens"
+
+    id = Column(String(64), primary_key=True, index=True)
+    token_hash = Column(String(128), nullable=False, unique=True, index=True)
+    user_id = Column(String(64), ForeignKey("users.id"), nullable=True, index=True)
+    revoked_at = Column(DateTime, default=utc_now)
+    expires_at = Column(DateTime, nullable=True)
+
+
+class IngestionJob(Base):
+    """Records CSV imports, manual entries, collector batches, and row-level validation diagnostics."""
+    __tablename__ = "ingestion_jobs"
+
+    id = Column(String(64), primary_key=True, index=True)
+    storage_id = Column(String(64), ForeignKey("devices.id"), nullable=True, index=True)
+    source_type = Column(String(32), nullable=False)  # CSV_UPLOAD, MANUAL_ENTRY, API_COLLECTOR, HISTORICAL_IMPORT
+    filename = Column(String(255), nullable=True)
+    status = Column(String(32), default="COMPLETED")  # COMPLETED, PARTIAL, FAILED
+    total_rows = Column(Integer, default=0)
+    accepted_rows = Column(Integer, default=0)
+    rejected_rows = Column(Integer, default=0)
+    duplicate_rows = Column(Integer, default=0)
+    errors_json = Column(Text, default="[]")
+    idempotency_key = Column(String(128), nullable=True, index=True)
+    uploaded_by = Column(String(64), default="system")
+    created_at = Column(DateTime, default=utc_now, index=True)
+
+
+class DataQualityResult(Base):
+    """Persists deterministic preprocessing and data quality assessments without modifying raw telemetry."""
+    __tablename__ = "data_quality_results"
+
+    id = Column(String(64), primary_key=True, index=True)
+    storage_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    ingestion_job_id = Column(String(64), ForeignKey("ingestion_jobs.id"), nullable=True)
+    total_records_received = Column(Integer, default=0)
+    valid_records = Column(Integer, default=0)
+    rejected_records = Column(Integer, default=0)
+    duplicate_records = Column(Integer, default=0)
+    missing_field_stats_json = Column(Text, default="{}")
+    outlier_count = Column(Integer, default=0)
+    data_completeness_pct = Column(Float, default=100.0)
+    latest_telemetry_timestamp = Column(DateTime, nullable=True)
+    preprocessing_decisions_json = Column(Text, default="[]")
+    evaluated_at = Column(DateTime, default=utc_now, index=True)
+
+
+class ModelMetric(Base):
+    """Chronological holdout validation metrics for trained ML models."""
+    __tablename__ = "model_metrics"
+
+    id = Column(String(64), primary_key=True, index=True)
+    model_version_id = Column(String(64), ForeignKey("model_versions.id"), nullable=False, index=True)
+    storage_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    mae = Column(Float, nullable=False)
+    rmse = Column(Float, nullable=False)
+    r2_score = Column(Float, nullable=True)
+    mape = Column(Float, nullable=True)
+    mase = Column(Float, nullable=True)
+    pinball_loss = Column(Float, nullable=True)
+    interval_coverage = Column(Float, nullable=True)
+    mean_interval_width = Column(Float, nullable=True)
+    vs_baseline_status = Column(String(32), default="UNKNOWN")
+    residual_std = Column(Float, default=0.0)
+    is_selected = Column(Boolean, default=False)
+    selection_reason = Column(Text, default="")
+    evaluated_at = Column(DateTime, default=utc_now)
+
+    model_version = relationship("ModelVersion", back_populates="metrics")
+
+
+class ReportHistory(Base):
+    """Tracks generated reports, filters, format (JSON/CSV/PDF), and metadata."""
+    __tablename__ = "report_history"
+
+    id = Column(String(64), primary_key=True, index=True)
+    report_type = Column(String(64), nullable=False, index=True)
+    format = Column(String(16), nullable=False)  # JSON, CSV, PDF
+    storage_id = Column(String(64), nullable=True)
+    filters_json = Column(Text, default="{}")
+    generated_by = Column(String(64), default="system")
+    row_count = Column(Integer, default=0)
+    summary_json = Column(Text, default="{}")
+    created_at = Column(DateTime, default=utc_now, index=True)
+
+
+class ApplicationSetting(Base):
+    """Persisted system configuration thresholds, forecast settings, and retention rules."""
+    __tablename__ = "application_settings"
+
+    key = Column(String(64), primary_key=True, index=True)
+    value_json = Column(Text, nullable=False)
+    category = Column(String(32), default="general")
+    version = Column(Integer, default=1, nullable=False)
+    updated_by = Column(String(64), default="system")
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
+
+
+class ApiKey(Base):
+    """Hashed API keys for authenticated external collectors and agents."""
+    __tablename__ = "api_keys"
+
+    id = Column(String(64), primary_key=True, index=True)
+    name = Column(String(128), nullable=False)
+    key_prefix = Column(String(16), nullable=False)
+    key_hash = Column(String(128), nullable=False, unique=True, index=True)
+    role = Column(String(32), default="OPERATOR")
+    organization_id = Column(String(64), default="org-primary-enterprise")
+    created_by = Column(String(64), default="admin")
+    is_active = Column(Boolean, default=True)
+    last_used_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=utc_now)
+
+
+class TelemetryConnector(Base):
+    """Registered telemetry adapter configurations (Linux Host, Prometheus, HTTP Agent, etc.)."""
+    __tablename__ = "telemetry_connectors"
+
+    id = Column(String(64), primary_key=True, index=True)
+    name = Column(String(128), nullable=False)
+    connector_type = Column(String(32), nullable=False)  # LINUX_HOST, PROMETHEUS, CSV_HISTORICAL, HTTP_API
+    endpoint_url = Column(String(512), nullable=True)
+    config_json = Column(Text, default="{}")
+    target_storage_id = Column(String(64), ForeignKey("devices.id"), nullable=True)
+    is_enabled = Column(Boolean, default=True)
+    last_status = Column(String(32), default="CONFIGURED")  # CONFIGURED, CONNECTED, ERROR, STALE
+    last_error = Column(Text, nullable=True)
+    last_sync_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=utc_now)
+
+
+class DataReliabilityProfile(Base):
+    """Stores the 9 transparent data reliability factors and weighted 0..1 score."""
+    __tablename__ = "data_reliability_profiles"
+
+    id = Column(String(64), primary_key=True, index=True)
+    storage_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    reliability_score = Column(Float, nullable=False)  # 0.0 to 1.0
+    reliability_tier = Column(String(16), nullable=False)  # HIGH, MEDIUM, LOW
+    is_stale = Column(Boolean, default=False)
+    last_successful_timestamp = Column(DateTime, nullable=True)
+    completeness_score = Column(Float, default=1.0)
+    freshness_score = Column(Float, default=1.0)
+    continuity_score = Column(Float, default=1.0)
+    duplicate_rate_score = Column(Float, default=1.0)
+    invalid_rate_score = Column(Float, default=1.0)
+    capacity_consistency_score = Column(Float, default=1.0)
+    missing_metric_score = Column(Float, default=1.0)
+    source_availability_score = Column(Float, default=1.0)
+    historical_stability_score = Column(Float, default=1.0)
+    weights_json = Column(Text, default="{}")
+    explanation_json = Column(Text, default="{}")
+    uncertainty_multiplier = Column(Float, default=1.0)
+    evaluated_at = Column(DateTime, default=utc_now, index=True)
+
+
+class WorkloadRegimeEvent(Base):
+    """Persisted statistical workload regime classifications, changepoints, and drift events."""
+    __tablename__ = "workload_regime_events"
+
+    id = Column(String(64), primary_key=True, index=True)
+    storage_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    regime_label = Column(String(48), nullable=False)
+    event_type = Column(String(48), nullable=False)  # REGIME_CLASSIFICATION, CHANGEPOINT_BURST, DISTRIBUTION_DRIFT, INTERRUPTION
+    severity = Column(String(16), default="INFO")
+    confidence = Column(Float, default=0.0)
+    supporting_metrics_json = Column(Text, default="{}")
+    explanation = Column(Text, nullable=False)
+    detected_at = Column(DateTime, default=utc_now, index=True)
+
+
+class BackgroundJob(Base):
+    """Tracks asynchronous ML model training and scheduled forecast jobs."""
+    __tablename__ = "background_jobs"
+
+    id = Column(String(64), primary_key=True, index=True)
+    job_type = Column(String(48), nullable=False)  # ML_TRAIN_CHAMPION_CHALLENGER, FORECAST_SCHEDULED
+    storage_id = Column(String(64), ForeignKey("devices.id"), nullable=True, index=True)
+    status = Column(String(24), default="QUEUED")  # QUEUED, VALIDATING_DATA, PREPARING_FEATURES, TRAINING, EVALUATING, SAVING_MODEL, COMPLETED, FAILED, CANCELLED
+    stage = Column(String(32), default="QUEUED")
+    progress_pct = Column(Integer, default=0)
+    result_json = Column(Text, default="{}")
+    error_message = Column(Text, nullable=True)
+    triggered_by = Column(String(64), default="system")
+    created_at = Column(DateTime, default=utc_now)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
+    completed_at = Column(DateTime, nullable=True)
+
+
+class CapacityRiskEvaluation(Base):
+    """Stores probabilistic capacity exhaustion & safety-threshold crossing risk assessments."""
+    __tablename__ = "capacity_risk_evaluations"
+
+    id = Column(String(64), primary_key=True, index=True)
+    storage_id = Column(String(64), ForeignKey("devices.id"), nullable=False, index=True)
+    forecast_id = Column(Integer, ForeignKey("forecasts.id"), nullable=True)
+    horizon_days = Column(Integer, default=30)
+    current_utilization_pct = Column(Float, nullable=False)
+    forecasted_utilization_pct = Column(Float, nullable=False)
+    remaining_safe_capacity_bytes = Column(BigInteger, nullable=False)
+    safety_threshold_crossing_date = Column(DateTime, nullable=True)
+    exhaustion_date = Column(DateTime, nullable=True)
+    threshold_crossing_probability = Column(Float, nullable=False)
+    expected_shortfall_bytes = Column(BigInteger, default=0)
+    adverse_p90_utilization_pct = Column(Float, nullable=False)
+    data_reliability_score = Column(Float, default=1.0)
+    details_json = Column(Text, default="{}")
+    evaluated_at = Column(DateTime, default=utc_now, index=True)
+
+
+class Role(Base):
+    """System & administrator-configurable IAM roles."""
+    __tablename__ = "roles"
+
+    name = Column(String(32), primary_key=True, index=True)
+    description = Column(Text, default="")
+    is_system = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=utc_now)
+
+
+class Permission(Base):
+    """Canonical central permission catalog keys."""
+    __tablename__ = "permissions"
+
+    key = Column(String(64), primary_key=True, index=True)
+    module = Column(String(48), nullable=False, index=True)
+    description = Column(Text, default="")
+
+
+class RolePermission(Base):
+    """Dynamic role-to-permission assignments persisted in the database."""
+    __tablename__ = "role_permissions"
+
+    id = Column(String(64), primary_key=True, index=True)
+    role_name = Column(String(32), ForeignKey("roles.name"), nullable=False, index=True)
+    permission_key = Column(String(64), ForeignKey("permissions.key"), nullable=False, index=True)
+    is_allowed = Column(Boolean, default=True)
+
+
+class UserSession(Base):
+    """Persistent authenticated user sessions supporting expiration and immediate revocation."""
+    __tablename__ = "user_sessions"
+
+    id = Column(String(64), primary_key=True, index=True)
+    user_id = Column(String(64), ForeignKey("users.id"), nullable=False, index=True)
+    session_token_hash = Column(String(128), unique=True, index=True, nullable=False)
+    csrf_token_hash = Column(String(128), nullable=True)
+    role_at_issue = Column(String(32), nullable=False)
+    client_ip = Column(String(64), default="127.0.0.1")
+    user_agent = Column(String(256), default="")
+    is_revoked = Column(Boolean, default=False, index=True)
+    revoked_reason = Column(String(128), nullable=True)
+    expires_at = Column(DateTime, nullable=False, index=True)
+    last_seen_at = Column(DateTime, default=utc_now)
+    created_at = Column(DateTime, default=utc_now)
+
+
+class PasswordResetToken(Base):
+    """Single-use expiring SHA-256 hashed password reset tokens."""
+    __tablename__ = "password_reset_tokens"
+
+    id = Column(String(64), primary_key=True, index=True)
+    user_id = Column(String(64), ForeignKey("users.id"), nullable=False, index=True)
+    token_hash = Column(String(128), unique=True, index=True, nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    used_at = Column(DateTime, nullable=True)
+    created_by = Column(String(64), default="self_service")
+    created_at = Column(DateTime, default=utc_now)
+
+
+class LoginAttempt(Base):
+    """Records authentication attempts (both successes and failures) for security auditing."""
+    __tablename__ = "login_attempts"
+
+    id = Column(String(64), primary_key=True, index=True)
+    identifier = Column(String(128), nullable=False, index=True)
+    user_id = Column(String(64), ForeignKey("users.id"), nullable=True, index=True)
+    success = Column(Boolean, default=False)
+    failure_reason = Column(String(128), nullable=True)
+    client_ip = Column(String(64), default="127.0.0.1")
+    user_agent = Column(String(256), default="")
+    attempted_at = Column(DateTime, default=utc_now, index=True)
+
+
+class OperationalAssignment(Base):
+    """Tracks alert / recommendation assignments and human workflow ownership."""
+    __tablename__ = "operational_assignments"
+
+    id = Column(String(64), primary_key=True, index=True)
+    target_type = Column(String(32), nullable=False, index=True)  # ALERT, RECOMMENDATION, STORAGE
+    target_id = Column(String(64), nullable=False, index=True)
+    assigned_to_user_id = Column(String(64), ForeignKey("users.id"), nullable=False, index=True)
+    assigned_by = Column(String(64), nullable=False)
+    status = Column(String(32), default="ASSIGNED")
+    notes = Column(Text, default="")
+    created_at = Column(DateTime, default=utc_now)
+
+
+class OutboxEvent(Base):
+    """Transactional outbox ensuring real-time events are committed atomically and replayable via cursor."""
+    __tablename__ = "outbox_events"
+
+    seq_id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    id = Column(String(64), unique=True, nullable=False, index=True)
+    event_type = Column(String(64), nullable=False, index=True)
+    event_version = Column(Integer, default=1, nullable=False)
+    organization_id = Column(String(64), default="org-primary-enterprise", nullable=False, index=True)
+    actor_user_id = Column(String(64), nullable=True)
+    actor_username = Column(String(64), nullable=True)
+    actor_role = Column(String(32), nullable=True)
+    resource_type = Column(String(48), nullable=False, index=True)
+    resource_id = Column(String(64), nullable=False, index=True)
+    entity_version = Column(Integer, nullable=True)
+    changed_fields_json = Column(Text, default="[]")
+    payload_json = Column(Text, default="{}")
+    required_permission = Column(String(64), nullable=True)
+    target_user_id = Column(String(64), nullable=True, index=True)
+    created_at = Column(DateTime, default=utc_now, index=True)
+    published_at = Column(DateTime, nullable=True)
+    delivery_error = Column(Text, nullable=True)
+
+
+class UserNotification(Base):
+    """Persistent per-user notifications for real-time bell, unread counters, and reconnect recovery."""
+    __tablename__ = "user_notifications"
+
+    id = Column(String(64), primary_key=True, index=True)
+    user_id = Column(String(64), ForeignKey("users.id"), nullable=False, index=True)
+    event_id = Column(String(64), nullable=True, index=True)
+    event_type = Column(String(64), nullable=False)
+    title = Column(String(160), nullable=False)
+    message = Column(Text, nullable=False)
+    resource_type = Column(String(48), nullable=False)
+    resource_id = Column(String(64), nullable=False)
+    severity = Column(String(24), default="INFO")  # INFO, WARNING, CRITICAL, SUCCESS
+    is_read = Column(Boolean, default=False, nullable=False, index=True)
+    read_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=utc_now, index=True)
+
+
+class OperationalTask(Base):
+    """Persistent collaborative operational task assigned between Admin and Operator."""
+    __tablename__ = "operational_tasks"
+
+    id = Column(String(64), primary_key=True, index=True)
+    organization_id = Column(String(64), default="org-primary-enterprise", nullable=False, index=True)
+    title = Column(String(160), nullable=False)
+    description = Column(Text, default="")
+    priority = Column(String(24), default="MEDIUM")  # LOW, MEDIUM, HIGH, CRITICAL
+    status = Column(String(32), default="ASSIGNED", index=True)  # ASSIGNED, ACKNOWLEDGED, IN_PROGRESS, WAITING, COMPLETED, CANCELLED
+    assigned_to_user_id = Column(String(64), ForeignKey("users.id"), nullable=False, index=True)
+    created_by_user_id = Column(String(64), ForeignKey("users.id"), nullable=False)
+    linked_device_id = Column(String(64), ForeignKey("devices.id"), nullable=True, index=True)
+    linked_alert_id = Column(String(64), nullable=True)
+    due_date = Column(DateTime, nullable=True)
+    version = Column(Integer, default=1, nullable=False)
+    created_by = Column(String(64), default="system")
+    updated_by = Column(String(64), default="system")
+    created_at = Column(DateTime, default=utc_now, index=True)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
+    completed_at = Column(DateTime, nullable=True)
+
+
+class TaskComment(Base):
+    """Persistent progress comment thread on an OperationalTask."""
+    __tablename__ = "task_comments"
+
+    id = Column(String(64), primary_key=True, index=True)
+    task_id = Column(String(64), ForeignKey("operational_tasks.id"), nullable=False, index=True)
+    author_user_id = Column(String(64), ForeignKey("users.id"), nullable=False)
+    author_username = Column(String(64), nullable=False)
+    author_role = Column(String(32), nullable=False)
+    body = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=utc_now, index=True)
+
+
+class UserPresence(Base):
+    """Authenticated live WebSocket presence state per active session."""
+    __tablename__ = "user_presence"
+
+    session_id = Column(String(64), primary_key=True, index=True)
+    user_id = Column(String(64), ForeignKey("users.id"), nullable=False, index=True)
+    username = Column(String(64), nullable=False)
+    role = Column(String(32), nullable=False)
+    current_route = Column(String(128), default="/")
+    is_online = Column(Boolean, default=True, nullable=False, index=True)
+    connected_at = Column(DateTime, default=utc_now)
+    last_heartbeat_at = Column(DateTime, default=utc_now, index=True)
+    disconnected_at = Column(DateTime, nullable=True)
+
+
+import app.models.enterprise_entities  # noqa: E402, F401
+import app.models.control_plane_entities  # noqa: E402, F401
+
 
 
 

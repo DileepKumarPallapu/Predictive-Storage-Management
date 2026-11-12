@@ -13,6 +13,11 @@ from app.api.v1 import (
     endpoints_alerts,
     endpoints_datasets,
     endpoints_settings,
+    endpoints_organisations,
+    endpoints_topology_services,
+    endpoints_reliability_incidents,
+    endpoints_itsm,
+    endpoints_control_plane,
     endpoints_auth,
     endpoints_metrics,
     endpoints_omega,
@@ -24,23 +29,40 @@ from app.api.v1 import (
     endpoints_gauntlet,
     endpoints_sovereign,
     endpoints_vault,
-    endpoints_replay
+    endpoints_replay,
+    endpoints_ingestion,
+    endpoints_performance,
+    endpoints_reports,
+    endpoints_connectors,
+    endpoints_intelligence,
+    endpoints_realtime,
 )
 
 api_router = APIRouter()
 
 api_router.include_router(endpoints_health.router, tags=["Health & System"])
+api_router.include_router(endpoints_realtime.router, tags=["Real-Time Sync, Tasks & Notifications"])
 api_router.include_router(endpoints_auth.router, tags=["Authentication & Access Control"])
+api_router.include_router(endpoints_auth.users_router, tags=["User Management"])
+api_router.include_router(endpoints_auth.permissions_router, tags=["Permissions & RBAC Configuration"])
+api_router.include_router(endpoints_connectors.router, tags=["Telemetry Connectors & API Keys"])
+api_router.include_router(endpoints_intelligence.router, tags=["Reliability, Regimes, Champion-Challenger ML & Risk"])
+api_router.include_router(endpoints_ingestion.router)
+api_router.include_router(endpoints_performance.router)
+api_router.include_router(endpoints_reports.router)
 api_router.include_router(endpoints_metrics.router, tags=["Prometheus Telemetry"])
 api_router.include_router(endpoints_overview.router, tags=["Overview & Dashboard"])
 api_router.include_router(endpoints_devices.router, tags=["Devices & Storage Fleet"])
+api_router.include_router(endpoints_organisations.router, tags=["Enterprise Organisations & Hierarchy"])
+api_router.include_router(endpoints_topology_services.router, tags=["Enterprise Topology & Service Impact"])
+api_router.include_router(endpoints_control_plane.router, tags=["Control Plane Foundation"])
 api_router.include_router(endpoints_telemetry.router, tags=["Telemetry"])
+api_router.include_router(endpoints_reliability.router, tags=["Model Reliability & Calibration"])
 api_router.include_router(endpoints_forecasts.router, tags=["Forecasting Engine"])
 api_router.include_router(endpoints_risks.router, tags=["Risk & Reserve Runway"])
 api_router.include_router(endpoints_scenarios.router, tags=["Digital Twin & Simulator"])
 api_router.include_router(endpoints_recommendations.router, tags=["Interventions & Governance"])
 api_router.include_router(endpoints_experiments.router, tags=["Experiment Workbench"])
-api_router.include_router(endpoints_reliability.router, tags=["Model Reliability & Calibration"])
 api_router.include_router(endpoints_alerts.router, tags=["Alerts & Incidents"])
 api_router.include_router(endpoints_datasets.router, tags=["Datasets & Provenance"])
 api_router.include_router(endpoints_settings.router, tags=["Settings & Audit"])

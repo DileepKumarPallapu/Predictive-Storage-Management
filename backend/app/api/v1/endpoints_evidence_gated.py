@@ -4,8 +4,13 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.services.evidence_gated_planner import EvidenceGatedPlanner
 from app.services.research_benchmark_engine import ResearchBenchmarkEngine
+from app.auth.permissions import require_method_permission
 
-router = APIRouter(prefix="/research", tags=["Research Contribution & Benchmarks (Prompt 17.0)"])
+router = APIRouter(
+    prefix="/research",
+    tags=["Research Contribution & Benchmarks (Prompt 17.0)"],
+    dependencies=[Depends(require_method_permission("optimisation.read", "optimisation.execute"))],
+)
 
 @router.post("/planner/plan")
 def execute_evidence_gated_planner(

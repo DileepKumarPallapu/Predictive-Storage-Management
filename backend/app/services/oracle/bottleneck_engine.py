@@ -159,8 +159,8 @@ class BottleneckForensicsEngine:
                 .order_by(Telemetry.timestamp.desc())
                 .first()
             )
-            util_pct = latest_tel.utilization_pct if latest_tel else 70.0
-            lat_p95 = latest_tel.latency_p95_ms if latest_tel else 2.5
+            util_pct = float(latest_tel.utilization_pct or 70.0) if latest_tel else 70.0
+            lat_p95 = float(latest_tel.latency_p95_ms or 2.5) if latest_tel else 2.5
 
             nodes.append({
                 "id": d.id,

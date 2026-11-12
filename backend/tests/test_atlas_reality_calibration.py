@@ -22,8 +22,9 @@ from app.services.atlas import (
     DiscrepancyAnalysisService, ActionEffectEvidenceService,
     FidelityAssessor, EvidenceGatedPlanner, ValueOfExperimentPlanner
 )
+from tests.auth_helper import attach_admin_auth
 
-client = TestClient(app)
+client = attach_admin_auth(TestClient(app))
 
 
 @pytest.fixture

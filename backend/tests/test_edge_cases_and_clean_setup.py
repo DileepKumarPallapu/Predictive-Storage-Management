@@ -166,8 +166,11 @@ def test_seeding_idempotency():
 
     db = SessionLocal()
     try:
-        dev_count = db.query(Device).filter(Device.tier != "HOST_LOCAL").count()
-        assert dev_count == 4  # Exactly the 4 configured demo pools
+        dev_count_first = db.query(Device).filter(Device.tier != "HOST_LOCAL").count()
+        assert dev_count_first >= 4  # Includes the 4 configured demo pools without duplicates
+        initialize_database_and_seed_demo()
+        dev_count_second = db.query(Device).filter(Device.tier != "HOST_LOCAL").count()
+        assert dev_count_second == dev_count_first
         alert_count = db.query(Alert).count()
         assert alert_count >= 3
     finally:

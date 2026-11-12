@@ -8,8 +8,9 @@ from app.services.performance_risk_engine import PerformanceRiskEngine
 from app.services.action_planner import ActionPlannerService
 from app.simulator.digital_twin import DigitalTwinSimulator
 from app.collector.synthetic import SyntheticGenerator
+from tests.auth_helper import attach_admin_auth
 
-client = TestClient(app)
+client = attach_admin_auth(TestClient(app))
 
 # -------------------------------------------------------------------
 # 1. Capacity Runway Engine Tests

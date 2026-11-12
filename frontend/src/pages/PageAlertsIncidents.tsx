@@ -3,26 +3,58 @@ import { api, AlertItem } from '../api/client';
 import { AlertTriangle, CheckCircle2, ShieldAlert, Check, X, Filter, Sparkles, ArrowRight } from 'lucide-react';
 import { EmptyState } from '../components/EmptyState';
 import { usePresentationMode } from '../context/PresentationModeContext';
+import { useRealtimeSubscription } from '../context/RealtimeContext';
 
 export const PageAlertsIncidents: React.FC = () => {
-  const [alerts, setAlerts] = useState<AlertItem[]>([]);
+  const [alerts, setAlerts] = useState<any[]>([]);
   const [categoryFilter, setCategoryFilter] = useState<string>('');
+  const [severityFilter, setSeverityFilter] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('');
+  const [evaluating, setEvaluating] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const { isGuided } = usePresentationMode();
 
   useEffect(() => {
     loadAlerts();
-  }, [categoryFilter, statusFilter]);
+  }, [categoryFilter, severityFilter, statusFilter]);
+
+  useRealtimeSubscription(['alert.', 'storage.'], () => {
+    loadAlerts();
+  });
 
   const loadAlerts = async () => {
     try {
-      const data = await api.getAlerts(categoryFilter || undefined, undefined, statusFilter || undefined);
+      const data = await api.getAlerts(
+        categoryFilter || undefined,
+        severityFilter || undefined,
+        statusFilter || undefined
+      );
       setAlerts(data);
     } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleEvaluate = async () => {
+    setEvaluating(true);
+    try {
+      await api.evaluateAlerts();
+      await loadAlerts();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setEvaluating(false);
+    }
+  };
+
+  const handleReopen = async (id: string) => {
+    try {
+      await api.reopenAlert(id);
+      loadAlerts();
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -38,6 +70,15 @@ export const PageAlertsIncidents: React.FC = () => {
   const handleResolve = async (id: string) => {
     try {
       await api.resolveAlert(id);
+      loadAlerts();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleEscalate = async (id: string) => {
+    try {
+      await api.escalateAlert(id, 'L2_STORAGE_SRE', 'Escalated from Alert Centre for SRE triage');
       loadAlerts();
     } catch (e) {
       console.error(e);
@@ -83,6 +124,20 @@ export const PageAlertsIncidents: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2 text-xs">
+          <span className="text-[var(--text-secondary)] font-medium">Severity:</span>
+          <select
+            value={severityFilter}
+            onChange={(e) => setSeverityFilter(e.target.value)}
+            className="bg-[var(--surface-secondary)] border border-[var(--border-normal)] focus:border-[var(--accent-primary)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] focus:outline-none cursor-pointer"
+          >
+            <option value="">All Severities</option>
+            <option value="CRITICAL">CRITICAL</option>
+            <option value="WARNING">WARNING</option>
+            <option value="INFO">INFO</option>
+          </select>
+        </div>
+
+        <div className="flex items-center gap-2 text-xs">
           <span className="text-[var(--text-secondary)] font-medium">Status:</span>
           <select
             value={statusFilter}
@@ -96,6 +151,14 @@ export const PageAlertsIncidents: React.FC = () => {
             <option value="RESOLVED" className="bg-[var(--surface-primary)]">Resolved</option>
           </select>
         </div>
+
+        <button
+          onClick={handleEvaluate}
+          disabled={evaluating}
+          className="ml-auto btn-primary px-3.5 py-1.5 rounded-lg text-xs font-semibold"
+        >
+          {evaluating ? 'Evaluating Fleet...' : 'Evaluate Risk Rules'}
+        </button>
       </div>
 
       {/* Alerts List */}
@@ -158,14 +221,19 @@ export const PageAlertsIncidents: React.FC = () => {
                       </div>
                       <div className="p-2.5 rounded-xl bg-[var(--surface-secondary)]/40 border border-[var(--border-subtle)]">
                         <strong className="text-[var(--text-primary)] block">3. Supporting Evidence:</strong>
-                        <span className="text-[var(--text-secondary)] mt-0.5 block leading-relaxed">
-                          Telemetry readings verified by calibrated quantile forecast with {a.status} severity status.
+                        <span className="text-[var(--text-secondary)] mt-0.5 block leading-relaxed font-mono text-[11px]">
+                          {a.supporting_evidence && Object.keys(a.supporting_evidence).length > 0
+                            ? JSON.stringify(a.supporting_evidence)
+                            : `Severity: ${a.severity} · Triggered: ${new Date(a.triggered_at).toLocaleString()}`}
+                          {a.acknowledged_by ? ` · Ack by ${a.acknowledged_by}` : ''}
                         </span>
                       </div>
                       <div className="p-2.5 rounded-xl bg-[var(--surface-secondary)]/40 border border-[var(--border-subtle)]">
-                        <strong className="text-[var(--text-primary)] block">4. What to do next:</strong>
+                        <strong className="text-[var(--text-primary)] block">4. Resolution / Next Action:</strong>
                         <span className="text-[var(--text-secondary)] mt-0.5 block leading-relaxed">
-                          Acknowledge this notification and simulate cold data migration in the Digital Twin.
+                          {a.resolution_details
+                            ? a.resolution_details
+                            : 'Acknowledge or simulate mitigation in the Digital Twin before resolving.'}
                         </span>
                       </div>
                     </div>
@@ -173,7 +241,7 @@ export const PageAlertsIncidents: React.FC = () => {
                 </div>
 
                 {/* Status and Action Buttons */}
-                <div className="flex items-center gap-2 self-end md:self-start shrink-0">
+                <div className="flex flex-wrap items-center gap-2 self-end md:self-start shrink-0">
                   <span
                     className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold ${
                       a.status === 'ACTIVE'
@@ -195,12 +263,30 @@ export const PageAlertsIncidents: React.FC = () => {
                     </button>
                   )}
 
+                  {a.status !== 'RESOLVED' && a.status !== 'ESCALATED' && (
+                    <button
+                      onClick={() => handleEscalate(a.id)}
+                      className="btn-secondary px-3 py-1.5 rounded-lg text-xs font-medium text-[var(--status-warning)]"
+                    >
+                      Escalate
+                    </button>
+                  )}
+
                   {a.status !== 'RESOLVED' && (
                     <button
                       onClick={() => handleResolve(a.id)}
                       className="btn-primary px-3.5 py-1.5 rounded-lg text-xs font-semibold"
                     >
                       Resolve
+                    </button>
+                  )}
+
+                  {a.status === 'RESOLVED' && (
+                    <button
+                      onClick={() => handleReopen(a.id)}
+                      className="btn-secondary px-3 py-1.5 rounded-lg text-xs font-medium"
+                    >
+                      Reopen
                     </button>
                   )}
                 </div>

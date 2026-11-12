@@ -5,13 +5,14 @@ import tempfile
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
+from tests.auth_helper import attach_admin_auth
 from app.database import get_db, Base, engine, SessionLocal
 from app.config import settings
 from app.services.vault_backup_engine import VaultBackupEngine
 from app.models.entities import VaultBackupRecord, Device, AuditLog, User
 from app.auth.security import create_access_token
 
-client = TestClient(app)
+client = attach_admin_auth(TestClient(app))
 
 
 @pytest.fixture(scope="module")

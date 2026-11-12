@@ -1,6 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
+from tests.auth_helper import attach_admin_auth
 from app.models.entities import JurassicScenario, Device
 from app.services.jurassic.scenario_engine import ScenarioEngine
 from app.services.jurassic.chaos_engine import ChaosEngine
@@ -10,7 +11,7 @@ from app.services.jurassic.fallback_engine import FallbackEngine
 @pytest.fixture(scope="module")
 def client():
     with TestClient(app) as c:
-        yield c
+        yield attach_admin_auth(c)
 
 
 def test_jurassic_command_center_endpoint(client):

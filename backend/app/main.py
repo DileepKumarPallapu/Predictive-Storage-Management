@@ -1,4 +1,5 @@
 import logging
+import os
 import time
 import uuid
 from datetime import datetime, timezone, timedelta
@@ -13,6 +14,7 @@ from app.collector.synthetic import SyntheticGenerator
 from app.ml.models import run_forecast
 from app.ml.calibration import ModelCalibrator
 from app.auth.security import hash_password
+from app.auth.permissions import seed_roles_and_permissions
 from app.services.fleet_topology_service import FleetTopologyService
 from app.services.outcome_ledger import OutcomeLedgerService
 from app.services.model_governance import ModelGovernanceService
@@ -57,22 +59,85 @@ def initialize_database_and_seed_demo():
                     conn.execute(text("ALTER TABLE devices ADD COLUMN organization_id VARCHAR(64) DEFAULT 'org-primary-enterprise'"))
             if "users" in inspector.get_table_names():
                 user_cols = [c["name"] for c in inspector.get_columns("users")]
-                if "organization_id" not in user_cols:
-                    conn.execute(text("ALTER TABLE users ADD COLUMN organization_id VARCHAR(64) DEFAULT 'org-primary-enterprise'"))
+                user_migrations = [
+                    ("organization_id", "VARCHAR(64) DEFAULT 'org-primary-enterprise'"),
+                    ("failed_login_attempts", "INTEGER DEFAULT 0"),
+                    ("locked_until", "DATETIME"),
+                    ("last_login_at", "DATETIME"),
+                    ("password_changed_at", "DATETIME"),
+                    ("created_at", "DATETIME"),
+                ]
+                for c_name, c_def in user_migrations:
+                    if c_name not in user_cols:
+                        conn.execute(text(f"ALTER TABLE users ADD COLUMN {c_name} {c_def}"))
             if "audit_logs" in inspector.get_table_names():
                 audit_cols = [c["name"] for c in inspector.get_columns("audit_logs")]
-                if "organization_id" not in audit_cols:
-                    conn.execute(text("ALTER TABLE audit_logs ADD COLUMN organization_id VARCHAR(64) DEFAULT 'org-primary-enterprise'"))
-                if "client_ip" not in audit_cols:
-                    conn.execute(text("ALTER TABLE audit_logs ADD COLUMN client_ip VARCHAR(64) DEFAULT '127.0.0.1'"))
-                if "prev_hash" not in audit_cols:
-                    conn.execute(text("ALTER TABLE audit_logs ADD COLUMN prev_hash VARCHAR(64)"))
-                if "entry_hash" not in audit_cols:
-                    conn.execute(text("ALTER TABLE audit_logs ADD COLUMN entry_hash VARCHAR(64)"))
+                audit_migrations = [
+                    ("organization_id", "VARCHAR(64) DEFAULT 'org-primary-enterprise'"),
+                    ("client_ip", "VARCHAR(64) DEFAULT '127.0.0.1'"),
+                    ("prev_hash", "VARCHAR(64)"),
+                    ("entry_hash", "VARCHAR(64)"),
+                    ("user_id", "VARCHAR(64)"),
+                    ("user_role", "VARCHAR(32)"),
+                    ("outcome", "VARCHAR(32) DEFAULT 'SUCCESS'"),
+                ]
+                for c_name, c_def in audit_migrations:
+                    if c_name not in audit_cols:
+                        conn.execute(text(f"ALTER TABLE audit_logs ADD COLUMN {c_name} {c_def}"))
             if "recommendations" in inspector.get_table_names():
                 rec_cols = [c["name"] for c in inspector.get_columns("recommendations")]
                 if "details_json" not in rec_cols:
                     conn.execute(text("ALTER TABLE recommendations ADD COLUMN details_json TEXT DEFAULT '{}'"))
+            # Ensure v2 enterprise columns exist idempotently
+            col_migrations = {
+                "devices": [
+                    ("storage_type", "VARCHAR(64) DEFAULT 'SAN'"),
+                    ("environment_location", "VARCHAR(128) DEFAULT 'Primary Data Center'"),
+                    ("description", "TEXT DEFAULT ''"),
+                    ("notes", "TEXT DEFAULT ''"),
+                    ("last_telemetry_at", "DATETIME"),
+                    ("version", "INTEGER DEFAULT 1"),
+                    ("created_by", "VARCHAR(64) DEFAULT 'system'"),
+                    ("updated_by", "VARCHAR(64) DEFAULT 'system'"),
+                ],
+                "scenarios": [
+                    ("version", "INTEGER DEFAULT 1"),
+                    ("updated_at", "DATETIME"),
+                    ("updated_by", "VARCHAR(64) DEFAULT 'system_operator'"),
+                ],
+                "application_settings": [
+                    ("version", "INTEGER DEFAULT 1"),
+                ],
+                "background_jobs": [
+                    ("stage", "VARCHAR(32) DEFAULT 'QUEUED'"),
+                    ("progress_pct", "INTEGER DEFAULT 0"),
+                    ("updated_at", "DATETIME"),
+                ],
+                "telemetry": [
+                    ("total_capacity_bytes", "BIGINT"),
+                    ("read_latency_ms", "FLOAT"),
+                    ("write_latency_ms", "FLOAT"),
+                ],
+                "forecasts": [
+                    ("model_version_id", "VARCHAR(64)"),
+                    ("horizon_days", "INTEGER"),
+                    ("daily_predictions_json", "TEXT"),
+                    ("projected_capacity_breach", "BOOLEAN DEFAULT 0"),
+                    ("breach_timestamp", "DATETIME"),
+                ],
+                "alerts": [
+                    ("acknowledged_by", "VARCHAR(64)"),
+                    ("acknowledged_at", "DATETIME"),
+                    ("resolution_details", "TEXT"),
+                    ("supporting_evidence_json", "TEXT DEFAULT '{}'"),
+                ],
+            }
+            for tbl, cols in col_migrations.items():
+                if tbl in inspector.get_table_names():
+                    existing_c = [c["name"] for c in inspector.get_columns(tbl)]
+                    for c_name, c_def in cols:
+                        if c_name not in existing_c:
+                            conn.execute(text(f"ALTER TABLE {tbl} ADD COLUMN {c_name} {c_def}"))
             conn.commit()
 
 
@@ -81,19 +146,107 @@ def initialize_database_and_seed_demo():
 
     db = SessionLocal()
     try:
-        # 0. Ensure default administrative and operator accounts exist
-        default_admin = db.query(User).filter(User.username == "admin").first()
-        if not default_admin:
-            admin_user = User(
-                id="usr-system-admin",
-                username="admin",
-                email="admin@aegisstor.internal",
-                hashed_password=hash_password("admin123"),
-                role="ADMIN",
-                is_active=True
-            )
-            db.add(admin_user)
+        # 0. Seed Role & Permission catalog idempotently
+        seed_roles_and_permissions(db)
+
+        # 0b. Secure first-admin bootstrap from explicit environment variables only when no admin exists
+        admin_exists = db.query(User).filter(User.role == "ADMIN", User.is_active == True).count() > 0
+        bootstrap_user = os.getenv("AEGISSTOR_BOOTSTRAP_ADMIN_USERNAME", "").strip()
+        bootstrap_pass = os.getenv("AEGISSTOR_BOOTSTRAP_ADMIN_PASSWORD", "")
+        bootstrap_email = os.getenv("AEGISSTOR_BOOTSTRAP_ADMIN_EMAIL", "admin@aegisstor.internal").strip()
+        if not admin_exists and bootstrap_user and len(bootstrap_pass) >= 8:
+            if not db.query(User).filter((User.username == bootstrap_user) | (User.email == bootstrap_email)).first():
+                db.add(User(
+                    id=f"usr-bootstrap-{uuid.uuid4().hex[:8]}",
+                    username=bootstrap_user,
+                    email=bootstrap_email,
+                    hashed_password=hash_password(bootstrap_pass),
+                    role="ADMIN",
+                    is_active=True,
+                ))
+                db.commit()
+                logger.info(f"Bootstrapped initial administrator '{bootstrap_user}' from environment.")
+
+        # 0c. Local development synthetic user seeding (NEVER active by default)
+        if os.getenv("AEGISSTOR_ALLOW_DEV_SEED", "false").lower() == "true":
+            dev_accounts = [
+                (
+                    "usr-dev-admin",
+                    os.getenv("AEGISSTOR_DEV_ADMIN_USER", "admin"),
+                    os.getenv("AEGISSTOR_DEV_ADMIN_EMAIL", "admin@aegisstor.internal"),
+                    os.getenv("AEGISSTOR_DEV_ADMIN_PASS", "AegisAdmin!2026"),
+                    "ADMIN",
+                ),
+                (
+                    "usr-dev-operator",
+                    os.getenv("AEGISSTOR_DEV_OPERATOR_USER", "operator"),
+                    os.getenv("AEGISSTOR_DEV_OPERATOR_EMAIL", "operator@aegisstor.internal"),
+                    os.getenv("AEGISSTOR_DEV_OPERATOR_PASS", "AegisOperator!2026"),
+                    "OPERATOR",
+                ),
+                (
+                    "usr-dev-viewer",
+                    os.getenv("AEGISSTOR_DEV_VIEWER_USER", "viewer"),
+                    os.getenv("AEGISSTOR_DEV_VIEWER_EMAIL", "viewer@aegisstor.internal"),
+                    os.getenv("AEGISSTOR_DEV_VIEWER_PASS", "AegisViewer!2026"),
+                    "VIEWER",
+                ),
+            ]
+            for uid, uname, uemail, upass, urole in dev_accounts:
+                if not db.query(User).filter(User.username == uname).first():
+                    db.add(User(
+                        id=uid,
+                        username=uname,
+                        email=uemail,
+                        hashed_password=hash_password(upass),
+                        role=urole,
+                        is_active=True,
+                    ))
+                    db.flush()
+            db.commit()
+
+        # Idempotently seed default enterprise organisation and link all existing users
+        from app.models.enterprise_entities import Organisation, OrganisationMember
+        default_org_id = "org-primary-enterprise"
+        if not db.query(Organisation).filter(Organisation.id == default_org_id).first():
+            db.add(Organisation(
+                id=default_org_id,
+                name="Primary Enterprise Infrastructure",
+                slug="primary-enterprise",
+                plan="ENTERPRISE",
+                default_currency="USD",
+                status="ACTIVE",
+            ))
             db.flush()
+        for existing_user in db.query(User).all():
+            if not existing_user.organization_id:
+                existing_user.organization_id = default_org_id
+            member = db.query(OrganisationMember).filter(
+                OrganisationMember.organization_id == (existing_user.organization_id or default_org_id),
+                OrganisationMember.user_id == existing_user.id,
+            ).first()
+            if not member:
+                db.add(OrganisationMember(
+                    id=f"mem-{existing_user.id}-primary",
+                    organization_id=existing_user.organization_id or default_org_id,
+                    user_id=existing_user.id,
+                    role=existing_user.role or "OPERATOR",
+                    status="ACTIVE",
+                ))
+        db.commit()
+
+        from app.services.control_plane_service import seed_action_definitions
+        seed_action_definitions(db)
+
+        # Never populate synthetic storage/telemetry/alerts into a live runtime database unless explicitly requested
+        allow_synthetic_seed = (
+            os.getenv("AEGISSTOR_SEED_SYNTHETIC_DEMO", "false").lower() == "true"
+            or bool(os.getenv("PYTEST_CURRENT_TEST"))
+        )
+        if not allow_synthetic_seed:
+            db.commit()
+            logger.info("Schema, RBAC catalog, and live bootstrap verified (zero synthetic records seeded).")
+            return
 
         gen = SyntheticGenerator(seed=42)
         
@@ -291,8 +444,18 @@ def initialize_database_and_seed_demo():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    settings.validate_production_safety()
     initialize_database_and_seed_demo()
     yield
+    try:
+        from app.realtime.event_bus import realtime_manager
+        await realtime_manager.shutdown()
+    except Exception as exc:
+        logger.warning("Realtime shutdown warning: %s", exc)
+    try:
+        engine.dispose()
+    except Exception as exc:
+        logger.warning("Database engine dispose warning: %s", exc)
 
 app = FastAPI(
     title="AEGISSTOR — Storage Resilience Intelligence Platform",
@@ -301,30 +464,78 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Dynamic CORS Configuration with support for local, Vercel deployments and custom origins
-cors_env = settings.model_dump().get("CORS_ALLOWED_ORIGINS", "*") if hasattr(settings, "CORS_ALLOWED_ORIGINS") else "*"
+# Dynamic CORS Configuration with strict production enforcement
+cors_env = settings.CORS_ALLOWED_ORIGINS if hasattr(settings, "CORS_ALLOWED_ORIGINS") else "*"
 configured_origins = [o.strip() for o in cors_env.split(",") if o.strip()] if cors_env != "*" else []
+is_prod = settings.ENVIRONMENT == "production"
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=configured_origins if configured_origins else ["*"],
-    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1|.*\.vercel\.app|.*\.onrender\.com)(:\d+)?$",
+    allow_origins=configured_origins if configured_origins else ([] if is_prod else ["*"]),
+    allow_origin_regex=None if (is_prod and configured_origins) else r"^https?://(localhost|127\.0\.0\.1|.*\.vercel\.app|.*\.onrender\.com)(:\d+)?$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+from collections import defaultdict, deque
+import os
 from fastapi.responses import JSONResponse
+
+_RATE_LIMIT_BUCKETS = defaultdict(deque)
+app.state.rate_limit_max = int(os.getenv("AEGISSTOR_RATE_LIMIT_PER_MIN", "600"))
+app.state.rate_limit_buckets = _RATE_LIMIT_BUCKETS
+
 
 @app.middleware("http")
 async def request_tracing_and_security_middleware(request: Request, call_next):
     """
     Injects request tracing headers (X-Request-ID, X-Process-Time-Ms),
-    enforces enterprise HTTP security headers, and provides structured timing logs.
+    enforces configurable sliding-window API rate limits (X-RateLimit-Remaining),
+    enterprise HTTP security headers, and structured timing logs.
     """
     request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))
     start_time = time.perf_counter()
-    
+
+    # Enforce maximum request payload size
+    content_length = request.headers.get("content-length")
+    if content_length:
+        try:
+            if int(content_length) > settings.MAX_REQUEST_BODY_BYTES:
+                return JSONResponse(
+                    status_code=413,
+                    headers={"X-Request-ID": request_id},
+                    content={
+                        "detail": f"Request payload exceeds limit of {settings.MAX_REQUEST_BODY_BYTES} bytes."
+                    },
+                )
+        except ValueError:
+            pass
+
+    # Sliding-window 60s rate limit check (skipped only for root/health liveness probes)
+    client_key = request.headers.get("X-API-Key") or (request.client.host if request.client else "unknown")
+    limit_max = int(getattr(app.state, "rate_limit_max", 600))
+    now_ts = time.time()
+    remaining = limit_max
+    if limit_max > 0 and request.url.path not in {"/health", "/health/live", "/api/v1/health", "/api/v1/health/live"}:
+        bucket = _RATE_LIMIT_BUCKETS[client_key]
+        cutoff_ts = now_ts - 60.0
+        while bucket and bucket[0] < cutoff_ts:
+            bucket.popleft()
+        if len(bucket) >= limit_max:
+            return JSONResponse(
+                status_code=429,
+                headers={
+                    "X-Request-ID": request_id,
+                    "X-RateLimit-Limit": str(limit_max),
+                    "X-RateLimit-Remaining": "0",
+                    "Retry-After": "60",
+                },
+                content={"detail": "Rate limit exceeded. Retry after 60 seconds."},
+            )
+        bucket.append(now_ts)
+        remaining = max(0, limit_max - len(bucket))
+
     try:
         response = await call_next(request)
     except Exception as exc:
@@ -349,13 +560,18 @@ async def request_tracing_and_security_middleware(request: Request, call_next):
     process_time = (time.perf_counter() - start_time) * 1000.0
     response.headers["X-Request-ID"] = request_id
     response.headers["X-Process-Time-Ms"] = f"{process_time:.2f}"
+    response.headers["X-RateLimit-Limit"] = str(limit_max)
+    response.headers["X-RateLimit-Remaining"] = str(remaining)
     
     # Enterprise Security Headers
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-    response.headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' http: ws:;"
+    response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
+    response.headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https: wss: http: ws:;"
+    if settings.ENVIRONMENT in ("staging", "production") or request.url.scheme == "https":
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
 
     
     if request.url.path not in ["/metrics", "/api/v1/health"]:
@@ -365,6 +581,7 @@ async def request_tracing_and_security_middleware(request: Request, call_next):
     return response
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
+app.include_router(api_router, prefix="/api", include_in_schema=False)
 
 @app.get("/")
 def root():
@@ -383,6 +600,15 @@ def root_health():
         "status": "ok",
         "platform": settings.PROJECT_NAME,
         "version": settings.PROJECT_VERSION,
+        "environment": settings.ENVIRONMENT,
         "mode": settings.OPERATING_MODE,
         "timestamp": time.time()
     }
+
+
+from app.api.v1 import endpoints_health as _health_ep
+app.add_api_route("/health/live", _health_ep.health_live, methods=["GET"], include_in_schema=False)
+app.add_api_route("/health/ready", _health_ep.health_ready, methods=["GET"], include_in_schema=False)
+app.add_api_route("/health/database", _health_ep.health_database, methods=["GET"], include_in_schema=False)
+app.add_api_route("/health/worker", _health_ep.health_worker, methods=["GET"], include_in_schema=False)
+app.add_api_route("/health/realtime", _health_ep.health_realtime, methods=["GET"], include_in_schema=False)

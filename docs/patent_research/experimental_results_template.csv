@@ -1,0 +1,8 @@
+experiment_id,dataset_name,workload_regime,telemetry_reliability_tier,reliability_gate_enabled,regime_detection_enabled,model_family,mae_gb,rmse_gb,r2_score,mase,pinball_loss,empirical_coverage_80pct,mean_interval_width_gb,threshold_crossing_brier_score,digital_twin_expected_shortfall_gb,notes
+EXP-01,fill_dataset_id,STABLE_GROWTH,HIGH,true,true,SeasonalNaiveBenchmark,,,,,,,,,,,,
+EXP-02,fill_dataset_id,STABLE_GROWTH,HIGH,true,true,LightGBM,,,,,,,,,,,,
+EXP-03,fill_dataset_id,STABLE_GROWTH,HIGH,true,true,SARIMAX,,,,,,,,,,,,
+EXP-04,fill_dataset_id,DEGRADED_STALE,LOW,false,true,Champion,,,,,,,,,,,,
+EXP-05,fill_dataset_id,DEGRADED_STALE,LOW,true,true,Champion,,,,,,,,,,,,
+EXP-06,fill_dataset_id,ACCELERATING_OR_BURST,HIGH,true,false,Champion,,,,,,,,,,,,
+EXP-07,fill_dataset_id,ACCELERATING_OR_BURST,HIGH,true,true,Champion,,,,,,,,,,,,

@@ -13,8 +13,13 @@ from app.services.oracle import (
     CounterfactualExperimentService,
     OracleReportGenerator
 )
+from app.auth.permissions import require_method_permission
 
-router = APIRouter(prefix="/oracle", tags=["AEGISSTOR Oracle Workload Intelligence"])
+router = APIRouter(
+    prefix="/oracle",
+    tags=["AEGISSTOR Oracle Workload Intelligence"],
+    dependencies=[Depends(require_method_permission("workload.read", "workload.analyse"))],
+)
 
 # -------------------------------------------------------------
 # Request Schemas

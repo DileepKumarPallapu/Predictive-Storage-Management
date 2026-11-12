@@ -2,10 +2,11 @@ import pytest
 from fastapi.testclient import TestClient
 from app.main import app
 from app.config import settings
+from tests.auth_helper import attach_admin_auth
 
 @pytest.fixture
 def client():
-    client_instance = TestClient(app)
+    client_instance = attach_admin_auth(TestClient(app))
     settings.OPERATING_MODE = "demo"
     yield client_instance
     settings.OPERATING_MODE = "demo"

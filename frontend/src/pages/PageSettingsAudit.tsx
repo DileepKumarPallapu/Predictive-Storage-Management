@@ -7,7 +7,12 @@ export const PageSettingsAudit: React.FC = () => {
   const [auditLogs, setAuditLogs] = useState<AuditItem[]>([]);
   const [backups, setBackups] = useState<VaultBackupItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [activeTab, setActiveTab] = useState<'vault' | 'audit' | 'safety'>('vault');
+  const [activeTab, setActiveTab] = useState<'vault' | 'audit' | 'safety' | 'reports'>('vault');
+  const [reportType, setReportType] = useState<string>('storage_inventory');
+  const [reportHistory, setReportHistory] = useState<any[]>([]);
+  const [warnDefault, setWarnDefault] = useState<number>(80);
+  const [critDefault, setCritDefault] = useState<number>(90);
+  const [retentionDays, setRetentionDays] = useState<number>(365);
 
   // Vault action states
   const [creatingBackup, setCreatingBackup] = useState<boolean>(false);
@@ -24,14 +29,23 @@ export const PageSettingsAudit: React.FC = () => {
   const loadAllData = async () => {
     try {
       setLoading(true);
-      const [s, a, vaultRes] = await Promise.all([
+      const [s, a, vaultRes, repHist] = await Promise.all([
         api.getSettings(),
         api.getAuditTrail(),
-        api.getVaultBackups().catch(() => ({ status: 'error', backups_count: 0, backups: [] }))
+        api.getVaultBackups().catch(() => ({ status: 'error', backups_count: 0, backups: [] })),
+        api.getReportHistory().catch(() => []),
       ]);
       setSettingsData(s);
       setAuditLogs(a);
       setBackups(vaultRes.backups || []);
+      setReportHistory(repHist || []);
+      if (s?.capacity_thresholds) {
+        setWarnDefault(s.capacity_thresholds.default_warning_pct ?? 80);
+        setCritDefault(s.capacity_thresholds.default_critical_pct ?? 90);
+      }
+      if (s?.data_retention_settings) {
+        setRetentionDays(s.data_retention_settings.retention_days ?? 365);
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -154,6 +168,17 @@ export const PageSettingsAudit: React.FC = () => {
           >
             <Settings size={14} />
             Audit Trail ({auditLogs.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('reports')}
+            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+              activeTab === 'reports'
+                ? 'bg-[var(--accent-primary)] text-white shadow-sm'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+            }`}
+          >
+            <FileCheck size={14} />
+            Reports & Thresholds
           </button>
         </div>
       </div>
@@ -533,6 +558,142 @@ export const PageSettingsAudit: React.FC = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 4: Reports Export & Global Settings */}
+      {activeTab === 'reports' && (
+        <div className="space-y-6">
+          <div className="titan-card rounded-xl p-5 space-y-4">
+            <h3 className="text-sm font-bold text-[var(--text-primary)]">
+              Operational & ML Report Generator (Actual Database Records)
+            </h3>
+            <div className="flex flex-wrap items-center gap-3 text-xs">
+              <select
+                value={reportType}
+                onChange={(e) => setReportType(e.target.value)}
+                className="px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-primary)] text-[var(--text-primary)]"
+              >
+                <option value="storage_inventory">Storage Inventory Report</option>
+                <option value="storage_utilisation">Storage Utilisation Report</option>
+                <option value="capacity_forecast">Capacity Forecast Report</option>
+                <option value="model_performance">Model Performance Report</option>
+                <option value="risk_and_alert">Risk and Alert Report</option>
+                <option value="data_quality">Data-Quality Report</option>
+                <option value="digital_twin_comparison">Digital Twin Scenario Comparison Report</option>
+              </select>
+              <a
+                href={api.generateReportUrl(reportType, 'csv')}
+                target="_blank"
+                rel="noreferrer"
+                className="px-3.5 py-2 rounded-lg font-semibold bg-[var(--accent)] text-white hover:opacity-90"
+              >
+                Export CSV
+              </a>
+              <a
+                href={api.generateReportUrl(reportType, 'pdf')}
+                target="_blank"
+                rel="noreferrer"
+                className="px-3.5 py-2 rounded-lg font-semibold border border-[var(--accent-primary)] text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/10"
+              >
+                Export PDF
+              </a>
+            </div>
+            {reportHistory.length > 0 && (
+              <div className="text-xs font-mono text-[var(--text-secondary)]">
+                Recent generated reports: {reportHistory.slice(0, 5).map(r => `${r.report_type} (${r.format}, ${r.row_count} rows)`).join(' · ')}
+              </div>
+            )}
+          </div>
+
+          <div className="titan-card rounded-xl p-5 space-y-4">
+            <h3 className="text-sm font-bold text-[var(--text-primary)]">
+              Global Capacity Thresholds & Data Retention Settings
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div>
+                <label className="block text-[11px] text-[var(--text-secondary)] mb-1">Default Warning %</label>
+                <input
+                  type="number"
+                  value={warnDefault}
+                  onChange={(e) => setWarnDefault(Number(e.target.value))}
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-primary)] font-mono"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] text-[var(--text-secondary)] mb-1">Default Critical %</label>
+                <input
+                  type="number"
+                  value={critDefault}
+                  onChange={(e) => setCritDefault(Number(e.target.value))}
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-primary)] font-mono"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] text-[var(--text-secondary)] mb-1">Retention Days</label>
+                <input
+                  type="number"
+                  value={retentionDays}
+                  onChange={(e) => setRetentionDays(Number(e.target.value))}
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-primary)] font-mono"
+                />
+              </div>
+            </div>
+            <button
+              onClick={async () => {
+                try {
+                  await api.updateSettings({
+                    capacity_thresholds: { default_warning_pct: warnDefault, default_critical_pct: critDefault },
+                    data_retention_settings: { retention_days: retentionDays },
+                  });
+                  setActionMessage({ text: 'Global thresholds & retention settings persisted.', type: 'success' });
+                  loadAllData();
+                } catch (e: any) {
+                  setActionMessage({ text: `Settings update failed: ${e.message}`, type: 'error' });
+                }
+              }}
+              className="px-4 py-2 rounded-lg text-xs font-semibold bg-[var(--accent)] text-white hover:opacity-90"
+            >
+              Save Global Settings
+            </button>
+            <div className="flex flex-wrap gap-2 pt-3 border-t border-[var(--border-subtle)]">
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    const r = await api.runRetention(retentionDays, true);
+                    setActionMessage({
+                      text: `Retention Dry Run (${retentionDays}d): would prune ${r.would_delete_telemetry_rows} telemetry row(s), ${r.expired_ingestion_jobs} job(s). Audit logs preserved.`,
+                      type: 'success',
+                    });
+                  } catch (e: any) {
+                    setActionMessage({ text: `Retention dry run failed: ${e.message}`, type: 'error' });
+                  }
+                }}
+                className="px-3.5 py-1.5 rounded-lg text-xs font-medium border border-[var(--border-subtle)] bg-[var(--surface-secondary)] hover:bg-[var(--surface-tertiary)]"
+              >
+                Dry-Run Retention Cleanup
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    const r = await api.runRetention(retentionDays, false);
+                    setActionMessage({
+                      text: `Retention executed: pruned ${r.deleted_telemetry_rows} expired telemetry row(s); latest snapshots & audit logs preserved.`,
+                      type: 'success',
+                    });
+                    loadAllData();
+                  } catch (e: any) {
+                    setActionMessage({ text: `Retention cleanup failed: ${e.message}`, type: 'error' });
+                  }
+                }}
+                className="px-3.5 py-1.5 rounded-lg text-xs font-medium border border-[var(--status-warning)]/40 text-[var(--status-warning)] bg-[var(--surface-secondary)]"
+              >
+                Execute Retention Cleanup
+              </button>
+            </div>
           </div>
         </div>
       )}

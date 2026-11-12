@@ -17,6 +17,7 @@ import numpy as np
 from fastapi.testclient import TestClient
 
 from app.main import app
+from tests.auth_helper import attach_admin_auth
 from app.database import SessionLocal
 from app.models.entities import (
     SovereignSite, SovereignRound, SovereignUpdate, SovereignGlobalModel, SovereignExperiment
@@ -26,7 +27,7 @@ from app.services.sovereign_service import SovereignService
 @pytest.fixture(scope="module")
 def client():
     with TestClient(app) as c:
-        yield c
+        yield attach_admin_auth(c)
 
 @pytest.fixture(scope="module")
 def db():

@@ -48,11 +48,11 @@ class IncidentCorrelationEngine:
             .first()
         )
 
-        curr_util = latest_telemetry.utilization_pct
+        curr_util = float(latest_telemetry.utilization_pct or 0.0)
         curr_lat = latest_telemetry.latency_p95_ms
-        warn_util = device.warning_threshold_pct or 80.0
-        crit_util = device.critical_threshold_pct or 90.0
-        max_lat = device.max_acceptable_latency_ms or 20.0
+        warn_util = float(device.warning_threshold_pct or 80.0)
+        crit_util = float(device.critical_threshold_pct or 90.0)
+        max_lat = float(device.max_acceptable_latency_ms or 20.0)
 
         runway_hours = latest_risk.runway_hours_estimate if latest_risk else 168.0
         runway_lower = latest_risk.runway_hours_lower if latest_risk else runway_hours * 0.8
@@ -91,7 +91,7 @@ class IncidentCorrelationEngine:
             evidence_type = "OBSERVED"
 
         # Check observed latency
-        if curr_lat > max_lat:
+        if curr_lat is not None and curr_lat > max_lat:
             symptoms.append(f"P95 latency elevated at {curr_lat:.2f}ms (threshold: {max_lat}ms)")
             hypotheses.append({
                 "hypothesis": "Storage queue depth or device media saturation producing response time degradation",

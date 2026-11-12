@@ -10,10 +10,15 @@ from app.services.jurassic.scenario_engine import ScenarioEngine, PRESET_SCENARI
 from app.services.jurassic.experiment_runner import ExperimentRunner
 from app.services.jurassic.fallback_engine import FALLBACK_STATES
 from app.utils.datetime_utils import utc_now
+from app.auth.permissions import require_method_permission
 
 logger = logging.getLogger("aegisstor.api.jurassic")
 
-router = APIRouter(prefix="/jurassic", tags=["AEGISSTOR Jurassic Resilience Lab"])
+router = APIRouter(
+    prefix="/jurassic",
+    tags=["AEGISSTOR Jurassic Resilience Lab"],
+    dependencies=[Depends(require_method_permission("digital_twin.read", "digital_twin.execute"))],
+)
 
 # --- Request / Response Pydantic Schemas ---
 

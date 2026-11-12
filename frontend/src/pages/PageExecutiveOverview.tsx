@@ -11,6 +11,7 @@ import { ContextualHelp } from '../components/ContextualHelp';
 import { KpiCard } from '../components/KpiCard';
 import { usePresentationMode } from '../context/PresentationModeContext';
 import { useOperatingMode } from '../context/OperatingModeContext';
+import { useRealtimeSubscription } from '../context/RealtimeContext';
 import {
   Activity,
   Clock,
@@ -55,6 +56,14 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
       loadDeviceCharts(selectedDeviceId, horizonHours);
     }
   }, [selectedDeviceId, horizonHours]);
+
+  useRealtimeSubscription(
+    ['storage.', 'telemetry.', 'alert.', 'model.', 'forecast.', 'approval.', 'task.', 'ingestion.'],
+    () => {
+      loadInitialData();
+      if (selectedDeviceId) loadDeviceCharts(selectedDeviceId, horizonHours);
+    },
+  );
 
   const loadInitialData = async () => {
     setLoading(true);
@@ -153,6 +162,51 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
           </div>
         </div>
       </div>
+
+      {/* 5-Question Plain-English Summary Strip */}
+      {overview && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
+          <div className="bg-[var(--surface)] border border-[var(--border)] rounded-lg p-3">
+            <div className="text-[11px] text-[var(--text-muted)]">1. Connected Storage</div>
+            <div className="text-sm font-bold text-[var(--text-primary)] mt-0.5">
+              {overview.monitored_device_count} {overview.monitored_device_count === 1 ? 'pool' : 'pools'}
+            </div>
+            <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">Monitored storage resources</div>
+          </div>
+          <div className="bg-[var(--surface)] border border-[var(--border)] rounded-lg p-3">
+            <div className="text-[11px] text-[var(--text-muted)]">2. Storage Used</div>
+            <div className="text-sm font-bold text-[var(--text-primary)] mt-0.5">
+              {overview.capacity_utilization_pct.toFixed(1)}%
+            </div>
+            <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">Active fleet capacity</div>
+          </div>
+          <div className="bg-[var(--surface)] border border-[var(--border)] rounded-lg p-3">
+            <div className="text-[11px] text-[var(--text-muted)]">3. Needs Attention</div>
+            <div className="text-sm font-bold text-[var(--text-primary)] mt-0.5">
+              {overview.highest_current_risk?.level || 'LOW'} Risk
+            </div>
+            <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">
+              Top pool: {overview.highest_current_risk?.device_id || 'None'}
+            </div>
+          </div>
+          <div className="bg-[var(--surface)] border border-[var(--border)] rounded-lg p-3">
+            <div className="text-[11px] text-[var(--text-muted)]">4. Future Outlook</div>
+            <div className="text-sm font-bold text-[var(--text-primary)] mt-0.5">
+              ~{overview.estimated_reserve_runway_hours.toFixed(0)} hours
+            </div>
+            <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">Estimated time to safety limit</div>
+          </div>
+          <div className="bg-[var(--surface)] border border-[var(--border)] rounded-lg p-3">
+            <div className="text-[11px] text-[var(--text-muted)]">5. Recommended Next Step</div>
+            <div className="text-sm font-bold text-[var(--text-primary)] mt-0.5">
+              {isCritical || isElevated ? 'Review & Simulate Action' : 'Continue Monitoring'}
+            </div>
+            <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">
+              {overview.highest_current_risk?.device_id || 'All pools healthy'}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* SECTION B: Storage Condition Panel */}
       {overview && (
@@ -307,31 +361,70 @@ export const PageExecutiveOverview: React.FC<Props> = ({ onNavigateToDevice, onN
             />
           </div>
 
-          {/* Secondary Health Indicators (Supporting Region) */}
+          {/* Operational Readiness KPIs & Backend Health Matrix (Module A) */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+            {[
+              { label: 'Managed Resources', val: String(overview.monitored_device_count ?? 0) },
+              { label: 'Resources at Risk', val: String((overview as any).resources_at_risk ?? 0) },
+              { label: 'Critical Alerts', val: String((overview as any).critical_alerts_count ?? 0) },
+              {
+                label: 'Data Freshness',
+                val:
+                  (overview as any).data_freshness_hours !== null && (overview as any).data_freshness_hours !== undefined
+                    ? `${(overview as any).data_freshness_hours}h max age`
+                    : 'No samples',
+              },
+              {
+                label: 'Telemetry Quality',
+                val:
+                  (overview as any).avg_data_reliability_score !== null && (overview as any).avg_data_reliability_score !== undefined
+                    ? `${(((overview as any).avg_data_reliability_score) * 100).toFixed(0)}%`
+                    : 'Unscored',
+              },
+              {
+                label: 'Active Connectors',
+                val: `${(overview as any).active_connectors_count ?? 0} / ${(overview as any).total_connectors_count ?? 0}`,
+              },
+              { label: 'Pending Decisions', val: String((overview as any).pending_decisions_count ?? 0) },
+            ].map((item) => (
+              <div key={item.label} className="bg-[var(--surface-primary)] border border-[var(--border-subtle)] rounded-lg p-3">
+                <div className="text-[10px] font-medium text-[var(--text-muted)] uppercase truncate">{item.label}</div>
+                <div className="text-sm font-bold font-mono text-[var(--text-primary)] mt-1 truncate">{item.val}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Real Telemetry Heartbeat & Model Training / Latest Forecast Strip */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="p-3 bg-[var(--surface-elevated)] border border-[var(--border)] rounded-lg flex items-center justify-between text-xs gap-2">
               <div className="flex items-center gap-2.5 min-w-0">
-                <Radio size={15} className="text-[var(--success)] shrink-0" />
+                <Radio size={15} className={(overview as any).stale_resources_count > 0 ? 'text-[var(--warning)] shrink-0' : 'text-[var(--success)] shrink-0'} />
                 <div className="truncate">
-                  <span className="font-semibold text-[var(--text-primary)]">Telemetry Heartbeat: </span>
-                  <span className="text-[var(--text-secondary)]">100% healthy, zero dropouts (1 sample/hr)</span>
+                  <span className="font-semibold text-[var(--text-primary)]">Telemetry Freshness: </span>
+                  <span className="text-[var(--text-secondary)]">
+                    {(overview as any).stale_resources_count ?? 0} stale resource(s) · {(overview as any).active_alerts_count ?? 0} active alert(s)
+                  </span>
                 </div>
               </div>
-              <span className="text-[10px] font-mono text-[var(--success)] font-semibold px-2 py-0.5 rounded bg-[var(--success)]/10 border border-[var(--success)]/20 shrink-0">
-                ACTIVE
+              <span className="text-[10px] font-mono text-[var(--text-primary)] font-semibold px-2 py-0.5 rounded bg-[var(--surface-secondary)] border border-[var(--border-subtle)] shrink-0">
+                {(overview as any).errored_connectors_count > 0 ? `${(overview as any).errored_connectors_count} CONN ERR` : 'HEALTHY'}
               </span>
             </div>
 
             <div className="p-3 bg-[var(--surface-elevated)] border border-[var(--border)] rounded-lg flex items-center justify-between text-xs gap-2">
               <div className="flex items-center gap-2.5 min-w-0">
-                <Sparkles size={15} className="text-[var(--accent)] shrink-0" />
+                <Sparkles size={15} className="text-[var(--brand-primary)] shrink-0" />
                 <div className="truncate">
-                  <span className="font-semibold text-[var(--text-primary)]">Forecast Calibration: </span>
-                  <span className="text-[var(--text-secondary)]">81.4% coverage (Target: 80% CI [q10, q90])</span>
+                  <span className="font-semibold text-[var(--text-primary)]">ML Engine: </span>
+                  <span className="text-[var(--text-secondary)]">
+                    {(overview as any).model_training_status?.latest_model_type || 'Unset'} ({(overview as any).model_training_status?.latest_status || 'IDLE'})
+                  </span>
                 </div>
               </div>
-              <span className="text-[10px] font-mono text-[var(--text-primary)] font-semibold px-2 py-0.5 rounded bg-[var(--surface)] border border-[var(--border)] shrink-0">
-                CALIBRATED
+              <span className="text-[10px] font-mono text-[var(--text-muted)] shrink-0">
+                {(overview as any).latest_forecast_run?.generated_at
+                  ? `FC ${(overview as any).latest_forecast_run.generated_at.slice(0, 10)}`
+                  : 'No forecast'}
               </span>
             </div>
           </div>

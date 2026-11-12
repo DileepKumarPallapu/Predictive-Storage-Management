@@ -61,9 +61,9 @@ def scrape_prometheus_metrics(db: Session = Depends(get_db)):
         )
         if recent_tels:
             latest = recent_tels[0]
-            STORAGE_USED_BYTES.labels(device_id=dev.id, tier=dev.tier).set(float(latest.used_bytes))
-            STORAGE_LATENCY_MS.labels(device_id=dev.id, tier=dev.tier).set(float(latest.latency_p95_ms))
-            STORAGE_IOPS.labels(device_id=dev.id, tier=dev.tier).set(float(latest.read_iops + latest.write_iops))
+            STORAGE_USED_BYTES.labels(device_id=dev.id, tier=dev.tier).set(float(latest.used_bytes or 0.0))
+            STORAGE_LATENCY_MS.labels(device_id=dev.id, tier=dev.tier).set(float(latest.latency_p95_ms or 0.0))
+            STORAGE_IOPS.labels(device_id=dev.id, tier=dev.tier).set(float((latest.read_iops or 0.0) + (latest.write_iops or 0.0)))
 
             # Fast linear runway estimate for scrape target
             crit_bytes = (float(dev.critical_threshold_pct) / 100.0) * tot_cap

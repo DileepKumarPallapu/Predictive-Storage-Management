@@ -2,13 +2,17 @@ from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models.entities import DatasetSource
+from app.models.entities import DatasetSource, User
 from app.schemas.payloads import DatasetItem
+from app.auth.permissions import require_permission
 
 router = APIRouter()
 
 @router.get("/datasets", response_model=List[DatasetItem])
-def list_datasets(db: Session = Depends(get_db)):
+def list_datasets(
+    current_user: User = Depends(require_permission("storage.read")),
+    db: Session = Depends(get_db),
+):
     datasets = db.query(DatasetSource).all()
     return [
         DatasetItem(

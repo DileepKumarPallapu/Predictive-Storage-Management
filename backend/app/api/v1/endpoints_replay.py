@@ -1,8 +1,10 @@
 import os
 from typing import Optional, Any
 from pydantic import BaseModel, Field
-from fastapi import APIRouter, HTTPException, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from app.services.replay_service import replay_engine
+from app.auth.permissions import require_permission
+from app.models.entities import User
 
 router = APIRouter()
 
@@ -13,13 +15,16 @@ class ReplayControlRequest(BaseModel):
 
 
 @router.get("/replay/status")
-def get_replay_status():
+def get_replay_status(current_user: User = Depends(require_permission("telemetry.read"))):
     """Returns the current trace replay status, active trace, and timeline cursor."""
     return replay_engine.get_status()
 
 
 @router.post("/replay/control")
-def control_replay(payload: ReplayControlRequest):
+def control_replay(
+    payload: ReplayControlRequest,
+    current_user: User = Depends(require_permission("telemetry.collect")),
+):
     """Executes playback actions (play, pause, seek, step, speed, load, unload)."""
     action = payload.action.lower()
 
@@ -60,13 +65,16 @@ def control_replay(payload: ReplayControlRequest):
 
 
 @router.get("/replay/traces")
-def list_traces():
+def list_traces(current_user: User = Depends(require_permission("telemetry.read"))):
     """Lists all available storage benchmark traces."""
     return replay_engine.list_available_traces()
 
 
 @router.post("/replay/upload")
-async def upload_trace(file: UploadFile = File(...)):
+async def upload_trace(
+    file: UploadFile = File(...),
+    current_user: User = Depends(require_permission("ingestion.commit")),
+):
     """Uploads a new CSV or JSON storage trace to the traces library."""
     if not file.filename.endswith(".csv") and not file.filename.endswith(".json"):
         raise HTTPException(status_code=400, detail="Only .csv and .json traces are supported")

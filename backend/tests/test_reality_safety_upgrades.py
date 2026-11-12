@@ -2,6 +2,7 @@ import pytest
 from datetime import datetime, timezone, timedelta
 from fastapi.testclient import TestClient
 from app.main import app
+from tests.auth_helper import attach_admin_auth
 from app.collector.host_collector import (
     HostStorageCollector,
     PROVENANCE_LIVE,
@@ -13,7 +14,7 @@ from app.database import SessionLocal
 from app.models.entities import Device, Recommendation, Telemetry
 from app.services.research_benchmark_engine import ResearchBenchmarkEngine
 
-client = TestClient(app)
+client = attach_admin_auth(TestClient(app))
 
 
 # ==============================================================================

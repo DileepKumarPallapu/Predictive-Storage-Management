@@ -4,13 +4,14 @@ from pydantic import BaseModel, Field
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models.entities import Experiment, Alert, Device
+from app.models.entities import Experiment, Alert, Device, User
 from app.schemas.payloads import (
     ReliabilityMetrics,
     SentinelTrustAssessmentResponse,
     SentinelTrustHistoryItem
 )
 from app.services.sentinel_service import SentinelEngine
+from app.auth.permissions import require_permission
 
 router = APIRouter()
 
@@ -24,7 +25,10 @@ class ModelCandidateValidationRequest(BaseModel):
     candidate_model_type: str = Field(default="lightgbm_quantile_retrained", description="Candidate model identifier")
 
 @router.get("/models/reliability", response_model=ReliabilityMetrics)
-def get_model_reliability(db: Session = Depends(get_db)):
+def get_model_reliability(
+    current_user: User = Depends(require_permission("models.read")),
+    db: Session = Depends(get_db),
+):
     """Aggregates model reliability indicators with live Sentinel trust metrics."""
     latest_exp = db.query(Experiment).order_by(Experiment.created_at.desc()).first()
     active_drift = db.query(Alert).filter(Alert.category == "MODEL_DRIFT", Alert.status == "ACTIVE").count()
@@ -72,6 +76,7 @@ def get_sentinel_trust_assessment(
     device_id: str = Query("vol-nvme-tier1-db", description="Storage device ID to evaluate"),
     evaluation_window_hours: int = Query(168, ge=24, le=720, description="Evaluation window in hours"),
     reference_window_hours: int = Query(336, ge=48, le=1440, description="Reference baseline window in hours"),
+    current_user: User = Depends(require_permission("models.read")),
     db: Session = Depends(get_db)
 ):
     """
@@ -96,6 +101,7 @@ def get_sentinel_trust_assessment(
 def get_sentinel_trust_history(
     device_id: str = Query("vol-nvme-tier1-db", description="Target storage device"),
     limit: int = Query(20, ge=1, le=100),
+    current_user: User = Depends(require_permission("models.read")),
     db: Session = Depends(get_db)
 ):
     """Retrieves historical Sentinel drift & trust evaluation audits for timeline visualization."""
@@ -104,6 +110,7 @@ def get_sentinel_trust_history(
 @router.post("/sentinel/model/recalibrate")
 def recalibrate_conformal_bounds(
     payload: ModelRecalibrateRequest,
+    current_user: User = Depends(require_permission("models.retrain")),
     db: Session = Depends(get_db)
 ):
     """
@@ -131,6 +138,7 @@ def recalibrate_conformal_bounds(
 @router.post("/sentinel/model/retrain-evaluation")
 def evaluate_candidate_model_retrain(
     payload: ModelCandidateValidationRequest,
+    current_user: User = Depends(require_permission("models.retrain")),
     db: Session = Depends(get_db)
 ):
     """

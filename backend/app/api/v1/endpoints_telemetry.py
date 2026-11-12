@@ -1,12 +1,17 @@
 import io
 import csv
+import json
+import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Optional, List, Dict, Any
 from pydantic import BaseModel, Field
-from fastapi import APIRouter, Depends, HTTPException, Query, Response
+from fastapi import APIRouter, Depends, HTTPException, Header, Query, Response
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models.entities import Device, Telemetry
+from app.models.entities import Device, Telemetry, IngestionJob, User
+from app.auth.security import require_role
+from app.auth.permissions import require_permission
+from app.services.audit_service import AuditService
 from app.schemas.payloads import TelemetryResponse, TelemetryIngestBatch
 from app.config import settings
 from app.services.replay_service import replay_engine
@@ -39,6 +44,7 @@ def get_device_telemetry(
     device_id: str,
     metric: str = Query("used_bytes", description="used_bytes, utilization_pct, read_iops, write_iops, throughput_mb_s, latency_p95_ms, queue_depth"),
     hours: int = Query(720, description="Hours of historical telemetry to fetch"),
+    current_user: User = Depends(require_permission("telemetry.read")),
     db: Session = Depends(get_db)
 ):
     mode = settings.OPERATING_MODE.lower()
@@ -79,7 +85,7 @@ def get_device_telemetry(
         )
 
     timestamps = [r.timestamp for r in records]
-    values = [float(getattr(r, metric, 0.0)) for r in records]
+    values = [float(getattr(r, metric, 0.0) or 0.0) for r in records]
     is_synth = any(r.is_synthetic for r in records) if records else True
 
     # Identify missing intervals (> 2 hour jump between timestamps)
@@ -105,19 +111,73 @@ def get_device_telemetry(
     )
 
 @router.post("/telemetry/ingest")
-def ingest_telemetry(payload: TelemetryIngestBatch, db: Session = Depends(get_db)):
+def ingest_telemetry(
+    payload: TelemetryIngestBatch,
+    idempotency_key_header: Optional[str] = Header(default=None, alias="Idempotency-Key"),
+    current_user: User = Depends(require_permission("telemetry.ingest")),
+    db: Session = Depends(get_db)
+):
     device = db.query(Device).filter(Device.id == payload.device_id).first()
     if not device:
         raise HTTPException(status_code=404, detail="Target storage device not found")
 
+    idem_key = (idempotency_key_header or payload.idempotency_key or "").strip() or None
+    if idem_key:
+        existing_job = (
+            db.query(IngestionJob)
+            .filter(IngestionJob.storage_id == payload.device_id, IngestionJob.idempotency_key == idem_key)
+            .first()
+        )
+        if existing_job:
+            return {
+                "status": "idempotent_replay",
+                "idempotent_replay": True,
+                "idempotency_key": idem_key,
+                "job_id": existing_job.id,
+                "ingested_count": 0,
+                "original_accepted_count": existing_job.accepted_rows,
+                "rejected_count": existing_job.rejected_rows,
+                "duplicate_count": existing_job.duplicate_rows,
+                "errors": json.loads(existing_job.errors_json or "[]"),
+                "device_id": payload.device_id,
+            }
+
+    existing_ts = {
+        (r[0].replace(tzinfo=None) if r[0].tzinfo else r[0]).replace(microsecond=0)
+        for r in db.query(Telemetry.timestamp).filter(Telemetry.device_id == payload.device_id).all()
+        if r[0] is not None
+    }
+
     new_entities = []
-    for item in payload.records:
+    errors = []
+    duplicates = 0
+    rejected = 0
+    seen_batch = set()
+
+    for idx, item in enumerate(payload.records):
+        ts_naive = (item.timestamp.astimezone(timezone.utc).replace(tzinfo=None) if item.timestamp.tzinfo else item.timestamp).replace(microsecond=0)
+        if item.used_bytes < 0 or item.used_bytes > device.total_capacity_bytes:
+            rejected += 1
+            errors.append({"index": idx, "type": "IMPOSSIBLE_CAPACITY", "reason": f"used_bytes ({item.used_bytes}) out of [0, {device.total_capacity_bytes}]"})
+            continue
+        if item.read_iops < 0 or item.write_iops < 0 or item.throughput_mb_s < 0 or item.latency_p95_ms < 0:
+            rejected += 1
+            errors.append({"index": idx, "type": "NEGATIVE_METRIC", "reason": "Performance metrics cannot be negative"})
+            continue
+        if ts_naive in existing_ts or ts_naive in seen_batch:
+            duplicates += 1
+            errors.append({"index": idx, "type": "DUPLICATE_TIMESTAMP", "reason": f"Duplicate timestamp {ts_naive.isoformat()}"})
+            continue
+
+        seen_batch.add(ts_naive)
         util_pct = round((item.used_bytes / device.total_capacity_bytes) * 100.0, 2)
+        free_b = max(0, device.total_capacity_bytes - item.used_bytes)
         t = Telemetry(
             device_id=payload.device_id,
-            timestamp=item.timestamp,
+            timestamp=ts_naive,
+            total_capacity_bytes=device.total_capacity_bytes,
             used_bytes=item.used_bytes,
-            free_bytes=item.free_bytes,
+            free_bytes=free_b,
             utilization_pct=util_pct,
             read_iops=item.read_iops,
             write_iops=item.write_iops,
@@ -129,13 +189,72 @@ def ingest_telemetry(payload: TelemetryIngestBatch, db: Session = Depends(get_db
         )
         new_entities.append(t)
 
-    db.bulk_save_objects(new_entities)
-    db.commit()
+    if new_entities:
+        db.bulk_save_objects(new_entities)
+        device.last_telemetry_at = max(e.timestamp for e in new_entities)
 
-    return {"status": "ok", "ingested_count": len(new_entities), "device_id": payload.device_id}
+    job_id = f"job-{uuid.uuid4().hex[:10]}"
+    db.add(IngestionJob(
+        id=job_id,
+        storage_id=payload.device_id,
+        source_type="API_COLLECTOR",
+        filename="rest_api_batch",
+        status="COMPLETED" if rejected == 0 and duplicates == 0 else ("PARTIAL" if new_entities else "FAILED"),
+        total_rows=len(payload.records),
+        accepted_rows=len(new_entities),
+        rejected_rows=rejected,
+        duplicate_rows=duplicates,
+        errors_json=json.dumps(errors),
+        idempotency_key=idem_key,
+        uploaded_by=current_user.username,
+    ))
+    from app.realtime.event_bus import OutboxService
+    evt = OutboxService.stage_event(
+        db,
+        event_type="telemetry.batch_completed",
+        resource_type="telemetry",
+        resource_id=payload.device_id,
+        actor_user=current_user,
+        payload={
+            "job_id": job_id,
+            "storage_id": payload.device_id,
+            "accepted": len(new_entities),
+            "rejected": rejected,
+            "duplicates": duplicates,
+        },
+        required_permission="telemetry.read",
+    )
+    db.commit()
+    db.refresh(evt)
+    OutboxService.publish_after_commit(db, evt)
+
+    AuditService.log_event(
+        db=db,
+        action="API_TELEMETRY_INGEST",
+        target_type="DEVICE",
+        target_id=payload.device_id,
+        user=current_user.username,
+        details={"accepted": len(new_entities), "rejected": rejected, "duplicates": duplicates, "idempotency_key": idem_key}
+    )
+
+    return {
+        "status": "ok",
+        "idempotent_replay": False,
+        "idempotency_key": idem_key,
+        "job_id": job_id,
+        "ingested_count": len(new_entities),
+        "rejected_count": rejected,
+        "duplicate_count": duplicates,
+        "errors": errors,
+        "device_id": payload.device_id,
+    }
 
 @router.get("/telemetry/export")
-def export_telemetry_csv(device_id: str, db: Session = Depends(get_db)):
+def export_telemetry_csv(
+    device_id: str,
+    current_user: User = Depends(require_permission("telemetry.read")),
+    db: Session = Depends(get_db),
+):
     device = db.query(Device).filter(Device.id == device_id).first()
     if not device:
         raise HTTPException(status_code=404, detail="Device not found")
@@ -170,7 +289,7 @@ def export_telemetry_csv(device_id: str, db: Session = Depends(get_db)):
     )
 
 @router.get("/telemetry/sources")
-def get_telemetry_sources():
+def get_telemetry_sources(current_user: User = Depends(require_permission("telemetry.read"))):
     """
     Returns registered telemetry sources, configured boundaries, read-only guarantees,
     and supported metrics. Enforces strict zero-mutation policy.
@@ -184,7 +303,7 @@ def get_telemetry_sources():
     }
 
 @router.get("/telemetry/live-host")
-def get_live_host_telemetry():
+def get_live_host_telemetry(current_user: User = Depends(require_permission("telemetry.read"))):
     """
     Collects real filesystem capacity and usage from host storage partitions.
     Guarantees non-destructive read-only sampling with provenance='LIVE'.
@@ -201,7 +320,10 @@ def get_live_host_telemetry():
     }
 
 @router.post("/telemetry/prometheus/scrape")
-def scrape_prometheus_metrics(payload: PrometheusScrapeRequest = PrometheusScrapeRequest()):
+def scrape_prometheus_metrics(
+    payload: PrometheusScrapeRequest = PrometheusScrapeRequest(),
+    current_user: User = Depends(require_permission("telemetry.collect")),
+):
     """
     Scrapes Prometheus Node Exporter metrics in read-only mode.
     Parses node_filesystem and node_disk counters with failure diagnostics and validation.
@@ -213,7 +335,10 @@ def scrape_prometheus_metrics(payload: PrometheusScrapeRequest = PrometheusScrap
     return result
 
 @router.post("/telemetry/validate")
-def validate_telemetry_sample(payload: TelemetryValidationRequest):
+def validate_telemetry_sample(
+    payload: TelemetryValidationRequest,
+    current_user: User = Depends(require_permission("ingestion.validate")),
+):
     """
     Validates a telemetry sample against physical invariants (positive capacity,
     utilization bounds 0-100%, non-negative IOPS), timestamp validity,

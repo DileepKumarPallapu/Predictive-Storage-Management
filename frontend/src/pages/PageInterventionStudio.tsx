@@ -164,8 +164,8 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
           </p>
         </div>
 
-        {/* Storage Pool Selector */}
-        <div className="flex items-center gap-3">
+        {/* Storage Pool Selector & Rule Generator */}
+        <div className="flex flex-wrap items-center gap-3">
           <select
             value={selectedDeviceId}
             onChange={(e) => setSelectedDeviceId(e.target.value)}
@@ -178,6 +178,20 @@ export const PageInterventionStudio: React.FC<Props> = ({ initialDeviceId }) => 
               </option>
             ))}
           </select>
+          <button
+            onClick={async () => {
+              try {
+                const res = await api.generateRecommendationsForStorage(selectedDeviceId);
+                setActionStatusMsg(`Generated ${res.generated_count} rule-based traceable recommendation(s).`);
+                await loadDeviceIntelligence(selectedDeviceId);
+              } catch (e: any) {
+                setActionStatusMsg(`Error: ${e.message}`);
+              }
+            }}
+            className="btn-primary px-3.5 py-1.5 rounded-lg text-xs font-semibold"
+          >
+            Generate Recommendations
+          </button>
         </div>
       </div>
 

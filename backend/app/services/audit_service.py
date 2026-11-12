@@ -36,11 +36,21 @@ class AuditService:
         user: str = "operator@aegisstor.internal",
         details: Optional[Dict[str, Any]] = None,
         organization_id: str = "org-primary-enterprise",
-        client_ip: str = "127.0.0.1"
+        client_ip: str = "127.0.0.1",
+        user_id: Optional[str] = None,
+        user_role: Optional[str] = None,
+        outcome: str = "SUCCESS",
     ) -> AuditLog:
         now = datetime.now(timezone.utc).replace(microsecond=0)
         time_str = now.strftime("%Y-%m-%d %H:%M:%S")
         details_str = json.dumps(details or {}, sort_keys=True)
+
+        if user_id is None or user_role is None:
+            from app.models.entities import User
+            u_obj = db.query(User).filter(User.username == user).first()
+            if u_obj:
+                user_id = user_id or u_obj.id
+                user_role = user_role or u_obj.role
 
         # Get latest entry to link cryptographic hash chain
         latest = (
@@ -64,6 +74,9 @@ class AuditService:
         log_entry = AuditLog(
             timestamp=now,
             user=user,
+            user_id=user_id,
+            user_role=user_role,
+            outcome=outcome,
             action=action,
             target_type=target_type,
             target_id=target_id,

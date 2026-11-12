@@ -11,10 +11,13 @@ import {
   Database,
   X,
   Info,
-  ShieldCheck
+  ShieldCheck,
+  Plus,
+  Trash2
 } from 'lucide-react';
 import { usePresentationMode } from '../context/PresentationModeContext';
 import { useOperatingMode } from '../context/OperatingModeContext';
+import { useRealtimeSubscription } from '../context/RealtimeContext';
 import { ContextualHelp } from '../components/ContextualHelp';
 
 interface Props {
@@ -30,6 +33,19 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
   const [critThreshold, setCritThreshold] = useState<number>(90);
   const [maxLat, setMaxLat] = useState<number>(20);
   const [saveMsg, setSaveMsg] = useState('');
+  const [sortBy, setSortBy] = useState<'name' | 'utilization' | 'capacity'>('utilization');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const pageSize = 6;
+  const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
+  const [newName, setNewName] = useState<string>('');
+  const [newStorageType, setNewStorageType] = useState<string>('SAN');
+  const [newLocation, setNewLocation] = useState<string>('Primary Data Center');
+  const [newTotalGb, setNewTotalGb] = useState<number>(2000);
+  const [newUsedGb, setNewUsedGb] = useState<number>(400);
+  const [newWarnPct, setNewWarnPct] = useState<number>(80);
+  const [newCritPct, setNewCritPct] = useState<number>(90);
+  const [newDesc, setNewDesc] = useState<string>('');
+  const [createErr, setCreateErr] = useState<string>('');
   const { isGuided } = usePresentationMode();
   const { operatingMode, provenanceLabel, refreshKey } = useOperatingMode();
 
@@ -37,14 +53,68 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
     loadFleet();
   }, [tierFilter, searchTerm, refreshKey]);
 
+  useRealtimeSubscription(['storage.', 'telemetry.', 'ingestion.', 'alert.'], () => {
+    loadFleet();
+  });
+
   const loadFleet = async () => {
     try {
       const data = await api.getDevices(tierFilter || undefined, undefined, searchTerm || undefined);
       setDevices(data);
+      setCurrentPage(1);
     } catch (e) {
       console.error(e);
     }
   };
+
+  const handleCreateStorage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreateErr('');
+    if (newUsedGb < 0 || newUsedGb > newTotalGb) {
+      setCreateErr('Used capacity must be between 0 and Total capacity.');
+      return;
+    }
+    if (newWarnPct >= newCritPct) {
+      setCreateErr('Warning threshold must be less than Critical threshold.');
+      return;
+    }
+    try {
+      await api.createStorage({
+        name: newName,
+        storage_type: newStorageType,
+        environment_location: newLocation,
+        total_capacity_bytes: Math.round(newTotalGb * (1024 ** 3)),
+        initial_used_bytes: Math.round(newUsedGb * (1024 ** 3)),
+        warning_threshold_pct: newWarnPct,
+        critical_threshold_pct: newCritPct,
+        description: newDesc,
+      });
+      setShowCreateModal(false);
+      setNewName('');
+      setNewDesc('');
+      loadFleet();
+    } catch (err: any) {
+      setCreateErr(err.message || 'Failed to create storage resource');
+    }
+  };
+
+  const handleDeleteStorage = async (dev: DeviceSummary) => {
+    if (!window.confirm(`Delete storage resource "${dev.name}" (${dev.id}) and its associated records?`)) return;
+    try {
+      await api.deleteStorage(dev.id, true);
+      loadFleet();
+    } catch (err: any) {
+      alert(`Delete failed: ${err.message}`);
+    }
+  };
+
+  const sortedDevices = [...devices].sort((a, b) => {
+    if (sortBy === 'name') return a.name.localeCompare(b.name);
+    if (sortBy === 'capacity') return b.total_capacity_bytes - a.total_capacity_bytes;
+    return b.current_utilization_pct - a.current_utilization_pct;
+  });
+  const totalPages = Math.max(1, Math.ceil(sortedDevices.length / pageSize));
+  const pagedDevices = sortedDevices.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const openEditModal = (dev: DeviceSummary) => {
     setEditingDevice(dev);
@@ -61,7 +131,8 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
         warning_threshold_pct: warnThreshold,
         critical_threshold_pct: critThreshold,
         max_acceptable_latency_ms: maxLat,
-      });
+        expected_version: editingDevice.version,
+      } as any);
       setSaveMsg('Thresholds saved & logged to audit trail.');
       setTimeout(() => {
         setEditingDevice(null);
@@ -128,7 +199,7 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
           />
         </div>
 
-        <div className="flex items-center gap-2.5 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
           <Filter size={14} className="text-[var(--text-muted)]" />
           <select
             value={tierFilter}
@@ -139,13 +210,29 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
             <option value="NVME_TIER1" className="bg-[var(--surface-primary)]">Tier 1 NVMe (Fastest)</option>
             <option value="SAS_TIER2" className="bg-[var(--surface-primary)]">Tier 2 Enterprise SAS</option>
             <option value="HDD_ARCHIVE" className="bg-[var(--surface-primary)]">Tier 3 Cold Archive</option>
+            <option value="CLOUD_S3" className="bg-[var(--surface-primary)]">Cloud / Object Storage</option>
           </select>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+            className="bg-[var(--surface-secondary)] border border-[var(--border-normal)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] cursor-pointer"
+          >
+            <option value="utilization">Sort: Utilisation %</option>
+            <option value="capacity">Sort: Total Capacity</option>
+            <option value="name">Sort: Name (A-Z)</option>
+          </select>
+          <button
+            onClick={() => { setCreateErr(''); setShowCreateModal(true); }}
+            className="btn-primary px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5"
+          >
+            <Plus size={14} /> Add Storage Resource
+          </button>
         </div>
       </div>
 
       {/* Grid of Storage Devices */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {devices.map((d) => (
+        {pagedDevices.map((d) => (
           <div
             key={d.id}
             className="titan-card rounded-lg p-5 flex flex-col justify-between hover:border-[var(--accent-primary)]/40 transition-all group"
@@ -208,21 +295,30 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
                 </div>
               </div>
 
-              {/* Threshold info */}
-              <div className="mt-3 flex items-center justify-between text-[11px] text-[var(--text-muted)] font-mono">
+              {/* Threshold & Free Capacity info */}
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-1 text-[11px] text-[var(--text-muted)] font-mono">
+                <span>Free: {formatTB(Math.max(0, d.total_capacity_bytes - d.current_used_bytes))} · {(d as any).storage_type || d.tier}</span>
                 <span>Warn: {d.warning_threshold_pct}% | Limit: {d.critical_threshold_pct}%</span>
-                <span>Max Latency: {d.max_acceptable_latency_ms}ms</span>
               </div>
             </div>
 
-            <div className="mt-5 pt-3.5 border-t border-[var(--border-subtle)] flex items-center justify-between gap-2">
-              <button
-                onClick={() => openEditModal(d)}
-                className="px-3 py-1.5 rounded-lg btn-secondary text-xs flex items-center gap-1.5 font-medium"
-              >
-                <Sliders size={13} />
-                Adjust Safety Limits
-              </button>
+            <div className="mt-5 pt-3.5 border-t border-[var(--border-subtle)] flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => openEditModal(d)}
+                  className="px-3 py-1.5 rounded-lg btn-secondary text-xs flex items-center gap-1.5 font-medium"
+                >
+                  <Sliders size={13} />
+                  Limits
+                </button>
+                <button
+                  onClick={() => handleDeleteStorage(d)}
+                  className="px-2.5 py-1.5 rounded-lg border border-[var(--border-subtle)] text-[var(--status-critical)] hover:bg-[var(--status-critical)]/10 text-xs flex items-center gap-1"
+                  title="Delete Storage Resource"
+                >
+                  <Trash2 size={13} />
+                </button>
+              </div>
 
               <button
                 onClick={() => onNavigateToIntelligence(d.id)}
@@ -234,6 +330,29 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
           </div>
         ))}
       </div>
+
+      {/* Pagination Bar */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between text-xs font-mono text-[var(--text-secondary)]">
+          <span>Page {currentPage} of {totalPages} ({sortedDevices.length} resources)</span>
+          <div className="flex gap-2">
+            <button
+              disabled={currentPage <= 1}
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              className="px-3 py-1 rounded border border-[var(--border-subtle)] disabled:opacity-40"
+            >
+              Previous
+            </button>
+            <button
+              disabled={currentPage >= totalPages}
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              className="px-3 py-1 rounded border border-[var(--border-subtle)] disabled:opacity-40"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Threshold Edit Modal */}
       {editingDevice && (
@@ -325,6 +444,70 @@ export const PageStorageFleet: React.FC<Props> = ({ onNavigateToIntelligence }) 
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Create Storage Resource Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 z-50">
+          <form onSubmit={handleCreateStorage} className="glass-modal max-w-lg w-full p-6 space-y-4 shadow-glass-modal rounded-lg">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-bold text-[var(--text-primary)]">Add Storage Resource</h3>
+              <button type="button" onClick={() => setShowCreateModal(false)} className="p-1 text-[var(--text-muted)]">
+                <X size={16} />
+              </button>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div className="sm:col-span-2">
+                <label className="block text-[11px] text-[var(--text-secondary)] mb-1">Storage Name</label>
+                <input type="text" required value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="e.g., Primary SAN Volume" className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-primary)]" />
+              </div>
+              <div>
+                <label className="block text-[11px] text-[var(--text-secondary)] mb-1">Storage Type</label>
+                <select value={newStorageType} onChange={(e) => setNewStorageType(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-primary)]">
+                  <option value="SAN">SAN</option>
+                  <option value="NAS">NAS</option>
+                  <option value="Local storage">Local storage</option>
+                  <option value="Cloud storage">Cloud storage</option>
+                  <option value="Backup storage">Backup storage</option>
+                  <option value="Object storage">Object storage</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-[11px] text-[var(--text-secondary)] mb-1">Environment / Location</label>
+                <input type="text" value={newLocation} onChange={(e) => setNewLocation(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-primary)]" />
+              </div>
+              <div>
+                <label className="block text-[11px] text-[var(--text-secondary)] mb-1">Total Capacity (GB)</label>
+                <input type="number" min={1} required value={newTotalGb} onChange={(e) => setNewTotalGb(Number(e.target.value))} className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-primary)] font-mono" />
+              </div>
+              <div>
+                <label className="block text-[11px] text-[var(--text-secondary)] mb-1">Initial Used (GB)</label>
+                <input type="number" min={0} required value={newUsedGb} onChange={(e) => setNewUsedGb(Number(e.target.value))} className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-primary)] font-mono" />
+              </div>
+              <div>
+                <label className="block text-[11px] text-[var(--text-secondary)] mb-1">Warning Threshold %</label>
+                <input type="number" min={1} max={98} value={newWarnPct} onChange={(e) => setNewWarnPct(Number(e.target.value))} className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-primary)] font-mono" />
+              </div>
+              <div>
+                <label className="block text-[11px] text-[var(--text-secondary)] mb-1">Critical Threshold %</label>
+                <input type="number" min={2} max={100} value={newCritPct} onChange={(e) => setNewCritPct(Number(e.target.value))} className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-primary)] font-mono" />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-[11px] text-[var(--text-secondary)] mb-1">Description / Notes</label>
+                <input type="text" value={newDesc} onChange={(e) => setNewDesc(e.target.value)} placeholder="Optional inventory notes" className="w-full px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-primary)]" />
+              </div>
+            </div>
+            {createErr && (
+              <div className="p-2.5 rounded-lg bg-[var(--status-critical)]/10 border border-[var(--status-critical)] text-xs text-[var(--status-critical)]">
+                {createErr}
+              </div>
+            )}
+            <div className="flex justify-end gap-2 pt-3 border-t border-[var(--border-subtle)]">
+              <button type="button" onClick={() => setShowCreateModal(false)} className="px-3.5 py-1.5 rounded-lg btn-secondary text-xs">Cancel</button>
+              <button type="submit" className="px-4 py-1.5 rounded-lg btn-primary text-xs font-semibold">Create Storage Resource</button>
+            </div>
+          </form>
         </div>
       )}
     </div>

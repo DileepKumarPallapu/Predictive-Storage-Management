@@ -2,13 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from datetime import datetime, timezone
 from app.database import get_db
-from app.models.entities import Device, Telemetry
+from app.models.entities import Device, Telemetry, User
 from app.schemas.payloads import RiskResponse
 from app.schemas.intelligence_contract import CapacityRunwayResult, PerformanceRiskResult
 from app.services.risk_engine import RiskEngine
 from app.services.capacity_runway_engine import CapacityRunwayEngine
 from app.services.performance_risk_engine import PerformanceRiskEngine
 from app.ml.models import run_forecast
+from app.auth.permissions import require_permission
 
 router = APIRouter()
 
@@ -44,7 +45,11 @@ def _fetch_device_and_telemetry(db: Session, device_id: str):
     return device, telemetry_dicts
 
 @router.get("/devices/{device_id}/reserve-runway", response_model=CapacityRunwayResult)
-def get_device_reserve_runway(device_id: str, db: Session = Depends(get_db)):
+def get_device_reserve_runway(
+    device_id: str,
+    current_user: User = Depends(require_permission("risk.read")),
+    db: Session = Depends(get_db),
+):
     """
     Dedicated Capacity Reserve Runway Endpoint.
     Integrates historical growth with calibrated forecast trajectories to estimate
@@ -71,7 +76,11 @@ def get_device_reserve_runway(device_id: str, db: Session = Depends(get_db)):
     return runway_res
 
 @router.get("/devices/{device_id}/risk-assessment")
-def get_comprehensive_risk_assessment(device_id: str, db: Session = Depends(get_db)):
+def get_comprehensive_risk_assessment(
+    device_id: str,
+    current_user: User = Depends(require_permission("risk.read")),
+    db: Session = Depends(get_db),
+):
     """
     Comprehensive Storage Resilience Risk Assessment.
     Returns synchronized capacity runway, performance risk, and coupling analysis.
@@ -127,7 +136,11 @@ def get_comprehensive_risk_assessment(device_id: str, db: Session = Depends(get_
     }
 
 @router.get("/devices/{device_id}/risks", response_model=RiskResponse)
-def get_device_risk_assessment_legacy(device_id: str, db: Session = Depends(get_db)):
+def get_device_risk_assessment_legacy(
+    device_id: str,
+    current_user: User = Depends(require_permission("risk.read")),
+    db: Session = Depends(get_db),
+):
     """Legacy compatibility endpoint for existing dashboard widgets."""
     device, telemetry_dicts = _fetch_device_and_telemetry(db, device_id)
     latest = telemetry_dicts[-1]

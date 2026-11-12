@@ -11,9 +11,14 @@ from app.models.entities import (
 from app.services.gauntlet_service import GauntletService
 from app.services.research_benchmark_engine import ResearchBenchmarkEngine
 from app.auth.security import get_current_user, require_role
+from app.auth.permissions import require_method_permission
 
 
-router = APIRouter(prefix="/gauntlet", tags=["GAUNTLET Validation & Examiner Workbench"])
+router = APIRouter(
+    prefix="/gauntlet",
+    tags=["GAUNTLET Validation & Examiner Workbench"],
+    dependencies=[Depends(require_method_permission("models.read", "models.train"))],
+)
 
 # ------------------------------------------------------------------------------
 # Pydantic Schemas

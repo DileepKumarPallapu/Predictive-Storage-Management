@@ -8,7 +8,6 @@ import {
   Sliders,
   LineChart,
   Brain,
-  FlaskConical,
   ShieldCheck,
   AlertTriangle,
   Database,
@@ -16,36 +15,52 @@ import {
   ChevronLeft,
   ChevronRight,
   Network,
-  Flame,
   ShieldAlert,
   Compass,
   Sparkles,
-  Lock,
   Workflow,
-  X
+  X,
+  Upload,
+  FileText,
+  ClipboardList,
+  ClipboardCheck,
+  Radio,
+  Plug,
+  Users
 } from 'lucide-react';
 import { usePresentationMode } from '../context/PresentationModeContext';
 
 export type PageId =
+  | 'admin'
+  | 'operator'
+  | 'viewer'
+  | 'access-denied'
   | 'overview'
   | 'fleet'
-  | 'intelligence'
-  | 'twin'
-  | 'interventions'
-  | 'telemetry'
-  | 'ml-lab'
-  | 'experiments'
-  | 'reliability'
-  | 'alerts'
+  | 'topology'
+  | 'live-telemetry'
+  | 'ingestion'
   | 'datasets'
+  | 'workload'
+  | 'ml-centre'
+  | 'ml-lab'
+  | 'risk-centre'
+  | 'telemetry'
+  | 'twin'
+  | 'optimizer'
+  | 'interventions'
+  | 'approvals'
+  | 'tasks'
+  | 'alerts'
+  | 'reports'
+  | 'audit'
+  | 'integrations'
+  | 'control-plane'
   | 'settings'
-  | 'omega'
-  | 'jurassic'
-  | 'phoenix'
-  | 'atlas'
-  | 'oracle'
-  | 'gauntlet'
-  | 'sovereign';
+  | 'intelligence'
+  | 'users'
+  | 'experiments'
+  | 'reliability';
 
 interface SidebarProps {
   currentPage: PageId;
@@ -53,6 +68,8 @@ interface SidebarProps {
   collapsed: boolean;
   onToggleCollapsed: () => void;
   activeAlertsCount: number;
+  currentUserRole?: string;
+  userPermissions?: string[];
   onOpenOnboarding?: () => void;
   mobileOpen?: boolean;
   onCloseMobile?: () => void;
@@ -65,6 +82,7 @@ interface NavGroup {
     label: string;
     icon: React.ComponentType<{ size?: number; className?: string }>;
     badge?: number;
+    requiredPermission?: string;
   }[];
 }
 
@@ -74,144 +92,111 @@ export const Sidebar: React.FC<SidebarProps> = ({
   collapsed,
   onToggleCollapsed,
   activeAlertsCount,
+  currentUserRole = 'VIEWER',
+  userPermissions = [],
   mobileOpen = false,
   onCloseMobile,
 }) => {
-  const { isGuided } = usePresentationMode();
+  usePresentationMode();
+  const permSet = new Set(userPermissions);
+  const roleUpper = (currentUserRole || 'VIEWER').toUpperCase();
+  const homePage: { id: PageId; label: string } =
+    roleUpper === 'ADMIN'
+      ? { id: 'admin', label: 'Admin Workspace' }
+      : roleUpper === 'OPERATOR'
+      ? { id: 'operator', label: 'Operator Workspace' }
+      : { id: 'viewer', label: 'Viewer Summary' };
 
-  const navGroups: NavGroup[] = [
+  const rawNavGroups: NavGroup[] = [
     {
       groupName: 'OVERVIEW',
       items: [
-        {
-          id: 'overview',
-          label: isGuided ? 'Storage Health' : 'Executive Overview',
-          icon: Activity,
-        },
+        { id: homePage.id, label: homePage.label, icon: ShieldCheck, requiredPermission: 'storage.read' },
+        { id: 'overview', label: 'Overview', icon: Activity, requiredPermission: 'storage.read' },
       ],
     },
     {
-      groupName: 'MONITOR',
+      groupName: 'DATA SOURCES',
       items: [
-        {
-          id: 'fleet',
-          label: isGuided ? 'Storage Fleet' : 'Fleet Inventory & SLAs',
-          icon: HardDrive,
-        },
-        {
-          id: 'intelligence',
-          label: isGuided ? 'Device Details' : 'Device Telemetry & Tail',
-          icon: Cpu,
-        },
-        {
-          id: 'telemetry',
-          label: isGuided ? 'Telemetry Signals' : 'Raw Signals Explorer',
-          icon: LineChart,
-        },
-        {
-          id: 'alerts',
-          label: isGuided ? 'Alerts & Safeguards' : 'Incidents & Active Alerts',
-          icon: AlertTriangle,
-          badge: activeAlertsCount,
-        },
+        { id: 'integrations', label: 'Data Sources & Connections', icon: Plug, requiredPermission: 'integrations.read' },
+        { id: 'ingestion', label: 'Import Data', icon: Upload, requiredPermission: 'ingestion.preview' },
+        { id: 'datasets', label: 'Data Quality', icon: Database, requiredPermission: 'quality.read' },
       ],
     },
     {
-      groupName: 'PREDICT',
+      groupName: 'STORAGE',
       items: [
-        {
-          id: 'ml-lab',
-          label: isGuided ? 'Capacity Forecast' : 'ML Quantile Lab',
-          icon: Brain,
-        },
-        {
-          id: 'reliability',
-          label: isGuided ? 'Forecast Reliability' : 'Model Drift & Reliability',
-          icon: ShieldCheck,
-        },
+        { id: 'fleet', label: 'Storage Systems', icon: HardDrive, requiredPermission: 'storage.read' },
+        { id: 'topology', label: 'Storage Topology', icon: Network, requiredPermission: 'storage.read' },
+        { id: 'intelligence', label: 'Device Details', icon: Cpu, requiredPermission: 'storage.read' },
       ],
     },
     {
-      groupName: 'SIMULATE',
+      groupName: 'MONITORING',
       items: [
-        {
-          id: 'twin',
-          label: isGuided ? 'Digital Twin Sandbox' : 'Resilience Digital Twin',
-          icon: Layers,
-        },
-        {
-          id: 'interventions',
-          label: isGuided ? 'Compare Actions' : 'Counterfactual Interventions',
-          icon: Sliders,
-        },
+        { id: 'live-telemetry', label: 'Live Monitoring', icon: Radio, requiredPermission: 'telemetry.read' },
+        { id: 'telemetry', label: 'Performance Trends', icon: LineChart, requiredPermission: 'performance.read' },
+        { id: 'workload', label: 'Workload Patterns', icon: Sparkles, requiredPermission: 'workload.read' },
       ],
     },
     {
-      groupName: 'RESPOND',
+      groupName: 'PREDICTIONS',
       items: [
-        {
-          id: 'phoenix',
-          label: isGuided ? 'Incident Command' : 'Phoenix Orchestrator',
-          icon: ShieldAlert,
-        },
+        { id: 'ml-lab', label: 'Capacity Forecasts', icon: Brain, requiredPermission: 'forecasts.read' },
+        { id: 'ml-centre', label: 'Forecasting Models', icon: Cpu, requiredPermission: 'models.read' },
+        { id: 'reliability', label: 'Forecast Accuracy', icon: ShieldCheck, requiredPermission: 'models.read' },
       ],
     },
     {
-      groupName: 'RESEARCH LABS',
+      groupName: 'RISK AND ALERTS',
       items: [
-        {
-          id: 'omega',
-          label: isGuided ? 'Fleet Topology' : 'Omega Correlated Risk',
-          icon: Network,
-        },
-        {
-          id: 'jurassic',
-          label: isGuided ? 'Stress Testing' : 'Jurassic Resilience Lab',
-          icon: Flame,
-        },
-        {
-          id: 'atlas',
-          label: isGuided ? 'Reality Calibration' : 'Atlas Reality Lab',
-          icon: Compass,
-        },
-        {
-          id: 'oracle',
-          label: isGuided ? 'Bottleneck Analysis' : 'Oracle Attribution AI',
-          icon: Sparkles,
-        },
-        {
-          id: 'gauntlet',
-          label: isGuided ? 'Scientific Benchmarks' : 'Gauntlet Workbench',
-          icon: FlaskConical,
-        },
-        {
-          id: 'sovereign',
-          label: isGuided ? 'Federated Privacy' : 'Sovereign Federation',
-          icon: Lock,
-        },
-        {
-          id: 'experiments',
-          label: isGuided ? 'Ablation Studies' : 'Research Benchmarks',
-          icon: Workflow,
-        },
+        { id: 'risk-centre', label: 'Capacity Risk', icon: ShieldAlert, requiredPermission: 'risk.read' },
+        { id: 'alerts', label: 'Alerts', icon: AlertTriangle, badge: activeAlertsCount, requiredPermission: 'alerts.read' },
       ],
     },
     {
-      groupName: 'PLATFORM',
+      groupName: 'OPTIMISATION',
       items: [
-        {
-          id: 'datasets',
-          label: isGuided ? 'Datasets & Quality' : 'Telemetry Repositories',
-          icon: Database,
-        },
-        {
-          id: 'settings',
-          label: isGuided ? 'Settings & Backups' : 'Governance & Vault Recovery',
-          icon: Settings,
-        },
+        { id: 'optimizer', label: 'Optimisation', icon: Sliders, requiredPermission: 'optimisation.read' },
+        { id: 'interventions', label: 'Recommendations', icon: Compass, requiredPermission: 'recommendations.read' },
+      ],
+    },
+    {
+      groupName: 'DIGITAL TWIN',
+      items: [
+        { id: 'twin', label: 'Digital Twin (Simulation)', icon: Layers, requiredPermission: 'digital_twin.read' },
+      ],
+    },
+    {
+      groupName: 'TASKS AND APPROVALS',
+      items: [
+        { id: 'tasks', label: 'Tasks', icon: ClipboardList, requiredPermission: 'alerts.read' },
+        { id: 'approvals', label: 'Approvals', icon: ClipboardCheck, requiredPermission: 'approvals.read' },
+        { id: 'control-plane', label: 'Control Plane', icon: Workflow, requiredPermission: 'control_plane.read' },
+      ],
+    },
+    {
+      groupName: 'REPORTS',
+      items: [
+        { id: 'reports', label: 'Reports', icon: FileText, requiredPermission: 'reports.read' },
+        { id: 'audit', label: 'Activity Log', icon: ClipboardList, requiredPermission: 'audit.read' },
+      ],
+    },
+    {
+      groupName: 'ADMINISTRATION',
+      items: [
+        { id: 'settings', label: 'Settings', icon: Settings, requiredPermission: 'settings.update' },
+        { id: 'users', label: 'Users & Roles', icon: Users, requiredPermission: 'users.read' },
       ],
     },
   ];
+
+  const navGroups = rawNavGroups
+    .map((g) => ({
+      ...g,
+      items: g.items.filter((it) => !it.requiredPermission || permSet.size === 0 || permSet.has(it.requiredPermission)),
+    }))
+    .filter((g) => g.items.length > 0);
 
   const handleItemClick = (id: PageId) => {
     onSelectPage(id);

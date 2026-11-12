@@ -31,18 +31,66 @@ class DeviceBase(BaseModel):
 
 class DeviceSummary(DeviceBase):
     current_used_bytes: int
+    free_capacity_bytes: Optional[int] = None
     current_utilization_pct: float
     current_read_iops: float
     current_write_iops: float
     current_latency_p95_ms: float
     runway_hours_estimate: float
     risk_level: str
+    storage_type: Optional[str] = "SAN"
+    environment_location: Optional[str] = "Primary Data Center"
+    description: Optional[str] = ""
+    notes: Optional[str] = ""
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+    last_telemetry_update: Optional[datetime] = None
+    version: int = 1
+    created_by: Optional[str] = "system"
+    updated_by: Optional[str] = "system"
+
+
+class StorageCreateRequest(BaseModel):
+    id: Optional[str] = None
+    name: str = Field(..., min_length=2, max_length=128)
+    storage_type: str = Field(default="SAN", description="Local storage, NAS, SAN, Cloud storage, Backup storage, Object storage")
+    tier: Optional[str] = None
+    media_type: Optional[str] = None
+    environment_location: str = Field(default="Primary Data Center", max_length=128)
+    total_capacity_bytes: int = Field(..., gt=0)
+    initial_used_bytes: Optional[int] = Field(default=0, ge=0)
+    warning_threshold_pct: float = Field(default=80.0, gt=0.0, lt=100.0)
+    critical_threshold_pct: float = Field(default=90.0, gt=0.0, le=100.0)
+    max_acceptable_latency_ms: float = Field(default=20.0, gt=0.0)
+    min_free_reserve_pct: float = Field(default=10.0, ge=0.0, lt=100.0)
+    workload_profile: str = Field(default="General Enterprise")
+    description: str = Field(default="")
+    notes: str = Field(default="")
+
+
+class StorageUpdateRequest(BaseModel):
+    name: Optional[str] = Field(default=None, min_length=2, max_length=128)
+    storage_type: Optional[str] = None
+    tier: Optional[str] = None
+    media_type: Optional[str] = None
+    environment_location: Optional[str] = None
+    total_capacity_bytes: Optional[int] = Field(default=None, gt=0)
+    warning_threshold_pct: Optional[float] = Field(default=None, gt=0.0, lt=100.0)
+    critical_threshold_pct: Optional[float] = Field(default=None, gt=0.0, le=100.0)
+    max_acceptable_latency_ms: Optional[float] = Field(default=None, gt=0.0)
+    min_free_reserve_pct: Optional[float] = Field(default=None, ge=0.0, lt=100.0)
+    status: Optional[str] = None
+    workload_profile: Optional[str] = None
+    description: Optional[str] = None
+    notes: Optional[str] = None
+    expected_version: Optional[int] = None
 
 class ThresholdsUpdate(BaseModel):
     warning_threshold_pct: Optional[float] = None
     critical_threshold_pct: Optional[float] = None
     max_acceptable_latency_ms: Optional[float] = None
     min_free_reserve_pct: Optional[float] = None
+    expected_version: Optional[int] = None
 
 # Telemetry
 class TelemetryPoint(BaseModel):
@@ -81,6 +129,7 @@ class TelemetryIngestItem(BaseModel):
 class TelemetryIngestBatch(BaseModel):
     device_id: str
     records: List[TelemetryIngestItem]
+    idempotency_key: Optional[str] = None
 
 # Forecasts
 class ForecastResponse(BaseModel):
@@ -223,7 +272,11 @@ class AlertItem(BaseModel):
     message: str
     status: str
     triggered_at: datetime
+    acknowledged_by: Optional[str] = None
+    acknowledged_at: Optional[datetime] = None
     resolved_at: Optional[datetime] = None
+    resolution_details: Optional[str] = None
+    supporting_evidence: Optional[Dict[str, Any]] = None
 
 # Experiments
 class ExperimentCreate(BaseModel):

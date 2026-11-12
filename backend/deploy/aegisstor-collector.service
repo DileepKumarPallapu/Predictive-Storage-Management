@@ -1,0 +1,26 @@
+[Unit]
+Description=AEGISSTOR Read-Only Linux Host Storage Telemetry Collector
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=aegisstor-collector
+Group=aegisstor-collector
+EnvironmentFile=/etc/aegisstor/collector.env
+ExecStart=/usr/bin/python3 /opt/aegisstor/linux_collector_agent.py \
+  --server ${AEGISSTOR_SERVER_URL} \
+  --storage-id ${AEGISSTOR_STORAGE_ID} \
+  --mountpoint ${AEGISSTOR_MOUNTPOINT} \
+  --interval ${AEGISSTOR_INTERVAL_SEC} \
+  --buffer-path /var/lib/aegisstor/collector_buffer.jsonl \
+  --health-file /var/lib/aegisstor/collector_health.json
+Restart=always
+RestartSec=10
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/aegisstor
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

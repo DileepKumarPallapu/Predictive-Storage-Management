@@ -1,0 +1,176 @@
+{
+  "generated_at_utc": "2026-11-11T17:31:50.098196+00:00",
+  "experiments": [
+    {
+      "scenario": "PERIODIC_POSITIVE",
+      "reliability_score": 0.993,
+      "reliability_tier": "HIGH",
+      "is_stale": false,
+      "allow_high_conf_recommendations": true,
+      "uncertainty_multiplier": 1.0,
+      "workload_regime_detected": "PERIODIC_SEASONAL",
+      "naive_baseline": {
+        "model": "SeasonalNaiveBenchmark",
+        "mae": 1.23927,
+        "rmse": 1.54191,
+        "mase": 0.043
+      },
+      "candidates": [
+        {
+          "family": "SARIMAX",
+          "is_champion": true,
+          "metrics": {
+            "mae": 0.0,
+            "rmse": 0.0,
+            "r2_score": 1.0,
+            "mape": 0.0,
+            "mase": 0.0,
+            "pinball_loss": 1e-05,
+            "interval_coverage": 1.0,
+            "mean_interval_width": 0.0002,
+            "vs_baseline_status": "BEATS_BASELINE"
+          }
+        },
+        {
+          "family": "LightGBM",
+          "is_champion": false,
+          "metrics": {
+            "mae": 29.52875,
+            "rmse": 29.76553,
+            "r2_score": -75.5618,
+            "mape": 5.0805,
+            "mase": 1.0253,
+            "pinball_loss": 6.90483,
+            "interval_coverage": 0.0,
+            "mean_interval_width": 39.29773,
+            "vs_baseline_status": "WORSE_THAN_BASELINE"
+          }
+        }
+      ],
+      "conformal_band_width_30d_with_gate_gb": 0.0027,
+      "conformal_band_width_30d_without_gate_gb": 0.0027,
+      "capacity_risk": {
+        "risk_band": "CRITICAL",
+        "threshold_crossing_probability": 1.0,
+        "brier_calibration_score": 0.469,
+        "expected_shortfall_gb": 150.0
+      },
+      "optimizer_no_cost_status": "Cost not provided",
+      "optimizer_budgeted_winner": "MIGRATE_WORKLOAD"
+    },
+    {
+      "scenario": "ACCELERATING",
+      "reliability_score": 0.993,
+      "reliability_tier": "HIGH",
+      "is_stale": false,
+      "allow_high_conf_recommendations": true,
+      "uncertainty_multiplier": 1.0,
+      "workload_regime_detected": "UNUSUAL_CONSUMPTION_CHANGE",
+      "naive_baseline": {
+        "model": "SeasonalNaiveBenchmark",
+        "mae": 6.95341,
+        "rmse": 6.971,
+        "mase": 0.0927
+      },
+      "candidates": [
+        {
+          "family": "SARIMAX",
+          "is_champion": true,
+          "metrics": {
+            "mae": 0.01847,
+            "rmse": 0.01857,
+            "r2_score": 1.0,
+            "mape": 0.0024,
+            "mase": 0.0002,
+            "pinball_loss": 0.00415,
+            "interval_coverage": 0.0,
+            "mean_interval_width": 0.02539,
+            "vs_baseline_status": "BEATS_BASELINE"
+          }
+        },
+        {
+          "family": "LightGBM",
+          "is_champion": false,
+          "metrics": {
+            "mae": 154.40118,
+            "rmse": 158.46831,
+            "r2_score": -22.6177,
+            "mape": 20.0449,
+            "mase": 2.0587,
+            "pinball_loss": 37.04017,
+            "interval_coverage": 0.0,
+            "mean_interval_width": 200.8021,
+            "vs_baseline_status": "WORSE_THAN_BASELINE"
+          }
+        }
+      ],
+      "conformal_band_width_30d_with_gate_gb": 0.3407,
+      "conformal_band_width_30d_without_gate_gb": 0.3407,
+      "capacity_risk": {
+        "risk_band": "CRITICAL",
+        "threshold_crossing_probability": 1.0,
+        "brier_calibration_score": 0.5807,
+        "expected_shortfall_gb": 149.689
+      },
+      "optimizer_no_cost_status": "Cost not provided",
+      "optimizer_budgeted_winner": "MIGRATE_WORKLOAD"
+    },
+    {
+      "scenario": "DEGRADED_STALE",
+      "reliability_score": 0.779,
+      "reliability_tier": "MEDIUM",
+      "is_stale": true,
+      "allow_high_conf_recommendations": false,
+      "uncertainty_multiplier": 1.075,
+      "workload_regime_detected": "PERIODIC_SEASONAL",
+      "naive_baseline": {
+        "model": "SeasonalNaiveBenchmark",
+        "mae": 1.73867,
+        "rmse": 2.03242,
+        "mase": 0.0659
+      },
+      "candidates": [
+        {
+          "family": "SARIMAX",
+          "is_champion": true,
+          "metrics": {
+            "mae": 0.0,
+            "rmse": 0.0,
+            "r2_score": 1.0,
+            "mape": 0.0,
+            "mase": 0.0,
+            "pinball_loss": 1e-05,
+            "interval_coverage": 1.0,
+            "mean_interval_width": 0.0002,
+            "vs_baseline_status": "BEATS_BASELINE"
+          }
+        },
+        {
+          "family": "LightGBM",
+          "is_champion": false,
+          "metrics": {
+            "mae": 24.81209,
+            "rmse": 25.08776,
+            "r2_score": -28.5202,
+            "mape": 3.1008,
+            "mase": 0.9399,
+            "pinball_loss": 5.53772,
+            "interval_coverage": 0.0,
+            "mean_interval_width": 34.34162,
+            "vs_baseline_status": "WORSE_THAN_BASELINE"
+          }
+        }
+      ],
+      "conformal_band_width_30d_with_gate_gb": 0.0029,
+      "conformal_band_width_30d_without_gate_gb": 0.0027,
+      "capacity_risk": {
+        "risk_band": "CRITICAL",
+        "threshold_crossing_probability": 1.0,
+        "brier_calibration_score": 0.5123,
+        "expected_shortfall_gb": 150.0
+      },
+      "optimizer_no_cost_status": "Cost not provided",
+      "optimizer_budgeted_winner": "MIGRATE_WORKLOAD"
+    }
+  ]
+}

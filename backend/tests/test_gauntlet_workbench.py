@@ -22,11 +22,12 @@ from app.models.entities import (
     Device, GauntletSuite, GauntletRun, GauntletClaim, GauntletFailure, GauntletReproduction, User
 )
 from app.services.gauntlet_service import GauntletService
+from tests.auth_helper import attach_admin_auth
 
 @pytest.fixture(scope="module")
 def client():
     with TestClient(app) as c:
-        yield c
+        yield attach_admin_auth(c)
 
 @pytest.fixture(scope="module")
 def db():
@@ -223,7 +224,8 @@ def test_reviewer_mutation_restriction(client, db):
         }
     )
     assert res.status_code == 403
-    assert "Examiner Mode is read-only" in res.json()["detail"]
+    detail_msg = res.json()["detail"]
+    assert "Examiner Mode is read-only" in detail_msg or "Permission denied" in detail_msg
 
 
 def test_examiner_report_exports(client):

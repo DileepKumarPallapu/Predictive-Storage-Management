@@ -12,8 +12,13 @@ from app.database import Base
 from app.models.entities import (
     Device, Telemetry, Forecast, RiskAssessment, Scenario,
     SimulatedOutcome, Recommendation, Alert, Experiment, AuditLog,
-    DatasetSource, User
+    DatasetSource, User, RevokedToken, IngestionJob, DataQualityResult,
+    ModelVersion, ModelMetric, ReportHistory, ApplicationSetting,
+    ApiKey, TelemetryConnector, DataReliabilityProfile, WorkloadRegimeEvent,
+    BackgroundJob, CapacityRiskEvaluation
 )
+import app.models.enterprise_entities  # noqa: E402, F401
+import app.models.control_plane_entities  # noqa: E402, F401
 
 config = context.config
 
