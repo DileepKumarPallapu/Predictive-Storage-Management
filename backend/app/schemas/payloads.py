@@ -30,13 +30,13 @@ class DeviceBase(BaseModel):
     workload_profile: str
 
 class DeviceSummary(DeviceBase):
-    current_used_bytes: int
-    current_utilization_pct: float
-    current_read_iops: float
-    current_write_iops: float
-    current_latency_p95_ms: float
-    runway_hours_estimate: float
-    risk_level: str
+    current_used_bytes: Optional[int] = None
+    current_utilization_pct: Optional[float] = None
+    current_read_iops: Optional[float] = None
+    current_write_iops: Optional[float] = None
+    current_latency_p95_ms: Optional[float] = None
+    runway_hours_estimate: Optional[float] = None
+    risk_level: str = "INSUFFICIENT_EVIDENCE"
 
 class ThresholdsUpdate(BaseModel):
     warning_threshold_pct: Optional[float] = None
