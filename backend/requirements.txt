@@ -14,3 +14,7 @@ prometheus-client>=0.20.0
 pytest>=8.0.0
 httpx>=0.27.0
 python-multipart>=0.0.9
+# Optional live enterprise database dialect drivers (SQL Server pyodbc is installed separately).
+psycopg[binary]>=3.2
+PyMySQL>=1.1
+oracledb>=2.0

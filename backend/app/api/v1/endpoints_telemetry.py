@@ -41,6 +41,9 @@ def get_device_telemetry(
     hours: int = Query(720, description="Hours of historical telemetry to fetch"),
     db: Session = Depends(get_db)
 ):
+    if metric not in METRIC_UNITS:
+        raise HTTPException(status_code=422, detail=f"Unsupported telemetry metric '{metric}'.")
+
     mode = settings.OPERATING_MODE.lower()
 
     if mode == "replay":
@@ -78,11 +81,15 @@ def get_device_telemetry(
             .all()
         )
 
-    timestamps = [r.timestamp for r in records]
-    values = [float(getattr(r, metric, 0.0)) for r in records]
-    is_synth = any(r.is_synthetic for r in records) if records else True
+    observed_records = [
+        r for r in records
+        if getattr(r, metric, None) is not None
+    ]
+    timestamps = [r.timestamp for r in observed_records]
+    values = [float(getattr(r, metric)) for r in observed_records]
+    is_synth = any(r.is_synthetic for r in records) if records else False
 
-    # Identify missing intervals (> 2 hour jump between timestamps)
+    # Identify missing intervals (> 2 hour jump between actual observations).
     missing = []
     for i in range(1, len(timestamps)):
         delta_h = (timestamps[i] - timestamps[i-1]).total_seconds() / 3600.0

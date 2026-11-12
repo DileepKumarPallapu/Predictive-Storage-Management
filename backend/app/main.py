@@ -43,6 +43,15 @@ def initialize_database_and_seed_demo():
     logger.info("Initializing AEGISSTOR database tables...")
     Base.metadata.create_all(bind=engine)
 
+    # Register Control Plane action definitions on every fresh deployment.
+    # This is idempotent reference data only; it does not seed users/connectors/telemetry.
+    from app.services.control_plane_bootstrap import ensure_control_plane_action_definitions
+    cp_db = SessionLocal()
+    try:
+        ensure_control_plane_action_definitions(cp_db)
+    finally:
+        cp_db.close()
+
     from sqlalchemy import inspect as sa_inspect, text
     try:
         with engine.connect() as conn:

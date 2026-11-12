@@ -24,7 +24,8 @@ from app.api.v1 import (
     endpoints_gauntlet,
     endpoints_sovereign,
     endpoints_vault,
-    endpoints_replay
+    endpoints_replay,
+    endpoints_control_plane
 )
 
 api_router = APIRouter()
@@ -54,5 +55,6 @@ api_router.include_router(endpoints_gauntlet.router, tags=["AEGISSTOR Gauntlet V
 api_router.include_router(endpoints_sovereign.router, tags=["AEGISSTOR Sovereign Federated Storage Intelligence"])
 api_router.include_router(endpoints_vault.router, tags=["AEGISSTOR VAULT — Backup & Disaster Recovery"])
 api_router.include_router(endpoints_replay.router, tags=["AEGISSTOR Trace Replay Engine"])
+api_router.include_router(endpoints_control_plane.router, tags=["AEGISSTOR Control Plane — Sprint 1"])
 
 

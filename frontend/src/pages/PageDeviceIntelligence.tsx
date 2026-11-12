@@ -159,7 +159,7 @@ export const PageDeviceIntelligence: React.FC<Props> = ({ deviceId, onSelectDevi
                 label={isGuided ? 'Response Delay (P95)' : 'P95 Tail Latency Risk'}
                 value={
                   <span className="text-[var(--brand-primary)]">
-                    {device.current_latency_p95_ms.toFixed(1)} ms
+                    {device.current_latency_p95_ms === null ? 'Not collected' : device.current_latency_p95_ms.toFixed(1) + ' ms'}
                   </span>
                 }
                 help={{

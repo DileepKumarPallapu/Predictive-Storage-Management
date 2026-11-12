@@ -205,7 +205,11 @@ class HostStorageCollector:
     @staticmethod
     def sample_telemetry(path: str) -> Dict[str, Any]:
         """
-        Samples instantaneous usage metrics safely from a given host filesystem path.
+        Samples real filesystem capacity only.
+
+        Standard Python filesystem APIs do not provide disk IOPS, throughput,
+        queue depth or request-latency percentiles. Those metrics remain None
+        until a real OS/performance collector supplies them.
         """
         now = datetime.now(timezone.utc)
         try:
@@ -222,14 +226,15 @@ class HostStorageCollector:
                 "used_bytes": used,
                 "free_bytes": free,
                 "utilization_pct": pct,
-                "read_iops": 0.0,
-                "write_iops": 0.0,
-                "throughput_mb_s": 0.0,
-                "latency_p95_ms": 1.2,
-                "queue_depth": 1.0,
+                "read_iops": None,
+                "write_iops": None,
+                "throughput_mb_s": None,
+                "latency_p95_ms": None,
+                "queue_depth": None,
                 "is_synthetic": False,
                 "provenance": PROVENANCE_LIVE,
-                "source_label": "host_os_read_only",
+                "source_label": "host_filesystem_capacity_only",
+                "metrics_available": ["capacity"],
                 "read_only": True
             }
 
@@ -240,13 +245,12 @@ class HostStorageCollector:
                 "total_capacity_bytes": total,
                 "used_bytes": used,
                 "free_bytes": free,
-                "utilization_pct": pct,
-                "latency_p95_ms": 1.2
+                "utilization_pct": pct
             })
             return result
         except Exception as e:
             return {
-                "error": str(e),
+                "error": type(e).__name__,
                 "timestamp": now.isoformat(),
                 "path": path,
                 "is_synthetic": False,
@@ -258,10 +262,13 @@ class HostStorageCollector:
     @staticmethod
     def sync_live_partitions_to_db(db) -> List[Dict[str, Any]]:
         """
-        Synchronizes live host storage partitions to the database so real storage
-        devices are available for telemetry exploration, forecasting, and risk analysis.
+        Persists only observed host filesystem capacity.
+
+        It deliberately does not generate historical values, IOPS, throughput,
+        latency or risk scores. Forecasts become available after enough actual
+        timestamped observations have accumulated.
         """
-        from app.models.entities import Device, Telemetry, RiskAssessment
+        from app.models.entities import Device, Telemetry
         partitions = HostStorageCollector.get_available_partitions()
         now = datetime.now(timezone.utc)
         synced = []
@@ -280,62 +287,49 @@ class HostStorageCollector:
                     max_acceptable_latency_ms=15.0,
                     min_free_reserve_pct=10.0,
                     status="HEALTHY",
-                    workload_profile="Host Native Telemetry"
+                    workload_profile="Host Filesystem Capacity",
+                    organization_id="org-primary-enterprise",
                 )
                 db.add(dev)
-                db.commit()
-
-            # Ensure adequate telemetry history exists for ML quantile models
-            count = db.query(Telemetry).filter(Telemetry.device_id == p["id"]).count()
-            if count < 48:
-                telemetries = []
-                cur_used = p["used_bytes"]
-                tot_cap = p["total_capacity_bytes"]
-                for i in range(72, -1, -1):
-                    t_time = now - timedelta(hours=i)
-                    sim_used = int(cur_used - (i * 20 * 1024 * 1024) + ((i % 5) * 8 * 1024 * 1024))
-                    sim_free = max(0, tot_cap - sim_used)
-                    sim_pct = round((sim_used / tot_cap) * 100.0, 2)
-                    telemetries.append(Telemetry(
-                        device_id=p["id"],
-                        timestamp=t_time,
-                        used_bytes=sim_used,
-                        free_bytes=sim_free,
-                        utilization_pct=sim_pct,
-                        read_iops=1250.0 + (i % 7) * 30.0,
-                        write_iops=820.0 + (i % 6) * 25.0,
-                        throughput_mb_s=115.0 + (i % 5) * 12.0,
-                        latency_p95_ms=1.2 + (i % 4) * 0.1,
-                        queue_depth=1.0,
-                        is_synthetic=False,
-                        source_label="host_native_read_only"
-                    ))
-                db.bulk_save_objects(telemetries)
-                db.commit()
-
-            # Ensure initial risk assessment exists
-            r_exist = db.query(RiskAssessment).filter(RiskAssessment.device_id == p["id"]).first()
-            if not r_exist:
-                free_gb = p["free_bytes"] / (1024 ** 3)
-                # Realistic runway estimation based on ~0.5 GB/h growth
-                runway = min(720.0, max(48.0, free_gb / 0.5))
-                risk = RiskAssessment(
-                    device_id=p["id"],
-                    computed_at=now,
-                    current_capacity_pct=p["utilization_pct"],
-                    runway_hours_estimate=round(runway, 1),
-                    runway_hours_lower=round(runway * 0.85, 1),
-                    runway_hours_upper=round(runway * 1.25, 1),
-                    risk_level="NOMINAL" if p["utilization_pct"] < 80 else ("ELEVATED" if p["utilization_pct"] < 90 else "CRITICAL"),
-                    capacity_breach_prob_24h=0.01 if p["utilization_pct"] < 80 else 0.45,
-                    capacity_breach_prob_72h=0.05 if p["utilization_pct"] < 80 else 0.82,
-                    latency_breach_prob_24h=0.01,
-                    contributors_json='[{"factor": "Host Storage Headroom", "impact_score": 0.15}]'
+            else:
+                dev.total_capacity_bytes = p["total_capacity_bytes"]
+                dev.status = (
+                    "CRITICAL" if p["utilization_pct"] >= dev.critical_threshold_pct
+                    else "WARNING" if p["utilization_pct"] >= dev.warning_threshold_pct
+                    else "HEALTHY"
                 )
-                db.add(risk)
-                db.commit()
+
+            latest = (
+                db.query(Telemetry)
+                .filter(Telemetry.device_id == p["id"])
+                .order_by(Telemetry.timestamp.desc())
+                .first()
+            )
+            latest_time = latest.timestamp if latest else None
+            if latest_time and latest_time.tzinfo is None:
+                latest_time = latest_time.replace(tzinfo=timezone.utc)
+            age_seconds = (now - latest_time).total_seconds() if latest_time else None
+
+            # Avoid generating an observation more frequently than every 5 minutes.
+            if latest is None or age_seconds is None or age_seconds >= 300:
+                db.add(Telemetry(
+                    device_id=p["id"],
+                    timestamp=now.replace(tzinfo=None),
+                    used_bytes=p["used_bytes"],
+                    free_bytes=p["free_bytes"],
+                    utilization_pct=p["utilization_pct"],
+                    read_iops=None,
+                    write_iops=None,
+                    throughput_mb_s=None,
+                    latency_p95_ms=None,
+                    queue_depth=None,
+                    is_synthetic=False,
+                    source_label="host_filesystem_capacity_only",
+                ))
 
             synced.append(p)
+
+        db.commit()
         return synced
 
     @staticmethod

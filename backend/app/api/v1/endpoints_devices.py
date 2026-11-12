@@ -30,8 +30,15 @@ def list_devices(
         for p in partitions:
             if search and search.lower() not in p["name"].lower() and search.lower() not in p["id"].lower():
                 continue
-            free_gb = p["free_bytes"] / (1024 ** 3)
-            runway = min(720.0, max(48.0, free_gb / 0.5))
+            if tier and tier != "HOST_LOCAL":
+                continue
+            current_status = (
+                "CRITICAL" if p["utilization_pct"] >= 90.0
+                else "WARNING" if p["utilization_pct"] >= 80.0
+                else "HEALTHY"
+            )
+            if status and current_status != status:
+                continue
             results.append(DeviceSummary(
                 id=p["id"],
                 name=p["name"],
@@ -42,15 +49,15 @@ def list_devices(
                 critical_threshold_pct=90.0,
                 max_acceptable_latency_ms=15.0,
                 min_free_reserve_pct=10.0,
-                status="HEALTHY",
-                workload_profile="Host Native Telemetry",
+                status=current_status,
+                workload_profile="Host Filesystem Capacity",
                 current_used_bytes=p["used_bytes"],
                 current_utilization_pct=p["utilization_pct"],
-                current_read_iops=1250.0,
-                current_write_iops=820.0,
-                current_latency_p95_ms=1.2,
-                runway_hours_estimate=round(runway, 1),
-                risk_level="NOMINAL" if p["utilization_pct"] < 80 else ("ELEVATED" if p["utilization_pct"] < 90 else "CRITICAL")
+                current_read_iops=None,
+                current_write_iops=None,
+                current_latency_p95_ms=None,
+                runway_hours_estimate=None,
+                risk_level="CRITICAL" if current_status == "CRITICAL" else "ELEVATED" if current_status == "WARNING" else "INSUFFICIENT_EVIDENCE"
             ))
         return results
 
@@ -139,11 +146,15 @@ def get_device(
         raise HTTPException(status_code=404, detail=f"Replay trace volume '{device_id}' not found in active trace")
 
     if device_id.startswith("host-vol"):
+        HostStorageCollector.sync_live_partitions_to_db(db)
         partitions = HostStorageCollector.get_available_partitions()
         for p in partitions:
             if p["id"] == device_id:
-                free_gb = p["free_bytes"] / (1024 ** 3)
-                runway = min(720.0, max(48.0, free_gb / 0.5))
+                current_status = (
+                    "CRITICAL" if p["utilization_pct"] >= 90.0
+                    else "WARNING" if p["utilization_pct"] >= 80.0
+                    else "HEALTHY"
+                )
                 return DeviceSummary(
                     id=p["id"],
                     name=p["name"],
@@ -154,16 +165,17 @@ def get_device(
                     critical_threshold_pct=90.0,
                     max_acceptable_latency_ms=15.0,
                     min_free_reserve_pct=10.0,
-                    status="HEALTHY",
-                    workload_profile="Host Native Telemetry",
+                    status=current_status,
+                    workload_profile="Host Filesystem Capacity",
                     current_used_bytes=p["used_bytes"],
                     current_utilization_pct=p["utilization_pct"],
-                    current_read_iops=1250.0,
-                    current_write_iops=820.0,
-                    current_latency_p95_ms=1.2,
-                    runway_hours_estimate=round(runway, 1),
-                    risk_level="NOMINAL" if p["utilization_pct"] < 80 else ("ELEVATED" if p["utilization_pct"] < 90 else "CRITICAL")
+                    current_read_iops=None,
+                    current_write_iops=None,
+                    current_latency_p95_ms=None,
+                    runway_hours_estimate=None,
+                    risk_level="CRITICAL" if current_status == "CRITICAL" else "ELEVATED" if current_status == "WARNING" else "INSUFFICIENT_EVIDENCE"
                 )
+        raise HTTPException(status_code=404, detail=f"Host storage volume '{device_id}' not found")
 
     d = db.query(Device).filter(Device.id == device_id).first()
     if not d:
@@ -185,13 +197,13 @@ def get_device(
         .first()
     )
 
-    used = latest_tel.used_bytes if latest_tel else int(d.total_capacity_bytes * 0.70)
-    util_pct = latest_tel.utilization_pct if latest_tel else 70.0
-    r_iops = latest_tel.read_iops if latest_tel else 5000.0
-    w_iops = latest_tel.write_iops if latest_tel else 4000.0
-    lat = latest_tel.latency_p95_ms if latest_tel else 2.5
-    runway = latest_risk.runway_hours_estimate if latest_risk else 120.0
-    r_level = latest_risk.risk_level if latest_risk else "NOMINAL"
+    used = latest_tel.used_bytes if latest_tel else None
+    util_pct = latest_tel.utilization_pct if latest_tel else None
+    r_iops = latest_tel.read_iops if latest_tel else None
+    w_iops = latest_tel.write_iops if latest_tel else None
+    lat = latest_tel.latency_p95_ms if latest_tel else None
+    runway = latest_risk.runway_hours_estimate if latest_risk else None
+    r_level = latest_risk.risk_level if latest_risk else "INSUFFICIENT_EVIDENCE"
 
     return DeviceSummary(
         id=d.id,
