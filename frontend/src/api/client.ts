@@ -1157,5 +1157,42 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ confirmation_token: confirmationToken }),
     }),
+
+  // ==========================================
+  // AEGISSTOR ENTERPRISE DATABASE CONNECTORS
+  // ==========================================
+  getControlPlaneConnectors: () =>
+    apiFetch<any[]>("/control-plane/connectors", { forceFresh: true }),
+  getControlPlaneDataSourceSummary: () =>
+    apiFetch<any>("/control-plane/data-source-summary", { forceFresh: true }),
+  createControlPlaneConnector: (payload: {
+    provider: "POSTGRESQL" | "MYSQL" | "SQL_SERVER" | "ORACLE";
+    name: string;
+    credential_ref: string;
+    configuration: Record<string, any>;
+  }) =>
+    apiFetch<any>("/control-plane/connectors", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  checkControlPlaneConnector: (connectorId: string) =>
+    apiFetch<any>(`/control-plane/connectors/${encodeURIComponent(connectorId)}/health-check`, {
+      method: "POST",
+    }),
+  syncControlPlaneConnector: (connectorId: string) =>
+    apiFetch<any>(`/control-plane/connectors/${encodeURIComponent(connectorId)}/sync`, {
+      method: "POST",
+    }),
+  getControlPlaneConnectorSnapshots: (connectorId: string, limit = 50) =>
+    apiFetch<any[]>(
+      `/control-plane/connectors/${encodeURIComponent(connectorId)}/snapshots?limit=${limit}`,
+      { forceFresh: true }
+    ),
+  getControlPlaneDatabaseInventory: (connectorId?: string, limit = 100) => {
+    const params = new URLSearchParams({ limit: String(limit) });
+    if (connectorId) params.set("connector_id", connectorId);
+    return apiFetch<any[]>(`/control-plane/database-inventory?${params.toString()}`, { forceFresh: true });
+  },
+
 };
 
