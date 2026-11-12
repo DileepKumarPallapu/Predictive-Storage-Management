@@ -10,6 +10,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from app.config import settings
 from app.database import Base
 from app.models import control_plane as control_plane_models  # register Control Plane tables in Base.metadata
+from app.models import enterprise_data as enterprise_data_models  # register enterprise observation tables
 from app.models.entities import (
     Device, Telemetry, Forecast, RiskAssessment, Scenario,
     SimulatedOutcome, Recommendation, Alert, Experiment, AuditLog,
