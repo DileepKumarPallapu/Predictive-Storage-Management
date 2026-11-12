@@ -34,12 +34,12 @@ export interface DeviceSummary {
   min_free_reserve_pct: number;
   status: string;
   workload_profile: string;
-  current_used_bytes: number;
-  current_utilization_pct: number;
-  current_read_iops: number;
-  current_write_iops: number;
-  current_latency_p95_ms: number;
-  runway_hours_estimate: number;
+  current_used_bytes: number | null;
+  current_utilization_pct: number | null;
+  current_read_iops: number | null;
+  current_write_iops: number | null;
+  current_latency_p95_ms: number | null;
+  runway_hours_estimate: number | null;
   risk_level: string;
 }
 
