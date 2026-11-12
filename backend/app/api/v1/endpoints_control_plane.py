@@ -247,7 +247,6 @@ def _preflight(db: Session, actor: User, definition: ActionDefinition, req: Acti
         {"name": "action_enabled", "passed": True, "detail": "Action is enabled."},
         {"name": "resource_scope", "passed": True, "detail": "Resource belongs to the authenticated organisation."},
         {"name": "resource_capacity", "passed": device.total_capacity_bytes > 0, "detail": "Registered total capacity must be positive."},
-        {"name": "telemetry_available", "passed": latest is not None, "detail": "Latest telemetry is required for this operation."},
     ]
 
     if req.action_type == "resource.inspect":
@@ -257,20 +256,30 @@ def _preflight(db: Session, actor: User, definition: ActionDefinition, req: Acti
             "checks": checks,
             "data_provenance": provenance,
             "telemetry_timestamp": latest.timestamp.isoformat() if latest and latest.timestamp else None,
+            "warnings": [] if latest is not None else ["No telemetry is stored for this resource; only inventory metadata can be inspected."],
             "physical_mutation": False,
             "note": "This operation reads AEGISSTOR's persisted inventory and telemetry records. It does not connect to or modify the physical storage provider.",
         }
 
     if req.action_type == "storage.capacity.plan":
         additional = req.parameters.get("additional_capacity_bytes")
-        valid_additional = isinstance(additional, int) and not isinstance(additional, bool) and additional > 0
+        valid_additional = (
+            isinstance(additional, int)
+            and not isinstance(additional, bool)
+            and 0 < additional <= (2**63 - 1 - device.total_capacity_bytes)
+        )
         checks.append({
             "name": "additional_capacity",
             "passed": valid_additional,
-            "detail": "additional_capacity_bytes must be a positive integer.",
+            "detail": "additional_capacity_bytes must be positive and keep proposed total capacity within signed 64-bit byte range.",
         })
-        if latest is not None:
-            age_seconds = max(0.0, (_now() - latest.timestamp.replace(tzinfo=_now().tzinfo) if latest.timestamp.tzinfo is None else _now() - latest.timestamp).total_seconds())
+        if latest is None or latest.timestamp is None:
+            checks.append({"name": "telemetry_available", "passed": False, "detail": "A timestamped telemetry observation is required for capacity planning."})
+        else:
+            observation_time = latest.timestamp
+            if observation_time.tzinfo is None:
+                observation_time = observation_time.replace(tzinfo=_now().tzinfo)
+            age_seconds = max(0.0, (_now() - observation_time).total_seconds())
             fresh = age_seconds <= 3600
             checks.extend([
                 {"name": "telemetry_provenance", "passed": not latest.is_synthetic, "detail": "Capacity planning requires non-synthetic telemetry."},
